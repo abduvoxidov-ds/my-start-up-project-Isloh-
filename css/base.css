@@ -1,0 +1,41 @@
+/* ==========================================================================
+   ISLOH — Base / Reset
+   Global element defaults. No component classes here.
+   ========================================================================== */
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-app);
+  color: var(--ink-900);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink-900);
+  margin: 0;
+}
+
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; }
+
+/* --- Accessibility: visible focus state for keyboard navigation --- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+.nav-item:focus-visible,
+.icon-btn:focus-visible,
+.tab-item:focus-visible {
+  outline: 2px solid var(--violet-500);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--ink-300); border-radius: var(--r-pill); }
+::-webkit-scrollbar-track { background: transparent; }

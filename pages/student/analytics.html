@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analitika — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .grid-2b { display:grid; grid-template-columns: 1.5fr 1fr; gap:18px; margin-top:18px; }
+  .bars { display:flex; align-items:flex-end; gap:14px; height:150px; margin-top:18px; }
+  .bars .col { flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .bars .stack { width:100%; display:flex; flex-direction:column-reverse; height:120px; border-radius:6px; overflow:hidden; }
+  .bars .seg-a { background: var(--violet-600); }
+  .bars .seg-b { background: var(--violet-100); }
+  .bars .lbl { font-size:11px; color:var(--ink-500); }
+  .donut { width:130px; height:130px; border-radius:50%; background: conic-gradient(var(--violet-600) 0% 46%, #A79CEE 46% 72%, var(--border-soft) 72% 100%); display:flex; align-items:center; justify-content:center; margin: 0 auto; }
+  .donut-inner { width:88px; height:88px; border-radius:50%; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .legend-row { display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-700); margin-top:8px; }
+  .legend-dot { width:9px; height:9px; border-radius:50%; }
+  .heatmap { display:grid; grid-template-columns: repeat(26, 12px); grid-auto-rows:12px; gap:3px; margin-top:14px; }
+  .heatmap .cell { border-radius:3px; background: var(--border-soft); }
+  .trend-pill { font-size:12px; font-weight:700; padding:3px 9px; border-radius:var(--r-pill); }
+  .trend-up { background:var(--teach-green-100); color:var(--teach-green); }
+  .trend-down { background:#FDEBEC; color:var(--danger); }
+  @media (max-width:1100px){ .grid-3{grid-template-columns:1fr 1fr;} .grid-2b{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="analytics">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h1 style="font-size:24px;">Analitika</h1>
+        <select class="btn btn-outline" style="border-radius:var(--r-md);"><option>Oxirgi 30 kun</option></select>
+      </div>
+
+      <div class="grid-3" style="margin-top:20px;">
+        <div class="card card-pad stat-card">
+          <div class="stat-label">Jami o'quv vaqti</div>
+          <div style="display:flex; align-items:baseline; gap:10px;"><div class="stat-value">42s 10m</div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 12%</span></div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-label">O'rtacha e'tibor bali</div>
+          <div style="display:flex; align-items:baseline; gap:10px;"><div class="stat-value">86</div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 4%</span></div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-label">Yakunlangan darslar</div>
+          <div style="display:flex; align-items:baseline; gap:10px;"><div class="stat-value">57</div><span class="trend-pill trend-down"><i class="bi bi-arrow-down-short"></i> 3%</span></div>
+        </div>
+      </div>
+
+      <div class="grid-2b">
+        <div class="card card-pad">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="font-size:16px;">Haftalik samaradorlik</h3>
+            <div style="display:flex; gap:14px; font-size:12px;">
+              <span class="legend-row"><span class="legend-dot" style="background:var(--violet-600);"></span> Faol o'qish</span>
+              <span class="legend-row"><span class="legend-dot" style="background:var(--violet-100);"></span> Tanaffus</span>
+            </div>
+          </div>
+          <div class="bars">
+            <div class="col"><div class="stack"><div class="seg-a" style="height:60%;"></div><div class="seg-b" style="height:20%;"></div></div><div class="lbl">Dush</div></div>
+            <div class="col"><div class="stack"><div class="seg-a" style="height:75%;"></div><div class="seg-b" style="height:10%;"></div></div><div class="lbl">Sesh</div></div>
+            <div class="col"><div class="stack"><div class="seg-a" style="height:40%;"></div><div class="seg-b" style="height:25%;"></div></div><div class="lbl">Chor</div></div>
+            <div class="col"><div class="stack"><div class="seg-a" style="height:85%;"></div><div class="seg-b" style="height:10%;"></div></div><div class="lbl">Pay</div></div>
+            <div class="col"><div class="stack"><div class="seg-a" style="height:65%;"></div><div class="seg-b" style="height:15%;"></div></div><div class="lbl">Jum</div></div>
+            <div class="col"><div class="stack"><div class="seg-a" style="height:30%;"></div><div class="seg-b" style="height:10%;"></div></div><div class="lbl">Shan</div></div>
+            <div class="col"><div class="stack"><div class="seg-a" style="height:20%;"></div><div class="seg-b" style="height:5%;"></div></div><div class="lbl">Yak</div></div>
+          </div>
+
+          <h3 style="font-size:16px; margin-top:26px;">Faollik xaritasi</h3>
+          <p style="font-size:12px; color:var(--ink-500); margin-top:2px;">Oxirgi 26 hafta</p>
+          <div class="heatmap" id="heatmap"></div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          <div class="card card-pad">
+            <h3 style="font-size:15px;">Kurs kategoriyalari bo'yicha vaqt</h3>
+            <div class="donut"><div class="donut-inner"><div style="font-weight:800; font-size:18px;">42s</div><div style="font-size:11px; color:var(--ink-500);">jami</div></div></div>
+            <div class="legend-row"><span class="legend-dot" style="background:var(--violet-600);"></span> Dasturlash — 46%</div>
+            <div class="legend-row"><span class="legend-dot" style="background:#A79CEE;"></span> Dizayn — 26%</div>
+            <div class="legend-row"><span class="legend-dot" style="background:var(--border-soft);"></span> Boshqa — 28%</div>
+          </div>
+
+          <div class="card card-pad">
+            <h3 style="font-size:15px;">E'tibor tahlili</h3>
+            <p style="font-size:13px; color:var(--ink-700); margin-top:10px; line-height:1.6;">Sizning eng samarali vaqtingiz <b>10:00–12:00</b> oralig'ida. Payshanba kunlari eng yuqori natija ko'rsatasiz.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  const hm = document.getElementById('heatmap');
+  for (let i = 0; i < 26*7; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    const r = Math.random();
+    if (r > 0.85) cell.style.background = 'var(--violet-600)';
+    else if (r > 0.65) cell.style.background = '#A79CEE';
+    else if (r > 0.45) cell.style.background = 'var(--violet-100)';
+    hm.appendChild(cell);
+  }
+</script>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docker for Beginners — Player — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a href="courses.html" style="color:inherit;">Kurslar</a><span class="sep">/</span><span class="current">Docker for Beginners</span></nav>
+      <div class="topbar-actions">
+        <button class="btn btn-outline btn-sm" data-ai-drawer-trigger onclick="isloh_openModal('ai-drawer-overlay')"><i class="bi bi-stars"></i> AI Yordamchi</button>
+        <a href="learning-progress.html" class="btn btn-outline btn-sm"><i class="bi bi-graph-up"></i> Jarayonim</a>
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <main class="content" data-ai-context="course-player">
+      <!-- COMPLETION BANNER (hidden until 100%; toggled by js/lesson-viewer.js) -->
+      <div class="completion-banner" data-completion-banner hidden style="margin-bottom:18px;">
+        <div class="completion-banner-icon"><i class="bi bi-trophy-fill"></i></div>
+        <div>
+          <div class="completion-banner-title">Tabriklaymiz! Kursni yakunladingiz</div>
+          <div class="completion-banner-sub">Endi sertifikatingizni ko'rishingiz mumkin.</div>
+        </div>
+        <div class="completion-banner-actions">
+          <a href="certificate-preview.html" class="btn btn-outline btn-sm"><i class="bi bi-award"></i> Sertifikatni ko'rish</a>
+          <a href="courses.html" class="btn btn-outline btn-sm"><i class="bi bi-journal-bookmark"></i> Boshqa kurslar</a>
+        </div>
+      </div>
+
+      <div class="player-shell" data-tabs>
+        <!-- SIDEBAR: MODULES / LESSONS -->
+        <aside class="card card-pad course-player-sidebar">
+          <div class="cps-course-head">
+            <div class="cps-course-title">Docker for Beginners</div>
+            <div class="progress-track"><div class="progress-fill" data-course-progress-fill style="width:0%;"></div></div>
+            <div class="cps-course-meta"><span data-course-progress-pct>0%</span><span>24 dars</span></div>
+          </div>
+
+          <!-- MODULE 1 -->
+          <div class="cps-module">
+            <button class="cps-module-head" data-cps-module-toggle>
+              <i class="bi bi-chevron-down cps-module-toggle" aria-hidden="true"></i>
+              <span class="cps-module-title">1-modul: Kirish va sozlash</span>
+              <span class="cps-module-meta">3/6</span>
+            </button>
+            <div class="cps-lesson-list">
+              <button class="tab-item cps-lesson active is-done" data-cps-lesson data-tab-target="lesson-intro">
+                <span class="cps-lesson-ic lt-video"><i class="bi bi-play-fill"></i></span>
+                <span class="cps-lesson-name">Kursga kirish</span>
+                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check></i>
+                <span class="cps-lesson-time">8:24</span>
+              </button>
+              <button class="tab-item cps-lesson is-done" data-cps-lesson data-tab-target="lesson-setup">
+                <span class="cps-lesson-ic lt-article"><i class="bi bi-file-text-fill"></i></span>
+                <span class="cps-lesson-name">Muhitni sozlash</span>
+                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check></i>
+                <span class="cps-lesson-time">12 daq</span>
+              </button>
+              <button class="tab-item cps-lesson is-done" data-cps-lesson data-tab-target="lesson-terminal">
+                <span class="cps-lesson-ic lt-video"><i class="bi bi-play-fill"></i></span>
+                <span class="cps-lesson-name">Terminal buyruqlari</span>
+                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check></i>
+                <span class="cps-lesson-time">10:05</span>
+              </button>
+              <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-images">
+                <span class="cps-lesson-ic lt-video"><i class="bi bi-play-fill"></i></span>
+                <span class="cps-lesson-name">Docker image nima?</span>
+                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check hidden></i>
+                <span class="cps-lesson-time">9:40</span>
+              </button>
+              <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-code">
+                <span class="cps-lesson-ic lt-code"><i class="bi bi-code-slash"></i></span>
+                <span class="cps-lesson-name">Birinchi Dockerfile</span>
+                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check hidden></i>
+                <span class="cps-lesson-time">15 daq</span>
+              </button>
+              <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-quiz1">
+                <span class="cps-lesson-ic lt-quiz"><i class="bi bi-patch-question-fill"></i></span>
+                <span class="cps-lesson-name">Bilimni tekshirish: 1-modul</span>
+                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check hidden></i>
+                <span class="cps-lesson-time">5 daq</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- MODULE 2 -->
+          <div class="cps-module">
+            <button class="cps-module-head" data-cps-module-toggle>
+              <i class="bi bi-chevron-down cps-module-toggle collapsed" aria-hidden="true"></i>
+              <span class="cps-module-title">2-modul: Docker asoslari</span>
+              <span class="cps-module-meta">0/7</span>
+            </button>
+            <div class="cps-lesson-list collapsed">
+              <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-compose">
+                <span class="cps-lesson-ic lt-video"><i class="bi bi-play-fill"></i></span>
+                <span class="cps-lesson-name">Docker Compose kirish</span>
+                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check hidden></i>
+                <span class="cps-lesson-time">11:20</span>
+              </button>
+              <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-assignment1">
+                <span class="cps-lesson-ic lt-assignment"><i class="bi bi-file-earmark-text-fill"></i></span>
+                <span class="cps-lesson-name">Amaliy topshiriq: Compose fayli</span>
+                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check hidden></i>
+                <span class="cps-lesson-time">1 soat</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="cps-progress-foot">
+            <div class="ai-widget" style="padding:10px 4px; border-top:1px solid var(--border-soft); padding-top:14px;">
+              <div class="ai-widget-icon"><i class="bi bi-stars"></i></div>
+              <div style="flex:1;">
+                <div class="ai-widget-title">AI tavsiyasi</div>
+                <div class="ai-widget-sub">Ushbu darsni tezroq o'zlashtirish uchun fleshkartalarni sinab ko'ring.</div>
+                <div class="ai-widget-foot" style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <button class="ai-action-chip" data-ai-quick="course-player:flashcards"><i class="bi bi-layers"></i> Fleshkartalar</button>
+                  <button class="ai-action-chip" data-ai-quick="course-player:quizme"><i class="bi bi-patch-question-fill"></i> Sinab ko'r</button>
+                </div>
+              </div>
+            </div>
+            <a href="learning-progress.html" style="font-size:12.5px; color:var(--violet-600); font-weight:600; display:block; margin-top:12px;"><i class="bi bi-graph-up"></i> To'liq jarayonni ko'rish</a>
+            <a href="live-sessions.html" style="font-size:12.5px; color:var(--violet-600); font-weight:600; display:block; margin-top:8px;"><i class="bi bi-camera-video"></i> Jonli sessiyalar</a>
+            <a href="notes.html" style="font-size:12.5px; color:var(--violet-600); font-weight:600; display:block; margin-top:8px;"><i class="bi bi-journal-text"></i> Izohlarim</a>
+          </div>
+        </aside>
+
+        <!-- MAIN VIEWER -->
+        <section class="lesson-viewer">
+          <div class="lesson-header">
+            <div>
+              <div class="lesson-header-title">Kursga kirish</div>
+              <div class="lesson-header-meta">
+                <span><i class="bi bi-collection-play"></i> 1-modul</span>
+                <span><i class="bi bi-clock"></i> Taxminiy vaqt: 8 daqiqa</span>
+              </div>
+            </div>
+            <div class="lesson-header-actions">
+              <button class="icon-btn" data-lesson-bookmark aria-label="Xatcho'p"><i class="bi bi-bookmark"></i></button>
+              <a href="lesson-player.html" class="icon-btn" aria-label="To'liq ekran"><i class="bi bi-arrows-fullscreen"></i></a>
+            </div>
+          </div>
+
+          <!-- LESSON PANELS (one per lesson type; switched via js/tabs.js using data-tab-panel) -->
+          <div data-tab-panel="lesson-intro">
+            <div class="lv-stage lv-stage-video">
+              <div class="play-btn"><i class="bi bi-play-fill"></i></div>
+              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>2:14 / 8:24</span><i class="bi bi-volume-up" style="margin-left:auto;"></i><i class="bi bi-arrows-fullscreen"></i></div>
+              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill"></div></div>
+            </div>
+          </div>
+          <div data-tab-panel="lesson-setup" hidden>
+            <div class="lv-article-body">
+              <h2>Muhitni sozlash</h2>
+              <p>Ushbu darsda siz Docker, VS Code va Git'ni o'rnatasiz hamda birinchi konteyneringizni ishga tushirasiz.</p>
+              <h3>1-qadam: Docker Desktop o'rnatish</h3>
+              <p>Rasmiy saytdan operatsion tizimingizga mos versiyani yuklab oling va o'rnating.</p>
+            </div>
+          </div>
+          <div data-tab-panel="lesson-terminal" hidden>
+            <div class="lv-stage lv-stage-video">
+              <div class="play-btn"><i class="bi bi-play-fill"></i></div>
+              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 10:05</span><i class="bi bi-volume-up" style="margin-left:auto;"></i><i class="bi bi-arrows-fullscreen"></i></div>
+              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill" style="width:0%;"></div></div>
+            </div>
+          </div>
+          <div data-tab-panel="lesson-images" hidden>
+            <div class="lv-stage lv-stage-video">
+              <div class="play-btn"><i class="bi bi-play-fill"></i></div>
+              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 9:40</span><i class="bi bi-volume-up" style="margin-left:auto;"></i><i class="bi bi-arrows-fullscreen"></i></div>
+              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill" style="width:0%;"></div></div>
+            </div>
+          </div>
+          <div data-tab-panel="lesson-code" hidden>
+            <div class="lv-code-body">
+              <div class="editor-block-label"><i class="bi bi-file-code"></i> Dockerfile</div>
+              <div class="lv-code-block"><span class="cm"># Asosiy image</span><br><span class="kw">FROM</span> python:3.12-slim<br><span class="kw">WORKDIR</span> /app<br><span class="kw">COPY</span> . .<br><span class="kw">RUN</span> pip install -r requirements.txt<br><span class="kw">CMD</span> [<span class="st">"python"</span>, <span class="st">"app.py"</span>]</div>
+            </div>
+          </div>
+          <div data-tab-panel="lesson-quiz1" hidden>
+            <div class="lv-launch-card">
+              <div class="lv-launch-icon lt-quiz"><i class="bi bi-patch-question-fill"></i></div>
+              <div class="lv-launch-title">Bilimni tekshirish: 1-modul</div>
+              <div class="lv-launch-sub">10 ta savoldan iborat test. O'tish balli: 70%. Cheklanmagan urinish soni.</div>
+              <button class="btn btn-teach"><i class="bi bi-play-fill"></i> Testni boshlash</button>
+            </div>
+          </div>
+          <div data-tab-panel="lesson-compose" hidden>
+            <div class="lv-stage lv-stage-video">
+              <div class="play-btn"><i class="bi bi-play-fill"></i></div>
+              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 11:20</span><i class="bi bi-volume-up" style="margin-left:auto;"></i><i class="bi bi-arrows-fullscreen"></i></div>
+              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill" style="width:0%;"></div></div>
+            </div>
+          </div>
+          <div data-tab-panel="lesson-assignment1" hidden>
+            <div class="lv-launch-card">
+              <div class="lv-launch-icon lt-assignment"><i class="bi bi-file-earmark-text-fill"></i></div>
+              <div class="lv-launch-title">Amaliy topshiriq: Compose fayli</div>
+              <div class="lv-launch-sub">Ikki xizmatli (web + db) docker-compose.yml faylini yarating va topshiring. Muddat: 3 kun.</div>
+              <button class="btn btn-teach"><i class="bi bi-upload"></i> Topshiriqni ochish</button>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:8px;">
+            <button class="btn btn-outline btn-sm" data-mark-complete><i class="bi bi-check2"></i> Yakunlandi deb belgilash</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- TABS: Notes / Downloads / Resources / Discussion (own data-tabs scope,
+           kept outside .player-shell so it doesn't mix with the lesson switcher) -->
+      <div class="card card-pad" style="margin-top:18px;" data-tabs>
+        <div class="tab-strip">
+          <div class="tab-item active" data-tab-target="tab-notes">Izohlarim</div>
+          <div class="tab-item" data-tab-target="tab-downloads">Yuklab olishlar</div>
+          <div class="tab-item" data-tab-target="tab-resources">Resurslar</div>
+          <div class="tab-item" data-tab-target="tab-discussion">Muhokama</div>
+        </div>
+        <div data-tab-panel="tab-notes" style="margin-top:16px;">
+          <textarea class="editor-textarea" placeholder="Ushbu dars bo'yicha izohlaringizni yozing..." style="min-height:100px;"></textarea>
+          <button class="btn btn-teach btn-sm" style="margin-top:10px;" data-notes-save><i class="bi bi-save"></i> Izohni saqlash</button>
+        </div>
+        <div data-tab-panel="tab-downloads" hidden style="margin-top:16px;">
+          <div class="resource-grid">
+            <div class="card resource-card"><div class="resource-icon" style="background:var(--danger);"><i class="bi bi-filetype-pdf"></i></div><div class="resource-body"><div class="resource-name">Docker-cheat-sheet.pdf</div><div class="resource-meta">1.2 MB</div></div><div class="resource-actions"><button class="icon-btn" aria-label="Yuklab olish"><i class="bi bi-download"></i></button></div></div>
+            <div class="card resource-card"><div class="resource-icon" style="background:var(--ink-700);"><i class="bi bi-file-earmark-zip"></i></div><div class="resource-body"><div class="resource-name">boshlangich-loyiha.zip</div><div class="resource-meta">4.8 MB</div></div><div class="resource-actions"><button class="icon-btn" aria-label="Yuklab olish"><i class="bi bi-download"></i></button></div></div>
+          </div>
+        </div>
+        <div data-tab-panel="tab-resources" hidden style="margin-top:16px;">
+          <div class="resource-grid">
+            <div class="card resource-card"><div class="resource-icon" style="background:var(--violet-600);"><i class="bi bi-link-45deg"></i></div><div class="resource-body"><div class="resource-name">Docker rasmiy hujjatlari</div><div class="resource-meta">Tashqi havola</div></div></div>
+            <div class="card resource-card"><div class="resource-icon" style="background:var(--teach-green);"><i class="bi bi-github"></i></div><div class="resource-body"><div class="resource-name">Dars kodi (GitHub)</div><div class="resource-meta">Tashqi havola</div></div></div>
+          </div>
+        </div>
+        <div data-tab-panel="tab-discussion" hidden style="margin-top:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div style="font-size:12.5px; color:var(--ink-500);">Ushbu dars bo'yicha 3 ta muhokama</div>
+            <a href="discussions.html" style="font-size:12.5px; color:var(--violet-600); font-weight:600;">Barchasini ko'rish <i class="bi bi-arrow-right"></i></a>
+          </div>
+          <div class="comment-card">
+            <div class="avatar-sm">FR</div>
+            <div class="comment-body">
+              <div class="comment-head"><span class="comment-name">Farrux Rustamov</span><span class="role-badge student">Talaba</span><span class="comment-time">3 soat oldin</span></div>
+              <div class="comment-text" data-comment-text>Docker Volumes va Bind Mounts o'rtasidagi farqni tushunmadim, kimdir tushuntira oladimi?</div>
+              <div class="comment-actions">
+                <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>4</span></button>
+                <button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>
+              </div>
+            </div>
+          </div>
+          <div class="comment-card">
+            <div class="avatar-sm" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+            <div class="comment-body">
+              <div class="comment-head"><span class="comment-name">Akmal Yuldashev</span><span class="role-badge instructor">O'qituvchi</span><span class="comment-time">20 daqiqa oldin</span></div>
+              <div class="comment-text" data-comment-text>Bind mount — mashinangizdagi papkani to'g'ridan-to'g'ri bog'laydi, volume esa Docker o'zi boshqaradigan alohida joy.</div>
+              <div class="comment-actions">
+                <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>6</span></button>
+                <button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:14px;">
+            <input placeholder="Savolingizni yozing..." aria-label="Savolingizni yozing" style="flex:1; border:1px solid var(--border-soft); border-radius:var(--r-sm); padding:8px 12px; font-size:13px;">
+            <button class="btn btn-teach btn-sm">Yuborish</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="lesson-nav-bar" style="margin-top:18px;">
+        <button class="btn btn-outline btn-sm" data-lesson-prev><i class="bi bi-arrow-left"></i> Oldingi</button>
+        <span class="lnb-center"><i class="bi bi-collection-play"></i> Dars 1 / 24</span>
+        <button class="btn btn-teach btn-sm" data-lesson-next>Keyingi <i class="bi bi-arrow-right"></i></button>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- AI DRAWER (Sprint 8A) -->
+<div id="ai-drawer-mount"></div>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/tabs.js"></script>
+<script src="../../js/lesson-viewer.js"></script>
+<script src="../../js/comments.js"></script>
+<script src="../../js/ai-assistant.js"></script>
+<script src="../../js/ai-panel.js"></script>
+<script src="../../js/ai-chat.js"></script>
+</body>
+</html>

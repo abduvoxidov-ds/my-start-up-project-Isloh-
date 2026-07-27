@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurslar — Admin — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="admin" data-active="admin-courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Admin</span><span class="sep">/</span><span class="current">Kurslar</span></nav>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#2B2266,#6C5DD3);">AD</div>
+      </div>
+    </header>
+
+    <main class="content" data-filterable>
+      <div class="page-header">
+        <div><h1>Kurslar boshqaruvi</h1><p>Barcha platformadagi kurslarni tasdiqlang, tashkil eting va boshqaring.</p></div>
+      </div>
+
+      <!-- APPROVAL QUEUE -->
+      <div class="section-header" style="margin-top:20px;"><h3>Tasdiqlash navbati (<span data-approval-count>2</span>)</h3></div>
+      <div class="card">
+        <div class="approval-card" data-approval-item>
+          <div class="ac-cover" style="background:linear-gradient(135deg,#F97316,#EA580C);"><i class="bi bi-boxes"></i></div>
+          <div class="ac-body">
+            <div class="ac-title">Docker for Beginners</div>
+            <div class="ac-meta">Yaratuvchi: Aziz Yusupov &middot; Kategoriya: Dasturlash &middot; 12 modul</div>
+          </div>
+          <div class="ac-actions">
+            <button class="btn btn-outline btn-sm"><i class="bi bi-eye"></i> Ko'rish</button>
+            <button class="btn btn-teach btn-sm" data-approve><i class="bi bi-check-lg"></i> Tasdiqlash</button>
+            <button class="btn btn-outline btn-sm" data-reject style="color:var(--danger); border-color:var(--danger);"><i class="bi bi-x-lg"></i> Rad etish</button>
+          </div>
+        </div>
+        <div class="approval-card" data-approval-item>
+          <div class="ac-cover" style="background:linear-gradient(135deg,#6366F1,#818CF8);"><i class="bi bi-code-slash"></i></div>
+          <div class="ac-body">
+            <div class="ac-title">Advanced API Design</div>
+            <div class="ac-meta">Yaratuvchi: Malika Tosheva &middot; Kategoriya: Dasturlash &middot; 9 modul</div>
+          </div>
+          <div class="ac-actions">
+            <button class="btn btn-outline btn-sm"><i class="bi bi-eye"></i> Ko'rish</button>
+            <button class="btn btn-teach btn-sm" data-approve><i class="bi bi-check-lg"></i> Tasdiqlash</button>
+            <button class="btn btn-outline btn-sm" data-reject style="color:var(--danger); border-color:var(--danger);"><i class="bi bi-x-lg"></i> Rad etish</button>
+          </div>
+        </div>
+        <div class="empty-state" data-approval-empty style="display:none;">
+          <div class="empty-icon"><i class="bi bi-check2-circle"></i></div>
+          <div class="empty-title">Navbat bo'sh</div>
+          <div class="empty-sub">Barcha kurslar ko'rib chiqildi.</div>
+        </div>
+      </div>
+
+      <!-- FILTERS -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:26px;">
+        <div class="filter-bar" data-filter-group="category">
+          <button class="filter-chip active" data-filter-value="all">Barcha kategoriyalar</button>
+          <button class="filter-chip" data-filter-value="dev">Dasturlash</button>
+          <button class="filter-chip" data-filter-value="design">Dizayn</button>
+          <button class="filter-chip" data-filter-value="ai">AI</button>
+        </div>
+        <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Kurs qidirish..." aria-label="Kurs qidirish"></div>
+      </div>
+
+      <div class="bulk-bar" data-bulk-bar hidden style="margin-top:16px;">
+        <span class="bulk-count" data-bulk-count>0</span> ta tanlandi
+        <span class="bulk-spacer"></span>
+        <button class="btn btn-outline btn-sm"><i class="bi bi-star"></i> Tavsiya qilish</button>
+        <button class="btn btn-outline btn-sm"><i class="bi bi-archive"></i> Arxivlash</button>
+        <button class="btn btn-outline btn-sm" data-bulk-cancel>Bekor qilish</button>
+      </div>
+
+      <!-- COURSE TABLE -->
+      <div class="card" style="margin-top:16px; overflow:hidden;" data-bulk-scope>
+        <div class="itable-wrap">
+          <table class="itable">
+            <thead><tr><th style="width:36px;"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th><th>Kurs</th><th>Kategoriya</th><th>Talabalar</th><th>Holat</th><th>Tavsiya etilgan</th><th>Amallar</th></tr></thead>
+            <tbody>
+              <tr data-course-row data-filter-item data-category="dev" data-filter-text="Python Backend Development">
+                <td><input type="checkbox" data-select-item aria-label="Python Backend Development tanlash"></td>
+                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div><div class="cell-title filter-title">Python Backend Development</div></div></td>
+                <td>Dasturlash</td><td>312</td>
+                <td><span class="badge badge-green">Nashr etilgan</span></td>
+                <td><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><div class="row-actions"><button class="row-action" aria-label="Ko'rish"><i class="bi bi-eye"></i></button><button class="row-action" data-archive-course aria-label="Arxivlash"><i class="bi bi-archive"></i></button></div></td>
+              </tr>
+              <tr data-course-row data-filter-item data-category="dev" data-filter-text="React The Complete Guide">
+                <td><input type="checkbox" data-select-item aria-label="React The Complete Guide tanlash"></td>
+                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#1E3A8A);"><i class="bi bi-atom"></i></div><div class="cell-title filter-title">React — The Complete Guide</div></div></td>
+                <td>Dasturlash</td><td>204</td>
+                <td><span class="badge badge-green">Nashr etilgan</span></td>
+                <td><label class="switch"><input type="checkbox"><span class="slider"></span></label></td>
+                <td><div class="row-actions"><button class="row-action" aria-label="Ko'rish"><i class="bi bi-eye"></i></button><button class="row-action" data-archive-course aria-label="Arxivlash"><i class="bi bi-archive"></i></button></div></td>
+              </tr>
+              <tr data-course-row data-filter-item data-category="design" data-filter-text="UI UX Design Fundamentals">
+                <td><input type="checkbox" data-select-item aria-label="UI UX Design Fundamentals tanlash"></td>
+                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8E44EC,#3B82F6);"><i class="bi bi-palette-fill"></i></div><div class="cell-title filter-title">UI/UX Design Fundamentals</div></div></td>
+                <td>Dizayn</td><td>178</td>
+                <td><span class="badge badge-green">Nashr etilgan</span></td>
+                <td><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><div class="row-actions"><button class="row-action" aria-label="Ko'rish"><i class="bi bi-eye"></i></button><button class="row-action" data-archive-course aria-label="Arxivlash"><i class="bi bi-archive"></i></button></div></td>
+              </tr>
+              <tr data-course-row data-filter-item data-category="ai" data-filter-text="Machine Learning A-Z">
+                <td><input type="checkbox" data-select-item aria-label="Machine Learning A-Z tanlash"></td>
+                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#06B6D4,#0E7490);"><i class="bi bi-cpu-fill"></i></div><div class="cell-title filter-title">Machine Learning A-Z</div></div></td>
+                <td>AI</td><td>98</td>
+                <td><span class="badge badge-green">Nashr etilgan</span></td>
+                <td><label class="switch"><input type="checkbox"><span class="slider"></span></label></td>
+                <td><div class="row-actions"><button class="row-action" aria-label="Ko'rish"><i class="bi bi-eye"></i></button><button class="row-action" data-archive-course aria-label="Arxivlash"><i class="bi bi-archive"></i></button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="empty-state card" data-filter-empty style="display:none; margin-top:16px;">
+        <div class="empty-icon"><i class="bi bi-journal-x"></i></div>
+        <div class="empty-title">Kurs topilmadi</div>
+        <div class="empty-sub">Filtrlarni o'zgartirib qayta urinib ko'ring.</div>
+      </div>
+
+      <p class="placeholder-note" style="margin-top:16px;"><i class="bi bi-flag"></i> Kurs shikoyatlari (Reports) — backend ulanganda bu yerda ro'yxat ko'rinadi.</p>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="archive-modal" hidden>
+  <div class="modal">
+    <div class="modal-head"><h3 style="font-size:15px;">Kursni arxivlash</h3><button class="icon-btn" onclick="isloh_closeModal('archive-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body">Ushbu kursni arxivlamoqchimisiz? Arxivlangan kurslar Marketplace'da ko'rinmaydi, lekin sotib olgan talabalar uchun ochiq qoladi.</div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="isloh_closeModal('archive-modal')">Bekor qilish</button>
+      <button class="btn btn-primary" data-archive-confirm>Arxivlash</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/filterable.js"></script>
+<script src="../../js/courses.js"></script>
+<script src="../../js/admin-courses.js"></script>
+</body>
+</html>

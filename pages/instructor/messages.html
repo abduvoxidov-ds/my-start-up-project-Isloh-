@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xabarlar — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<!-- Chat shell styles: css/widgets.css (Sprint 4B — shared with Student Chat via .chat-shell / .theme-teach) -->
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="instructor" data-active="messages">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><span class="current">Xabarlar</span></nav>
+      <div class="topbar-actions">
+        <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+      </div>
+    </header>
+
+    <div class="chat-shell theme-teach">
+      <!-- CHAT LIST -->
+      <div class="chat-list-col">
+        <div class="chat-list-head" style="display:flex; justify-content:space-between; align-items:center;">
+          <h3 style="font-size:17px;">Xabarlar</h3>
+          <button class="icon-btn" style="width:32px; height:32px;" title="E'lon yuborish" aria-label="E'lon yuborish"><i class="bi bi-megaphone-fill"></i></button>
+        </div>
+        <div class="chat-tabs">
+          <div class="chat-tab active">Suhbatlar</div>
+          <div class="chat-tab">Kurs guruhlari</div>
+          <div class="chat-tab">Arxiv</div>
+        </div>
+        <div class="chat-search"><i class="bi bi-search"></i><input placeholder="Talaba yoki guruh qidirish..." aria-label="Talaba yoki guruh qidirish"></div>
+
+        <div style="overflow-y:auto; flex:1;">
+          <div class="chat-item active">
+            <div class="presence-wrap"><div class="avatar" style="background:linear-gradient(135deg,#306998,#FFD43B);">PB</div><span class="presence-dot online"></span></div>
+            <div>
+              <div class="name">Python Backend (guruh)</div>
+              <div class="last-msg">Nodira: Ustoz, 5-dars bo'yicha savolim bor edi</div>
+            </div>
+            <div class="meta">10 daq<div class="unread">2</div></div>
+          </div>
+          <div class="chat-item">
+            <div class="presence-wrap"><div class="avatar" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">SI</div><span class="presence-dot online"></span></div>
+            <div>
+              <div class="name">Samarqand Islomov</div>
+              <div class="last-msg">Rahmat ustoz, tushundim!</div>
+            </div>
+            <div class="meta">1 soat</div>
+          </div>
+          <div class="chat-item">
+            <div class="presence-wrap"><div class="avatar" style="background:linear-gradient(135deg,#0F766E,#14B8A6);">DR</div><span class="presence-dot offline"></span></div>
+            <div>
+              <div class="name">Django REST (guruh)</div>
+              <div class="last-msg">Javohir: Serializer xatosini tuzatdim</div>
+            </div>
+            <div class="meta">3 soat</div>
+          </div>
+          <div class="chat-item">
+            <div class="presence-wrap"><div class="avatar" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">AK</div><span class="presence-dot offline"></span></div>
+            <div>
+              <div class="name">Alisher Karimov</div>
+              <div class="last-msg">Sertifikat uchun rahmat!</div>
+            </div>
+            <div class="meta">Kecha</div>
+          </div>
+          <div class="chat-item">
+            <div class="presence-wrap"><div class="avatar" style="background:var(--ink-300);">SP</div><span class="presence-dot busy"></span></div>
+            <div>
+              <div class="name">Isloh Support</div>
+              <div class="last-msg">Yangi to'lov usuli tasdiqlandi</div>
+            </div>
+            <div class="meta">2 kun</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THREAD -->
+      <div class="chat-thread">
+        <div class="thread-head">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="presence-wrap"><div class="avatar" style="background:linear-gradient(135deg,#306998,#FFD43B);">PB</div><span class="presence-dot online"></span></div>
+            <div class="info">
+              <div class="name">Python Backend (guruh)</div>
+              <div class="sub">248 a'zo &middot; 12 tasi onlayn</div>
+            </div>
+          </div>
+          <div class="thread-actions">
+            <button class="icon-btn" aria-label="Ishtirokchilar"><i class="bi bi-people-fill"></i></button>
+            <button class="icon-btn" aria-label="Fayllar"><i class="bi bi-folder-fill"></i></button>
+            <button class="icon-btn" aria-label="Ko'proq"><i class="bi bi-three-dots"></i></button>
+          </div>
+        </div>
+
+        <div class="pin-banner"><i class="bi bi-pin-angle-fill"></i> E'lon: 6-modul (Deployment) darsi ertaga soat 18:00 da boshlanadi</div>
+
+        <div class="thread-body">
+          <div class="bubble-row">
+            <div class="avatar" style="width:32px; height:32px; font-size:12px; background:linear-gradient(135deg,#DB2777,#F472B6);">NY</div>
+            <div>
+              <div class="bubble">Ustoz, 5-dars bo'yicha savolim bor edi — ManyToMany maydonlarni serializerda qanday ko'rsataman?</div>
+              <div class="bubble-time">10:02</div>
+            </div>
+          </div>
+          <div class="bubble-row me">
+            <div>
+              <div class="bubble">Salom Nodira! SlugRelatedField yoki nested serializer ishlatishingiz mumkin. Hozir kodini yuboraman 👍</div>
+              <div class="bubble-time" style="text-align:right;">10:07</div>
+            </div>
+          </div>
+          <div class="bubble-row me">
+            <div>
+              <div class="bubble">Bu masala bo'yicha video ham qo'shdim, "Materiallar" bo'limini tekshiring.</div>
+              <div class="bubble-time" style="text-align:right;">10:08</div>
+            </div>
+          </div>
+          <div class="bubble-row">
+            <div class="avatar" style="width:32px; height:32px; font-size:12px; background:linear-gradient(135deg,#DB2777,#F472B6);">NY</div>
+            <div>
+              <div class="bubble">Rahmat ustoz, tushundim!</div>
+              <div class="bubble-time">10:14</div>
+            </div>
+          </div>
+          <div class="bubble-row">
+            <div class="avatar" style="width:32px; height:32px; font-size:12px; background:linear-gradient(135deg,#0EA5E9,#0369A1);">SI</div>
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+
+        <div class="thread-input">
+          <button class="icon-btn" aria-label="Fayl biriktirish"><i class="bi bi-paperclip"></i></button>
+          <button class="icon-btn emoji-btn" aria-label="Emoji"><i class="bi bi-emoji-smile"></i></button>
+          <input placeholder="Xabar yozing..." aria-label="Xabar yozing">
+          <button class="send-btn" aria-label="Yuborish"><i class="bi bi-send-fill"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/chat.js"></script>
+</body>
+</html>

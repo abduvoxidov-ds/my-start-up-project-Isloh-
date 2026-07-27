@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  .ad-2col { display:grid; grid-template-columns:1.5fr 1fr; gap:18px; align-items:start; }
+  @media (max-width:1100px){ .ad-2col{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="admin" data-active="admin-dashboard">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Admin</span><span class="sep">/</span><span class="current">Dashboard</span></nav>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#2B2266,#6C5DD3);">AD</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div><h1>Admin Dashboard</h1><p>Platformaning umumiy holati va so'nggi faoliyat.</p></div>
+        <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Davr"><option>Oxirgi 30 kun</option><option>Oxirgi 7 kun</option><option>Bu yil</option></select>
+      </div>
+
+      <!-- OVERVIEW CARDS -->
+      <div class="wk-grid-4" style="margin-top:20px;">
+        <div class="card card-pad stat-card">
+          <div class="stat-top"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-people-fill"></i></div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 6%</span></div>
+          <div class="stat-value">3,412</div><div class="stat-label">Jami foydalanuvchilar</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-top"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-journal-bookmark-fill"></i></div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 4%</span></div>
+          <div class="stat-value">186</div><div class="stat-label">Jami kurslar</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-top"><div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-cash-stack"></i></div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 11%</span></div>
+          <div class="stat-value">$48,920</div><div class="stat-label">Jami daromad</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-hourglass-split"></i></div>
+          <div class="stat-value">7</div><div class="stat-label">Tasdiqlashni kutayotgan kurslar</div>
+        </div>
+      </div>
+
+      <div class="ad-2col" style="margin-top:18px;">
+        <div class="card card-pad chart-container">
+          <div class="chart-head">
+            <h3 style="font-size:16px;">Daromad umumiy ko'rinishi</h3>
+            <div class="chart-legend"><span class="cl"><span class="cl-dot" style="background:var(--violet-600);"></span> Daromad</span></div>
+          </div>
+          <div class="chart-body">
+            <span class="chart-placeholder-note">Namuna ma'lumot</span>
+            <svg class="chart-svg" viewBox="0 0 600 200" preserveAspectRatio="none" aria-label="Platforma daromadi grafigi (namuna)">
+              <line class="chart-grid-line" x1="0" y1="50" x2="600" y2="50"></line>
+              <line class="chart-grid-line" x1="0" y1="100" x2="600" y2="100"></line>
+              <line class="chart-grid-line" x1="0" y1="150" x2="600" y2="150"></line>
+              <path class="chart-area" d="M0,170 L75,150 L150,155 L225,120 L300,125 L375,90 L450,100 L525,60 L600,45 L600,200 L0,200 Z"></path>
+              <path class="chart-line" d="M0,170 L75,150 L150,155 L225,120 L300,125 L375,90 L450,100 L525,60 L600,45"></path>
+            </svg>
+          </div>
+          <div class="chart-xaxis"><span>Yan</span><span>Fev</span><span>Mar</span><span>Apr</span><span>May</span><span>Iyun</span><span>Iyul</span></div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="section-header"><h3>Tizim holati</h3></div>
+          <div class="health-row"><span class="health-dot ok"></span> Veb-sayt <span style="margin-left:auto; color:var(--ink-500);">Barqaror</span></div>
+          <div class="health-row"><span class="health-dot ok"></span> Video striming <span style="margin-left:auto; color:var(--ink-500);">Barqaror</span></div>
+          <div class="health-row"><span class="health-dot warn"></span> To'lov shlyuzi <span style="margin-left:auto; color:var(--ink-500);">Sekinlashgan</span></div>
+          <div class="health-row"><span class="health-dot ok"></span> Xabarnoma xizmati <span style="margin-left:auto; color:var(--ink-500);">Barqaror</span></div>
+          <p class="placeholder-note" style="margin-top:12px;"><i class="bi bi-info-circle"></i> Namuna holat — real monitoring backend ulanganda yangilanadi.</p>
+        </div>
+      </div>
+
+      <div class="ad-2col" style="margin-top:18px;">
+        <!-- COURSE OVERVIEW -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>Kurslar umumiy ko'rinishi</h3><a href="admin-courses.html" class="section-action">Boshqarish</a></div>
+          <div class="perf-row">
+            <div class="perf-cover" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div>
+            <div class="perf-info"><div class="perf-title">Python Backend Development</div><div class="perf-sub">312 talaba · 4.9 ★</div></div>
+            <span class="badge badge-green">Nashr etilgan</span>
+          </div>
+          <div class="perf-row">
+            <div class="perf-cover" style="background:linear-gradient(135deg,#0EA5E9,#1E3A8A);"><i class="bi bi-atom"></i></div>
+            <div class="perf-info"><div class="perf-title">React — The Complete Guide</div><div class="perf-sub">204 talaba · 4.8 ★</div></div>
+            <span class="badge badge-green">Nashr etilgan</span>
+          </div>
+          <div class="perf-row">
+            <div class="perf-cover" style="background:linear-gradient(135deg,#F97316,#EA580C);"><i class="bi bi-boxes"></i></div>
+            <div class="perf-info"><div class="perf-title">Docker for Beginners</div><div class="perf-sub">Tasdiqlash kutilmoqda</div></div>
+            <span class="badge badge-warning">Kutilmoqda</span>
+          </div>
+        </div>
+
+        <!-- USER OVERVIEW -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>Foydalanuvchilar umumiy ko'rinishi</h3><a href="admin-users.html" class="section-action">Boshqarish</a></div>
+          <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border-soft); font-size:13.5px;"><span>Talabalar</span><strong>3,108</strong></div>
+          <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border-soft); font-size:13.5px;"><span>O'qituvchilar</span><strong>298</strong></div>
+          <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border-soft); font-size:13.5px;"><span>Adminlar</span><strong>6</strong></div>
+          <div style="display:flex; justify-content:space-between; padding:10px 0; font-size:13.5px;"><span>Bloklangan</span><strong style="color:var(--danger);">14</strong></div>
+        </div>
+      </div>
+
+      <!-- RECENT ACTIVITY -->
+      <div class="card card-pad" style="margin-top:18px;">
+        <div class="section-header"><h3>So'nggi faoliyat</h3></div>
+        <div class="timeline">
+          <div class="timeline-item tl-green"><div class="timeline-time">10 daqiqa oldin</div><div class="timeline-title">Aziz Yusupov "Docker for Beginners" kursini tasdiqlash uchun yubordi</div></div>
+          <div class="timeline-item"><div class="timeline-time">42 daqiqa oldin</div><div class="timeline-title">Yangi foydalanuvchi ro'yxatdan o'tdi: Nodira Yusupova</div></div>
+          <div class="timeline-item tl-warning"><div class="timeline-time">1 soat oldin</div><div class="timeline-title">Kupon "ISLOH2026" muddati yaqinlashmoqda</div></div>
+          <div class="timeline-item"><div class="timeline-time">3 soat oldin</div><div class="timeline-title">Buyurtma #10312 uchun to'lov muvaffaqiyatli amalga oshirildi</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+</body>
+</html>

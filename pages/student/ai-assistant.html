@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Yordamchi — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<!-- AI Assistant shell styles now live in css/widgets.css (Sprint 4B — shared with Instructor AI Workspace) -->
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="ai-assistant">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <div class="ai-shell">
+      <!-- CONVERSATION SIDEBAR -->
+      <div class="ai-history-col">
+        <div class="new-chat-btn"><i class="bi bi-plus-lg"></i> Yangi suhbat</div>
+        <div class="hist-label">Bugun</div>
+        <div class="hist-item active">Django Auth bo'yicha savol</div>
+        <div class="hist-item">Motivatsiya tahlili</div>
+        <div class="hist-label">Kecha</div>
+        <div class="hist-item">DRF Serializer xatosi</div>
+        <div class="hist-item">Ingliz tili — Present Perfect</div>
+        <div class="hist-label">Oldingi 7 kun</div>
+        <div class="hist-item">PostgreSQL indekslash</div>
+        <div class="hist-item">Docker compose sozlash</div>
+      </div>
+
+      <!-- MAIN CHAT -->
+      <div class="ai-main">
+        <div class="ai-body">
+          <div style="text-align:center; margin-bottom:24px;">
+            <h2 style="font-size:18px; color:var(--violet-600);">Salom, Samar! ✨</h2>
+            <p style="color:var(--ink-500); font-size:13.5px; margin-top:4px;">Men sizning o'quv tahlilingizni ko'rib chiqdim</p>
+          </div>
+
+          <div class="suggest-row" style="margin-bottom:28px;">
+            <div class="suggest-card"><i class="bi bi-lightbulb-fill"></i><div class="txt">Bugun nima o'rganay?</div></div>
+            <div class="suggest-card"><i class="bi bi-clipboard-check"></i><div class="txt">E'tiborimni qanday tekshiray?</div></div>
+            <div class="suggest-card"><i class="bi bi-graph-up-arrow"></i><div class="txt">Motivatsiyani tahlil qil</div></div>
+          </div>
+
+          <div class="msg user">
+            <div class="avatar-sm">SM</div>
+            <div class="msg-bubble">Bugun kuchta Django Authentication bo'limini tugatishni rejalashtirgandim.</div>
+          </div>
+
+          <div class="msg ai">
+            <div class="avatar-sm"><i class="bi bi-stars"></i></div>
+            <div>
+              <div class="msg-bubble">
+                Ajoyib reja! Bugungi darslar asosida quyidagilarni tavsiya qilaman:
+                <ul>
+                  <li>DRF Views va Serializers</li>
+                  <li>Permissions bo'limi</li>
+                  <li>Taxminiy vaqt: 1 soat 20 daqiqa</li>
+                </ul>
+              </div>
+              <div class="msg-actions">
+                <button><i class="bi bi-clipboard"></i> Nusxalash</button>
+                <button><i class="bi bi-arrow-clockwise"></i> Qayta yaratish</button>
+                <button aria-label="Foydali"><i class="bi bi-hand-thumbs-up"></i></button>
+                <button aria-label="Foydali emas"><i class="bi bi-hand-thumbs-down"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg user">
+            <div class="avatar-sm">SM</div>
+            <div class="msg-bubble">Serializer'da ValidationError qanday ushlanadi, misol ko'rsat.</div>
+          </div>
+
+          <div class="msg ai">
+            <div class="avatar-sm"><i class="bi bi-stars"></i></div>
+            <div>
+              <div class="msg-bubble">
+                Mana DRF'da odatiy usul:
+                <div class="code-block">
+<div class="head"><span>python</span><span><i class="bi bi-clipboard"></i></span></div>
+def validate_email(self, value):
+    if User.objects.filter(email=value).exists():
+        raise serializers.ValidationError(
+            "Bu email allaqachon ro'yxatdan o'tgan."
+        )
+    return value
+                </div>
+              </div>
+              <div class="msg-actions">
+                <button><i class="bi bi-clipboard"></i> Nusxalash</button>
+                <button><i class="bi bi-arrow-clockwise"></i> Qayta yaratish</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg ai">
+            <div class="avatar-sm"><i class="bi bi-stars"></i></div>
+            <div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+          </div>
+        </div>
+
+        <div class="ai-input-wrap">
+          <div class="ai-input-box">
+            <input placeholder="Xabar yozing..." aria-label="Xabar yozing">
+            <button class="icon-btn" style="width:34px;height:34px;" aria-label="Fayl biriktirish"><i class="bi bi-paperclip"></i></button>
+            <button class="send-btn btn btn-primary" style="width:38px;height:38px;padding:0;border-radius:50%;" aria-label="Yuborish"><i class="bi bi-send-fill"></i></button>
+          </div>
+          <div class="ai-disclaimer">AI yordamchi xato qilishi mumkin. Muhim ma'lumotlarni tekshiring.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+</body>
+</html>

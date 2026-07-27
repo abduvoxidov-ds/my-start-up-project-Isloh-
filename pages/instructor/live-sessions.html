@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonli sessiyalar — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="instructor" data-active="courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="course-details.html" style="color:inherit;">Python Backend Development</a><span class="sep">/</span><span class="current">Jonli sessiyalar</span></nav>
+      <div class="topbar-actions">
+        <a href="notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+      </div>
+    </header>
+
+    <main class="content" data-filterable>
+      <div class="page-header">
+        <div>
+          <h1>Jonli sessiyalar</h1>
+          <p>Python Backend Development · Talabalar uchun jonli darslarni rejalashtiring va boshqaring.</p>
+        </div>
+        <button class="btn btn-teach btn-sm" onclick="isloh_openModal('schedule-session-modal')"><i class="bi bi-calendar-plus"></i> Sessiya rejalashtirish</button>
+      </div>
+
+      <div data-filter-group="status" style="display:flex; gap:6px; margin-top:16px;">
+        <button class="category-chip active" data-filter-value="all">Barchasi</button>
+        <button class="category-chip" data-filter-value="live">Jonli</button>
+        <button class="category-chip" data-filter-value="upcoming">Rejalashtirilgan</button>
+        <button class="category-chip" data-filter-value="ended">Tugagan</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:14px; margin-top:16px;">
+        <div class="card live-session-card" data-filter-item data-status="live" data-filter-text="Q&A sessiyasi" style="border:1.5px solid var(--danger);">
+          <div style="flex:1;">
+            <span class="ls-status live"><span class="dot-blink"></span> Jonli efirda</span>
+            <div class="ls-title">Haftalik Q&A sessiyasi — 2-modul savollari</div>
+            <div class="ls-meta"><span><i class="bi bi-people-fill"></i> 24 ishtirokchi</span><span><i class="bi bi-clock"></i> 18 daqiqadan beri</span></div>
+          </div>
+          <button class="btn btn-teach" data-ls-join><i class="bi bi-camera-video-fill"></i> Sessiyani boshqarish</button>
+        </div>
+
+        <div class="card live-session-card" data-filter-item data-status="upcoming" data-filter-text="Docker Compose amaliyoti">
+          <div style="flex:1;">
+            <span class="ls-status upcoming">Rejalashtirilgan</span>
+            <div class="ls-title">Amaliyot: Docker Compose bilan ko'p konteynerli ilova</div>
+            <div class="ls-meta"><span><i class="bi bi-calendar-event"></i> 26-iyul, 18:00</span><span><i class="bi bi-people-fill"></i> 18 ro'yxatdan o'tgan</span></div>
+          </div>
+          <div style="text-align:center;">
+            <div class="ls-countdown" data-countdown="2026-07-26T18:00:00">--:--:--</div>
+            <button class="btn btn-outline btn-sm" style="margin-top:8px;">Tahrirlash</button>
+          </div>
+        </div>
+
+        <div class="card live-session-card" data-filter-item data-status="ended" data-filter-text="Kirish sessiyasi" style="opacity:.85;">
+          <div style="flex:1;">
+            <span class="ls-status ended">Tugagan</span>
+            <div class="ls-title">Kursga kirish sessiyasi</div>
+            <div class="ls-meta"><span><i class="bi bi-calendar-event"></i> 12-iyul, 18:00</span><span><i class="bi bi-people-fill"></i> 41 ishtirokchi bo'lgan</span></div>
+          </div>
+          <button class="btn btn-outline btn-sm" data-ls-join><i class="bi bi-film"></i> Yozuvni yuklash</button>
+        </div>
+      </div>
+
+      <div class="empty-state" data-filter-empty style="display:none;">
+        <div class="empty-icon"><i class="bi bi-camera-video"></i></div>
+        <div class="empty-title">Sessiyalar topilmadi</div>
+        <div class="empty-sub">Boshqa filtrni tanlab ko'ring yoki yangi sessiya rejalashtiring.</div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- SCHEDULE SESSION MODAL -->
+<div class="modal-overlay" id="schedule-session-modal" hidden>
+  <div class="modal">
+    <div class="modal-head"><h3 style="font-size:15px;">Yangi sessiya rejalashtirish</h3><button class="icon-btn" onclick="isloh_closeModal('schedule-session-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body">
+      <div class="field"><label for="ls-title-input">Sarlavha</label><input id="ls-title-input" placeholder="Masalan: Haftalik Q&A sessiyasi"></div>
+      <div class="field-row-2">
+        <div class="field"><label for="ls-date-input">Sana va vaqt</label><input id="ls-date-input" type="datetime-local"></div>
+        <div class="field"><label for="ls-duration-input">Davomiyligi</label><select id="ls-duration-input"><option>30 daqiqa</option><option selected>60 daqiqa</option><option>90 daqiqa</option></select></div>
+      </div>
+      <div class="field" style="margin-bottom:0;"><label for="ls-agenda-input">Kun tartibi</label><textarea id="ls-agenda-input" class="editor-textarea" style="min-height:80px;" placeholder="Har bir bandni yangi qatorda yozing"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('schedule-session-modal')">Bekor qilish</button>
+      <button class="btn btn-teach btn-sm" onclick="isloh_closeModal('schedule-session-modal')"><i class="bi bi-calendar-check"></i> Rejalashtirish</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/filterable.js"></script>
+<script src="../../js/live-session.js"></script>
+</body>
+</html>

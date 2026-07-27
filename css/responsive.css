@@ -1,0 +1,17 @@
+/* ==========================================================================
+   ISLOH — Responsive
+   Breakpoint convention (match existing page-local media queries, do not
+   invent new ones — see Sprint 1 §8):
+     1100px  → multi-column grids collapse (e.g. course-grid 3→2 cols)
+     900px   → topbar/sidebar density adjustments (see layout.css)
+     700px   → grids collapse to a single column
+   Page-specific grid breakpoints (course-grid, mkt-grid, grid-3, etc.)
+   remain in their page's own <style> block for now, per the incremental
+   migration plan in Sprint 1 — moving them here is a Sprint 3+ task done
+   page-by-page as each page is touched, not a one-shot rewrite.
+   ========================================================================== */
+
+@media (max-width: 700px) {
+  .content { padding: 18px; }
+  .topbar { padding: 0 16px; }
+}

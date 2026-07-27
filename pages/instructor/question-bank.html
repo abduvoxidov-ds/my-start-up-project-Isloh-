@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savollar banki — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="instructor" data-active="courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="courses.html" style="color:inherit;">Kurslarim</a><span class="sep">/</span><a href="quiz-builder.html" style="color:inherit;">Testlar</a><span class="sep">/</span><span class="current">Savollar banki</span></nav>
+      <div class="topbar-actions">
+        <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+      </div>
+    </header>
+
+    <main class="content" data-filterable>
+      <div class="page-header">
+        <div><h1>Savollar banki</h1><p>Barcha testlaringiz uchun qayta ishlatiladigan savollar to'plami.</p></div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" data-modal-open="import-questions-modal"><i class="bi bi-upload"></i> Import</button>
+          <button class="btn btn-outline btn-sm" data-modal-open="export-questions-modal"><i class="bi bi-download"></i> Eksport</button>
+          <button class="btn btn-teach" data-add-bank-question-btn><i class="bi bi-plus-lg"></i> Savol qo'shish</button>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="wk-grid-4" style="margin-top:20px;">
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-journal-text"></i></div><div class="stat-value">142</div><div class="stat-label">Jami savollar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-collection-fill"></i></div><div class="stat-value">6</div><div class="stat-label">Kategoriyalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-tags-fill"></i></div><div class="stat-value">28</div><div class="stat-label">Teglar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-archive"></i></div><div class="stat-value">9</div><div class="stat-label">Arxivlangan</div></div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="lesson-toolbar bank-toolbar">
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="filter-bar" data-filter-group="category">
+            <button class="filter-chip active" data-filter-value="all">Barcha kategoriyalar</button>
+            <button class="filter-chip" data-filter-value="python">Python</button>
+            <button class="filter-chip" data-filter-value="django">Django</button>
+            <button class="filter-chip" data-filter-value="devops">DevOps</button>
+            <button class="filter-chip" data-filter-value="db">Ma'lumotlar bazasi</button>
+          </div>
+          <div class="filter-bar" data-filter-group="type">
+            <button class="filter-chip active" data-filter-value="all">Barcha turlar</button>
+            <button class="filter-chip" data-filter-value="single">Bitta tanlov</button>
+            <button class="filter-chip" data-filter-value="multi">Ko'p tanlov</button>
+            <button class="filter-chip" data-filter-value="boolean">To'g'ri/Noto'g'ri</button>
+            <button class="filter-chip" data-filter-value="short">Qisqa javob</button>
+            <button class="filter-chip" data-filter-value="long">Batafsil javob</button>
+            <button class="filter-chip" data-filter-value="match">Moslashtirish</button>
+            <button class="filter-chip" data-filter-value="order">Tartiblash</button>
+            <button class="filter-chip" data-filter-value="blank">Bo'sh joy</button>
+          </div>
+          <div class="filter-bar" data-filter-group="difficulty">
+            <button class="filter-chip active" data-filter-value="all">Barcha darajalar</button>
+            <button class="filter-chip" data-filter-value="easy">Oson</button>
+            <button class="filter-chip" data-filter-value="medium">O'rta</button>
+            <button class="filter-chip" data-filter-value="hard">Qiyin</button>
+          </div>
+          <div class="filter-bar" data-filter-group="status">
+            <button class="filter-chip active" data-filter-value="all">Barchasi</button>
+            <button class="filter-chip" data-filter-value="active">Faol</button>
+            <button class="filter-chip" data-filter-value="archived">Arxivlangan</button>
+          </div>
+        </div>
+        <div class="topbar-search" style="width:240px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Savol qidirish..." aria-label="Savol qidirish"></div>
+      </div>
+
+      <!-- BULK ACTION BAR -->
+      <div class="bulk-bar" data-bulk-bar hidden>
+        <span><span class="bulk-count" data-bulk-count>0</span> ta savol tanlandi</span>
+        <div class="bulk-spacer"></div>
+        <button class="btn btn-outline btn-sm"><i class="bi bi-archive"></i> Arxivlash</button>
+        <button class="btn btn-outline btn-sm"><i class="bi bi-copy"></i> Nusxalash</button>
+        <button class="btn btn-outline btn-sm" style="color:#FF9B9E; border-color:rgba(255,255,255,.25);"><i class="bi bi-trash"></i> O'chirish</button>
+        <button class="btn btn-outline btn-sm" data-bulk-cancel>Bekor qilish</button>
+      </div>
+
+      <!-- LOADING SKELETON -->
+      <div class="card" style="margin-top:16px;" data-list-skeleton>
+        <div class="skeleton-table" style="padding:8px 22px;">
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+        </div>
+      </div>
+
+      <div data-list-content hidden data-bulk-scope>
+        <div class="card" style="margin-top:16px; overflow:hidden;" data-bank-table>
+          <div class="itable-wrap">
+            <table class="itable">
+              <thead><tr>
+                <th style="width:36px;"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th>
+                <th>Savol</th><th>Turi</th><th>Kategoriya</th><th>Qiyinlik</th><th>Teglar</th><th>Ishlatilgan</th><th>Amallar</th>
+              </tr></thead>
+              <tbody>
+                <tr data-filter-item data-category="python" data-type="single" data-difficulty="easy" data-status="active" data-filter-text="Python'da qaysi kalit so'z funksiya e'lon qiladi?">
+                  <td><input type="checkbox" data-select-item aria-label="Savolni tanlash"></td>
+                  <td><div class="cell-title filter-title">Python'da qaysi kalit so'z funksiya e'lon qiladi?</div></td>
+                  <td><span class="badge badge-violet question-type-badge"><i class="bi bi-ui-radios"></i> Bitta tanlov</span></td>
+                  <td>Python</td>
+                  <td><span class="badge badge-green difficulty-badge"><span class="difficulty-dot easy"></span> Oson</span></td>
+                  <td><span class="chip-demo">sintaksis</span> <span class="chip-demo">asoslar</span></td>
+                  <td>3 testda</td>
+                  <td>
+                    <div class="dropdown">
+                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
+                      <div class="dropdown-menu">
+                        <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
+                        <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
+                        <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
+                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr data-filter-item data-category="python" data-type="multi" data-difficulty="medium" data-status="active" data-filter-text="Quyidagilardan qaysilari o'zgaruvchan (mutable) turlar?">
+                  <td><input type="checkbox" data-select-item aria-label="Savolni tanlash"></td>
+                  <td><div class="cell-title filter-title">Quyidagilardan qaysilari o'zgaruvchan (mutable) turlar?</div></td>
+                  <td><span class="badge badge-violet question-type-badge"><i class="bi bi-ui-checks"></i> Ko'p tanlov</span></td>
+                  <td>Python</td>
+                  <td><span class="badge badge-warning difficulty-badge"><span class="difficulty-dot medium"></span> O'rta</span></td>
+                  <td><span class="chip-demo">ma'lumot turlari</span></td>
+                  <td>2 testda</td>
+                  <td>
+                    <div class="dropdown">
+                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
+                      <div class="dropdown-menu">
+                        <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
+                        <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
+                        <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
+                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr data-filter-item data-category="devops" data-type="order" data-difficulty="medium" data-status="active" data-filter-text="Docker image yaratish bosqichlarini to'g'ri tartibda joylashtiring">
+                  <td><input type="checkbox" data-select-item aria-label="Savolni tanlash"></td>
+                  <td><div class="cell-title filter-title">Docker image yaratish bosqichlarini to'g'ri tartibda joylashtiring</div></td>
+                  <td><span class="badge badge-violet question-type-badge"><i class="bi bi-sort-numeric-down"></i> Tartiblash</span></td>
+                  <td>DevOps</td>
+                  <td><span class="badge badge-warning difficulty-badge"><span class="difficulty-dot medium"></span> O'rta</span></td>
+                  <td><span class="chip-demo">docker</span> <span class="chip-demo">devops</span></td>
+                  <td>1 testda</td>
+                  <td>
+                    <div class="dropdown">
+                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
+                      <div class="dropdown-menu">
+                        <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
+                        <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
+                        <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
+                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr data-filter-item data-category="django" data-type="match" data-difficulty="hard" data-status="active" data-filter-text="Django ORM metodlarini vazifasiga moslashtiring">
+                  <td><input type="checkbox" data-select-item aria-label="Savolni tanlash"></td>
+                  <td><div class="cell-title filter-title">Django ORM metodlarini vazifasiga moslashtiring</div></td>
+                  <td><span class="badge badge-violet question-type-badge"><i class="bi bi-arrow-left-right"></i> Moslashtirish</span></td>
+                  <td>Django</td>
+                  <td><span class="badge badge-danger difficulty-badge"><span class="difficulty-dot hard"></span> Qiyin</span></td>
+                  <td><span class="chip-demo">orm</span> <span class="chip-demo">django</span></td>
+                  <td>4 testda</td>
+                  <td>
+                    <div class="dropdown">
+                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
+                      <div class="dropdown-menu">
+                        <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
+                        <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
+                        <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
+                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="is-archived" data-filter-item data-category="db" data-type="short" data-difficulty="easy" data-status="archived" data-filter-text="SQL'da JOIN nima uchun ishlatiladi?">
+                  <td><input type="checkbox" data-select-item aria-label="Savolni tanlash"></td>
+                  <td><div class="cell-title filter-title">SQL'da JOIN nima uchun ishlatiladi?</div></td>
+                  <td><span class="badge badge-violet question-type-badge"><i class="bi bi-input-cursor-text"></i> Qisqa javob</span></td>
+                  <td>Ma'lumotlar bazasi</td>
+                  <td><span class="badge badge-green difficulty-badge"><span class="difficulty-dot easy"></span> Oson</span></td>
+                  <td><span class="chip-demo">sql</span></td>
+                  <td>0 testda</td>
+                  <td>
+                    <div class="dropdown">
+                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
+                      <div class="dropdown-menu">
+                        <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
+                        <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
+                        <div class="dropdown-item" data-action="restore-bank-question"><i class="bi bi-arrow-counterclockwise"></i> Tiklash</div>
+                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-bank-question"><i class="bi bi-trash"></i> Butunlay o'chirish</div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="empty-state" data-filter-empty style="display:none;">
+            <div class="empty-icon"><i class="bi bi-journal-x"></i></div><div class="empty-title">Savol topilmadi</div><div class="empty-sub">Bu filtr yoki qidiruv bo'yicha savol yo'q.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="pager">
+        <button aria-label="Oldingi"><i class="bi bi-chevron-left"></i></button>
+        <button class="active">1</button><button>2</button><button>3</button>
+        <button aria-label="Keyingi"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- IMPORT MODAL (UI only — no backend) -->
+<div class="modal-overlay" id="import-questions-modal" hidden>
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-head"><b>Savollarni import qilish</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('import-questions-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body">
+      <div class="upload-dropzone"><i class="bi bi-file-earmark-arrow-up"></i><div class="dz-title">CSV yoki JSON faylni shu yerga tashlang</div><div class="dz-sub">yoki tanlash uchun bosing</div></div>
+      <p style="font-size:12px; color:var(--ink-500); margin-top:10px;"><i class="bi bi-info-circle"></i> Namuna shablonni <a href="#" style="color:var(--violet-600);">yuklab olish</a> mumkin.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('import-questions-modal')">Bekor qilish</button>
+      <button class="btn btn-teach btn-sm"><i class="bi bi-upload"></i> Import qilish</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT MODAL (UI only — no backend) -->
+<div class="modal-overlay" id="export-questions-modal" hidden>
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-head"><b>Savollarni eksport qilish</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('export-questions-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body">
+      <div class="field"><label>Format</label>
+        <select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option>CSV</option><option>JSON</option><option>PDF</option></select>
+      </div>
+      <div class="opt-row" style="margin-bottom:8px;"><input type="radio" name="export-scope" checked> Faqat tanlangan savollar</div>
+      <div class="opt-row"><input type="radio" name="export-scope"> Filtrlangan barcha savollar</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('export-questions-modal')">Bekor qilish</button>
+      <button class="btn btn-teach btn-sm"><i class="bi bi-download"></i> Eksport qilish</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE QUESTION CONFIRM MODAL -->
+<div class="modal-overlay" id="delete-bank-question-modal" hidden>
+  <div class="modal">
+    <div class="modal-head"><b style="color:var(--danger);">Savolni o'chirishni tasdiqlang</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('delete-bank-question-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body">Bu savol savollar bankidan butunlay o'chiriladi. Undan foydalangan testlarga ta'sir qilishi mumkin. Bu amalni qaytarib bo'lmaydi.</div>
+    <div class="modal-foot">
+      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('delete-bank-question-modal')">Bekor qilish</button>
+      <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-bank-question>Ha, o'chirish</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     SHARED QUESTION EDITOR MODAL  (Sprint 6A)
+     Identical markup+script to the one in quiz-editor.html — see that
+     file's comment for why it's duplicated markup but a single JS module.
+     ========================================================================== -->
+<div class="modal-overlay" id="question-editor-modal" hidden>
+  <div class="modal modal-lg">
+    <div class="modal-head"><b>Yangi savol qo'shish</b><button type="button" class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('question-editor-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body">
+      <div class="qe-columns">
+        <div>
+          <div class="field">
+            <label for="qe-title">Savol matni</label>
+            <input id="qe-title" placeholder="Savolni shu yerga yozing" data-char-counter="300" maxlength="300">
+            <div class="field-hint" data-char-counter-for="qe-title">0 / 300</div>
+          </div>
+
+          <div style="display:flex; gap:12px;">
+            <div class="field" style="flex:1;"><label for="qe-type">Savol turi</label>
+              <select id="qe-type" data-question-type-select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);">
+                <option value="single">Bitta tanlov</option>
+                <option value="multi">Ko'p tanlov</option>
+                <option value="boolean">To'g'ri / Noto'g'ri</option>
+                <option value="short">Qisqa javob</option>
+                <option value="long">Batafsil javob</option>
+                <option value="match">Moslashtirish</option>
+                <option value="order">Tartiblash</option>
+                <option value="blank">Bo'sh joyni to'ldirish</option>
+              </select>
+            </div>
+            <div class="field" style="width:110px;"><label for="qe-points">Ball</label><input id="qe-points" type="number" value="5" min="0"></div>
+            <div class="field" style="width:150px;"><label for="qe-difficulty">Qiyinlik</label>
+              <select id="qe-difficulty" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);">
+                <option value="easy">Oson</option>
+                <option value="medium" selected>O'rta</option>
+                <option value="hard">Qiyin</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field"><label for="qe-category">Kategoriya</label>
+            <select id="qe-category" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);">
+              <option>Python</option><option>Django</option><option>DevOps</option><option>Ma'lumotlar bazasi</option>
+            </select>
+          </div>
+
+          <!-- SINGLE CHOICE -->
+          <div data-qtype-panel="single">
+            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Variantlar (to'g'ri javobni belgilang)</label>
+            <div data-row-list="qopt-single-template">
+              <div class="question-option-row is-correct"><input type="radio" name="qopt-single" class="qo-mark" checked><input type="text" value="Variant A"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+              <div class="question-option-row"><input type="radio" name="qopt-single" class="qo-mark"><input type="text" value="Variant B"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-single-template"><i class="bi bi-plus-lg"></i> Variant qo'shish</button>
+          </div>
+
+          <!-- MULTIPLE SELECT -->
+          <div data-qtype-panel="multi" hidden>
+            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Variantlar (barcha to'g'ri javoblarni belgilang)</label>
+            <div data-row-list="qopt-multi-template">
+              <div class="question-option-row is-correct"><input type="checkbox" class="qo-mark" checked><input type="text" value="Variant A"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+              <div class="question-option-row"><input type="checkbox" class="qo-mark"><input type="text" value="Variant B"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-multi-template"><i class="bi bi-plus-lg"></i> Variant qo'shish</button>
+          </div>
+
+          <!-- TRUE / FALSE -->
+          <div data-qtype-panel="boolean" hidden>
+            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">To'g'ri javobni belgilang</label>
+            <div class="question-option-row is-correct"><input type="radio" name="qopt-bool" class="qo-mark" checked><span style="flex:1;">To'g'ri</span></div>
+            <div class="question-option-row"><input type="radio" name="qopt-bool" class="qo-mark"><span style="flex:1;">Noto'g'ri</span></div>
+          </div>
+
+          <!-- SHORT ANSWER -->
+          <div data-qtype-panel="short" hidden>
+            <div class="field"><label for="qe-short-answer">Qabul qilinadigan javob (namuna)</label><input id="qe-short-answer" placeholder="Namuna javob"></div>
+          </div>
+
+          <!-- LONG ANSWER -->
+          <div data-qtype-panel="long" hidden>
+            <div class="field" style="margin-bottom:0;"><label for="qe-long-rubric">Baholash mezoni (o'qituvchi uchun)</label><textarea id="qe-long-rubric" class="editor-textarea" rows="3"></textarea></div>
+          </div>
+
+          <!-- MATCHING -->
+          <div data-qtype-panel="match" hidden>
+            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Juftliklarni kiriting</label>
+            <div data-row-list="qopt-match-template">
+              <div class="question-option-row match-row"><input type="text" placeholder="Element"><span class="qo-sep"><i class="bi bi-arrow-right"></i></span><input type="text" placeholder="Mos javob"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-match-template"><i class="bi bi-plus-lg"></i> Juftlik qo'shish</button>
+          </div>
+
+          <!-- ORDERING -->
+          <div data-qtype-panel="order" hidden>
+            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Elementlarni to'g'ri tartibda joylashtiring</label>
+            <div data-row-list="qopt-order-template" data-sortable-list>
+              <div class="question-option-row" data-sortable-item draggable="true"><i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Tashish"></i><input type="text" placeholder="1-element"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-order-template"><i class="bi bi-plus-lg"></i> Element qo'shish</button>
+          </div>
+
+          <!-- FILL IN THE BLANK -->
+          <div data-qtype-panel="blank" hidden>
+            <div class="field"><label for="qe-blank-text">Matn (bo'sh joyni ___ bilan belgilang)</label><input id="qe-blank-text" placeholder="Masalan: HTTP ___ kodi 404 — sahifa topilmadi degani"></div>
+            <div class="field" style="margin-bottom:0;"><label for="qe-blank-answer">To'g'ri javob</label><input id="qe-blank-answer" placeholder="Javob"></div>
+          </div>
+
+          <div class="editor-block" style="margin-top:22px;">
+            <div class="editor-block-label"><i class="bi bi-lightbulb"></i> Izoh va maslahat</div>
+            <div class="field"><label for="qe-explanation">Tushuntirish (javobdan so'ng ko'rsatiladi)</label><input id="qe-explanation" placeholder="To'g'ri javob nima uchun to'g'ri ekanini tushuntiring"></div>
+            <div class="field" style="margin-bottom:0;"><label for="qe-hint">Maslahat (ixtiyoriy)</label><input id="qe-hint" placeholder="Talaba qiynalsa ko'rsatiladigan maslahat"></div>
+          </div>
+
+          <div class="editor-block">
+            <div class="editor-block-label"><i class="bi bi-tags"></i> Teglar</div>
+            <div class="field" style="margin-bottom:0;"><input placeholder="Masalan: python, asoslar, sintaksis"></div>
+          </div>
+
+          <div class="editor-block">
+            <div class="editor-block-label"><i class="bi bi-images"></i> Media (ixtiyoriy)</div>
+            <div class="upload-dropzone"><i class="bi bi-image"></i><div class="dz-title">Rasm qo'shish uchun bosing</div><div class="dz-sub">PNG, JPG</div></div>
+          </div>
+          <div class="editor-block">
+            <div class="editor-block-label"><i class="bi bi-paperclip"></i> Ilova fayllar (ixtiyoriy)</div>
+            <div class="upload-dropzone"><i class="bi bi-file-earmark-arrow-up"></i><div class="dz-title">Fayl biriktirish uchun bosing</div><div class="dz-sub">PDF, ZIP, DOCX</div></div>
+          </div>
+        </div>
+
+        <!-- LIVE PREVIEW -->
+        <div class="qe-preview-col">
+          <div class="card question-preview" style="position:sticky; top:0;">
+            <div class="card-pad">
+              <div class="section-header" style="margin-bottom:10px;"><h3 style="font-size:13px;"><i class="bi bi-eye"></i> Jonli ko'rib chiqish</h3></div>
+              <div class="badge badge-violet" data-qe-preview-type style="margin-bottom:10px;">Bitta tanlov</div>
+              <div data-qe-preview-title style="font-size:14.5px; font-weight:700; margin-bottom:12px;">Savol matni shu yerda ko'rinadi</div>
+              <div data-qe-preview-options></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-outline btn-sm" onclick="isloh_closeModal('question-editor-modal')">Bekor qilish</button>
+      <button type="button" class="btn btn-teach btn-sm" data-save-question><i class="bi bi-save"></i> Savolni saqlash</button>
+    </div>
+  </div>
+</div>
+
+<template id="qopt-single-template"><div class="question-option-row"><input type="radio" name="qopt-single" class="qo-mark"><input type="text" placeholder="Yangi variant"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
+<template id="qopt-multi-template"><div class="question-option-row"><input type="checkbox" class="qo-mark"><input type="text" placeholder="Yangi variant"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
+<template id="qopt-match-template"><div class="question-option-row match-row"><input type="text" placeholder="Element"><span class="qo-sep"><i class="bi bi-arrow-right"></i></span><input type="text" placeholder="Mos javob"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
+<template id="qopt-order-template"><div class="question-option-row" data-sortable-item draggable="true"><i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Tashish"></i><input type="text" placeholder="Yangi element"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/filterable.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/sortable.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/course-wizard.js"></script>
+<script src="../../js/lesson-editor.js"></script>
+<script src="../../js/courses.js"></script>
+<script src="../../js/question-bank.js"></script>
+<script src="../../js/question-editor.js"></script>
+</body>
+</html>

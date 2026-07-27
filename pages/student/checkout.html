@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  .co-layout { display:grid; grid-template-columns:1.7fr 1fr; gap:20px; align-items:start; margin-top:6px; }
+  @media (max-width:900px){ .co-layout{ grid-template-columns:1fr; } }
+  .form-row { margin-bottom:14px; }
+  .form-row label { display:block; font-size:12.5px; font-weight:600; color:var(--ink-700); margin-bottom:6px; }
+  .form-row input, .form-row select { width:100%; border:1.5px solid var(--border-soft); border-radius:var(--r-md); padding:11px 14px; font-size:14px; outline:none; }
+  .form-row input:focus, .form-row select:focus { border-color:var(--violet-500); }
+  .form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .receipt-preview { border:1.5px dashed var(--border-soft); border-radius:var(--r-md); padding:18px; background:var(--bg-app); }
+  .success-icon { width:74px; height:74px; border-radius:50%; background:var(--teach-green-100); color:var(--teach-green); display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 18px; }
+  .failure-icon { width:74px; height:74px; border-radius:50%; background:#FDEBEC; color:var(--danger); display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 18px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="marketplace">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a href="cart.html" style="color:inherit; text-decoration:none;">Savat</a><span class="sep">/</span><span class="current">Checkout</span></nav>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <h1 style="font-size:24px;">Checkout</h1>
+
+      <div class="checkout-steps" data-checkout-steps style="margin-top:16px;">
+        <div class="checkout-step" data-step="1"><span class="step-num">1</span> To'lov ma'lumotlari</div>
+        <div class="checkout-step-sep"></div>
+        <div class="checkout-step" data-step="2"><span class="step-num">2</span> To'lov usuli</div>
+        <div class="checkout-step-sep"></div>
+        <div class="checkout-step" data-step="3"><span class="step-num">3</span> Ko'rib chiqish</div>
+      </div>
+
+      <div class="co-layout">
+        <div>
+          <!-- STEP 1: BILLING -->
+          <div class="card card-pad" data-checkout-panel="1">
+            <h3 style="font-size:16px; margin-bottom:16px;">Billing ma'lumotlari</h3>
+            <div class="form-grid-2">
+              <div class="form-row"><label for="bill-name">To'liq ism</label><input id="bill-name" type="text" value="Sardor Muminov"></div>
+              <div class="form-row"><label for="bill-email">Email</label><input id="bill-email" type="email" value="sardor@example.com"></div>
+            </div>
+            <div class="form-row"><label for="bill-address">Manzil</label><input id="bill-address" type="text" placeholder="Ko'cha, uy raqami"></div>
+            <div class="form-grid-2">
+              <div class="form-row"><label for="bill-city">Shahar</label><input id="bill-city" type="text" value="Toshkent"></div>
+              <div class="form-row"><label for="bill-country">Davlat</label><select id="bill-country"><option>O'zbekiston</option><option>Qozog'iston</option><option>Boshqa</option></select></div>
+            </div>
+            <button class="btn btn-primary btn-block" data-checkout-next>Davom etish <i class="bi bi-arrow-right"></i></button>
+          </div>
+
+          <!-- STEP 2: PAYMENT -->
+          <div class="card card-pad" data-checkout-panel="2" hidden>
+            <h3 style="font-size:16px; margin-bottom:16px;">To'lov usulini tanlang</h3>
+            <div class="wk-col">
+              <label class="payment-card selected" data-payment-card>
+                <div class="pc-icon"><i class="bi bi-credit-card-2-front-fill"></i></div>
+                <div><div style="font-weight:600; font-size:13.5px;">Visa / Mastercard</div><div style="font-size:12px; color:var(--ink-500);">•••• •••• •••• 4821</div></div>
+                <input type="radio" name="pay-method" checked>
+              </label>
+              <label class="payment-card" data-payment-card>
+                <div class="pc-icon"><i class="bi bi-phone-fill"></i></div>
+                <div><div style="font-weight:600; font-size:13.5px;">Payme</div><div style="font-size:12px; color:var(--ink-500);">Mobil ilova orqali to'lash</div></div>
+                <input type="radio" name="pay-method">
+              </label>
+              <label class="payment-card" data-payment-card>
+                <div class="pc-icon"><i class="bi bi-wallet2"></i></div>
+                <div><div style="font-weight:600; font-size:13.5px;">Click</div><div style="font-size:12px; color:var(--ink-500);">Mobil ilova orqali to'lash</div></div>
+                <input type="radio" name="pay-method">
+              </label>
+              <label class="payment-card" data-payment-card>
+                <div class="pc-icon"><i class="bi bi-bank"></i></div>
+                <div><div style="font-weight:600; font-size:13.5px;">Bank o'tkazmasi</div><div style="font-size:12px; color:var(--ink-500);">Hisob-faktura asosida</div></div>
+                <input type="radio" name="pay-method">
+              </label>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:16px;">
+              <button class="btn btn-outline" data-checkout-back><i class="bi bi-arrow-left"></i> Orqaga</button>
+              <button class="btn btn-primary" style="flex:1;" data-checkout-next>Davom etish <i class="bi bi-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- STEP 3: REVIEW -->
+          <div class="card card-pad" data-checkout-panel="3" hidden>
+            <h3 style="font-size:16px; margin-bottom:16px;">Buyurtmani ko'rib chiqing</h3>
+            <div class="coupon-row" style="display:flex; gap:10px; margin-bottom:16px;">
+              <input type="text" id="promo-input" placeholder="Promo-kod kiriting" style="flex:1; border:1.5px solid var(--border-soft); border-radius:var(--r-md); padding:11px 14px; font-size:14px; outline:none;">
+              <button class="btn btn-outline" id="promo-apply">Qo'llash</button>
+            </div>
+            <p id="promo-note" style="font-size:12.5px; margin-top:-8px; margin-bottom:16px; min-height:16px;"></p>
+            <div class="receipt-preview">
+              <div style="display:flex; justify-content:space-between; font-size:13px; padding:5px 0;"><span>Python Backend Development</span><span>249 000 so'm</span></div>
+              <div style="display:flex; justify-content:space-between; font-size:13px; padding:5px 0;"><span>React — The Complete Guide</span><span>299 000 so'm</span></div>
+              <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:800; padding-top:10px; margin-top:6px; border-top:1px solid var(--border-soft);"><span>Jami</span><span>548 000 so'm</span></div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:16px;">
+              <button class="btn btn-outline" data-checkout-back><i class="bi bi-arrow-left"></i> Orqaga</button>
+              <button class="btn btn-primary" style="flex:1;" data-checkout-submit><i class="bi bi-check2-circle"></i> Buyurtmani tasdiqlash</button>
+            </div>
+          </div>
+
+          <!-- SUCCESS -->
+          <div class="card card-pad" data-checkout-panel="success" hidden style="text-align:center; padding:44px 30px;">
+            <div class="success-icon"><i class="bi bi-check-lg"></i></div>
+            <h2 style="font-size:20px;">To'lov muvaffaqiyatli amalga oshirildi!</h2>
+            <p style="color:var(--ink-500); font-size:13.5px; margin-top:8px;">Buyurtma #10312 tasdiqlandi. Kurslaringiz endi "Mening kurslarim" bo'limida mavjud.</p>
+            <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
+              <a href="orders.html" class="btn btn-outline"><i class="bi bi-receipt"></i> Buyurtmani ko'rish</a>
+              <a href="courses.html" class="btn btn-primary"><i class="bi bi-play-circle"></i> O'qishni boshlash</a>
+            </div>
+          </div>
+
+          <!-- FAILURE -->
+          <div class="card card-pad" data-checkout-panel="failure" hidden style="text-align:center; padding:44px 30px;">
+            <div class="failure-icon"><i class="bi bi-x-lg"></i></div>
+            <h2 style="font-size:20px;">To'lov amalga oshmadi</h2>
+            <p style="color:var(--ink-500); font-size:13.5px; margin-top:8px;">Kartangiz bo'yicha muammo yuz berdi. Iltimos, boshqa usulni tanlab qayta urinib ko'ring.</p>
+            <button class="btn btn-primary" style="margin-top:20px;" data-checkout-retry><i class="bi bi-arrow-repeat"></i> Qayta urinish</button>
+          </div>
+        </div>
+
+        <div class="card card-pad checkout-summary">
+          <h3 style="font-size:16px; margin-bottom:14px;">Buyurtma xulosasi</h3>
+          <div class="cs-row"><span>2 ta kurs</span><span>548 000 so'm</span></div>
+          <div class="cs-row cs-discount" id="promo-summary-row" hidden><span>Chegirma</span><span>−82 200 so'm</span></div>
+          <div class="cs-row cs-total"><span>Jami</span><span>548 000 so'm</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/checkout.js"></script>
+</body>
+</html>

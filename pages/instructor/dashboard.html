@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructor Dashboard — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  /* Page-local layout only. All widgets come from css/widgets.css. */
+  .dash-2col { display:grid; grid-template-columns: 1.5fr 1fr; gap:18px; align-items:start; }
+  .dash-2col-even { display:grid; grid-template-columns: 1fr 1fr; gap:18px; align-items:start; }
+  @media (max-width:1100px){ .dash-2col, .dash-2col-even { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="instructor" data-active="dashboard">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:16px; min-width:0;">
+        <nav class="breadcrumb-demo" aria-label="Breadcrumb">
+          <span>Instructor</span><span class="sep">/</span><span class="current">Dashboard</span>
+        </nav>
+      </div>
+      <div class="topbar-actions">
+        <div class="topbar-search" style="width:240px;"><i class="bi bi-search"></i><input placeholder="Kurs, talaba qidirish..." aria-label="Qidirish"></div>
+        <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- HEADER + PRIMARY ACTION -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h1 style="font-size:24px;">Salom, Akmal! 👋</h1>
+          <p style="color:var(--ink-500); margin-top:4px;">Bugungi ko'rsatkichlaringiz va e'tibor talab qiladigan ishlar.</p>
+        </div>
+        <button class="btn btn-teach"><i class="bi bi-plus-lg"></i> Yangi kurs yaratish</button>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="section-header" style="margin-top:24px;"><h3>Tezkor amallar</h3></div>
+      <div class="quick-actions">
+        <a href="../shared/coming-soon.html?page=Mening+kurslarim&role=instructor" class="quick-action">
+          <div class="qa-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-plus-square-fill"></i></div>
+          <div class="qa-title">Kurs yaratish</div><div class="qa-sub">Yangi kurs qo'shish</div>
+        </a>
+        <a href="../shared/coming-soon.html?page=Talabalar&role=instructor" class="quick-action">
+          <div class="qa-icon"><i class="bi bi-people-fill"></i></div>
+          <div class="qa-title">Talabalar</div><div class="qa-sub">245 ta faol</div>
+        </a>
+        <a href="../instructor/messages.html" class="quick-action">
+          <div class="qa-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-chat-dots-fill"></i></div>
+          <div class="qa-title">Xabarlar</div><div class="qa-sub">3 ta yangi</div>
+        </a>
+        <a href="../instructor/ai-assistant.html" class="quick-action">
+          <div class="qa-icon"><i class="bi bi-stars"></i></div>
+          <div class="qa-title">AI Yordamchi</div><div class="qa-sub">Tahlil va takliflar</div>
+        </a>
+      </div>
+
+      <!-- TOP SUMMARY STATS -->
+      <div class="wk-grid-4" style="margin-top:22px;">
+        <div class="card card-pad stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-cash-stack"></i></div>
+            <span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 12%</span>
+          </div>
+          <div class="stat-value">$3,245</div>
+          <div class="stat-label">Oylik daromad</div>
+          <svg class="mini-spark" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+            <path class="spark-area" d="M0,28 L14,22 L28,25 L42,16 L56,18 L70,10 L84,13 L100,6 L100,34 L0,34 Z"></path>
+            <path class="spark-line" d="M0,28 L14,22 L28,25 L42,16 L56,18 L70,10 L84,13 L100,6"></path>
+          </svg>
+        </div>
+
+        <div class="card card-pad stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-people-fill"></i></div>
+            <span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 8%</span>
+          </div>
+          <div class="stat-value">245</div>
+          <div class="stat-label">Faol talabalar</div>
+          <svg class="mini-spark violet" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+            <path class="spark-area" d="M0,26 L14,24 L28,20 L42,22 L56,14 L70,16 L84,9 L100,11 L100,34 L0,34 Z"></path>
+            <path class="spark-line" d="M0,26 L14,24 L28,20 L42,22 L56,14 L70,16 L84,9 L100,11"></path>
+          </svg>
+        </div>
+
+        <div class="card card-pad stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-journal-bookmark-fill"></i></div>
+            <span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 2</span>
+          </div>
+          <div class="stat-value">6</div>
+          <div class="stat-label">Nashr etilgan kurslar</div>
+          <div class="stat-sub">2 ta qoralama tayyorlanmoqda</div>
+        </div>
+
+        <div class="card card-pad stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-star-fill"></i></div>
+            <span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 0.2</span>
+          </div>
+          <div class="stat-value">4.8</div>
+          <div class="stat-label">O'rtacha reyting</div>
+          <div class="stat-sub">128 ta sharh asosida</div>
+        </div>
+      </div>
+
+      <!-- SECONDARY STATS -->
+      <div class="wk-grid-4" style="margin-top:18px;">
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-wallet2"></i></div>
+          <div class="stat-value">$180</div><div class="stat-label">Bugungi daromad</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-check2-circle"></i></div>
+          <div class="stat-value">78%</div><div class="stat-label">Yakunlash darajasi</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-clock-history"></i></div>
+          <div class="stat-value">1,240<span style="font-size:14px; color:var(--ink-500); font-weight:600;">s</span></div><div class="stat-label">O'quv soatlari</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-file-earmark-text-fill"></i></div>
+          <div class="stat-value">8</div><div class="stat-label">Kutayotgan topshiriqlar</div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS SECTION (chart placeholders) -->
+      <div class="dash-2col" style="margin-top:18px;">
+        <div class="card card-pad chart-container">
+          <div class="chart-head">
+            <div class="section-title-icon"><h3 style="font-size:16px;">Daromad dinamikasi</h3></div>
+            <div class="chart-legend">
+              <span class="cl"><span class="cl-dot" style="background:var(--teach-green);"></span> Daromad</span>
+            </div>
+          </div>
+          <div class="chart-body">
+            <span class="chart-placeholder-note">Namuna ma'lumot</span>
+            <svg class="chart-svg" viewBox="0 0 600 200" preserveAspectRatio="none" aria-label="Daromad grafigi (namuna)">
+              <line class="chart-grid-line" x1="0" y1="50" x2="600" y2="50"></line>
+              <line class="chart-grid-line" x1="0" y1="100" x2="600" y2="100"></line>
+              <line class="chart-grid-line" x1="0" y1="150" x2="600" y2="150"></line>
+              <path class="chart-area" d="M0,160 L75,140 L150,150 L225,110 L300,120 L375,80 L450,95 L525,55 L600,40 L600,200 L0,200 Z"></path>
+              <path class="chart-line" d="M0,160 L75,140 L150,150 L225,110 L300,120 L375,80 L450,95 L525,55 L600,40"></path>
+            </svg>
+          </div>
+          <div class="chart-xaxis"><span>Yan</span><span>Fev</span><span>Mar</span><span>Apr</span><span>May</span><span>Iyun</span><span>Iyul</span></div>
+        </div>
+
+        <div class="card card-pad chart-container">
+          <div class="chart-head">
+            <div class="section-title-icon"><h3 style="font-size:16px;">Haftalik ro'yxatga olish</h3></div>
+          </div>
+          <div class="chart-bars" style="margin-top:16px;">
+            <div class="cb"><div class="cb-fill" style="height:45%;"></div><div class="cb-lbl">Du</div></div>
+            <div class="cb"><div class="cb-fill" style="height:70%;"></div><div class="cb-lbl">Se</div></div>
+            <div class="cb"><div class="cb-fill light" style="height:30%;"></div><div class="cb-lbl">Ch</div></div>
+            <div class="cb"><div class="cb-fill" style="height:85%;"></div><div class="cb-lbl">Pa</div></div>
+            <div class="cb"><div class="cb-fill" style="height:60%;"></div><div class="cb-lbl">Ju</div></div>
+            <div class="cb"><div class="cb-fill light" style="height:25%;"></div><div class="cb-lbl">Sh</div></div>
+            <div class="cb"><div class="cb-fill" style="height:95%;"></div><div class="cb-lbl">Ya</div></div>
+          </div>
+          <div style="font-size:12px; color:var(--ink-500); margin-top:14px;">Bu hafta: 42 yangi ro'yxatga olish</div>
+        </div>
+      </div>
+
+      <!-- TEACHING OVERVIEW -->
+      <div class="dash-2col-even" style="margin-top:18px;">
+        <div class="card card-pad">
+          <div class="section-header"><h3>Eng yaxshi kurslar</h3><a href="../shared/coming-soon.html?page=Mening+kurslarim&role=instructor" class="section-action">Barchasi</a></div>
+          <div class="perf-row">
+            <div class="perf-cover" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div>
+            <div class="perf-info"><div class="perf-title">Python Backend Development</div><div class="perf-sub">248 talaba · 4.9 ★</div></div>
+            <div class="perf-metric"><div class="perf-metric-val" style="color:var(--teach-green);">$1,480</div><div class="perf-metric-lbl">daromad</div></div>
+          </div>
+          <div class="perf-row">
+            <div class="perf-cover" style="background:linear-gradient(135deg,#0F766E,#14B8A6);"><i class="bi bi-database-fill"></i></div>
+            <div class="perf-info"><div class="perf-title">Django REST Masterclass</div><div class="perf-sub">130 talaba · 4.8 ★</div></div>
+            <div class="perf-metric"><div class="perf-metric-val" style="color:var(--teach-green);">$920</div><div class="perf-metric-lbl">daromad</div></div>
+          </div>
+          <div class="perf-row">
+            <div class="perf-cover" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);"><i class="bi bi-box-fill"></i></div>
+            <div class="perf-info"><div class="perf-title">PostgreSQL Complete Guide</div><div class="perf-sub">60 talaba · 4.7 ★</div></div>
+            <div class="perf-metric"><div class="perf-metric-val" style="color:var(--teach-green);">$540</div><div class="perf-metric-lbl">daromad</div></div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="section-header"><h3>Qoralama kurslar</h3></div>
+          <div class="perf-row">
+            <div class="perf-cover" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-hourglass-split"></i></div>
+            <div class="perf-info"><div class="perf-title">Docker for Beginners</div><div class="perf-sub">85% tayyor</div>
+              <div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:85%; background:var(--teach-green);"></div></div>
+            </div>
+            <a href="../shared/coming-soon.html?page=Mening+kurslarim&role=instructor" class="btn btn-outline btn-sm">Davom</a>
+          </div>
+          <div class="perf-row">
+            <div class="perf-cover" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-hourglass-split"></i></div>
+            <div class="perf-info"><div class="perf-title">Advanced API Design</div><div class="perf-sub">40% tayyor</div>
+              <div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:40%; background:var(--teach-green);"></div></div>
+            </div>
+            <a href="../shared/coming-soon.html?page=Mening+kurslarim&role=instructor" class="btn btn-outline btn-sm">Davom</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY + STUDENTS + AI -->
+      <div class="dash-2col" style="margin-top:18px;">
+        <!-- Recent activity -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>So'nggi faoliyat</h3><a href="discussions.html" class="section-action">Muhokamalar</a></div>
+          <div class="activity-row">
+            <div class="activity-ic" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-person-plus-fill"></i></div>
+            <div class="activity-main"><div class="activity-text"><b>Samarqand Islomov</b> "Python Backend" kursiga yozildi</div><div class="activity-time">10 daqiqa oldin</div></div>
+          </div>
+          <div class="activity-row">
+            <div class="activity-ic" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-chat-square-text-fill"></i></div>
+            <div class="activity-main"><div class="activity-text"><b>Javohir Rasimov</b> "Celery worker ishga tushmayapti" mavzusini ochdi</div><div class="activity-time">2 soat oldin</div></div>
+          </div>
+          <div class="activity-row">
+            <div class="activity-ic" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-star-fill"></i></div>
+            <div class="activity-main"><div class="activity-text"><b>Bekzod Odilov</b> yangi sharh qoldirdi (5 ★)</div><div class="activity-time">3 soat oldin</div></div>
+          </div>
+          <div class="activity-row">
+            <div class="activity-ic" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-patch-check-fill"></i></div>
+            <div class="activity-main"><div class="activity-text"><b>Alisher Karimov</b> kursni yakunladi va sertifikat oldi</div><div class="activity-time">Kecha</div></div>
+          </div>
+        </div>
+
+        <!-- Live session widget -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>Jonli sessiya</h3><a href="live-sessions.html" class="section-action">Barchasi</a></div>
+          <div class="live-session-card" style="padding:0; border:1.5px solid var(--danger); border-radius:var(--r-md); padding:14px 16px;">
+            <div style="flex:1;">
+              <span class="ls-status live"><span class="dot-blink"></span> Jonli efirda</span>
+              <div class="ls-title" style="font-size:13.5px;">Haftalik Q&A sessiyasi</div>
+              <div class="ls-meta"><span><i class="bi bi-people-fill"></i> 24 ishtirokchi</span></div>
+            </div>
+            <a href="live-sessions.html" class="btn btn-teach btn-sm">Boshqarish</a>
+          </div>
+        </div>
+
+        <!-- Recent students -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>So'nggi talabalar</h3><a href="../shared/coming-soon.html?page=Talabalar&role=instructor" class="section-action">Barchasi</a></div>
+          <div class="roster-row">
+            <div class="avatar avatar-sm">SI</div>
+            <div class="roster-info"><div class="roster-name">Samarqand Islomov</div><div class="roster-sub">Python Backend</div></div>
+            <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:66%;"></div></div></div>
+            <div class="roster-meta">66%</div>
+          </div>
+          <div class="roster-row">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#EA580C);">JR</div>
+            <div class="roster-info"><div class="roster-name">Javohir Rasimov</div><div class="roster-sub">Django REST</div></div>
+            <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:90%;"></div></div></div>
+            <div class="roster-meta">90%</div>
+          </div>
+          <div class="roster-row">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">BO</div>
+            <div class="roster-info"><div class="roster-name">Bekzod Odilov</div><div class="roster-sub">Python Backend</div></div>
+            <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:40%;"></div></div></div>
+            <div class="roster-meta">40%</div>
+          </div>
+          <div class="roster-row">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">AK</div>
+            <div class="roster-info"><div class="roster-name">Alisher Karimov</div><div class="roster-sub">PostgreSQL Guide</div></div>
+            <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:100%; background:var(--teach-green);"></div></div></div>
+            <div class="roster-meta">100%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI RECOMMENDATIONS -->
+      <div class="card card-pad ai-panel" style="margin-top:18px;">
+        <div class="section-header"><div class="section-title-icon"><i class="bi bi-stars"></i><h3>AI o'qituvchi tahlili</h3></div></div>
+        <div class="dash-2col-even">
+          <div>
+            <div class="ai-insight">
+              <div class="ai-insight-ic"><i class="bi bi-exclamation-triangle"></i></div>
+              <div class="ai-insight-body"><div class="ai-insight-title">Xavf ostidagi talabalar</div><div class="ai-insight-desc">5 talaba 7 kundan beri faol emas. Ularga eslatma yuboring.</div></div>
+            </div>
+            <div class="ai-insight">
+              <div class="ai-insight-ic"><i class="bi bi-graph-up-arrow"></i></div>
+              <div class="ai-insight-body"><div class="ai-insight-title">Kurs yaxshilash taklifi</div><div class="ai-insight-desc">"Django REST" kursida 4-bo'limda tark etish yuqori — videoni qisqartiring.</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="ai-insight">
+              <div class="ai-insight-ic"><i class="bi bi-lightbulb"></i></div>
+              <div class="ai-insight-body"><div class="ai-insight-title">Kontent tavsiyasi</div><div class="ai-insight-desc">Talabalar "amaliy loyihalar" so'rashmoqda. Yangi modul qo'shishni ko'rib chiqing.</div></div>
+            </div>
+            <div class="ai-insight">
+              <div class="ai-insight-ic"><i class="bi bi-calendar-check"></i></div>
+              <div class="ai-insight-body"><div class="ai-insight-title">Haftalik xulosa</div><div class="ai-insight-desc">Bu hafta daromad 12% o'sdi va 42 yangi talaba qo'shildi.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+</body>
+</html>

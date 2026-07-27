@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foydalanuvchilar — Admin — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="admin" data-active="admin-users">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Admin</span><span class="sep">/</span><span class="current">Foydalanuvchilar</span></nav>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#2B2266,#6C5DD3);">AD</div>
+      </div>
+    </header>
+
+    <main class="content" data-filterable>
+      <div class="page-header">
+        <div><h1>Foydalanuvchilar</h1><p>Barcha talaba, o'qituvchi va admin hisoblarini boshqaring.</p></div>
+        <button class="btn btn-outline"><i class="bi bi-download"></i> Eksport</button>
+      </div>
+
+      <div class="wk-grid-4" style="margin-top:20px;">
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-people-fill"></i></div><div class="stat-value">3,412</div><div class="stat-label">Jami foydalanuvchilar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-person-check-fill"></i></div><div class="stat-value">3,398</div><div class="stat-label">Faol</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-person-dash-fill"></i></div><div class="stat-value">14</div><div class="stat-label">Bloklangan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-person-plus-fill"></i></div><div class="stat-value">86</div><div class="stat-label">Bu hafta yangi</div></div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:22px;">
+        <div class="filter-bar" data-filter-group="role">
+          <button class="filter-chip active" data-filter-value="all">Barcha rollar</button>
+          <button class="filter-chip" data-filter-value="student">Talaba</button>
+          <button class="filter-chip" data-filter-value="instructor">O'qituvchi</button>
+          <button class="filter-chip" data-filter-value="admin">Admin</button>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Foydalanuvchi qidirish..." aria-label="Foydalanuvchi qidirish"></div>
+          <div class="filter-bar" data-filter-group="status">
+            <button class="filter-chip active" data-filter-value="all">Barchasi</button>
+            <button class="filter-chip" data-filter-value="active">Faol</button>
+            <button class="filter-chip" data-filter-value="blocked">Bloklangan</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bulk-bar" data-bulk-bar hidden style="margin-top:16px;">
+        <span class="bulk-count" data-bulk-count>0</span> ta tanlandi
+        <span class="bulk-spacer"></span>
+        <button class="btn btn-outline btn-sm"><i class="bi bi-envelope"></i> Xabar yuborish</button>
+        <button class="btn btn-outline btn-sm"><i class="bi bi-slash-circle"></i> Bloklash</button>
+        <button class="btn btn-outline btn-sm" data-bulk-cancel>Bekor qilish</button>
+      </div>
+
+      <div class="card" style="margin-top:16px; overflow:hidden;" data-bulk-scope>
+        <div class="itable-wrap">
+          <table class="itable">
+            <thead><tr><th style="width:36px;"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th><th>Foydalanuvchi</th><th>Rol</th><th>Holat</th><th>Qo'shilgan sana</th><th>Amallar</th></tr></thead>
+            <tbody>
+              <tr data-user-row data-user-name="Bekzod Odilov" data-filter-item data-role="student" data-status="active" data-filter-text="Bekzod Odilov">
+                <td><input type="checkbox" data-select-item aria-label="Bekzod Odilov tanlash"></td>
+                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">BO</div><div><div class="cell-title filter-title">Bekzod Odilov</div><div class="cell-sub">bekzod@example.com</div></div></div></td>
+                <td>Talaba</td>
+                <td><span class="badge badge-green" data-user-status-badge>Faol</span></td>
+                <td>14-yan, 2026</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action" aria-label="Profilni ko'rish"><i class="bi bi-eye"></i></button>
+                    <button class="row-action" data-user-suspend aria-label="Bloklash"><i class="bi bi-slash-circle"></i></button>
+                    <button class="row-action" data-user-activate hidden aria-label="Faollashtirish"><i class="bi bi-check-circle"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-user-row data-user-name="Aziz Yusupov" data-filter-item data-role="instructor" data-status="active" data-filter-text="Aziz Yusupov">
+                <td><input type="checkbox" data-select-item aria-label="Aziz Yusupov tanlash"></td>
+                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div><div><div class="cell-title filter-title">Aziz Yusupov</div><div class="cell-sub">aziz@example.com</div></div></div></td>
+                <td>O'qituvchi</td>
+                <td><span class="badge badge-green" data-user-status-badge>Faol</span></td>
+                <td>2-mart, 2025</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action" aria-label="Profilni ko'rish"><i class="bi bi-eye"></i></button>
+                    <button class="row-action" data-user-suspend aria-label="Bloklash"><i class="bi bi-slash-circle"></i></button>
+                    <button class="row-action" data-user-activate hidden aria-label="Faollashtirish"><i class="bi bi-check-circle"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-user-row data-user-name="Nodira Yusupova" data-filter-item data-role="student" data-status="active" data-filter-text="Nodira Yusupova">
+                <td><input type="checkbox" data-select-item aria-label="Nodira Yusupova tanlash"></td>
+                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#DB2777,#F472B6);">NY</div><div><div class="cell-title filter-title">Nodira Yusupova</div><div class="cell-sub">nodira@example.com</div></div></div></td>
+                <td>Talaba</td>
+                <td><span class="badge badge-green" data-user-status-badge>Faol</span></td>
+                <td>28-iyul, 2026</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action" aria-label="Profilni ko'rish"><i class="bi bi-eye"></i></button>
+                    <button class="row-action" data-user-suspend aria-label="Bloklash"><i class="bi bi-slash-circle"></i></button>
+                    <button class="row-action" data-user-activate hidden aria-label="Faollashtirish"><i class="bi bi-check-circle"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-user-row data-user-name="Samarqand Islomov" data-filter-item data-role="student" data-status="blocked" data-filter-text="Samarqand Islomov">
+                <td><input type="checkbox" data-select-item aria-label="Samarqand Islomov tanlash"></td>
+                <td><div class="cell-main"><div class="avatar avatar-sm">SI</div><div><div class="cell-title filter-title">Samarqand Islomov</div><div class="cell-sub">samar@example.com</div></div></div></td>
+                <td>Talaba</td>
+                <td><span class="badge badge-danger" data-user-status-badge>Bloklangan</span></td>
+                <td>4-noyabr, 2025</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action" aria-label="Profilni ko'rish"><i class="bi bi-eye"></i></button>
+                    <button class="row-action" data-user-suspend hidden aria-label="Bloklash"><i class="bi bi-slash-circle"></i></button>
+                    <button class="row-action" data-user-activate aria-label="Faollashtirish"><i class="bi bi-check-circle"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-user-row data-user-name="Malika Tosheva" data-filter-item data-role="instructor" data-status="active" data-filter-text="Malika Tosheva">
+                <td><input type="checkbox" data-select-item aria-label="Malika Tosheva tanlash"></td>
+                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">MT</div><div><div class="cell-title filter-title">Malika Tosheva</div><div class="cell-sub">malika@example.com</div></div></div></td>
+                <td>O'qituvchi</td>
+                <td><span class="badge badge-green" data-user-status-badge>Faol</span></td>
+                <td>19-avgust, 2024</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action" aria-label="Profilni ko'rish"><i class="bi bi-eye"></i></button>
+                    <button class="row-action" data-user-suspend aria-label="Bloklash"><i class="bi bi-slash-circle"></i></button>
+                    <button class="row-action" data-user-activate hidden aria-label="Faollashtirish"><i class="bi bi-check-circle"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="empty-state card" data-filter-empty style="display:none; margin-top:16px;">
+        <div class="empty-icon"><i class="bi bi-people"></i></div>
+        <div class="empty-title">Foydalanuvchi topilmadi</div>
+        <div class="empty-sub">Filtrlarni o'zgartirib qayta urinib ko'ring.</div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="user-action-modal" hidden>
+  <div class="modal">
+    <div class="modal-head"><h3 style="font-size:15px;">Amalni tasdiqlang</h3><button class="icon-btn" onclick="isloh_closeModal('user-action-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body" data-user-action-modal-title>Amalni bajarishni xohlaysizmi?</div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="isloh_closeModal('user-action-modal')">Bekor qilish</button>
+      <button class="btn btn-primary" data-user-action-confirm>Tasdiqlash</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/filterable.js"></script>
+<script src="../../js/courses.js"></script>
+<script src="../../js/admin-users.js"></script>
+</body>
+</html>

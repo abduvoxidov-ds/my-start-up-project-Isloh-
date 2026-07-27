@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buyurtmalar — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="marketplace">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a href="marketplace.html" style="color:inherit; text-decoration:none;">Marketplace</a><span class="sep">/</span><span class="current">Buyurtmalar</span></nav>
+      <div class="topbar-actions">
+        <a href="cart.html" class="icon-btn" aria-label="Savat"><i class="bi bi-cart-fill"></i></a>
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <main class="content" data-filterable>
+      <div class="page-header">
+        <div><h1>Buyurtmalar tarixi</h1><p>Sotib olingan kurslar va to'lovlaringizni kuzating.</p></div>
+      </div>
+
+      <div class="filter-bar" data-filter-group="status" style="margin-top:18px;">
+        <button class="filter-chip active" data-filter-value="all">Barchasi</button>
+        <button class="filter-chip" data-filter-value="paid">To'landi</button>
+        <button class="filter-chip" data-filter-value="pending">Kutilmoqda</button>
+        <button class="filter-chip" data-filter-value="refunded">Qaytarilgan</button>
+      </div>
+
+      <div class="wk-col" style="margin-top:16px;">
+        <div class="card order-card" data-filter-item data-status="paid" data-filter-text="10312 Python React">
+          <div class="order-card-head">
+            <div><div class="order-card-id">Buyurtma #10312</div><div class="order-card-date">18-iyul, 2026</div></div>
+            <span class="badge badge-green">To'landi</span>
+          </div>
+          <div class="order-card-row">
+            <div class="oc-cover" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div>
+            <div style="flex:1;"><div style="font-weight:600; font-size:13.5px;">Python Backend Development</div></div>
+            <span style="font-weight:700; font-size:13.5px;">249 000 so'm</span>
+          </div>
+          <div class="order-card-row">
+            <div class="oc-cover" style="background:linear-gradient(135deg,#0EA5E9,#1E3A8A);"><i class="bi bi-atom"></i></div>
+            <div style="flex:1;"><div style="font-weight:600; font-size:13.5px;">React — The Complete Guide</div></div>
+            <span style="font-weight:700; font-size:13.5px;">299 000 so'm</span>
+          </div>
+          <div class="order-card-foot">
+            <span style="font-weight:800; font-size:14px;">Jami: 548 000 so'm</span>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-outline btn-sm" data-download-receipt><i class="bi bi-download"></i> Kvitansiya</button>
+              <button class="btn btn-outline btn-sm"><i class="bi bi-file-earmark-text"></i> Invoys</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card order-card" data-filter-item data-status="paid" data-filter-text="10245 Python">
+          <div class="order-card-head">
+            <div><div class="order-card-id">Buyurtma #10245</div><div class="order-card-date">12-iyul, 2026</div></div>
+            <span class="badge badge-green">To'landi</span>
+          </div>
+          <div class="order-card-row">
+            <div class="oc-cover" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div>
+            <div style="flex:1;"><div style="font-weight:600; font-size:13.5px;">Python Backend Development</div></div>
+            <span style="font-weight:700; font-size:13.5px;">249 000 so'm</span>
+          </div>
+          <div class="order-card-foot">
+            <span style="font-weight:800; font-size:14px;">Jami: 249 000 so'm</span>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-outline btn-sm" data-download-receipt><i class="bi bi-download"></i> Kvitansiya</button>
+              <button class="btn btn-outline btn-sm" data-refund-request><i class="bi bi-arrow-counterclockwise"></i> Qaytarish</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card order-card" data-filter-item data-status="pending" data-filter-text="10198 Machine Learning">
+          <div class="order-card-head">
+            <div><div class="order-card-id">Buyurtma #10198</div><div class="order-card-date">2-iyul, 2026</div></div>
+            <span class="badge badge-warning">Kutilmoqda</span>
+          </div>
+          <div class="order-card-row">
+            <div class="oc-cover" style="background:linear-gradient(135deg,#06B6D4,#0E7490);"><i class="bi bi-cpu-fill"></i></div>
+            <div style="flex:1;"><div style="font-weight:600; font-size:13.5px;">Machine Learning A-Z</div></div>
+            <span style="font-weight:700; font-size:13.5px;">349 000 so'm</span>
+          </div>
+          <div class="order-card-foot">
+            <span style="font-weight:800; font-size:14px;">Jami: 349 000 so'm</span>
+            <span style="font-size:12px; color:var(--ink-500);">Bank tasdig'i kutilmoqda</span>
+          </div>
+        </div>
+
+        <div class="card order-card" data-filter-item data-status="refunded" data-filter-text="10102 UI UX">
+          <div class="order-card-head">
+            <div><div class="order-card-id">Buyurtma #10102</div><div class="order-card-date">20-iyun, 2026</div></div>
+            <span class="badge badge-danger">Qaytarilgan</span>
+          </div>
+          <div class="order-card-row">
+            <div class="oc-cover" style="background:linear-gradient(135deg,#8E44EC,#3B82F6);"><i class="bi bi-palette-fill"></i></div>
+            <div style="flex:1;"><div style="font-weight:600; font-size:13.5px;">UI/UX Design Fundamentals</div></div>
+            <span style="font-weight:700; font-size:13.5px; color:var(--danger);">−189 000 so'm</span>
+          </div>
+          <div class="order-card-foot">
+            <span style="font-size:12px; color:var(--ink-500);">Qaytarish 5 ish kunida amalga oshirildi</span>
+            <button class="btn btn-outline btn-sm" data-download-receipt><i class="bi bi-download"></i> Kvitansiya</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state card" data-filter-empty style="display:none; margin-top:16px;">
+        <div class="empty-icon"><i class="bi bi-receipt"></i></div>
+        <div class="empty-title">Buyurtmalar topilmadi</div>
+        <div class="empty-sub">Ushbu filtrga mos buyurtma mavjud emas.</div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="refund-modal" hidden>
+  <div class="modal">
+    <div class="modal-head"><h3 style="font-size:15px;">Qaytarishni so'rash</h3><button class="icon-btn" onclick="isloh_closeModal('refund-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body">Ushbu buyurtma uchun qaytarish so'rovini yubormoqchimisiz? Ko'rib chiqish odatda 3–5 ish kuni davom etadi. <em>(Bu — frontend namuna, real so'rov yuborilmaydi.)</em></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="isloh_closeModal('refund-modal')">Bekor qilish</button>
+      <button class="btn btn-primary" data-refund-confirm>So'rovni yuborish</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/filterable.js"></script>
+<script src="../../js/orders.js"></script>
+</body>
+</html>

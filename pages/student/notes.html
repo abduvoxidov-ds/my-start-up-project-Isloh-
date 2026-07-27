@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Izohlarim — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a href="course-detail.html" style="color:inherit;">Docker for Beginners</a><span class="sep">/</span><span class="current">Izohlarim</span></nav>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <main class="content" data-filterable>
+      <div class="page-header">
+        <div>
+          <h1>Izohlarim</h1>
+          <p>Shaxsiy va guruhdosh talabalar bilan bo'lishilgan izohlaringiz.</p>
+        </div>
+        <button class="btn btn-teach btn-sm" data-note-create><i class="bi bi-plus-lg"></i> Yangi izoh</button>
+      </div>
+
+      <!-- COMPOSER (hidden until "Yangi izoh" is clicked) -->
+      <div class="card card-pad" data-note-composer hidden style="margin-top:16px;">
+        <div class="field"><label for="note-title-input">Sarlavha</label><input id="note-title-input" data-note-title-input placeholder="Izoh sarlavhasi"></div>
+        <div class="field" style="margin-bottom:0;"><label for="note-body-input">Matn</label><textarea id="note-body-input" data-note-body-input class="editor-textarea" style="min-height:90px;" placeholder="Izohingizni yozing..."></textarea></div>
+        <div style="display:flex; justify-content:flex-end; margin-top:10px;"><button class="btn btn-teach btn-sm" data-note-save><i class="bi bi-save"></i> Saqlash</button></div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:16px;">
+        <div data-filter-group="scope" style="display:flex; gap:6px;">
+          <button class="category-chip active" data-filter-value="all">Barchasi</button>
+          <button class="category-chip" data-filter-value="personal">Shaxsiy</button>
+          <button class="category-chip" data-filter-value="shared">Bo'lishilgan</button>
+          <button class="category-chip" data-filter-value="pinned">Qadalgan</button>
+        </div>
+        <div class="topbar-search" style="width:240px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Izohlarni qidirish..." aria-label="Izohlarni qidirish"></div>
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:6px; flex-wrap:wrap;" data-note-tag-filter>
+        <button class="category-chip active" data-tag="all">Barcha teglar</button>
+        <button class="category-chip" data-tag="docker">Docker</button>
+        <button class="category-chip" data-tag="compose">Compose</button>
+        <button class="category-chip" data-tag="muhim">Muhim</button>
+      </div>
+
+      <div class="notes-grid" data-notes-grid style="margin-top:16px;">
+        <div class="card shared-note-card pinned" data-filter-item data-scope="personal" data-tags="docker,muhim" data-filter-text="Docker buyruqlari yodnoma">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div class="note-title">Docker buyruqlari yodnoma</div>
+            <button class="fav-toggle active" data-note-favorite aria-label="Sevimli"><i class="bi bi-star-fill"></i></button>
+          </div>
+          <div class="note-body">docker ps, docker exec -it, docker logs -f — eng ko'p ishlatadigan buyruqlarim.</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="note-tag-pill">Docker</span><span class="note-tag-pill">Muhim</span></div>
+          <div class="note-card-foot"><span>2 kun oldin</span><span>Shaxsiy</span></div>
+        </div>
+
+        <div class="card shared-note-card" data-filter-item data-scope="shared" data-tags="compose" data-filter-text="Guruh: Compose fayl namunasi">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div class="note-title">Guruh: Compose fayl namunasi</div>
+            <button class="fav-toggle" data-note-favorite aria-label="Sevimli"><i class="bi bi-star"></i></button>
+          </div>
+          <div class="note-body">Farrux bilan birga tayyorlagan ikki xizmatli (web+db) docker-compose.yml namunasi.</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="note-tag-pill">Compose</span></div>
+          <div class="note-card-foot"><span>Kecha &middot; Farrux R. bilan</span><span>Bo'lishilgan</span></div>
+        </div>
+
+        <div class="card shared-note-card" data-filter-item data-scope="personal" data-tags="docker" data-filter-text="Networking eslatmalari">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div class="note-title">Networking eslatmalari</div>
+            <button class="fav-toggle" data-note-favorite aria-label="Sevimli"><i class="bi bi-star"></i></button>
+          </div>
+          <div class="note-body">Bridge network — standart. Konteynerlar bir-birini nom orqali topa oladi.</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="note-tag-pill">Docker</span></div>
+          <div class="note-card-foot"><span>3 soat oldin</span><span>Shaxsiy</span></div>
+        </div>
+      </div>
+
+      <div class="empty-state" data-filter-empty style="display:none;">
+        <div class="empty-icon"><i class="bi bi-journal-text"></i></div>
+        <div class="empty-title">Izoh topilmadi</div>
+        <div class="empty-sub">Boshqa filtr yoki qidiruv so'zini sinab ko'ring.</div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/filterable.js"></script>
+<script src="../../js/notes.js"></script>
+</body>
+</html>

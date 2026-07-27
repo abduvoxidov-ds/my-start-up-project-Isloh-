@@ -1,0 +1,154 @@
+/* ==========================================================================
+   ISLOH — Layout
+   Structural page-shell rules: sidebar, topbar, content area, auth split.
+   These are the "layout" primitives every page (student/instructor/auth)
+   is built from. Visuals unchanged from the original style.css.
+   ========================================================================== */
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* --- Sidebar ---
+   Rendered dynamically by js/sidebar.js + js/navigation.js from a single
+   NAV_CONFIG source of truth (see js/navigation.js). Markup below is what
+   gets injected; CSS is unchanged from the original design. */
+.sidebar {
+  width: 232px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, var(--indigo-900) 0%, var(--indigo-950) 100%);
+  color: #C9C6E8;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 14px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: var(--z-sidebar);
+}
+.sidebar .brand { color: #fff; padding: 6px 10px 22px; }
+.nav-group { margin-top: 8px; }
+.nav-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6E6AA0;
+  padding: 14px 12px 6px;
+  font-weight: 600;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  font-size: 14px;
+  font-weight: 500;
+  color: #C9C6E8;
+  cursor: pointer;
+  transition: background var(--t-base) var(--ease-standard), color var(--t-base) var(--ease-standard);
+}
+.nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.nav-item.active {
+  background: var(--violet-600);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+/* Instructor role theme: same structure, green active state (Sprint 6+) */
+.sidebar.theme-teach .nav-item.active {
+  background: var(--teach-green);
+}
+/* Admin role theme: same structure, indigo-800 active state (Sprint 9) */
+.sidebar.theme-admin .nav-item.active {
+  background: var(--indigo-800);
+  box-shadow: none;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.nav-item .bi { font-size: 17px; width: 18px; text-align: center; }
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.topbar {
+  height: 68px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-topbar);
+}
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-app);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-pill);
+  padding: 9px 16px;
+  width: 320px;
+  color: var(--ink-500);
+  font-size: 14px;
+}
+.topbar-search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: var(--ink-900);
+}
+.topbar-actions { display: flex; align-items: center; gap: 16px; }
+
+.content { padding: 28px; flex: 1; }
+
+/* --- Auth split layout (login / register) --- */
+.auth-split {
+  min-height: 100vh;
+  display: flex;
+}
+.auth-panel {
+  flex: 1;
+  max-width: 460px;
+  background: linear-gradient(160deg, var(--indigo-900), var(--indigo-950));
+  color: #fff;
+  padding: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.auth-panel::before {
+  content: '';
+  position: absolute;
+  width: 340px; height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,111,240,0.35), transparent 70%);
+  top: -120px; right: -120px;
+}
+.auth-form-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.auth-form-inner { width: 100%; max-width: 380px; }
+
+/* --- Responsive foundation ---
+   Desktop appearance is unchanged. Below 900px the search field shrinks so
+   the topbar doesn't overflow. A full icon-only sidebar collapse is left
+   for the sprint that introduces the mobile nav toggle (needs a JS-driven
+   open/close control, not just CSS — see js/sidebar.js TODO). */
+@media (max-width: 900px) {
+  .topbar-search { width: 200px; }
+}

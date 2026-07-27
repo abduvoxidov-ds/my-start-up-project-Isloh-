@@ -1,0 +1,236 @@
+/* ==========================================================================
+   ISLOH — Components
+   Reusable UI atoms/molecules. Anything used on 2+ pages lives here so no
+   page ever redefines it locally. Visuals are unchanged from the original
+   style.css / components.html — this file only relocates + de-duplicates.
+   ========================================================================== */
+
+/* --- Logo --- */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 20px;
+}
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* --- Icon button + avatar (topbar atoms) --- */
+.icon-btn {
+  width: 38px; height: 38px;
+  border-radius: var(--r-pill);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-app);
+  color: var(--ink-700);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  font-size: 16px;
+}
+.icon-btn .dot {
+  position: absolute; top: 8px; right: 9px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--danger); border: 1.5px solid #fff;
+}
+.avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 14px;
+}
+.avatar-sm { width: 28px; height: 28px; font-size: 12px; }
+
+/* --- Card --- */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+.card-pad { padding: 22px; }
+
+/* --- Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--r-md);
+  padding: 11px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--t-fast) var(--ease-standard), box-shadow var(--t-base) var(--ease-standard), background var(--t-base) var(--ease-standard);
+}
+.btn:active { transform: scale(0.98); }
+.btn-block { width: 100%; }
+.btn-primary { background: var(--violet-600); color: #fff; box-shadow: 0 4px 14px rgba(108,93,211,0.35); }
+.btn-primary:hover { background: #5D4FC7; }
+.btn-teach { background: var(--teach-green); color: #fff; box-shadow: 0 4px 14px rgba(31,174,94,0.3); }
+.btn-teach:hover { background: #189950; }
+.btn-outline { background: #fff; color: var(--ink-700); border: 1px solid var(--border-soft); }
+.btn-outline:hover { background: var(--bg-app); }
+.btn-ghost { background: transparent; color: var(--violet-600); padding: 10px 14px; }
+.btn-sm { padding: 7px 14px; font-size: 13px; }
+
+/* --- Form field --- */
+.field { margin-bottom: 16px; }
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-700);
+  margin-bottom: 6px;
+}
+.field input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  border: var(--border-w-thick) solid var(--border-soft);
+  background: var(--bg-app);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--t-base) var(--ease-standard), background var(--t-base) var(--ease-standard);
+}
+.field input:focus { border-color: var(--violet-500); background: #fff; }
+.field-hint { font-size: 12px; color: var(--ink-500); margin-top: 5px; }
+
+/* --- Badge / status --- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-violet { background: var(--violet-100); color: var(--violet-600); }
+.badge-green { background: var(--teach-green-100); color: var(--teach-green); }
+.badge-neutral { background: var(--bg-app); color: var(--ink-500); }
+.badge-warning { background: #FEF3E2; color: var(--warning); }
+.badge-danger { background: #FDEBEC; color: var(--danger); }
+
+/* --- Progress --- */
+.progress-track {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--border-soft);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--violet-500), var(--violet-600));
+}
+
+/* --- Statistic card --- */
+.stat-card { display: flex; flex-direction: column; gap: 6px; }
+.stat-value { font-family: var(--font-display); font-size: 24px; font-weight: 800; }
+.stat-label { font-size: 13px; color: var(--ink-500); font-weight: 500; }
+.stat-icon {
+  width: 40px; height: 40px; border-radius: var(--r-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 8px;
+}
+
+/* --- Role select card (onboarding) --- */
+.role-card {
+  border: var(--border-w-thick) solid var(--border-soft);
+  border-radius: var(--r-lg);
+  padding: 28px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--t-base) var(--ease-standard), transform var(--t-base) var(--ease-standard), box-shadow var(--t-base) var(--ease-standard);
+}
+.role-card:hover { border-color: var(--violet-500); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.role-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin: 0 auto 16px;
+}
+
+/* --- Course cover --- */
+.course-cover {
+  height: 120px;
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 22px;
+}
+
+/* --- Tabs --- */
+.tab-strip { display: flex; gap: 4px; border-bottom: 1px solid var(--border-soft); }
+.tab-item {
+  padding: 12px 4px; margin-right: 22px;
+  font-size: 14px; font-weight: 600; color: var(--ink-500);
+  border-bottom: 2px solid transparent; cursor: pointer;
+}
+.tab-item.active { color: var(--violet-600); border-color: var(--violet-600); }
+
+/* ==========================================================================
+   Widgets consolidated from the former components.html inline <style> block.
+   Previously page-local; now shared so any future page (Tasks, Calendar,
+   Course Editor, modals across the app, etc.) can reuse them without
+   redefinition.
+   ========================================================================== */
+
+/* Switch */
+.switch { position:relative; width:44px; height:24px; }
+.switch input { opacity:0; width:0; height:0; }
+.slider { position:absolute; inset:0; background: var(--border-soft); border-radius:var(--r-pill); cursor:pointer; transition:var(--t-base) var(--ease-standard); }
+.slider::before { content:''; position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:var(--t-base) var(--ease-standard); box-shadow:var(--shadow-sm); }
+.switch input:checked + .slider { background: var(--violet-600); }
+.switch input:checked + .slider::before { transform: translateX(20px); }
+
+/* Radio / checkbox custom */
+.opt-row { display:flex; align-items:center; gap:8px; font-size:13.5px; }
+.opt-row input { accent-color: var(--violet-600); width:16px; height:16px; }
+
+/* Dropdown */
+.dropdown { position:relative; display:inline-block; }
+.dropdown-menu { position:absolute; top:calc(100% + 6px); left:0; background:#fff; border:1px solid var(--border-soft); border-radius:var(--r-md); box-shadow:var(--shadow-md); min-width:170px; padding:6px; display:none; z-index:var(--z-dropdown); }
+.dropdown.open .dropdown-menu { display:block; }
+.dropdown-item { padding:9px 12px; border-radius:var(--r-sm); font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:8px; }
+.dropdown-item:hover { background:var(--bg-app); }
+
+/* Tooltip */
+.tooltip-wrap { position:relative; display:inline-block; }
+.tooltip-box { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:var(--ink-900); color:#fff; font-size:12px; padding:6px 10px; border-radius:var(--r-sm); white-space:nowrap; opacity:0; pointer-events:none; transition:var(--t-base) var(--ease-standard); z-index:var(--z-tooltip); }
+.tooltip-wrap:hover .tooltip-box { opacity:1; }
+
+/* Toast */
+.toast-demo { display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--border-soft); border-radius:var(--r-md); box-shadow:var(--shadow-md); padding:12px 16px; font-size:13.5px; max-width:320px; }
+.toast-container { position: fixed; top: 20px; right: 20px; z-index: var(--z-toast); display: flex; flex-direction: column; gap: 10px; }
+
+/* Chip / tag */
+.chip-demo { padding:6px 14px; border-radius:var(--r-pill); font-size:12.5px; font-weight:600; background:var(--bg-app); color:var(--ink-700); border:1px solid var(--border-soft); }
+.tag-demo { padding:3px 10px; border-radius:6px; font-size:11.5px; font-weight:700; }
+
+/* Breadcrumb */
+.breadcrumb-demo { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-500); }
+.breadcrumb-demo .sep { color:var(--ink-300); }
+.breadcrumb-demo .current { color:var(--ink-900); font-weight:600; }
+
+/* Modal (also used as the real overlay target by js/modal.js) */
+.modal-demo, .modal { border:1px solid var(--border-soft); border-radius:var(--r-lg); box-shadow:var(--shadow-lg); max-width:340px; background:#fff; }
+.modal-demo .modal-head, .modal .modal-head { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; border-bottom:1px solid var(--border-soft); }
+.modal-demo .modal-body, .modal .modal-body { padding:18px; font-size:13.5px; color:var(--ink-700); }
+.modal-demo .modal-foot, .modal .modal-foot { display:flex; justify-content:flex-end; gap:8px; padding:14px 18px; border-top:1px solid var(--border-soft); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(23,18,59,0.45); display:flex; align-items:center; justify-content:center; z-index: var(--z-overlay); }
+.modal-overlay[hidden] { display: none; }
+
+code.inline { background:var(--bg-app); padding:2px 6px; border-radius:5px; font-size:12px; color:var(--violet-600); }

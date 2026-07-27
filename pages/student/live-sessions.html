@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonli sessiyalar — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a href="course-detail.html" style="color:inherit;">Docker for Beginners</a><span class="sep">/</span><span class="current">Jonli sessiyalar</span></nav>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <main class="content" data-filterable>
+      <div class="page-header">
+        <div>
+          <h1>Jonli sessiyalar</h1>
+          <p>Docker for Beginners · O'qituvchi bilan jonli darslarda qatnashing.</p>
+        </div>
+        <div data-filter-group="status" style="display:flex; gap:6px;">
+          <button class="category-chip active" data-filter-value="all">Barchasi</button>
+          <button class="category-chip" data-filter-value="live">Jonli</button>
+          <button class="category-chip" data-filter-value="upcoming">Rejalashtirilgan</button>
+          <button class="category-chip" data-filter-value="ended">Tugagan</button>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:14px; margin-top:20px;">
+        <!-- LIVE NOW -->
+        <div class="card live-session-card" data-filter-item data-status="live" data-filter-text="Q&A sessiyasi" style="border:1.5px solid var(--danger);">
+          <div style="flex:1;">
+            <span class="ls-status live"><span class="dot-blink"></span> Jonli efirda</span>
+            <div class="ls-title">Haftalik Q&A sessiyasi — 2-modul savollari</div>
+            <div class="ls-meta"><span><i class="bi bi-person-fill"></i> Akmal Yuldashev</span><span><i class="bi bi-people-fill"></i> 24 ishtirokchi</span></div>
+            <div class="ls-participants" data-ls-participants>
+              <div class="avatar-sm">SM</div><div class="avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">FR</div><div class="avatar-sm" style="background:var(--ink-300);">BR</div>
+              <span class="ls-more-count">+21</span>
+            </div>
+          </div>
+          <button class="btn btn-teach" data-ls-join><i class="bi bi-camera-video-fill"></i> Qo'shilish</button>
+        </div>
+
+        <!-- UPCOMING -->
+        <div class="card live-session-card" data-filter-item data-status="upcoming" data-filter-text="Docker Compose amaliyoti" style="align-items:center;">
+          <div style="flex:1;">
+            <span class="ls-status upcoming">Rejalashtirilgan</span>
+            <div class="ls-title">Amaliyot: Docker Compose bilan ko'p konteynerli ilova</div>
+            <div class="ls-meta"><span><i class="bi bi-person-fill"></i> Akmal Yuldashev</span><span><i class="bi bi-calendar-event"></i> 26-iyul, 18:00</span></div>
+          </div>
+          <div style="text-align:center;">
+            <div class="ls-countdown" data-countdown="2026-07-26T18:00:00">--:--:--</div>
+            <button class="btn btn-outline btn-sm" style="margin-top:8px;" data-ls-join>Eslatma qo'yish</button>
+          </div>
+        </div>
+
+        <!-- ENDED -->
+        <div class="card live-session-card" data-filter-item data-status="ended" data-filter-text="Kirish sessiyasi" style="opacity:.85;">
+          <div style="flex:1;">
+            <span class="ls-status ended">Tugagan</span>
+            <div class="ls-title">Kursga kirish sessiyasi</div>
+            <div class="ls-meta"><span><i class="bi bi-person-fill"></i> Akmal Yuldashev</span><span><i class="bi bi-calendar-event"></i> 12-iyul, 18:00</span><span><i class="bi bi-people-fill"></i> 41 ishtirokchi bo'lgan</span></div>
+          </div>
+          <button class="btn btn-outline btn-sm" data-ls-join><i class="bi bi-play-circle"></i> Yozuvni ko'rish</button>
+        </div>
+      </div>
+
+      <div class="empty-state" data-filter-empty style="display:none;">
+        <div class="empty-icon"><i class="bi bi-camera-video"></i></div>
+        <div class="empty-title">Sessiyalar topilmadi</div>
+        <div class="empty-sub">Boshqa filtrni tanlab ko'ring.</div>
+      </div>
+
+      <!-- DETAIL: agenda / host / recording placeholder for the live session -->
+      <div class="wk-grid-3" style="margin-top:24px;">
+        <div class="card card-pad">
+          <div class="section-header"><h3>Kun tartibi</h3><button class="icon-btn" data-ls-agenda-toggle aria-label="Kengaytirish"><i class="bi bi-chevron-up"></i></button></div>
+          <div data-ls-agenda>
+            <div class="ls-agenda-row"><span class="ls-agenda-time">18:00</span><span>Salomlashish va kirish so'zi</span></div>
+            <div class="ls-agenda-row"><span class="ls-agenda-time">18:10</span><span>2-modul bo'yicha savol-javob</span></div>
+            <div class="ls-agenda-row"><span class="ls-agenda-time">18:45</span><span>Amaliy demo: Docker Compose</span></div>
+            <div class="ls-agenda-row"><span class="ls-agenda-time">19:00</span><span>Yakunlovchi savollar</span></div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <h3 style="font-size:15px; margin-bottom:10px;">Host</h3>
+          <div class="ls-host-card">
+            <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+            <div>
+              <div style="font-weight:700; font-size:13.5px;">Akmal Yuldashev</div>
+              <div class="presence-label"><span class="presence-dot online"></span> Onlayn · O'qituvchi</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <h3 style="font-size:15px; margin-bottom:10px;">Yozuv</h3>
+          <div class="ls-recording-placeholder">
+            <i class="bi bi-film" style="font-size:24px;"></i>
+            <div>Sessiya tugagach, yozuv shu yerda ko'rinadi (placeholder)</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/filterable.js"></script>
+<script src="../../js/live-session.js"></script>
+</body>
+</html>

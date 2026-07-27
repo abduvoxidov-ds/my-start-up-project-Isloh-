@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Django modellari loyihasi — Topshiriqni tahrirlash — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  /* Page-local layout only. Editor widgets live in css/widgets.css. */
+  .as-shell { max-width: 900px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="instructor" data-active="courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="course-builder.html" style="color:inherit;">Kurs tarkibi</a><span class="sep">/</span><a href="assignment-builder.html" style="color:inherit;">Topshiriq loyihalari</a><span class="sep">/</span><span class="current">Tahrirlash</span></nav>
+      <div class="topbar-actions">
+        <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+      </div>
+    </header>
+
+    <main class="content" data-unsaved-scope>
+      <div class="page-header">
+        <div style="flex:1; min-width:260px;">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span class="badge badge-green">Nashr etilgan</span>
+            <span class="unsaved-badge" data-unsaved-indicator hidden><i class="bi bi-exclamation-circle-fill"></i> Saqlanmagan o'zgarishlar</span>
+          </div>
+          <div class="field" style="margin:10px 0 0; max-width:480px;">
+            <input id="assignment-title-input" value="Django modellari loyihasi" style="font-size:18px; font-weight:700; font-family:var(--font-display); padding:10px 14px;" data-char-counter="100" maxlength="100">
+            <div class="field-hint" data-char-counter-for="assignment-title-input">24 / 100</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="assignment-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Topshiriqlarga qaytish</a>
+          <button class="btn btn-teach" data-save-action><i class="bi bi-save"></i> Saqlash</button>
+        </div>
+      </div>
+
+      <div class="as-shell" style="margin-top:20px;" data-tabs>
+        <div class="tab-strip" role="tablist" aria-label="Topshiriq muharriri bo'limlari">
+          <div class="tab-item active" data-tab-target="content">Kontent</div>
+          <div class="tab-item" data-tab-target="submission">Topshirish</div>
+          <div class="tab-item" data-tab-target="resources">Resurslar</div>
+          <div class="tab-item" data-tab-target="settings">Sozlamalar</div>
+          <div class="tab-item" data-tab-target="preview">Ko'rib chiqish</div>
+        </div>
+
+        <!-- CONTENT TAB (mirrors lesson-editor.html's Content tab blocks) -->
+        <div data-tab-panel="content" style="margin-top:22px;">
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-fonts"></i> Topshiriq matni</div>
+            <div class="editor-toolbar">
+              <button aria-label="Qalin"><i class="bi bi-type-bold"></i></button>
+              <button aria-label="Qiya"><i class="bi bi-type-italic"></i></button>
+              <button aria-label="Ro'yxat"><i class="bi bi-list-ul"></i></button>
+              <button aria-label="Havola"><i class="bi bi-link-45deg"></i></button>
+              <button aria-label="Sitata"><i class="bi bi-quote"></i></button>
+            </div>
+            <textarea class="editor-textarea" data-char-counter="1500" id="assignment-text" maxlength="1500">Ushbu topshiriqda Django ORM yordamida kurs katalogi uchun modellarni loyihalashingiz kerak. Kamida 3 ta bog'langan model yarating (masalan, Course, Module, Lesson).</textarea>
+            <div class="field-hint" data-char-counter-for="assignment-text" style="margin-top:6px;">180 / 1500</div>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-images"></i> Rasmlar</div>
+            <div class="upload-dropzone"><i class="bi bi-image"></i><div class="dz-title">Rasm qo'shish uchun bosing</div><div class="dz-sub">PNG, JPG, GIF</div></div>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-camera-video-fill"></i> Video</div>
+            <div class="upload-dropzone"><i class="bi bi-camera-video"></i><div class="dz-title">Video qo'shish uchun bosing</div><div class="dz-sub">yoki tashqi havola kiriting</div></div>
+            <div class="field" style="margin-top:12px; margin-bottom:0;"><label for="assignment-video-url">Tashqi video havolasi</label><input id="assignment-video-url" placeholder="https://youtube.com/watch?v=..."></div>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-code-slash"></i> Kod bloki (namuna)</div>
+            <div class="field" style="max-width:200px;"><label for="assignment-code-lang">Til</label>
+              <select id="assignment-code-lang" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option>Python</option><option>JavaScript</option><option>Bash</option><option>SQL</option></select>
+            </div>
+            <textarea class="editor-textarea" style="font-family:'SFMono-Regular',Consolas,monospace; background:#191830; color:#E4E2F5; border:none;" rows="4">class Course(models.Model):
+    title = models.CharField(max_length=200)</textarea>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-link-45deg"></i> Tashqi havolalar</div>
+            <div data-row-list="as-link-row-template">
+              <div class="link-row">
+                <i class="bi bi-box-arrow-up-right" style="color:var(--ink-500);"></i>
+                <input value="https://docs.djangoproject.com/en/stable/topics/db/models/" readonly>
+                <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="as-link-row-template"><i class="bi bi-plus-lg"></i> Havola qo'shish</button>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-download"></i> Yuklab olish fayllari (boshlang'ich kod)</div>
+            <div data-row-list="as-download-row-template">
+              <div class="download-row">
+                <i class="bi bi-file-earmark-zip-fill" style="color:var(--ink-500);"></i>
+                <input value="starter-models.zip" readonly>
+                <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="as-download-row-template"><i class="bi bi-plus-lg"></i> Fayl qo'shish</button>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-paperclip"></i> Ilova fayllar</div>
+            <div class="upload-dropzone"><i class="bi bi-file-earmark-arrow-up"></i><div class="dz-title">Fayl biriktirish uchun bosing</div><div class="dz-sub">PDF, ZIP, DOCX va h.k.</div></div>
+          </div>
+        </div>
+
+        <!-- SUBMISSION TAB -->
+        <div data-tab-panel="submission" hidden style="margin-top:22px;">
+          <div class="wk-col">
+
+            <div class="card card-pad">
+              <div class="settings-section-title">Topshirish turi</div>
+              <div class="settings-section-sub">Talaba javobni qanday topshirishini belgilang.</div>
+              <div class="settings-item">
+                <div class="settings-item-info"><div class="settings-item-label">Matnli javob</div><div class="settings-item-desc">Talaba javobni to'g'ridan-to'g'ri matn ko'rinishida yozadi</div></div>
+                <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-info"><div class="settings-item-label">Fayl yuklash</div><div class="settings-item-desc">Talaba faylni yuklab topshiradi</div></div>
+                <label class="switch settings-item-control"><input type="checkbox" checked data-reveals="as-file-fields"><span class="slider"></span></label>
+              </div>
+
+              <div id="as-file-fields" style="margin-top:6px;">
+                <div class="settings-item">
+                  <div class="settings-item-info"><div class="settings-item-label">Bir nechta fayl</div><div class="settings-item-desc">Talaba bittadan ortiq fayl biriktira oladi</div></div>
+                  <label class="switch settings-item-control"><input type="checkbox" data-reveals="as-max-files-field"><span class="slider"></span></label>
+                </div>
+                <div class="field" id="as-max-files-field" hidden style="max-width:160px; margin-top:10px;"><label for="as-max-files">Maksimal fayllar soni</label><input id="as-max-files" type="number" value="3" min="1"></div>
+
+                <div class="field" style="margin-top:14px;"><label>Ruxsat etilgan fayl turlari</label>
+                  <div id="as-filetypes" style="display:flex; flex-wrap:wrap; gap:8px;" data-row-list="filetype-chip-list">
+                    <span class="file-chip">.PDF <button type="button" data-remove-row aria-label="PDF ni olib tashlash"><i class="bi bi-x"></i></button></span>
+                    <span class="file-chip">.ZIP <button type="button" data-remove-row aria-label="ZIP ni olib tashlash"><i class="bi bi-x"></i></button></span>
+                    <span class="file-chip">.PY <button type="button" data-remove-row aria-label="PY ni olib tashlash"><i class="bi bi-x"></i></button></span>
+                  </div>
+                  <div style="display:flex; gap:8px; margin-top:10px;">
+                    <input id="as-filetype-input" placeholder="Masalan: docx" style="max-width:160px;">
+                    <button type="button" class="btn btn-outline btn-sm" data-add-filetype><i class="bi bi-plus-lg"></i> Qo'shish</button>
+                  </div>
+                </div>
+
+                <div class="field" style="max-width:200px; margin-bottom:0;"><label for="as-max-size">Maksimal fayl hajmi (MB)</label><input id="as-max-size" type="number" value="25" min="1"></div>
+              </div>
+            </div>
+
+            <div class="card card-pad">
+              <div class="settings-section-title">Kechikkan topshirish</div>
+              <div class="settings-section-sub">Muddatdan keyin topshirishga ruxsat berish.</div>
+              <div class="settings-item">
+                <div class="settings-item-info"><div class="settings-item-label">Kechikkan topshirishga ruxsat</div><div class="settings-item-desc">O'chirilsa — muddat tugagach topshirish yopiladi</div></div>
+                <label class="switch settings-item-control"><input type="checkbox" checked data-reveals="as-late-penalty-field"><span class="slider"></span></label>
+              </div>
+              <div class="field" id="as-late-penalty-field" style="margin-top:12px; margin-bottom:0; max-width:200px;"><label for="as-late-penalty">Har kunlik jarima (%)</label><input id="as-late-penalty" type="number" value="10" min="0" max="100"></div>
+            </div>
+
+            <div class="card card-pad">
+              <div class="settings-section-title">Urinishlar</div>
+              <div class="settings-section-sub">Talaba necha marta qayta topshira olishini belgilang.</div>
+              <div class="field" style="max-width:200px; margin-bottom:0;"><label for="as-attempts">Maksimal urinishlar</label><input id="as-attempts" type="number" value="2" min="1"></div>
+            </div>
+
+            <div class="card card-pad">
+              <div class="section-header"><h3>Baholash mezoni (Rubrika)</h3><span style="font-size:12.5px; color:var(--ink-500);">Jami: <b data-rubric-total>0</b> ball</span></div>
+              <div data-row-list="rubric-row-template">
+                <div class="question-option-row">
+                  <input type="text" value="Modellar to'g'ri belgilangan (ForeignKey, fields)" style="flex:2;">
+                  <input type="number" value="40" min="0" style="width:80px;">
+                  <button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="question-option-row">
+                  <input type="text" value="Migratsiyalar xatosiz ishlaydi" style="flex:2;">
+                  <input type="number" value="30" min="0" style="width:80px;">
+                  <button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="question-option-row">
+                  <input type="text" value="Kod uslubi va izohlar" style="flex:2;">
+                  <input type="number" value="30" min="0" style="width:80px;">
+                  <button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+                </div>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="rubric-row-template"><i class="bi bi-plus-lg"></i> Mezon qo'shish</button>
+            </div>
+
+            <div class="card card-pad">
+              <div class="editor-block-label"><i class="bi bi-sticky-fill"></i> Baholash uchun eslatmalar (faqat o'qituvchi uchun)</div>
+              <textarea class="editor-textarea" rows="3">Talabalar ko'pincha ManyToMany maydonlarni unutishadi — shunga alohida e'tibor bering.</textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RESOURCES TAB (mirrors lesson-editor.html's Resources tab) -->
+        <div data-tab-panel="resources" hidden style="margin-top:22px;">
+          <div class="card card-pad">
+            <div class="section-header">
+              <h3>Resurslar</h3>
+              <div style="display:flex; gap:8px;">
+                <a href="resource-library.html" class="btn btn-outline btn-sm"><i class="bi bi-collection"></i> Kutubxonadan tanlash</a>
+                <button type="button" class="btn btn-teach btn-sm" data-add-row="as-resource-card-template" data-marks-dirty><i class="bi bi-plus-lg"></i> Resurs qo'shish</button>
+              </div>
+            </div>
+            <div class="resource-grid" data-row-list="as-resource-card-template" data-sortable-list>
+              <div class="card resource-card" draggable="true" data-sortable-item>
+                <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+                <div class="resource-icon" style="background:var(--ink-500);"><i class="bi bi-file-earmark-zip-fill"></i></div>
+                <div class="resource-body"><div class="resource-name">starter-models.zip</div><div class="resource-meta">ZIP · 220 KB</div></div>
+                <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+              </div>
+              <div class="card resource-card" draggable="true" data-sortable-item>
+                <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+                <div class="resource-icon" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                <div class="resource-body"><div class="resource-name">baholash-mezoni.pdf</div><div class="resource-meta">PDF · 90 KB</div></div>
+                <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SETTINGS TAB -->
+        <div data-tab-panel="settings" hidden style="margin-top:22px;">
+          <div class="wk-col">
+            <div class="card card-pad">
+              <div class="settings-section-title">Umumiy</div>
+              <div class="settings-section-sub">Topshiriqning asosiy ma'lumotlari.</div>
+              <div class="field"><label for="as-desc">Qisqa tavsif</label><input id="as-desc" value="Django ORM yordamida kurs katalogi modellarini loyihalash"></div>
+              <div style="display:flex; gap:12px;">
+                <div class="field" style="flex:1;"><label for="as-max-score">Maksimal ball</label><input id="as-max-score" type="number" value="100" min="0"></div>
+                <div class="field" style="flex:1;"><label for="as-est-time">Taxminiy vaqt (daqiqa)</label><input id="as-est-time" type="number" value="90" min="0"></div>
+              </div>
+            </div>
+
+            <div class="card card-pad">
+              <div class="settings-section-title">Muddat</div>
+              <div class="settings-section-sub">Topshirish uchun sana va vaqtni belgilang.</div>
+              <div style="display:flex; gap:12px;">
+                <div class="field" style="flex:1;"><label for="as-due-date">Sana</label><input id="as-due-date" type="date" value="2026-07-28"></div>
+                <div class="field" style="flex:1;"><label for="as-due-time">Vaqt</label><input id="as-due-time" type="time" value="23:59"></div>
+              </div>
+            </div>
+
+            <div class="card card-pad">
+              <div class="settings-section-title">Ko'rinish</div>
+              <div class="settings-section-sub">Topshiriqni kim va qachon ko'ra olishini belgilang.</div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <label class="opt-row"><input type="radio" name="assignment-visibility" checked> Ochiq — barcha ro'yxatdan o'tgan talabalar ko'ra oladi</label>
+                <label class="opt-row"><input type="radio" name="assignment-visibility"> Yashirin — faqat instruktor ko'ra oladi</label>
+                <label class="opt-row"><input type="radio" name="assignment-visibility"> Rejalashtirilgan — belgilangan sanadan boshlab ochiladi</label>
+              </div>
+            </div>
+
+            <div class="card card-pad">
+              <div class="settings-section-title">Holat</div>
+              <div class="settings-item">
+                <div class="settings-item-info"><div class="settings-item-label">Nashr etish</div><div class="settings-item-desc">Nashr etilgan topshiriqlar talabalarga ko'rinadi</div></div>
+                <span class="badge badge-green settings-item-control">Nashr etilgan</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PREVIEW TAB -->
+        <div data-tab-panel="preview" hidden style="margin-top:22px;">
+          <div class="lesson-preview-frame">
+            <div class="lesson-preview-body">
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <h2 style="font-size:19px;">Django modellari loyihasi</h2>
+                <span class="badge badge-violet">100 ball · Muddat: 28-iyul, 23:59</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-700); line-height:1.7; margin-top:12px;">
+                Ushbu topshiriqda Django ORM yordamida kurs katalogi uchun modellarni loyihalashingiz kerak. Kamida 3 ta bog'langan model yarating (masalan, Course, Module, Lesson).
+              </p>
+              <div class="score-indicator" style="margin-top:14px;">
+                <span>Baholash mezoni</span>
+                <div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div>
+                <span>3 mezon · 100 ball</span>
+              </div>
+              <div class="section-header" style="margin-top:20px;"><h3 style="font-size:14px;">Resurslar</h3></div>
+              <div class="resource-grid">
+                <div class="card resource-card"><div class="resource-icon" style="background:var(--ink-500);"><i class="bi bi-file-earmark-zip-fill"></i></div><div class="resource-body"><div class="resource-name">starter-models.zip</div><div class="resource-meta">ZIP · 220 KB</div></div></div>
+                <div class="card resource-card"><div class="resource-icon" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div><div class="resource-body"><div class="resource-name">baholash-mezoni.pdf</div><div class="resource-meta">PDF · 90 KB</div></div></div>
+              </div>
+              <p style="font-size:11.5px; color:var(--ink-300); margin-top:18px;"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan topshiriq sahifasining taxminiy ko'rinishi — faqat oldindan ko'rish rejimi.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<template id="as-link-row-template">
+  <div class="link-row">
+    <i class="bi bi-box-arrow-up-right" style="color:var(--ink-500);"></i>
+    <input placeholder="https://...">
+    <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+  </div>
+</template>
+
+<template id="as-download-row-template">
+  <div class="download-row">
+    <i class="bi bi-file-earmark-arrow-down-fill" style="color:var(--ink-500);"></i>
+    <input placeholder="fayl-nomi.zip">
+    <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+  </div>
+</template>
+
+<template id="as-resource-card-template">
+  <div class="card resource-card" draggable="true" data-sortable-item>
+    <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+    <div class="resource-icon" style="background:var(--ink-300);"><i class="bi bi-file-earmark-fill"></i></div>
+    <div class="resource-body"><div class="resource-name">Yangi resurs</div><div class="resource-meta">Fayl</div></div>
+    <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+  </div>
+</template>
+
+<template id="rubric-row-template">
+  <div class="question-option-row">
+    <input type="text" placeholder="Yangi mezon" style="flex:2;">
+    <input type="number" value="10" min="0" style="width:80px;">
+    <button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+  </div>
+</template>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/sortable.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/unsaved-guard.js"></script>
+<script src="../../js/tabs.js"></script>
+<script src="../../js/course-wizard.js"></script>
+<script src="../../js/settings-toggles.js"></script>
+<script src="../../js/lesson-editor.js"></script>
+<script src="../../js/assignment-editor.js"></script>
+</body>
+</html>

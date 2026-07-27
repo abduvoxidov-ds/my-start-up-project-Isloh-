@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurs tarkibi — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="instructor" data-active="courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="courses.html" style="color:inherit;">Kurslarim</a><span class="sep">/</span><a href="course-details.html" style="color:inherit;">Python Backend Development</a><span class="sep">/</span><span class="current">Kurs tarkibi</span></nav>
+      <div class="topbar-actions">
+        <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+      </div>
+    </header>
+
+    <main class="content" data-unsaved-scope data-ai-context="course-builder">
+      <div class="page-header">
+        <div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <h1>Kurs tarkibi</h1>
+            <span class="unsaved-badge" data-unsaved-indicator hidden><i class="bi bi-exclamation-circle-fill"></i> Saqlanmagan o'zgarishlar</span>
+          </div>
+          <p>Python Backend Development · Modullarni tashkil eting va tartibga soling.</p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="course-details.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kursga qaytish</a>
+          <button class="btn btn-outline btn-sm" data-ai-drawer-trigger onclick="isloh_openModal('ai-drawer-overlay')"><i class="bi bi-stars"></i> AI Yordamchi</button>
+          <button class="btn btn-teach" data-modal-open="add-module-modal" data-marks-dirty><i class="bi bi-plus-lg"></i> Modul qo'shish</button>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="wk-grid-4" style="margin-top:20px;">
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-collection-fill"></i></div><div class="stat-value">6</div><div class="stat-label">Jami modullar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-journal-text"></i></div><div class="stat-value">48</div><div class="stat-label">Jami darslar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-clock-history"></i></div><div class="stat-value">18s 40d</div><div class="stat-label">Umumiy davomiylik</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-check2-circle"></i></div><div class="stat-value">4 / 6</div><div class="stat-label">Nashr etilgan modullar</div></div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:22px;">
+        <div class="filter-bar" data-filter-group="status">
+          <button class="filter-chip active" data-filter-value="all">Barchasi</button>
+          <button class="filter-chip" data-filter-value="published">Nashr etilgan</button>
+          <button class="filter-chip" data-filter-value="draft">Qoralama</button>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Modul qidirish..." aria-label="Modul qidirish"></div>
+          <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Saralash"><option>Tartib bo'yicha</option><option>Nomi bo'yicha</option><option>Darslar soni bo'yicha</option></select>
+        </div>
+      </div>
+
+      <!-- LOADING SKELETON -->
+      <div style="margin-top:16px;" data-list-skeleton>
+        <div class="card skeleton-card" style="margin-bottom:12px;"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
+        <div class="card skeleton-card" style="margin-bottom:12px;"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
+        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
+      </div>
+
+      <!-- MODULES LIST -->
+      <div data-list-content hidden data-filterable>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;" data-modules-list data-sortable-list>
+
+          <div class="card module-card" data-filter-item data-status="published" data-filter-text="Kirish va sozlash" draggable="true" data-sortable-item>
+            <div class="module-header">
+              <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Modulni tashish"></i>
+              <button class="module-toggle" data-module-toggle aria-expanded="true" aria-label="Yig'ish/Yoyish"><i class="bi bi-chevron-down"></i></button>
+              <div class="module-info">
+                <div class="module-title-row">
+                  <span class="module-title filter-title">1-modul: Kirish va sozlash</span>
+                  <span class="badge badge-green">Nashr etilgan</span>
+                </div>
+                <div class="module-desc">Docker, Git va muhitni sozlash bo'yicha boshlang'ich modul.</div>
+              </div>
+              <div class="module-meta">
+                <span><i class="bi bi-journal-text"></i> 6 dars</span>
+                <span><i class="bi bi-clock"></i> 2s 10d</span>
+              </div>
+              <div class="module-progress-mini"><div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div></div>
+              <div class="dropdown">
+                <button class="row-action" aria-label="Modul amallari"><i class="bi bi-three-dots"></i></button>
+                <div class="dropdown-menu">
+                  <a href="lesson-builder.html" class="dropdown-item"><i class="bi bi-list-task"></i> Darslarni boshqarish</a>
+                  <a href="quiz-builder.html" class="dropdown-item"><i class="bi bi-patch-question"></i> Testlar</a>
+                  <a href="assignment-builder.html" class="dropdown-item"><i class="bi bi-file-earmark-text"></i> Topshiriqlar</a>
+                  <a href="resource-manager.html" class="dropdown-item"><i class="bi bi-folder2-open"></i> Resurslar</a>
+                  <div class="dropdown-item" data-action="duplicate-module"><i class="bi bi-copy"></i> Nusxalash</div>
+                  <div class="dropdown-item" style="color:var(--danger);" data-action="delete-module"><i class="bi bi-trash"></i> O'chirish</div>
+                </div>
+              </div>
+            </div>
+            <div class="module-body">
+              <div class="module-preview-list">
+                <div class="module-preview-item"><i class="bi bi-play-circle-fill"></i> Kursga kirish (Video · 8 daq)</div>
+                <div class="module-preview-item"><i class="bi bi-file-text-fill"></i> Muhitni sozlash (Maqola · 12 daq)</div>
+                <div class="module-preview-item"><i class="bi bi-patch-question-fill"></i> Bilimni tekshirish (Test · 5 daq)</div>
+              </div>
+              <div class="module-body-foot"><a href="lesson-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-list-task"></i> Barcha darslarni ko'rish (6)</a></div>
+            </div>
+          </div>
+
+          <div class="card module-card" data-filter-item data-status="published" data-filter-text="Python asoslari" draggable="true" data-sortable-item>
+            <div class="module-header">
+              <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Modulni tashish"></i>
+              <button class="module-toggle" data-module-toggle aria-expanded="true" aria-label="Yig'ish/Yoyish"><i class="bi bi-chevron-down"></i></button>
+              <div class="module-info">
+                <div class="module-title-row">
+                  <span class="module-title filter-title">2-modul: Python asoslari</span>
+                  <span class="badge badge-green">Nashr etilgan</span>
+                </div>
+                <div class="module-desc">O'zgaruvchilar, funksiyalar va OOP asoslari.</div>
+              </div>
+              <div class="module-meta">
+                <span><i class="bi bi-journal-text"></i> 10 dars</span>
+                <span><i class="bi bi-clock"></i> 3s 40d</span>
+              </div>
+              <div class="module-progress-mini"><div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div></div>
+              <div class="dropdown">
+                <button class="row-action" aria-label="Modul amallari"><i class="bi bi-three-dots"></i></button>
+                <div class="dropdown-menu">
+                  <a href="lesson-builder.html" class="dropdown-item"><i class="bi bi-list-task"></i> Darslarni boshqarish</a>
+                  <a href="quiz-builder.html" class="dropdown-item"><i class="bi bi-patch-question"></i> Testlar</a>
+                  <a href="assignment-builder.html" class="dropdown-item"><i class="bi bi-file-earmark-text"></i> Topshiriqlar</a>
+                  <a href="resource-manager.html" class="dropdown-item"><i class="bi bi-folder2-open"></i> Resurslar</a>
+                  <div class="dropdown-item" data-action="duplicate-module"><i class="bi bi-copy"></i> Nusxalash</div>
+                  <div class="dropdown-item" style="color:var(--danger);" data-action="delete-module"><i class="bi bi-trash"></i> O'chirish</div>
+                </div>
+              </div>
+            </div>
+            <div class="module-body">
+              <div class="module-preview-list">
+                <div class="module-preview-item"><i class="bi bi-play-circle-fill"></i> O'zgaruvchilar va turlar (Video · 14 daq)</div>
+                <div class="module-preview-item"><i class="bi bi-play-circle-fill"></i> Funksiyalar (Video · 18 daq)</div>
+                <div class="module-preview-item"><i class="bi bi-file-earmark-text-fill"></i> Uy vazifasi: OOP (Topshiriq)</div>
+              </div>
+              <div class="module-body-foot"><a href="lesson-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-list-task"></i> Barcha darslarni ko'rish (10)</a></div>
+            </div>
+          </div>
+
+          <div class="card module-card" data-filter-item data-status="published" data-filter-text="Django va DRF" draggable="true" data-sortable-item>
+            <div class="module-header">
+              <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Modulni tashish"></i>
+              <button class="module-toggle collapsed" data-module-toggle aria-expanded="false" aria-label="Yig'ish/Yoyish"><i class="bi bi-chevron-down"></i></button>
+              <div class="module-info">
+                <div class="module-title-row">
+                  <span class="module-title filter-title">3-modul: Django va DRF</span>
+                  <span class="badge badge-green">Nashr etilgan</span>
+                </div>
+                <div class="module-desc">Modellar, serializerlar va REST API yaratish.</div>
+              </div>
+              <div class="module-meta">
+                <span><i class="bi bi-journal-text"></i> 14 dars</span>
+                <span><i class="bi bi-clock"></i> 5s 20d</span>
+              </div>
+              <div class="module-progress-mini"><div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div></div>
+              <div class="dropdown">
+                <button class="row-action" aria-label="Modul amallari"><i class="bi bi-three-dots"></i></button>
+                <div class="dropdown-menu">
+                  <a href="lesson-builder.html" class="dropdown-item"><i class="bi bi-list-task"></i> Darslarni boshqarish</a>
+                  <a href="quiz-builder.html" class="dropdown-item"><i class="bi bi-patch-question"></i> Testlar</a>
+                  <a href="assignment-builder.html" class="dropdown-item"><i class="bi bi-file-earmark-text"></i> Topshiriqlar</a>
+                  <a href="resource-manager.html" class="dropdown-item"><i class="bi bi-folder2-open"></i> Resurslar</a>
+                  <div class="dropdown-item" data-action="duplicate-module"><i class="bi bi-copy"></i> Nusxalash</div>
+                  <div class="dropdown-item" style="color:var(--danger);" data-action="delete-module"><i class="bi bi-trash"></i> O'chirish</div>
+                </div>
+              </div>
+            </div>
+            <div class="module-body collapsed">
+              <div class="module-preview-list">
+                <div class="module-preview-item"><i class="bi bi-play-circle-fill"></i> Django ORM (Video · 22 daq)</div>
+                <div class="module-preview-item"><i class="bi bi-paperclip"></i> DRF hujjatlari (Resurs)</div>
+              </div>
+              <div class="module-body-foot"><a href="lesson-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-list-task"></i> Barcha darslarni ko'rish (14)</a></div>
+            </div>
+          </div>
+
+          <div class="card module-card" data-filter-item data-status="draft" data-filter-text="Deployment va DevOps" draggable="true" data-sortable-item>
+            <div class="module-header">
+              <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Modulni tashish"></i>
+              <button class="module-toggle collapsed" data-module-toggle aria-expanded="false" aria-label="Yig'ish/Yoyish"><i class="bi bi-chevron-down"></i></button>
+              <div class="module-info">
+                <div class="module-title-row">
+                  <span class="module-title filter-title">4-modul: Deployment va DevOps</span>
+                  <span class="badge badge-warning">Qoralama</span>
+                </div>
+                <div class="module-desc">Docker, CI/CD va production'ga chiqarish.</div>
+              </div>
+              <div class="module-meta">
+                <span><i class="bi bi-journal-text"></i> 8 dars</span>
+                <span><i class="bi bi-clock"></i> 3s 10d</span>
+              </div>
+              <div class="module-progress-mini"><div class="progress-track"><div class="progress-fill" style="width:55%; background:var(--warning);"></div></div></div>
+              <div class="dropdown">
+                <button class="row-action" aria-label="Modul amallari"><i class="bi bi-three-dots"></i></button>
+                <div class="dropdown-menu">
+                  <a href="lesson-builder.html" class="dropdown-item"><i class="bi bi-list-task"></i> Darslarni boshqarish</a>
+                  <a href="quiz-builder.html" class="dropdown-item"><i class="bi bi-patch-question"></i> Testlar</a>
+                  <a href="assignment-builder.html" class="dropdown-item"><i class="bi bi-file-earmark-text"></i> Topshiriqlar</a>
+                  <a href="resource-manager.html" class="dropdown-item"><i class="bi bi-folder2-open"></i> Resurslar</a>
+                  <div class="dropdown-item" data-action="duplicate-module"><i class="bi bi-copy"></i> Nusxalash</div>
+                  <div class="dropdown-item" style="color:var(--danger);" data-action="delete-module"><i class="bi bi-trash"></i> O'chirish</div>
+                </div>
+              </div>
+            </div>
+            <div class="module-body collapsed">
+              <div class="module-preview-list">
+                <div class="module-preview-item"><i class="bi bi-play-circle-fill"></i> Dockerfile yozish (Video · 16 daq)</div>
+              </div>
+              <div class="module-body-foot"><a href="lesson-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-list-task"></i> Barcha darslarni ko'rish (8)</a></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="empty-state" data-filter-empty style="display:none;">
+          <div class="empty-icon"><i class="bi bi-collection"></i></div><div class="empty-title">Modul topilmadi</div><div class="empty-sub">Bu filtr yoki qidiruv bo'yicha modul yo'q.</div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODULE TEMPLATE (cloned by js/course-builder.js on "Modul qo'shish") -->
+<template id="module-template">
+  <div class="card module-card" data-filter-item data-status="draft" draggable="true" data-sortable-item>
+    <div class="module-header">
+      <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Modulni tashish"></i>
+      <button class="module-toggle collapsed" data-module-toggle aria-expanded="false" aria-label="Yig'ish/Yoyish"><i class="bi bi-chevron-down"></i></button>
+      <div class="module-info">
+        <div class="module-title-row">
+          <span class="module-title filter-title">Yangi modul</span>
+          <span class="badge badge-warning">Qoralama</span>
+        </div>
+        <div class="module-desc">Tavsif</div>
+      </div>
+      <div class="module-meta">
+        <span><i class="bi bi-journal-text"></i> 0 dars</span>
+        <span><i class="bi bi-clock"></i> 0 daq</span>
+      </div>
+      <div class="module-progress-mini"><div class="progress-track"><div class="progress-fill" style="width:0%; background:var(--warning);"></div></div></div>
+      <div class="dropdown">
+        <button class="row-action" aria-label="Modul amallari"><i class="bi bi-three-dots"></i></button>
+        <div class="dropdown-menu">
+          <a href="lesson-builder.html" class="dropdown-item"><i class="bi bi-list-task"></i> Darslarni boshqarish</a>
+                  <a href="quiz-builder.html" class="dropdown-item"><i class="bi bi-patch-question"></i> Testlar</a>
+                  <a href="assignment-builder.html" class="dropdown-item"><i class="bi bi-file-earmark-text"></i> Topshiriqlar</a>
+                  <a href="resource-manager.html" class="dropdown-item"><i class="bi bi-folder2-open"></i> Resurslar</a>
+          <div class="dropdown-item" data-action="duplicate-module"><i class="bi bi-copy"></i> Nusxalash</div>
+          <div class="dropdown-item" style="color:var(--danger);" data-action="delete-module"><i class="bi bi-trash"></i> O'chirish</div>
+        </div>
+      </div>
+    </div>
+    <div class="module-body collapsed">
+      <div class="module-preview-list">
+        <div class="module-preview-item" style="color:var(--ink-300);">Hali dars qo'shilmagan</div>
+      </div>
+      <div class="module-body-foot"><a href="lesson-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-list-task"></i> Dars qo'shish</a></div>
+    </div>
+  </div>
+</template>
+
+<!-- ADD MODULE MODAL -->
+<div class="modal-overlay" id="add-module-modal" hidden>
+  <div class="modal" style="max-width:420px;">
+    <form data-add-module-form>
+      <div class="modal-head"><b>Yangi modul qo'shish</b><button type="button" class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('add-module-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+      <div class="modal-body">
+        <div class="field"><label for="mod-title">Modul nomi</label><input id="mod-title" name="title" placeholder="Masalan: Testlash va sifat nazorati" required></div>
+        <div class="field" style="margin-bottom:0;"><label for="mod-desc">Qisqa tavsif</label><input id="mod-desc" name="desc" placeholder="Modul haqida qisqacha yozing"></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline btn-sm" onclick="isloh_closeModal('add-module-modal')">Bekor qilish</button>
+        <button type="submit" class="btn btn-teach btn-sm" data-marks-dirty><i class="bi bi-plus-lg"></i> Qo'shish</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- DELETE MODULE CONFIRM MODAL -->
+<div class="modal-overlay" id="delete-module-modal" hidden>
+  <div class="modal">
+    <div class="modal-head"><b style="color:var(--danger);">Modulni o'chirishni tasdiqlang</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('delete-module-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body">Bu modul va undagi barcha darslar o'chiriladi. Bu amalni qaytarib bo'lmaydi.</div>
+    <div class="modal-foot">
+      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('delete-module-modal')">Bekor qilish</button>
+      <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-module data-marks-dirty>Ha, o'chirish</button>
+    </div>
+  </div>
+</div>
+
+<!-- AI DRAWER (Sprint 8A) -->
+<div id="ai-drawer-mount"></div>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/filterable.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/sortable.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/tabs.js"></script>
+<script src="../../js/unsaved-guard.js"></script>
+<script src="../../js/courses.js"></script>
+<script src="../../js/course-builder.js"></script>
+<script src="../../js/ai-assistant.js"></script>
+<script src="../../js/ai-panel.js"></script>
+<script src="../../js/ai-chat.js"></script>
+</body>
+</html>

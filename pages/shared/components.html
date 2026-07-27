@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Komponentlar — Isloh Design System</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  /* Page-local: layout for this gallery page only. Every actual widget
+     (.switch, .dropdown, .tooltip-wrap, .toast-demo, .chip-demo, .tag-demo,
+     .breadcrumb-demo, .spinner, .skeleton, .modal-demo, code.inline) now
+     lives in css/components.css + css/animations.css — see Sprint 2 CSS
+     Architecture — so this page just consumes them like any other page
+     would, instead of redefining them. */
+  .comp-section { margin-bottom: 34px; }
+  .comp-section h3 { font-size:15px; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .comp-section h3::before { content:''; width:4px; height:16px; background:var(--violet-600); border-radius:2px; }
+  .comp-row { display:flex; flex-wrap:wrap; gap:14px; align-items:center; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="components">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Komponent qidirish..." aria-label="Komponent qidirish"></div>
+      <div class="topbar-actions"><div class="avatar">SM</div></div>
+    </header>
+
+    <main class="content" style="max-width:980px;">
+      <h1 style="font-size:24px;">Komponentlar kutubxonasi</h1>
+      <p style="color:var(--ink-500); margin-top:4px; margin-bottom:30px;">Isloh dizayn tizimidagi qayta ishlatiladigan UI elementlari — <code class="inline">style.css</code> asosida.</p>
+
+      <div class="comp-section">
+        <h3>Tugmalar (Buttons)</h3>
+        <div class="comp-row">
+          <button class="btn btn-primary">Asosiy</button>
+          <button class="btn btn-teach">Teach</button>
+          <button class="btn btn-outline">Outline</button>
+          <button class="btn btn-ghost">Ghost</button>
+          <button class="btn btn-primary btn-sm">Kichik</button>
+          <button class="btn btn-primary" disabled style="opacity:.5; cursor:not-allowed;">O'chirilgan</button>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Kirish maydonlari (Inputs)</h3>
+        <div class="comp-row" style="align-items:flex-start;">
+          <div class="field" style="width:220px; margin-bottom:0;"><label>Standart</label><input placeholder="Matn kiriting"></div>
+          <div class="field" style="width:220px; margin-bottom:0;"><label>Fokusda</label><input placeholder="Bosing..." style="border-color:var(--violet-500); background:#fff;"></div>
+          <div class="field" style="width:220px; margin-bottom:0;"><label style="color:var(--danger);">Xatolik</label><input placeholder="Email noto'g'ri" style="border-color:var(--danger); background:#FFF5F5;"><div class="field-hint" style="color:var(--danger);">To'g'ri email kiriting</div></div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Dropdown</h3>
+        <div class="dropdown open" style="display:inline-block;">
+          <button class="btn btn-outline">Kategoriya tanlang <i class="bi bi-chevron-down"></i></button>
+          <div class="dropdown-menu" style="display:block; position:static; margin-top:8px; box-shadow:var(--shadow-sm);">
+            <div class="dropdown-item"><i class="bi bi-code-slash"></i> Dasturlash</div>
+            <div class="dropdown-item"><i class="bi bi-palette"></i> Dizayn</div>
+            <div class="dropdown-item"><i class="bi bi-graph-up"></i> Biznes</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Checkbox / Switch / Radio</h3>
+        <div class="comp-row">
+          <label class="opt-row"><input type="checkbox" checked> Checkbox</label>
+          <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+          <label class="opt-row"><input type="radio" name="r" checked> Radio A</label>
+          <label class="opt-row"><input type="radio" name="r"> Radio B</label>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Kartalar (Cards)</h3>
+        <div class="comp-row">
+          <div class="card card-pad" style="width:220px;">
+            <div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-star-fill"></i></div>
+            <div style="font-weight:700; font-size:14px;">Oddiy karta</div>
+            <div style="font-size:12.5px; color:var(--ink-500); margin-top:4px;">Ikonka, sarlavha va matn</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Dialog / Modal</h3>
+        <div class="modal-demo">
+          <div class="modal-head"><span style="font-weight:700; font-size:14.5px;">Kursdan chiqasizmi?</span><i class="bi bi-x-lg" style="cursor:pointer; color:var(--ink-500);"></i></div>
+          <div class="modal-body">Bu amalni bekor qilib bo'lmaydi. Kursdagi progressingiz saqlanadi.</div>
+          <div class="modal-foot"><button class="btn btn-outline btn-sm">Bekor qilish</button><button class="btn btn-primary btn-sm">Ha, chiqish</button></div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Toast</h3>
+        <div class="comp-row">
+          <div class="toast-demo"><i class="bi bi-check-circle-fill" style="color:var(--teach-green); font-size:18px;"></i> O'zgarishlar saqlandi</div>
+          <div class="toast-demo"><i class="bi bi-exclamation-triangle-fill" style="color:var(--danger); font-size:18px;"></i> Xatolik yuz berdi</div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Tooltip</h3>
+        <div class="tooltip-wrap">
+          <button class="icon-btn" aria-label="Ma'lumot"><i class="bi bi-info-circle"></i></button>
+          <div class="tooltip-box">Bu qo'shimcha ma'lumot</div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Progress bar</h3>
+        <div style="max-width:320px;">
+          <div class="progress-track"><div class="progress-fill" style="width:72%;"></div></div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Qidiruv (Search)</h3>
+        <div class="topbar-search" style="width:280px; background:#fff; border:1.5px solid var(--border-soft);"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Pagination</h3>
+        <div class="pager" style="justify-content:flex-start;">
+          <button aria-label="Oldingi sahifa"><i class="bi bi-chevron-left"></i></button>
+          <button class="active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <button aria-label="Keyingi sahifa"><i class="bi bi-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Yuklanish holati (Loading)</h3>
+        <div class="comp-row">
+          <div class="spinner"></div>
+          <div class="skeleton" style="width:180px; height:16px;"></div>
+          <div class="skeleton" style="width:60px; height:60px; border-radius:12px;"></div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Badge / Chip / Tag</h3>
+        <div class="comp-row">
+          <span class="badge badge-violet">Yangi</span>
+          <span class="badge badge-green">Faol</span>
+          <span class="badge badge-neutral">Neytral</span>
+          <span class="chip-demo">Filtr chip</span>
+          <span class="tag-demo" style="background:var(--violet-100); color:var(--violet-600);">#django</span>
+          <span class="tag-demo" style="background:var(--teach-green-100); color:var(--teach-green);">#bepul</span>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Tabs</h3>
+        <div class="tab-strip" style="max-width:320px;">
+          <div class="tab-item active">Faol</div>
+          <div class="tab-item">Yakunlangan</div>
+          <div class="tab-item">Bekor qilingan</div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Avatar</h3>
+        <div class="comp-row">
+          <div class="avatar">SM</div>
+          <div class="avatar" style="background:linear-gradient(135deg,#F97316,#EA580C);">AK</div>
+          <div class="avatar" style="width:48px; height:48px; font-size:16px;">+5</div>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Breadcrumb</h3>
+        <div class="breadcrumb-demo">
+          <span>Kurslar</span><span class="sep">/</span><span>Backend</span><span class="sep">/</span><span class="current">Python Backend Development</span>
+        </div>
+      </div>
+
+      <div class="comp-section">
+        <h3>Navigatsiya (sidebar item holatlari)</h3>
+        <div style="background:var(--indigo-950); padding:14px; border-radius:var(--r-lg); max-width:220px;">
+          <div class="nav-item active"><i class="bi bi-grid-1x2-fill"></i> Faol holat</div>
+          <div class="nav-item"><i class="bi bi-journal"></i> Oddiy holat</div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/toast.js"></script>
+</body>
+</html>

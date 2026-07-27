@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  .grid-4 { display:grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .grid-2 { display:grid; grid-template-columns: 1.4fr 1fr; gap: 18px; margin-top: 18px; }
+  .plan-row { display:flex; align-items:center; justify-content:space-between; padding: 10px 0; border-bottom:1px solid var(--border-soft); font-size:14px; }
+  .plan-row:last-child { border-bottom:none; }
+  .bar-chart { display:flex; align-items:flex-end; gap:10px; height:110px; margin-top:14px; }
+  .bar-chart .bar { flex:1; background: linear-gradient(180deg, var(--violet-500), var(--violet-600)); border-radius: 6px 6px 2px 2px; opacity: .85; }
+  .bar-chart .bar.light { background: var(--border-soft); }
+  .msg-row { display:flex; gap:12px; align-items:center; padding: 10px 0; }
+  .dash-heatmap { display:grid; grid-template-columns:repeat(20,1fr); gap:4px; margin-top:14px; }
+  .dash-heatmap .hcell { aspect-ratio:1; border-radius:3px; background:var(--border-soft); }
+  @media (max-width: 1100px){ .grid-4{grid-template-columns:repeat(2,1fr);} .grid-2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" data-role="student" data-active="dashboard">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <h1 style="font-size:24px;">Salom, Samar! 👋</h1>
+      <p style="color:var(--ink-500); margin-top:4px;">Davom eting: siz ajoyib ketyapsiz.</p>
+
+      <div class="grid-4" style="margin-top:22px;">
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-clock-fill"></i></div>
+          <div class="stat-value">3<span style="font-size:14px; color:var(--ink-500); font-weight:600;">soat 00m</span></div>
+          <div class="stat-label">Bugungi maqsad</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-fire"></i></div>
+          <div class="stat-value">12</div>
+          <div class="stat-label">O'rganish seriyasi</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-journal-check"></i></div>
+          <div class="stat-value">5</div>
+          <div class="stat-label">Jarayondagi kurslar</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-trophy-fill"></i></div>
+          <div class="stat-value">8</div>
+          <div class="stat-label">Yakunlangan kurslar</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card card-pad">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="font-size:16px;">O'rganishni davom ettirish</h3>
+          </div>
+          <div style="display:flex; align-items:center; gap:16px; margin-top:16px;">
+            <div class="course-cover" style="width:64px; height:64px; border-radius:14px; background:linear-gradient(135deg,#306998,#FFD43B); flex-shrink:0;"><i class="bi bi-filetype-py" style="font-size:26px;"></i></div>
+            <div style="flex:1;">
+              <div style="font-weight:700; font-size:14px;">Python Backend Development</div>
+              <div style="font-size:12px; color:var(--ink-500); margin:4px 0 8px;">Django & DRF kursi</div>
+              <div class="progress-track"><div class="progress-fill" style="width:63%;"></div></div>
+            </div>
+            <a href="course-player.html" class="btn btn-primary btn-sm">Davom etish</a>
+          </div>
+
+          <h3 style="font-size:16px; margin-top:26px;">Bugungi reja</h3>
+          <div class="plan-row"><span><i class="bi bi-circle" style="color:var(--violet-500);"></i>&nbsp; 10:00 — Django modellari</span><span class="badge badge-neutral">45 min</span></div>
+          <div class="plan-row"><span><i class="bi bi-circle" style="color:var(--violet-500);"></i>&nbsp; 14:00 — DRF ViewSets</span><span class="badge badge-neutral">30 min</span></div>
+          <div class="plan-row"><span><i class="bi bi-circle" style="color:var(--violet-500);"></i>&nbsp; 16:00 — 4-uy vazifasi</span><span class="badge badge-neutral">1 soat</span></div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          <div class="card card-pad">
+            <div style="display:flex; align-items:center; gap:8px;"><i class="bi bi-stars" style="color:var(--violet-600);"></i><h3 style="font-size:15px;">AI Tavsiyasi</h3></div>
+            <p style="font-size:13px; color:var(--ink-700); margin-top:10px;">Odatda soat 16:30 dan keyin biroz tanaffus qilasiz. Hozir mavzuni takrorlab qo'ying.</p>
+            <button class="btn btn-outline btn-sm" style="margin-top:10px;">Rad etish</button>
+          </div>
+          <div class="card card-pad">
+            <h3 style="font-size:15px;">Haftalik jarayon</h3>
+            <div class="bar-chart">
+              <div class="bar" style="height:40%;"></div>
+              <div class="bar" style="height:65%;"></div>
+              <div class="bar light" style="height:25%;"></div>
+              <div class="bar" style="height:80%;"></div>
+              <div class="bar" style="height:55%;"></div>
+              <div class="bar light" style="height:20%;"></div>
+              <div class="bar" style="height:90%;"></div>
+            </div>
+            <div style="font-size:12px; color:var(--ink-500); margin-top:10px;">14 soat 30 min • Maqsad: 20 soat</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-pad" style="margin-top:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3 style="font-size:16px;">So'nggi xabarlar</h3>
+          <a href="courses.html" style="font-size:13px; color:var(--violet-600); font-weight:600;">Barchasini ko'rish</a>
+        </div>
+        <div class="msg-row">
+          <div class="avatar" style="background:linear-gradient(135deg,#F97316,#EA580C);">BK</div>
+          <div style="flex:1;">
+            <div style="font-size:14px; font-weight:600;">Backend Course</div>
+            <div style="font-size:12px; color:var(--ink-500);">Akmal: Bugungi materiallarni yukladim</div>
+          </div>
+          <div style="font-size:12px; color:var(--ink-300);">10:30</div>
+        </div>
+      </div>
+
+      <!-- ============ Sprint 3A additions (new widgets, existing ones untouched) ============ -->
+
+      <!-- Quick actions -->
+      <div class="section-header" style="margin-top:26px;"><h3>Tezkor amallar</h3></div>
+      <div class="quick-actions">
+        <a href="courses.html" class="quick-action">
+          <div class="qa-icon"><i class="bi bi-play-circle-fill"></i></div>
+          <div class="qa-title">Darsni davom ettirish</div>
+          <div class="qa-sub">Python Backend</div>
+        </a>
+        <a href="tasks.html" class="quick-action">
+          <div class="qa-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-plus-square-fill"></i></div>
+          <div class="qa-title">Vazifa qo'shish</div>
+          <div class="qa-sub">Bugun 3 ta faol</div>
+        </a>
+        <a href="calendar.html" class="quick-action">
+          <div class="qa-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-calendar-plus-fill"></i></div>
+          <div class="qa-title">Jadvalni ko'rish</div>
+          <div class="qa-sub">2 ta yaqin muddat</div>
+        </a>
+        <a href="ai-assistant.html" class="quick-action">
+          <div class="qa-icon"><i class="bi bi-stars"></i></div>
+          <div class="qa-title">AI Yordamchi</div>
+          <div class="qa-sub">Savol bering</div>
+        </a>
+      </div>
+
+      <!-- Goals + Focus + Activity row -->
+      <div class="wk-grid-3" style="margin-top:18px;">
+        <!-- Weekly/Monthly goal rings -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>Maqsadlar</h3></div>
+          <div style="display:flex; justify-content:space-around; align-items:center;">
+            <div style="text-align:center;">
+              <div class="progress-ring">
+                <svg width="74" height="74" viewBox="0 0 74 74">
+                  <circle class="ring-track" cx="37" cy="37" r="31"></circle>
+                  <circle class="ring-fill" cx="37" cy="37" r="31" stroke-dasharray="194.8" stroke-dashoffset="52.6"></circle>
+                </svg>
+                <div class="ring-label"><span class="ring-val">73%</span><span class="ring-sub">Hafta</span></div>
+              </div>
+              <div style="font-size:12px; color:var(--ink-500); margin-top:8px;">14.5 / 20 soat</div>
+            </div>
+            <div style="text-align:center;">
+              <div class="progress-ring ring-green">
+                <svg width="74" height="74" viewBox="0 0 74 74">
+                  <circle class="ring-track" cx="37" cy="37" r="31"></circle>
+                  <circle class="ring-fill" cx="37" cy="37" r="31" stroke-dasharray="194.8" stroke-dashoffset="97.4"></circle>
+                </svg>
+                <div class="ring-label"><span class="ring-val">50%</span><span class="ring-sub">Oy</span></div>
+              </div>
+              <div style="font-size:12px; color:var(--ink-500); margin-top:8px;">40 / 80 soat</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Focus score -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>E'tibor bali</h3></div>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="progress-ring ring-warning">
+              <svg width="74" height="74" viewBox="0 0 74 74">
+                <circle class="ring-track" cx="37" cy="37" r="31"></circle>
+                <circle class="ring-fill" cx="37" cy="37" r="31" stroke-dasharray="194.8" stroke-dashoffset="27.3"></circle>
+              </svg>
+              <div class="ring-label"><span class="ring-val">86</span><span class="ring-sub">bal</span></div>
+            </div>
+            <div>
+              <div style="font-size:13px; color:var(--ink-700);">Ajoyib diqqat!</div>
+              <div style="font-size:12px; color:var(--ink-500); margin-top:4px;">O'tgan haftaga nisbatan <span style="color:var(--teach-green); font-weight:700;">+4%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>So'nggi faoliyat</h3><a href="discussions.html" class="section-action">Muhokamalar</a></div>
+          <div class="timeline">
+            <div class="timeline-item tl-green">
+              <div class="timeline-time">30 min oldin</div>
+              <div class="timeline-title">"Django ORM" darsi yakunlandi</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-time">2 soat oldin</div>
+              <div class="timeline-title">Yangi vazifa qo'shildi</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-time">3 soat oldin</div>
+              <div class="timeline-title">Akmal Yuldashev mavzuingizga javob berdi</div>
+            </div>
+            <div class="timeline-item tl-warning">
+              <div class="timeline-time">Kecha</div>
+              <div class="timeline-title">JavaScript testi topshirildi</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live session widget -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>Jonli sessiya</h3><a href="live-sessions.html" class="section-action">Barchasi</a></div>
+          <div class="live-session-card" style="border:1.5px solid var(--danger); border-radius:var(--r-md); padding:14px 16px;">
+            <div style="flex:1;">
+              <span class="ls-status live"><span class="dot-blink"></span> Jonli efirda</span>
+              <div class="ls-title" style="font-size:13.5px;">Haftalik Q&A sessiyasi</div>
+            </div>
+            <a href="live-sessions.html" class="btn btn-teach btn-sm">Qo'shilish</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deadlines + Heatmap preview + Motivation -->
+      <div class="wk-grid-3" style="margin-top:18px;">
+        <!-- Upcoming deadlines -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>Yaqin muddatlar</h3><a href="calendar.html" class="section-action">Kalendar</a></div>
+          <div class="upcoming-row">
+            <div class="upcoming-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-flag-fill"></i></div>
+            <div class="upcoming-body"><div class="upcoming-title">Loyiha topshirish</div><div class="upcoming-sub">3 kundan keyin</div></div>
+          </div>
+          <div class="upcoming-row">
+            <div class="upcoming-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-mortarboard-fill"></i></div>
+            <div class="upcoming-body"><div class="upcoming-title">JavaScript testi</div><div class="upcoming-sub">2 kundan keyin</div></div>
+          </div>
+        </div>
+
+        <!-- Learning heatmap preview -->
+        <div class="card card-pad">
+          <div class="section-header"><h3>O'quv faolligi</h3><a href="analytics.html" class="section-action">Batafsil</a></div>
+          <div class="dash-heatmap" id="dash-heatmap"></div>
+          <div style="font-size:12px; color:var(--ink-500); margin-top:12px;">So'nggi 60 kun • 42 faol kun</div>
+        </div>
+
+        <!-- Daily motivation -->
+        <div class="card card-pad" style="background:linear-gradient(135deg, var(--violet-600), var(--violet-500)); color:#fff; border:none;">
+          <div style="display:flex; align-items:center; gap:8px;"><i class="bi bi-quote"></i><h3 style="font-size:14px; color:#fff;">Kunlik motivatsiya</h3></div>
+          <p style="font-size:15px; font-weight:600; margin-top:12px; line-height:1.5;">"Har kun bir oz. Bu ko'p narsaga aylanadi."</p>
+          <div style="font-size:12px; color:rgba(255,255,255,.7); margin-top:12px;">12 kunlik seriya davom etmoqda 🔥</div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script>
+  // Fill the dashboard learning-heatmap preview (visual only, 60 cells).
+  (function () {
+    const grid = document.getElementById('dash-heatmap');
+    if (!grid) return;
+    const shades = ['var(--border-soft)', '#DED8F7', '#B9AEF0', '#8B7BE6', 'var(--violet-600)'];
+    let html = '';
+    for (let i = 0; i < 60; i++) {
+      const lvl = Math.random() < 0.3 ? 0 : 1 + Math.floor(Math.random() * 4);
+      html += `<div class="hcell" style="background:${shades[lvl]};"></div>`;
+    }
+    grid.innerHTML = html;
+  })();
+</script>
+</body>
+</html>

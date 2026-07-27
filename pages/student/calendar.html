@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalendar — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  /* Page-local: two-column calendar layout (main grid + right rail). All
+     widgets (.cal-*, .mini-cal-*, .upcoming-row, .cat-legend) come from
+     css/widgets.css. */
+  .cal-layout { display:grid; grid-template-columns: 1fr 300px; gap:18px; align-items:start; }
+  @media (max-width:1100px){ .cal-layout{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="calendar">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Kalendarni qidirish..." aria-label="Kalendarni qidirish"></div>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h1 style="font-size:24px;">Kalendar</h1>
+          <p style="color:var(--ink-500); margin-top:4px;">Darslar, muddatlar va imtihonlaringiz bir joyda.</p>
+        </div>
+        <button class="btn btn-primary" data-quick-add-event><i class="bi bi-plus-lg"></i> Tadbir qo'shish</button>
+      </div>
+
+      <div class="cal-layout" style="margin-top:20px;">
+        <!-- MAIN CALENDAR -->
+        <div class="card card-pad">
+          <div class="cal-toolbar">
+            <div class="cal-nav">
+              <button class="icon-btn" data-cal-prev aria-label="Oldingi oy"><i class="bi bi-chevron-left"></i></button>
+              <div class="cal-month-label" data-cal-month-label>—</div>
+              <button class="icon-btn" data-cal-next aria-label="Keyingi oy"><i class="bi bi-chevron-right"></i></button>
+              <button class="btn btn-outline btn-sm" data-cal-today>Bugun</button>
+            </div>
+            <div class="view-switch" role="tablist" aria-label="Ko'rinishni tanlash">
+              <button data-view="month" class="active">Oy</button>
+              <button data-view="week">Hafta</button>
+              <button data-view="day">Kun</button>
+            </div>
+          </div>
+
+          <!-- Month view -->
+          <div data-cal-view-panel="month">
+            <div class="cal-weekdays" id="cal-weekdays"></div>
+            <div class="cal-grid" id="cal-grid"></div>
+          </div>
+
+          <!-- Week / Day view (placeholder panels — full grids land in 3B) -->
+          <div data-cal-view-panel="week" hidden>
+            <div class="empty-state">
+              <div class="empty-icon"><i class="bi bi-calendar-week"></i></div>
+              <div class="empty-title">Haftalik ko'rinish tayyorlanmoqda</div>
+              <div class="empty-sub">Hozircha oylik ko'rinishdan foydalaning. Haftalik va kunlik ko'rinishlar keyingi bosqichda qo'shiladi.</div>
+            </div>
+          </div>
+          <div data-cal-view-panel="day" hidden>
+            <div class="empty-state">
+              <div class="empty-icon"><i class="bi bi-calendar-day"></i></div>
+              <div class="empty-title">Kunlik ko'rinish tayyorlanmoqda</div>
+              <div class="empty-sub">Bugungi tadbirlarni o'ng paneldagi "Bugungi jadval"da ko'rishingiz mumkin.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT RAIL -->
+        <div class="wk-col">
+          <!-- Mini calendar -->
+          <div class="card card-pad">
+            <div class="mini-cal-head">
+              <div class="mini-cal-month" id="mini-cal-month">—</div>
+            </div>
+            <div class="mini-cal-grid" id="mini-cal-grid"></div>
+          </div>
+
+          <!-- Today's timeline -->
+          <div class="card card-pad">
+            <div class="section-header"><h3>Bugungi jadval</h3></div>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-time">10:00 — 10:45</div>
+                <div class="timeline-title">Django modellari</div>
+              </div>
+              <div class="timeline-item tl-warning">
+                <div class="timeline-time">14:00 — 14:30</div>
+                <div class="timeline-title">DRF ViewSets amaliyot</div>
+              </div>
+              <div class="timeline-item tl-green">
+                <div class="timeline-time">16:00</div>
+                <div class="timeline-title">4-uy vazifasini topshirish</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming -->
+          <div class="card card-pad">
+            <div class="section-header"><h3>Yaqinlashayotgan</h3></div>
+            <div class="upcoming-row">
+              <div class="upcoming-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-flag-fill"></i></div>
+              <div class="upcoming-body">
+                <div class="upcoming-title">Loyiha topshirish</div>
+                <div class="upcoming-sub">3 kundan keyin</div>
+              </div>
+            </div>
+            <div class="upcoming-row">
+              <div class="upcoming-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-mortarboard-fill"></i></div>
+              <div class="upcoming-body">
+                <div class="upcoming-title">JavaScript testi</div>
+                <div class="upcoming-sub">2 kundan keyin</div>
+              </div>
+            </div>
+            <div class="upcoming-row">
+              <div class="upcoming-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-camera-video-fill"></i></div>
+              <div class="upcoming-body">
+                <div class="upcoming-title">Mentor uchrashuvi</div>
+                <div class="upcoming-sub">5 kundan keyin</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category legend -->
+          <div class="card card-pad">
+            <div class="section-header"><h3>Turkumlar</h3></div>
+            <div class="cat-legend">
+              <div class="cat-row"><span class="cat-swatch" style="background:var(--violet-600);"></span> Darslar</div>
+              <div class="cat-row"><span class="cat-swatch" style="background:var(--danger);"></span> Muddatlar</div>
+              <div class="cat-row"><span class="cat-swatch" style="background:var(--warning);"></span> Imtihonlar</div>
+              <div class="cat-row"><span class="cat-swatch" style="background:var(--teach-green);"></span> Shaxsiy</div>
+            </div>
+          </div>
+
+          <!-- AI scheduling teaser (prepares future AI support) -->
+          <div class="card card-pad" style="background:linear-gradient(135deg, var(--indigo-900), var(--indigo-950)); color:#fff; border:none;">
+            <div style="display:flex; align-items:center; gap:8px;"><i class="bi bi-stars"></i><h3 style="font-size:14px; color:#fff;">AI jadval tuzuvchi</h3></div>
+            <p style="font-size:12.5px; color:#C9C6E8; margin-top:8px;">AI dam olish vaqtlaringizni hisobga olib, optimal o'quv jadvalini taklif qilishi mumkin.</p>
+            <button class="btn btn-sm" style="margin-top:10px; background:rgba(255,255,255,.14); color:#fff;">Tez orada</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/calendar.js"></script>
+</body>
+</html>

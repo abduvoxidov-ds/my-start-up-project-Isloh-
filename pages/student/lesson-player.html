@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kursga kirish — Lesson Player — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  body { background:var(--bg-app); }
+  .fs-topbar { display:flex; align-items:center; gap:14px; padding:14px 24px; background:#fff; border-bottom:1px solid var(--border-soft); }
+  .fs-topbar .fs-title { font-weight:700; font-size:14.5px; }
+  .fs-topbar .fs-sub { font-size:12px; color:var(--ink-500); }
+  .fs-body { max-width:920px; margin:0 auto; padding:26px 24px 60px; }
+</style>
+</head>
+<body>
+<div class="fs-topbar">
+  <a href="course-player.html" class="icon-btn" aria-label="To'liq ekrandan chiqish"><i class="bi bi-fullscreen-exit"></i></a>
+  <div>
+    <div class="fs-title">Docker for Beginners</div>
+    <div class="fs-sub">1-modul · Kursga kirish</div>
+  </div>
+  <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+    <button class="btn btn-outline btn-sm" data-ai-drawer-trigger onclick="isloh_openModal('ai-drawer-overlay')"><i class="bi bi-stars"></i> AI Yordamchi</button>
+    <button class="icon-btn" data-lesson-bookmark aria-label="Xatcho'p"><i class="bi bi-bookmark"></i></button>
+    <a href="course-player.html" class="btn btn-outline btn-sm"><i class="bi bi-list-ul"></i> Kurs tarkibi</a>
+  </div>
+</div>
+
+<div class="fs-body" data-ai-context="course-player">
+  <div class="player-shell is-fullscreen">
+    <section class="lesson-viewer">
+      <div class="lesson-header">
+        <div>
+          <div class="lesson-header-title">Kursga kirish</div>
+          <div class="lesson-header-meta">
+            <span><i class="bi bi-collection-play"></i> 1-modul</span>
+            <span><i class="bi bi-clock"></i> Taxminiy vaqt: 8 daqiqa</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hidden lesson-row registry + panels share one data-tabs scope: lets
+           js/lesson-viewer.js's prev/next + progress logic, and js/tabs.js's
+           panel switching, work identically to course-player.html without
+           duplicating the full sidebar in this distraction-free view.
+           display:none rows are still clickable via script (used by the
+           Oldingi/Keyingi buttons below). -->
+      <div data-tabs>
+        <div class="cps-lesson-list" style="display:none;" aria-hidden="true">
+          <button class="tab-item cps-lesson active" data-cps-lesson data-tab-target="lesson-intro"><span class="cps-lesson-name">Kursga kirish</span><i class="cps-lesson-check" data-cps-lesson-check hidden></i></button>
+          <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-setup"><span class="cps-lesson-name">Muhitni sozlash</span><i class="cps-lesson-check" data-cps-lesson-check hidden></i></button>
+          <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-terminal"><span class="cps-lesson-name">Terminal buyruqlari</span><i class="cps-lesson-check" data-cps-lesson-check hidden></i></button>
+        </div>
+
+        <div data-tab-panel="lesson-intro">
+          <div class="lv-stage lv-stage-video">
+            <div class="play-btn"><i class="bi bi-play-fill"></i></div>
+            <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>2:14 / 8:24</span><i class="bi bi-volume-up" style="margin-left:auto;"></i><i class="bi bi-arrows-fullscreen"></i></div>
+            <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill"></div></div>
+          </div>
+        </div>
+        <div data-tab-panel="lesson-setup" hidden>
+          <div class="lv-article-body">
+            <h2>Muhitni sozlash</h2>
+            <p>Ushbu darsda siz Docker, VS Code va Git'ni o'rnatasiz hamda birinchi konteyneringizni ishga tushirasiz.</p>
+          </div>
+        </div>
+        <div data-tab-panel="lesson-terminal" hidden>
+          <div class="lv-stage lv-stage-video">
+            <div class="play-btn"><i class="bi bi-play-fill"></i></div>
+            <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 10:05</span><i class="bi bi-volume-up" style="margin-left:auto;"></i><i class="bi bi-arrows-fullscreen"></i></div>
+            <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill" style="width:0%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn btn-outline btn-sm" data-mark-complete><i class="bi bi-check2"></i> Yakunlandi deb belgilash</button>
+      </div>
+
+      <div class="lesson-nav-bar">
+        <button class="btn btn-outline btn-sm" data-lesson-prev><i class="bi bi-arrow-left"></i> Oldingi</button>
+        <span class="lnb-center"><i class="bi bi-collection-play"></i> Dars 1 / 24</span>
+        <button class="btn btn-teach btn-sm" data-lesson-next>Keyingi <i class="bi bi-arrow-right"></i></button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- AI DRAWER (Sprint 8A) -->
+<div id="ai-drawer-mount"></div>
+
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/tabs.js"></script>
+<script src="../../js/lesson-viewer.js"></script>
+<script src="../../js/ai-assistant.js"></script>
+<script src="../../js/ai-panel.js"></script>
+<script src="../../js/ai-chat.js"></script>
+</body>
+</html>

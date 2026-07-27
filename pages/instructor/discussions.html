@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhokamalar — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="instructor" data-active="courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="course-details.html" style="color:inherit;">Python Backend Development</a><span class="sep">/</span><span class="current">Muhokamalar</span></nav>
+      <div class="topbar-actions">
+        <a href="notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <h1>Muhokamalar va savollar</h1>
+          <p>Python Backend Development · Talabalar bilan muloqot qiling va savollarga javob bering.</p>
+        </div>
+        <button class="btn btn-teach btn-sm" onclick="isloh_openModal('announce-modal')"><i class="bi bi-megaphone-fill"></i> E'lon joylash</button>
+      </div>
+
+      <div class="wk-grid-4" style="margin-top:20px;">
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-chat-square-text-fill"></i></div><div class="stat-value">34</div><div class="stat-label">Faol mavzular</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-exclamation-circle-fill"></i></div><div class="stat-value">3</div><div class="stat-label">Javobsiz savollar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-check2-circle"></i></div><div class="stat-value">28</div><div class="stat-label">Hal qilingan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-clock-history"></i></div><div class="stat-value">1.4 soat</div><div class="stat-label">O'rtacha javob vaqti</div></div>
+      </div>
+
+      <div class="card card-pad" style="margin-top:18px;" data-filterable>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+          <div class="topbar-search" style="width:260px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Mavzularni qidirish..." aria-label="Mavzularni qidirish"></div>
+          <div data-filter-group="mtype" style="display:flex; gap:6px;">
+            <button class="category-chip active" data-filter-value="all">Barchasi</button>
+            <button class="category-chip" data-filter-value="unanswered">Javobsiz</button>
+            <button class="category-chip" data-filter-value="pinned">Qadalgan</button>
+          </div>
+        </div>
+
+        <div style="margin-top:16px; display:flex; flex-direction:column; gap:12px;">
+          <div class="card discussion-thread" data-thread data-filter-item data-mtype="unanswered" data-filter-text="Celery worker ishga tushmayapti">
+            <div class="dt-head">
+              <div class="avatar-sm">JR</div>
+              <div class="dt-head-main">
+                <div class="dt-title-row">
+                  <div class="dt-title"><a href="#">Celery worker Docker konteynerida ishga tushmayapti</a></div>
+                  <span class="role-badge student">Talaba</span>
+                </div>
+                <div class="dt-meta-row"><span>Javohir Rasimov</span><span>&middot;</span><span>2 soat oldin</span><span>&middot;</span><span>4-modul: Joylashtirish</span></div>
+                <div class="dt-excerpt">Celery workerni docker-compose orqali ishga tushirmoqchi bo'lganimda "ModuleNotFoundError" xatosi chiqyapti.</div>
+                <div class="dt-stats">
+                  <button class="dt-stat-btn like-btn" data-thread-like><i class="bi bi-hand-thumbs-up"></i> <span data-like-count>2</span></button>
+                  <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 0 ta javob</button>
+                  <button class="dt-stat-btn" data-thread-pin><i class="bi bi-pin-angle"></i> Qadash</button>
+                  <button class="dt-stat-btn" data-thread-solve><i class="bi bi-check2-circle"></i> Hal qilindi deb belgilash</button>
+                  <button class="dt-stat-btn" data-reply-box-toggle style="margin-left:auto;"><i class="bi bi-reply"></i> Javob berish</button>
+                </div>
+                <span class="solved-badge" data-solved-badge hidden style="margin-top:8px; display:inline-flex;"><i class="bi bi-check-circle-fill"></i> Hal qilindi</span>
+                <div data-reply-box hidden style="display:flex; gap:8px; margin-top:12px;">
+                  <input placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing" style="flex:1; border:1px solid var(--border-soft); border-radius:var(--r-sm); padding:8px 12px; font-size:13px;">
+                  <button class="btn btn-teach btn-sm">Yuborish</button>
+                </div>
+                <div data-reply-list hidden></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card discussion-thread dt-pinned" data-thread data-filter-item data-mtype="pinned" data-filter-text="1-modul uchun umumiy eslatma">
+            <div class="dt-head">
+              <div class="avatar-sm" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+              <div class="dt-head-main">
+                <div class="dt-title-row">
+                  <i class="bi bi-pin-angle-fill pin-thread-ic"></i>
+                  <div class="dt-title"><a href="#">📌 1-modul uchun umumiy eslatma va qo'shimcha materiallar</a></div>
+                  <span class="role-badge instructor">Siz</span>
+                </div>
+                <div class="dt-meta-row"><span>Siz</span><span>&middot;</span><span>2 kun oldin</span><span>&middot;</span><span>1-modul: Kirish</span></div>
+                <div class="dt-stats">
+                  <button class="dt-stat-btn like-btn" data-thread-like><i class="bi bi-hand-thumbs-up"></i> <span data-like-count>18</span></button>
+                  <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 6 ta javobni ko'rish</button>
+                  <button class="dt-stat-btn active" data-thread-pin><i class="bi bi-pin-fill"></i> Qadalgan</button>
+                  <button class="dt-stat-btn" data-reply-box-toggle style="margin-left:auto;"><i class="bi bi-reply"></i> Javob berish</button>
+                </div>
+                <div data-reply-box hidden style="display:flex; gap:8px; margin-top:12px;">
+                  <input placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing" style="flex:1; border:1px solid var(--border-soft); border-radius:var(--r-sm); padding:8px 12px; font-size:13px;">
+                  <button class="btn btn-teach btn-sm">Yuborish</button>
+                </div>
+                <div data-reply-list hidden>
+                  <div class="comment-card pinned">
+                    <div class="avatar-sm">SM</div>
+                    <div class="comment-body">
+                      <div class="comment-head"><span class="comment-name">Samar Mirzayev</span><span class="role-badge student">Talaba</span><span class="comment-time">1 kun oldin</span><button data-comment-pin class="icon-btn" style="width:22px;height:22px;margin-left:auto;" aria-label="Izohni qadash"><i class="bi bi-pin-angle"></i></button></div>
+                      <div class="comment-text" data-comment-text>Rahmat, materiallar juda foydali bo'ldi!</div>
+                      <div class="comment-actions">
+                        <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>3</span></button>
+                        <button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>
+                        <button data-comment-edit><i class="bi bi-pencil"></i> Tahrirlash</button>
+                        <button data-comment-delete><i class="bi bi-trash3"></i> O'chirish</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="empty-state" data-filter-empty style="display:none;">
+          <div class="empty-icon"><i class="bi bi-chat-square-text"></i></div>
+          <div class="empty-title">Hech narsa topilmadi</div>
+          <div class="empty-sub">Boshqa filtr yoki qidiruv so'zini sinab ko'ring.</div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ANNOUNCEMENT MODAL -->
+<div class="modal-overlay" id="announce-modal" hidden>
+  <div class="modal">
+    <div class="modal-head"><h3 style="font-size:15px;">Yangi e'lon joylash</h3><button class="icon-btn" onclick="isloh_closeModal('announce-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body">
+      <div class="field"><label for="announce-title">Sarlavha</label><input id="announce-title" placeholder="E'lon sarlavhasi"></div>
+      <div class="field" style="margin-bottom:0;"><label for="announce-body">Matn</label><textarea id="announce-body" class="editor-textarea" style="min-height:100px;" placeholder="E'lon matnini yozing..."></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('announce-modal')">Bekor qilish</button>
+      <button class="btn btn-teach btn-sm" onclick="isloh_closeModal('announce-modal')"><i class="bi bi-send"></i> Joylash</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/filterable.js"></script>
+<script src="../../js/discussion.js"></script>
+<script src="../../js/comments.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  /* Page-local layout only. Profile widgets live in css/widgets.css. */
+  .profile-grid { display:grid; grid-template-columns: 1fr 320px; gap:18px; align-items:start; margin-top:18px; }
+  @media (max-width:1100px){ .profile-grid{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="profile">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- HEADER CARD -->
+      <div class="card profile-header-card" style="overflow:hidden;">
+        <div class="profile-cover"></div>
+        <div class="profile-head">
+          <div class="profile-avatar-lg">SM</div>
+          <div class="profile-headline">
+            <div class="profile-name">Samar Mirzayev</div>
+            <div class="profile-role">Backend dasturchi bo'lishga intilayotgan talaba · Toshkent</div>
+          </div>
+          <div class="profile-actions">
+            <a href="settings.html" class="btn btn-outline btn-sm"><i class="bi bi-gear"></i> Sozlamalar</a>
+            <button class="btn btn-primary btn-sm"><i class="bi bi-pencil"></i> Profilni tahrirlash</button>
+          </div>
+        </div>
+        <div style="padding:18px 24px 22px;">
+          <p style="font-size:13.5px; color:var(--ink-700); line-height:1.6; max-width:640px;">
+            Python va Django yordamida backend dasturlashni o'rganyapman. Maqsad — 6 oyda
+            to'liq stack loyihasini mustaqil qura olish. Har kuni kamida 2 soat mashg'ulot.
+          </p>
+        </div>
+      </div>
+
+      <!-- STAT ROW -->
+      <div class="wk-grid-4" style="margin-top:18px;">
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-journal-check"></i></div>
+          <div class="stat-value">8</div><div class="stat-label">Yakunlangan kurslar</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-patch-check-fill"></i></div>
+          <div class="stat-value">3</div><div class="stat-label">Sertifikatlar</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-clock-history"></i></div>
+          <div class="stat-value">142<span style="font-size:14px; color:var(--ink-500); font-weight:600;">s</span></div><div class="stat-label">O'quv soati</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-fire"></i></div>
+          <div class="stat-value">12</div><div class="stat-label">Kunlik seriya</div>
+        </div>
+      </div>
+
+      <div class="profile-grid">
+        <!-- LEFT COLUMN -->
+        <div class="wk-col">
+          <!-- Skills -->
+          <div class="card card-pad">
+            <div class="section-header"><h3>Ko'nikmalar</h3></div>
+            <div style="display:flex; flex-wrap:wrap; gap:10px;">
+              <span class="skill-tag">Python <span class="lvl">Ilg'or</span></span>
+              <span class="skill-tag">Django <span class="lvl">O'rta</span></span>
+              <span class="skill-tag">JavaScript <span class="lvl">O'rta</span></span>
+              <span class="skill-tag">SQL <span class="lvl">O'rta</span></span>
+              <span class="skill-tag">Git <span class="lvl">Ilg'or</span></span>
+              <span class="skill-tag">HTML/CSS <span class="lvl">Ilg'or</span></span>
+            </div>
+          </div>
+
+          <!-- Learning goals -->
+          <div class="card card-pad">
+            <div class="section-header"><h3>O'quv maqsadlari</h3></div>
+            <div class="goal-item done">
+              <div class="goal-check done"><i class="bi bi-check-lg"></i></div>
+              <div class="goal-text">Python asoslarini yakunlash</div>
+            </div>
+            <div class="goal-item">
+              <div class="goal-check pending"></div>
+              <div class="goal-text">Django REST Framework loyihasini qurish</div>
+              <span class="badge badge-violet">63%</span>
+            </div>
+            <div class="goal-item">
+              <div class="goal-check pending"></div>
+              <div class="goal-text">To'liq stack portfolio loyihasi</div>
+              <span class="badge badge-neutral">Rejada</span>
+            </div>
+          </div>
+
+          <!-- Achievements -->
+          <div class="card card-pad">
+            <div class="section-header"><h3>Yutuqlar va nishonlar</h3></div>
+            <div class="achievements-grid">
+              <div class="achievement"><div class="achievement-badge"><i class="bi bi-fire"></i></div><div class="achievement-name">12 kun seriya</div></div>
+              <div class="achievement"><div class="achievement-badge"><i class="bi bi-trophy-fill"></i></div><div class="achievement-name">Birinchi kurs</div></div>
+              <div class="achievement"><div class="achievement-badge"><i class="bi bi-lightning-fill"></i></div><div class="achievement-name">Tez o'rganuvchi</div></div>
+              <div class="achievement"><div class="achievement-badge"><i class="bi bi-stars"></i></div><div class="achievement-name">AI do'sti</div></div>
+              <div class="achievement locked"><div class="achievement-badge locked"><i class="bi bi-lock-fill"></i></div><div class="achievement-name">30 kun seriya</div></div>
+              <div class="achievement locked"><div class="achievement-badge locked"><i class="bi bi-lock-fill"></i></div><div class="achievement-name">10 sertifikat</div></div>
+            </div>
+          </div>
+
+          <!-- Recent courses -->
+          <div class="card card-pad">
+            <div class="section-header"><h3>So'nggi kurslar</h3><a href="courses.html" class="section-action">Barchasi</a></div>
+            <div class="upcoming-row">
+              <div class="upcoming-icon" style="background:linear-gradient(135deg,#306998,#FFD43B); color:#fff;"><i class="bi bi-filetype-py"></i></div>
+              <div class="upcoming-body"><div class="upcoming-title">Python Backend Development</div><div class="upcoming-sub">63% · Davom etmoqda</div></div>
+              <a href="course-detail.html" class="btn btn-outline btn-sm">Ochish</a>
+            </div>
+            <div class="upcoming-row">
+              <div class="upcoming-icon" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3); color:#fff;"><i class="bi bi-palette-fill"></i></div>
+              <div class="upcoming-body"><div class="upcoming-title">UI/UX Design Fundamentals</div><div class="upcoming-sub">100% · Yakunlangan</div></div>
+              <a href="course-detail.html" class="btn btn-outline btn-sm">Ochish</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="wk-col">
+          <!-- Personal info -->
+          <div class="card card-pad">
+            <div class="section-header"><h3>Shaxsiy ma'lumot</h3></div>
+            <div style="display:flex; flex-direction:column; gap:14px; font-size:13.5px;">
+              <div><div style="color:var(--ink-500); font-size:12px;">Email</div><div style="font-weight:600;">samar@example.com</div></div>
+              <div><div style="color:var(--ink-500); font-size:12px;">Joylashuv</div><div style="font-weight:600;">Toshkent, O'zbekiston</div></div>
+              <div><div style="color:var(--ink-500); font-size:12px;">Qo'shilgan sana</div><div style="font-weight:600;">2025-yil Sentabr</div></div>
+              <div><div style="color:var(--ink-500); font-size:12px;">Til</div><div style="font-weight:600;">O'zbek, Ingliz</div></div>
+            </div>
+          </div>
+
+          <!-- Favorite categories -->
+          <div class="card card-pad">
+            <div class="section-header"><h3>Sevimli yo'nalishlar</h3></div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              <span class="filter-chip">Backend</span>
+              <span class="filter-chip">Web dasturlash</span>
+              <span class="filter-chip">Ma'lumotlar bazasi</span>
+              <span class="filter-chip">DevOps</span>
+            </div>
+          </div>
+
+          <!-- Activity timeline -->
+          <div class="card card-pad">
+            <div class="section-header"><h3>Faoliyat tarixi</h3></div>
+            <div class="timeline">
+              <div class="timeline-item tl-green"><div class="timeline-time">Bugun</div><div class="timeline-title">"Django ORM" darsi yakunlandi</div></div>
+              <div class="timeline-item"><div class="timeline-time">Kecha</div><div class="timeline-title">Yangi sertifikat qo'lga kiritildi</div></div>
+              <div class="timeline-item tl-warning"><div class="timeline-time">2 kun oldin</div><div class="timeline-title">JavaScript testi topshirildi</div></div>
+              <div class="timeline-item"><div class="timeline-time">5 kun oldin</div><div class="timeline-title">"UI/UX Fundamentals" kursi boshlandi</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+</body>
+</html>

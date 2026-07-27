@@ -1,0 +1,18 @@
+/* ==========================================================================
+   ISLOH — Design System (entry point)
+   This file only imports the split architecture below. Do not add rules
+   directly here — put them in the correct partial so the system stays a
+   single source of truth (Sprint 2 CSS Architecture).
+
+   Load order matters: tokens → base → layout → components → widgets →
+   utilities → animations → responsive.
+   ========================================================================== */
+
+@import url('tokens.css');
+@import url('base.css');
+@import url('layout.css');
+@import url('components.css');
+@import url('widgets.css');
+@import url('utilities.css');
+@import url('animations.css');
+@import url('responsive.css');

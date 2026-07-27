@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resurslar kutubxonasi — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="instructor" data-active="courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="courses.html" style="color:inherit;">Kurslarim</a><span class="sep">/</span><span class="current">Resurslar kutubxonasi</span></nav>
+      <div class="topbar-actions">
+        <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+      </div>
+    </header>
+
+    <main class="content" data-filterable>
+      <div class="page-header">
+        <div><h1>Resurslar kutubxonasi</h1><p>Barcha kurslaringiz uchun qayta ishlatiladigan resurslar to'plami.</p></div>
+        <a href="resource-manager.html" class="btn btn-outline btn-sm"><i class="bi bi-folder2-open"></i> Resurs menejeri</a>
+      </div>
+
+      <!-- STATS -->
+      <div class="wk-grid-4" style="margin-top:20px;">
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-collection-fill"></i></div><div class="stat-value">86</div><div class="stat-label">Jami resurslar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-folder-fill"></i></div><div class="stat-value">5</div><div class="stat-label">Kolleksiyalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-star-fill"></i></div><div class="stat-value">12</div><div class="stat-label">Sevimlilar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-clock-history"></i></div><div class="stat-value">7</div><div class="stat-label">Oxirgi ishlatilgan</div></div>
+      </div>
+
+      <!-- SCOPE TABS -->
+      <div style="margin-top:22px;" data-tabs>
+        <div class="tab-strip" role="tablist" aria-label="Resurs manbai">
+          <div class="tab-item active" data-tab-target="all">Barchasi</div>
+          <div class="tab-item" data-tab-target="course">Kurs resurslari</div>
+          <div class="tab-item" data-tab-target="lesson">Dars resurslari</div>
+          <div class="tab-item" data-tab-target="assignment">Topshiriq resurslari</div>
+          <div class="tab-item" data-tab-target="quiz">Test resurslari</div>
+        </div>
+
+        <div data-tab-panel="all" style="margin-top:20px;">
+
+          <!-- COLLECTIONS -->
+          <div class="section-header"><h3>Kolleksiyalar</h3></div>
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px;">
+            <div class="card collection-card">
+              <div class="collection-icon" style="background:var(--violet-600);"><i class="bi bi-mortarboard-fill"></i></div>
+              <div><div style="font-weight:700; font-size:13.5px;">Python asoslari</div><div style="font-size:12px; color:var(--ink-500);">14 ta resurs</div></div>
+            </div>
+            <div class="card collection-card">
+              <div class="collection-icon" style="background:#0EA5E9;"><i class="bi bi-database-fill"></i></div>
+              <div><div style="font-weight:700; font-size:13.5px;">Django va DRF</div><div style="font-size:12px; color:var(--ink-500);">22 ta resurs</div></div>
+            </div>
+            <div class="card collection-card">
+              <div class="collection-icon" style="background:#0F766E;"><i class="bi bi-box-fill"></i></div>
+              <div><div style="font-weight:700; font-size:13.5px;">DevOps va Docker</div><div style="font-size:12px; color:var(--ink-500);">11 ta resurs</div></div>
+            </div>
+            <div class="card collection-card">
+              <div class="collection-icon" style="background:var(--teach-green);"><i class="bi bi-star-fill"></i></div>
+              <div><div style="font-weight:700; font-size:13.5px;">Sevimlilar</div><div style="font-size:12px; color:var(--ink-500);">12 ta resurs</div></div>
+            </div>
+          </div>
+
+          <!-- RECENTLY USED -->
+          <div class="section-header" style="margin-top:26px;"><h3>Oxirgi ishlatilgan</h3></div>
+          <div class="card card-pad">
+            <div class="activity-row"><div class="activity-ic" style="background:#DC2626; color:#fff;"><i class="bi bi-file-earmark-pdf-fill"></i></div><div class="activity-main"><div class="activity-text"><b>Docker_cheat_sheet.pdf</b> — 1-modul, Lesson Editor'da ishlatildi</div><div class="activity-time">Bugun, 10:20</div></div></div>
+            <div class="activity-row"><div class="activity-ic" style="background:var(--ink-500); color:#fff;"><i class="bi bi-file-earmark-zip-fill"></i></div><div class="activity-main"><div class="activity-text"><b>starter-models.zip</b> — Django modellari loyihasi topshirig'ida ishlatildi</div><div class="activity-time">Kecha, 16:40</div></div></div>
+            <div class="activity-row"><div class="activity-ic" style="background:#0369A1; color:#fff;"><i class="bi bi-camera-video-fill"></i></div><div class="activity-main"><div class="activity-text"><b>intro-video.mp4</b> — Kursga kirish darsida ishlatildi</div><div class="activity-time">2 kun oldin</div></div></div>
+          </div>
+
+          <!-- TOOLBAR -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:26px;">
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div class="filter-bar" data-filter-group="category">
+                <button class="filter-chip active" data-filter-value="all">Barcha kategoriyalar</button>
+                <button class="filter-chip" data-filter-value="python">Python</button>
+                <button class="filter-chip" data-filter-value="django">Django</button>
+                <button class="filter-chip" data-filter-value="devops">DevOps</button>
+              </div>
+              <div class="filter-bar" data-filter-group="type">
+                <button class="filter-chip active" data-filter-value="all">Barcha turlar</button>
+                <button class="filter-chip" data-filter-value="pdf">PDF</button>
+                <button class="filter-chip" data-filter-value="video">Video</button>
+                <button class="filter-chip" data-filter-value="image">Rasm</button>
+                <button class="filter-chip" data-filter-value="code">Kod</button>
+                <button class="filter-chip" data-filter-value="url">Havola</button>
+              </div>
+            </div>
+            <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Resurs qidirish..." aria-label="Resurs qidirish"></div>
+          </div>
+
+          <!-- RESOURCE GRID -->
+          <div class="resource-grid" style="margin-top:16px;">
+
+            <div class="card resource-card" data-filter-item data-category="python" data-type="pdf" data-filter-text="Python_cheat_sheet.pdf">
+              <div class="resource-icon" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+              <div class="resource-body"><div class="resource-name filter-title">Python_cheat_sheet.pdf</div><div class="resource-meta">PDF · 280 KB · <span class="chip-demo">python</span></div></div>
+              <div class="resource-actions">
+                <button class="fav-toggle active" data-fav-toggle aria-pressed="true" aria-label="Sevimlilarga qo'shish/olib tashlash"><i class="bi bi-star-fill"></i></button>
+                <button class="btn btn-teach btn-sm" data-action="insert-resource"><i class="bi bi-plus-lg"></i> Tanlash</button>
+              </div>
+            </div>
+
+            <div class="card resource-card" data-filter-item data-category="django" data-type="video" data-filter-text="django-orm-intro.mp4">
+              <div class="resource-icon" style="background:#0369A1;"><i class="bi bi-camera-video-fill"></i></div>
+              <div class="resource-body"><div class="resource-name filter-title">django-orm-intro.mp4</div><div class="resource-meta">Video · 36 MB · <span class="chip-demo">django</span></div></div>
+              <div class="resource-actions">
+                <button class="fav-toggle" data-fav-toggle aria-pressed="false" aria-label="Sevimlilarga qo'shish/olib tashlash"><i class="bi bi-star"></i></button>
+                <button class="btn btn-teach btn-sm" data-action="insert-resource"><i class="bi bi-plus-lg"></i> Tanlash</button>
+              </div>
+            </div>
+
+            <div class="card resource-card" data-filter-item data-category="devops" data-type="code" data-filter-text="docker-compose-template.yml">
+              <div class="resource-icon" style="background:#1C1B29;"><i class="bi bi-file-earmark-code-fill"></i></div>
+              <div class="resource-body"><div class="resource-name filter-title">docker-compose-template.yml</div><div class="resource-meta">Kod · 2 KB · <span class="chip-demo">devops</span></div></div>
+              <div class="resource-actions">
+                <button class="fav-toggle" data-fav-toggle aria-pressed="false" aria-label="Sevimlilarga qo'shish/olib tashlash"><i class="bi bi-star"></i></button>
+                <button class="btn btn-teach btn-sm" data-action="insert-resource"><i class="bi bi-plus-lg"></i> Tanlash</button>
+              </div>
+            </div>
+
+            <div class="card resource-card" data-filter-item data-category="python" data-type="image" data-filter-text="architecture-diagram.png">
+              <div class="resource-icon" style="background:var(--violet-600);"><i class="bi bi-file-earmark-image-fill"></i></div>
+              <div class="resource-body"><div class="resource-name filter-title">architecture-diagram.png</div><div class="resource-meta">Rasm · 220 KB · <span class="chip-demo">arxitektura</span></div></div>
+              <div class="resource-actions">
+                <button class="fav-toggle active" data-fav-toggle aria-pressed="true" aria-label="Sevimlilarga qo'shish/olib tashlash"><i class="bi bi-star-fill"></i></button>
+                <button class="btn btn-teach btn-sm" data-action="insert-resource"><i class="bi bi-plus-lg"></i> Tanlash</button>
+              </div>
+            </div>
+
+            <div class="card resource-card" data-filter-item data-category="django" data-type="url" data-filter-text="docs.djangoproject.com">
+              <div class="resource-icon" style="background:var(--teach-green);"><i class="bi bi-box-arrow-up-right"></i></div>
+              <div class="resource-body"><div class="resource-name filter-title">docs.djangoproject.com</div><div class="resource-meta">Tashqi havola · <span class="chip-demo">django</span></div></div>
+              <div class="resource-actions">
+                <button class="fav-toggle" data-fav-toggle aria-pressed="false" aria-label="Sevimlilarga qo'shish/olib tashlash"><i class="bi bi-star"></i></button>
+                <button class="btn btn-teach btn-sm" data-action="insert-resource"><i class="bi bi-plus-lg"></i> Tanlash</button>
+              </div>
+            </div>
+
+            <div class="card resource-card" data-filter-item data-category="devops" data-type="pdf" data-filter-text="devops-roadmap.pdf">
+              <div class="resource-icon" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+              <div class="resource-body"><div class="resource-name filter-title">devops-roadmap.pdf</div><div class="resource-meta">PDF · 1.1 MB · <span class="chip-demo">devops</span></div></div>
+              <div class="resource-actions">
+                <button class="fav-toggle" data-fav-toggle aria-pressed="false" aria-label="Sevimlilarga qo'shish/olib tashlash"><i class="bi bi-star"></i></button>
+                <button class="btn btn-teach btn-sm" data-action="insert-resource"><i class="bi bi-plus-lg"></i> Tanlash</button>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="empty-state" data-filter-empty style="display:none;">
+            <div class="empty-icon"><i class="bi bi-collection"></i></div><div class="empty-title">Resurs topilmadi</div><div class="empty-sub">Bu filtr yoki qidiruv bo'yicha resurs yo'q.</div>
+          </div>
+
+          <!-- PAGINATION -->
+          <div class="pager">
+            <button aria-label="Oldingi"><i class="bi bi-chevron-left"></i></button>
+            <button class="active">1</button><button>2</button><button>3</button>
+            <button aria-label="Keyingi"><i class="bi bi-chevron-right"></i></button>
+          </div>
+        </div>
+
+        <div data-tab-panel="course" hidden style="margin-top:20px;">
+          <div class="empty-state"><div class="empty-icon"><i class="bi bi-mortarboard"></i></div><div class="empty-title">Kurs resurslari</div><div class="empty-sub">Faqat kurs darajasidagi umumiy resurslar shu yerda ko'rinadi.</div></div>
+        </div>
+        <div data-tab-panel="lesson" hidden style="margin-top:20px;">
+          <div class="empty-state"><div class="empty-icon"><i class="bi bi-journal-text"></i></div><div class="empty-title">Dars resurslari</div><div class="empty-sub">Darslarga biriktirilgan resurslar shu yerda ko'rinadi.</div></div>
+        </div>
+        <div data-tab-panel="assignment" hidden style="margin-top:20px;">
+          <div class="empty-state"><div class="empty-icon"><i class="bi bi-file-earmark-text"></i></div><div class="empty-title">Topshiriq resurslari</div><div class="empty-sub">Topshiriqlarga biriktirilgan resurslar shu yerda ko'rinadi.</div></div>
+        </div>
+        <div data-tab-panel="quiz" hidden style="margin-top:20px;">
+          <div class="empty-state"><div class="empty-icon"><i class="bi bi-patch-question"></i></div><div class="empty-title">Test resurslari</div><div class="empty-sub">Testlarga biriktirilgan resurslar shu yerda ko'rinadi.</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/filterable.js"></script>
+<script src="../../js/tabs.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/resource-library.js"></script>
+</body>
+</html>

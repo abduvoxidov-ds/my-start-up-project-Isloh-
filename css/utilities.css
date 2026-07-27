@@ -1,0 +1,46 @@
+/* ==========================================================================
+   ISLOH — Utilities
+   Small helper classes so future pages (Calendar, Tasks, Instructor module,
+   etc.) rely less on one-off inline `style="..."` attributes. Purely
+   additive: no existing page currently uses these, so nothing visually
+   changes today. Adopt incrementally per Sprint 1 §2.4.2.
+   ========================================================================== */
+
+/* --- Flex helpers --- */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.flex-1 { flex: 1; }
+.flex-wrap { flex-wrap: wrap; }
+
+/* --- Gap scale (maps to --sp-* tokens in tokens.css) --- */
+.gap-4 { gap: var(--sp-1); }
+.gap-8 { gap: var(--sp-2); }
+.gap-12 { gap: var(--sp-3); }
+.gap-16 { gap: var(--sp-4); }
+.gap-20 { gap: var(--sp-5); }
+.gap-24 { gap: var(--sp-6); }
+
+/* --- Margin-top scale --- */
+.mt-4 { margin-top: var(--sp-1); }
+.mt-8 { margin-top: var(--sp-2); }
+.mt-12 { margin-top: var(--sp-3); }
+.mt-16 { margin-top: var(--sp-4); }
+.mt-20 { margin-top: var(--sp-5); }
+.mt-24 { margin-top: var(--sp-6); }
+
+/* --- Text helpers --- */
+.text-sm { font-size: 13px; }
+.text-xs { font-size: 12px; }
+.text-muted { color: var(--ink-500); }
+.text-bold { font-weight: 700; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* --- Visibility helpers (for the mobile nav work in a later sprint) --- */
+.hide-mobile { display: initial; }
+.show-mobile { display: none; }
+@media (max-width: 700px) {
+  .hide-mobile { display: none; }
+  .show-mobile { display: initial; }
+}

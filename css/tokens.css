@@ -1,0 +1,79 @@
+/* ==========================================================================
+   ISLOH — Design Tokens
+   Single source of truth for color, typography, spacing, radius, shadow,
+   border, transition and z-index values. Nothing here renders visually by
+   itself — it only defines variables consumed by layout.css / components.css.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* --- Brand palette --- */
+  --indigo-950: #17123B;
+  --indigo-900: #201A4F;
+  --indigo-800: #2B2266;
+  --violet-600: #6C5DD3;
+  --violet-500: #7C6FF0;
+  --violet-100: #EEEBFC;
+  --teach-green: #1FAE5E;
+  --teach-green-100: #E4F8ED;
+
+  /* --- Neutrals --- */
+  --bg-app: #F5F5FB;
+  --bg-card: #FFFFFF;
+  --ink-900: #1C1B29;
+  --ink-700: #46445A;
+  --ink-500: #7B7891;
+  --ink-300: #C9C7D9;
+  --border-soft: #E9E8F3;
+
+  /* --- Semantic --- */
+  --success: #1FAE5E;
+  --warning: #E7A63B;
+  --danger: #E5484D;
+
+  /* --- Typography --- */
+  --font-display: 'Manrope', sans-serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+
+  /* --- Spacing scale (new — for utilities.css / future pages) --- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+
+  /* --- Elevation --- */
+  --shadow-sm: 0 1px 2px rgba(23, 18, 59, 0.05);
+  --shadow-md: 0 8px 24px rgba(32, 26, 79, 0.08);
+  --shadow-lg: 0 16px 40px rgba(32, 26, 79, 0.14);
+
+  /* --- Radius --- */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  /* --- Border --- */
+  --border-w: 1px;
+  --border-w-thick: 1.5px;
+
+  /* --- Transition / animation duration (new) --- */
+  --t-fast: .12s;
+  --t-base: .18s;
+  --t-slow: .3s;
+  --ease-standard: cubic-bezier(.4, 0, .2, 1);
+
+  /* --- Z-index hierarchy (new — single source of truth for stacking) --- */
+  --z-base: 1;
+  --z-sidebar: 10;
+  --z-topbar: 10;
+  --z-dropdown: 50;
+  --z-overlay: 90;
+  --z-modal: 100;
+  --z-toast: 110;
+  --z-tooltip: 120;
+}

@@ -1,0 +1,33 @@
+/* ==========================================================================
+   ISLOH — Animations
+   Shared keyframes + loading-state components. Consolidated from the
+   former components.html inline <style> block so any future page can use
+   .spinner / .skeleton without redefining the keyframes.
+   ========================================================================== */
+
+.spinner {
+  width:22px; height:22px;
+  border:3px solid var(--border-soft);
+  border-top-color:var(--violet-600);
+  border-radius:50%;
+  animation: isloh-spin .7s linear infinite;
+}
+@keyframes isloh-spin { to { transform:rotate(360deg); } }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--border-soft) 25%, #f2f1fa 37%, var(--border-soft) 63%);
+  background-size:400% 100%;
+  animation: isloh-shimmer 1.4s ease infinite;
+  border-radius:8px;
+}
+@keyframes isloh-shimmer {
+  0% { background-position:100% 0; }
+  100% { background-position:0 0; }
+}
+
+/* Generic fade/slide helpers for future modal & toast entrances */
+@keyframes isloh-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes isloh-slide-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.anim-fade-in { animation: isloh-fade-in var(--t-slow) var(--ease-standard); }
+.anim-slide-up { animation: isloh-slide-up var(--t-slow) var(--ease-standard); }

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketplace boshqaruvi — Admin — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  .am-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:900px){ .am-grid-2{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="admin" data-active="admin-marketplace">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Admin</span><span class="sep">/</span><span class="current">Marketplace</span></nav>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#2B2266,#6C5DD3);">AD</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div><h1>Marketplace boshqaruvi</h1><p>Kategoriyalar, kuponlar, bannerlar va tavsiya etilgan kurslarni sozlang.</p></div>
+        <button class="btn btn-primary"><i class="bi bi-plus-lg"></i> Yangi kupon</button>
+      </div>
+
+      <!-- CATEGORIES -->
+      <div class="section-header" style="margin-top:22px;"><h3>Kategoriyalar</h3><button class="section-action" style="background:none; border:none; cursor:pointer;">+ Qo'shish</button></div>
+      <div class="chip-row">
+        <div class="chip active">Dasturlash <i class="bi bi-x" style="margin-left:6px;"></i></div>
+        <div class="chip active">Dizayn <i class="bi bi-x" style="margin-left:6px;"></i></div>
+        <div class="chip active">Biznes <i class="bi bi-x" style="margin-left:6px;"></i></div>
+        <div class="chip active">Marketing <i class="bi bi-x" style="margin-left:6px;"></i></div>
+        <div class="chip active">AI <i class="bi bi-x" style="margin-left:6px;"></i></div>
+        <div class="chip active">Til <i class="bi bi-x" style="margin-left:6px;"></i></div>
+      </div>
+
+      <div class="am-grid-2" style="margin-top:24px;">
+        <!-- COUPONS -->
+        <div class="card">
+          <div style="padding:18px 20px 0;"><h3 style="font-size:16px;">Kuponlar</h3></div>
+          <div style="padding:14px 20px 20px; display:flex; flex-direction:column; gap:10px;">
+            <div class="card coupon-card" data-coupon-item>
+              <span class="cc-code">ISLOH2026</span>
+              <div class="cc-body"><span class="cc-value">−15%</span> &middot; Barcha kurslarga &middot; 25-iyulgacha</div>
+              <button class="row-action" data-coupon-remove aria-label="O'chirish"><i class="bi bi-trash"></i></button>
+            </div>
+            <div class="card coupon-card" data-coupon-item>
+              <span class="cc-code">BACKEND40</span>
+              <div class="cc-body"><span class="cc-value">−40%</span> &middot; Backend kategoriyasi &middot; 25-iyulgacha</div>
+              <button class="row-action" data-coupon-remove aria-label="O'chirish"><i class="bi bi-trash"></i></button>
+            </div>
+            <div class="card coupon-card" data-coupon-item>
+              <span class="cc-code">WELCOME10</span>
+              <div class="cc-body"><span class="cc-value">−10%</span> &middot; Yangi foydalanuvchilar uchun &middot; Doimiy</div>
+              <button class="row-action" data-coupon-remove aria-label="O'chirish"><i class="bi bi-trash"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- FEATURED COURSES -->
+        <div class="card">
+          <div style="padding:18px 20px 0;"><h3 style="font-size:16px;">Tavsiya etilgan kurslar</h3></div>
+          <div style="padding:14px 20px 20px; display:flex; flex-direction:column; gap:2px;">
+            <div class="perf-row"><div class="perf-cover" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div><div class="perf-info"><div class="perf-title">Python Backend Development</div></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="perf-row"><div class="perf-cover" style="background:linear-gradient(135deg,#0EA5E9,#1E3A8A);"><i class="bi bi-atom"></i></div><div class="perf-info"><div class="perf-title">React — The Complete Guide</div></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="perf-row"><div class="perf-cover" style="background:linear-gradient(135deg,#8E44EC,#3B82F6);"><i class="bi bi-palette-fill"></i></div><div class="perf-info"><div class="perf-title">UI/UX Design Fundamentals</div></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="perf-row"><div class="perf-cover" style="background:linear-gradient(135deg,#06B6D4,#0E7490);"><i class="bi bi-cpu-fill"></i></div><div class="perf-info"><div class="perf-title">Machine Learning A-Z</div></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANNERS -->
+      <div class="section-header" style="margin-top:24px;"><h3>Bannerlar / Reklama e'lonlari</h3></div>
+      <div class="wk-col">
+        <div class="banner-card" data-banner-item style="background:linear-gradient(120deg, var(--indigo-900), var(--violet-600));">
+          <div><div style="font-weight:800; font-size:15px;">Yozgi chegirma — Barcha Backend kurslariga -40%</div><div style="font-size:12.5px; color:#D9D6F5; margin-top:4px;">25-iyulgacha amal qiladi</div></div>
+          <div class="bc-actions">
+            <span class="badge badge-green" data-banner-status style="align-self:center; margin-right:6px;">Faol</span>
+            <button class="btn btn-sm" data-banner-toggle>O'chirish</button>
+          </div>
+        </div>
+        <div class="banner-card" data-banner-item style="background:linear-gradient(120deg,#0F766E,#14B8A6);">
+          <div><div style="font-weight:800; font-size:15px;">Yangi foydalanuvchilar uchun -10% kupon</div><div style="font-size:12.5px; color:#D2F5EE; margin-top:4px;">Doimiy taklif</div></div>
+          <div class="bc-actions">
+            <span class="badge badge-neutral" data-banner-status style="align-self:center; margin-right:6px; background:rgba(255,255,255,0.2); color:#fff;">Nofaol</span>
+            <button class="btn btn-sm" data-banner-toggle>Faollashtirish</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLECTIONS -->
+      <div class="section-header" style="margin-top:24px;"><h3>To'plamlar (Collections)</h3></div>
+      <div class="wk-grid-3">
+        <div class="card card-pad">
+          <div style="font-weight:700; font-size:14px;">Backend Mutaxassis to'plami</div>
+          <div style="font-size:12.5px; color:var(--ink-500); margin-top:4px;">3 ta kurs &middot; 459 000 so'm</div>
+          <button class="btn btn-outline btn-sm btn-block" style="margin-top:12px;"><i class="bi bi-pencil"></i> Tahrirlash</button>
+        </div>
+        <div class="card card-pad">
+          <div style="font-weight:700; font-size:14px;">Frontend Boshlang'ich to'plami</div>
+          <div style="font-size:12.5px; color:var(--ink-500); margin-top:4px;">2 ta kurs &middot; 399 000 so'm</div>
+          <button class="btn btn-outline btn-sm btn-block" style="margin-top:12px;"><i class="bi bi-pencil"></i> Tahrirlash</button>
+        </div>
+        <div class="card card-pad" style="display:flex; align-items:center; justify-content:center; border:1.5px dashed var(--border-soft); box-shadow:none;">
+          <button class="btn btn-outline btn-sm"><i class="bi bi-plus-lg"></i> Yangi to'plam</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/admin-marketplace.js"></script>
+</body>
+</html>

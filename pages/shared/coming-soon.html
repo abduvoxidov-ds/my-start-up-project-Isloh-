@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tez orada — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  .empty-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; min-height: 60vh; }
+  .empty-icon { width:76px; height:76px; border-radius:50%; background:var(--violet-100); color:var(--violet-600); display:flex; align-items:center; justify-content:center; font-size:32px; margin-bottom:20px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="student" data-active="">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
+      <div class="topbar-actions">
+        <a href="notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="empty-wrap">
+        <div class="empty-icon"><i class="bi bi-cone-striped"></i></div>
+        <h2 id="page-title" style="font-size:20px;">Bu sahifa tayyorlanmoqda</h2>
+        <p style="color:var(--ink-500); margin-top:8px; max-width:360px;">
+          Ushbu bo'lim keyingi development sprintlarida to'liq ishlab chiqiladi.
+          Hozircha dizayn tizimi va navigatsiya tayyor.
+        </p>
+        <a href="dashboard.html" class="btn btn-primary" style="margin-top:20px;" id="back-link">
+          <i class="bi bi-arrow-left"></i> Dashboardga qaytish
+        </a>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  // Read ?page= and ?role= from the URL and configure the sidebar mount
+  // BEFORE sidebar.js renders it, since role/active are read from the
+  // aside's data attributes.
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const pageName = params.get('page') || 'Bu sahifa';
+    const role = params.get('role') === 'instructor' ? 'instructor' : 'student';
+
+    document.querySelector('.sidebar').dataset.role = role;
+    document.getElementById('page-title').textContent = decodeURIComponent(pageName) + ' — tayyorlanmoqda';
+    document.getElementById('back-link').href = role === 'instructor'
+      ? '../instructor/dashboard.html'
+      : '../student/dashboard.html';
+  })();
+</script>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+</body>
+</html>

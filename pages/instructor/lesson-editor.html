@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kursga kirish — Darsni tahrirlash — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  /* Page-local layout only. Editor widgets live in css/widgets.css. */
+  .editor-shell { max-width: 880px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="instructor" data-active="courses">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="course-builder.html" style="color:inherit;">Kurs tarkibi</a><span class="sep">/</span><a href="lesson-builder.html" style="color:inherit;">1-modul</a><span class="sep">/</span><span class="current">Darsni tahrirlash</span></nav>
+      <div class="topbar-actions">
+        <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+      </div>
+    </header>
+
+    <main class="content" data-unsaved-scope data-ai-context="lesson-editor">
+      <div class="page-header">
+        <div style="flex:1; min-width:260px;">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span class="badge badge-green">Nashr etilgan</span>
+            <span class="unsaved-badge" data-unsaved-indicator hidden><i class="bi bi-exclamation-circle-fill"></i> Saqlanmagan o'zgarishlar</span>
+          </div>
+          <div class="field" style="margin:10px 0 0; max-width:480px;">
+            <input id="lesson-title-input" value="Kursga kirish" style="font-size:18px; font-weight:700; font-family:var(--font-display); padding:10px 14px;" data-char-counter="100" maxlength="100">
+            <div class="field-hint" data-char-counter-for="lesson-title-input">11 / 100</div>
+            <button class="ai-action-chip teach" style="margin-top:8px;" data-ai-quick="lesson-editor:title"><i class="bi bi-type"></i> AI: Sarlavha takliflari</button>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="lesson-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Darslarga qaytish</a>
+          <a href="discussions.html" class="btn btn-outline btn-sm"><i class="bi bi-chat-square-text"></i> Talaba savollari</a>
+          <button class="btn btn-outline btn-sm" data-ai-drawer-trigger onclick="isloh_openModal('ai-drawer-overlay')"><i class="bi bi-stars"></i> AI Yordamchi</button>
+          <button class="btn btn-teach" data-save-action><i class="bi bi-save"></i> Saqlash</button>
+        </div>
+      </div>
+
+      <div class="editor-shell" style="margin-top:20px;" data-tabs>
+        <div class="tab-strip" role="tablist" aria-label="Dars muharriri bo'limlari">
+          <div class="tab-item active" data-tab-target="content">Kontent</div>
+          <div class="tab-item" data-tab-target="resources">Resurslar</div>
+          <div class="tab-item" data-tab-target="settings">Sozlamalar</div>
+          <div class="tab-item" data-tab-target="preview">Ko'rib chiqish</div>
+        </div>
+
+        <!-- CONTENT TAB -->
+        <div data-tab-panel="content" style="margin-top:22px;">
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-play-circle-fill"></i> Video</div>
+            <div class="upload-dropzone"><i class="bi bi-camera-video"></i><div class="dz-title">intro-video.mp4 yuklangan</div><div class="dz-sub">4:32 · O'zgartirish uchun bosing</div></div>
+            <div class="field" style="margin-top:12px; margin-bottom:0;"><label for="video-url">Yoki tashqi video havolasi</label><input id="video-url" placeholder="https://youtube.com/watch?v=..." value="https://youtube.com/watch?v=isloh-intro"></div>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-fonts"></i> Matn</div>
+            <div class="ai-action-bar teach">
+              <button class="ai-action-chip teach" data-ai-quick="lesson-editor:rewrite"><i class="bi bi-arrow-repeat"></i> AI: Qayta yozish</button>
+              <button class="ai-action-chip teach" data-ai-quick="lesson-editor:improve"><i class="bi bi-stars"></i> AI: Tavsifni yaxshilash</button>
+              <button class="ai-action-chip teach" data-ai-quick="lesson-editor:grammar"><i class="bi bi-spellcheck"></i> AI: Grammatikani tekshirish</button>
+            </div>
+            <div class="editor-toolbar">
+              <button aria-label="Qalin"><i class="bi bi-type-bold"></i></button>
+              <button aria-label="Qiya"><i class="bi bi-type-italic"></i></button>
+              <button aria-label="Ro'yxat"><i class="bi bi-list-ul"></i></button>
+              <button aria-label="Havola"><i class="bi bi-link-45deg"></i></button>
+              <button aria-label="Sitata"><i class="bi bi-quote"></i></button>
+            </div>
+            <textarea class="editor-textarea" data-char-counter="1000" id="lesson-text" data-ai-insert-target maxlength="1000">Ushbu darsda kursga umumiy kirish qilamiz va nimalarni o'rganishingizni ko'rib chiqamiz.</textarea>
+            <div class="field-hint" data-char-counter-for="lesson-text" style="margin-top:6px;">87 / 1000</div>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-code-slash"></i> Kod bloki</div>
+            <div class="field" style="max-width:200px;"><label for="code-lang">Til</label>
+              <select id="code-lang" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option>Python</option><option>JavaScript</option><option>Bash</option><option>SQL</option></select>
+            </div>
+            <textarea class="editor-textarea" style="font-family:'SFMono-Regular',Consolas,monospace; background:#191830; color:#E4E2F5; border:none;" rows="4">print("Salom, Isloh!")</textarea>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-images"></i> Rasmlar</div>
+            <div class="upload-dropzone"><i class="bi bi-image"></i><div class="dz-title">Rasm qo'shish uchun bosing</div><div class="dz-sub">PNG, JPG, GIF</div></div>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-paperclip"></i> Ilova fayllar (Attachments)</div>
+            <div class="upload-dropzone"><i class="bi bi-file-earmark-arrow-up"></i><div class="dz-title">Fayl biriktirish uchun bosing</div><div class="dz-sub">PDF, ZIP, DOCX va h.k.</div></div>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-download"></i> Yuklab olish fayllari</div>
+            <div data-row-list="download-row-template">
+              <div class="download-row">
+                <i class="bi bi-file-earmark-zip-fill" style="color:var(--ink-500);"></i>
+                <input value="starter-files.zip" readonly>
+                <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="download-row-template"><i class="bi bi-plus-lg"></i> Fayl qo'shish</button>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-link-45deg"></i> Tashqi havolalar</div>
+            <div data-row-list="link-row-template">
+              <div class="link-row">
+                <i class="bi bi-box-arrow-up-right" style="color:var(--ink-500);"></i>
+                <input value="https://docs.docker.com" readonly>
+                <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="link-row-template"><i class="bi bi-plus-lg"></i> Havola qo'shish</button>
+          </div>
+
+          <div class="card card-pad editor-block">
+            <div class="editor-block-label"><i class="bi bi-sticky-fill"></i> Eslatmalar (faqat o'qituvchi uchun)</div>
+            <textarea class="editor-textarea" rows="3">Talabalar odatda Docker o'rnatishda muammoga duch kelishadi — Windows uchun WSL2 haqida alohida eslatib o'ting.</textarea>
+          </div>
+        </div>
+
+        <!-- RESOURCES TAB -->
+        <div data-tab-panel="resources" hidden style="margin-top:22px;">
+          <div class="card card-pad">
+            <div class="section-header"><h3>Resurslar</h3><div style="display:flex; gap:8px;"><a href="resource-library.html" class="btn btn-outline btn-sm"><i class="bi bi-collection"></i> Kutubxonadan tanlash</a><button type="button" class="btn btn-teach btn-sm" data-add-row="resource-card-template" data-marks-dirty><i class="bi bi-plus-lg"></i> Resurs qo'shish</button></div></div>
+            <div class="resource-grid" data-row-list="resource-card-template" data-sortable-list>
+              <div class="card resource-card" draggable="true" data-sortable-item>
+                <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+                <div class="resource-icon" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                <div class="resource-body"><div class="resource-name">Docker_cheat_sheet.pdf</div><div class="resource-meta">PDF · 340 KB</div></div>
+                <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+              </div>
+              <div class="card resource-card" draggable="true" data-sortable-item>
+                <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+                <div class="resource-icon" style="background:var(--ink-500);"><i class="bi bi-file-earmark-zip-fill"></i></div>
+                <div class="resource-body"><div class="resource-name">starter-files.zip</div><div class="resource-meta">ZIP · 1.2 MB</div></div>
+                <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+              </div>
+              <div class="card resource-card" draggable="true" data-sortable-item>
+                <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+                <div class="resource-icon" style="background:var(--violet-600);"><i class="bi bi-file-earmark-image-fill"></i></div>
+                <div class="resource-body"><div class="resource-name">architecture-diagram.png</div><div class="resource-meta">Rasm · 220 KB</div></div>
+                <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+              </div>
+              <div class="card resource-card" draggable="true" data-sortable-item>
+                <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+                <div class="resource-icon" style="background:#0369A1;"><i class="bi bi-camera-video-fill"></i></div>
+                <div class="resource-body"><div class="resource-name">intro-video.mp4</div><div class="resource-meta">Video · 42 MB</div></div>
+                <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+              </div>
+              <div class="card resource-card" draggable="true" data-sortable-item>
+                <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+                <div class="resource-icon" style="background:#0F766E;"><i class="bi bi-mic-fill"></i></div>
+                <div class="resource-body"><div class="resource-name">podcast-intro.mp3</div><div class="resource-meta">Audio · 8.4 MB</div></div>
+                <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+              </div>
+              <div class="card resource-card" draggable="true" data-sortable-item>
+                <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+                <div class="resource-icon" style="background:#EA580C;"><i class="bi bi-file-earmark-slides-fill"></i></div>
+                <div class="resource-body"><div class="resource-name">slides.pptx</div><div class="resource-meta">Taqdimot · 3.1 MB</div></div>
+                <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+              </div>
+              <div class="card resource-card" draggable="true" data-sortable-item>
+                <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+                <div class="resource-icon" style="background:#374151;"><i class="bi bi-file-earmark-text-fill"></i></div>
+                <div class="resource-body"><div class="resource-name">lesson-transcript.docx</div><div class="resource-meta">Hujjat · 90 KB</div></div>
+                <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+              </div>
+              <div class="card resource-card" draggable="true" data-sortable-item>
+                <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+                <div class="resource-icon" style="background:var(--teach-green);"><i class="bi bi-box-arrow-up-right"></i></div>
+                <div class="resource-body"><div class="resource-name">docs.docker.com</div><div class="resource-meta">Tashqi havola</div></div>
+                <div class="resource-actions"><button class="row-action" aria-label="Ochish"><i class="bi bi-box-arrow-up-right"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SETTINGS TAB -->
+        <div data-tab-panel="settings" hidden style="margin-top:22px;">
+          <div class="card card-pad">
+            <div class="settings-section-title">Dars sozlamalari</div>
+            <div class="settings-section-sub">Turi, davomiyligi va ko'rinishini belgilang.</div>
+
+            <div class="field"><label for="set-type">Dars turi</label>
+              <select id="set-type" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);">
+                <option selected>Video</option><option>Maqola</option><option>Test</option><option>Topshiriq</option><option>Resurs</option>
+              </select>
+            </div>
+            <div class="field"><label for="set-duration">Davomiyligi</label><input id="set-duration" value="8 daqiqa"></div>
+
+            <div class="field">
+              <label>Ko'rinish</label>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <label class="opt-row"><input type="radio" name="lesson-visibility" checked> Ochiq — barcha ro'yxatdan o'tgan talabalar ko'ra oladi</label>
+                <label class="opt-row"><input type="radio" name="lesson-visibility"> Yashirin — faqat instruktor ko'ra oladi</label>
+                <label class="opt-row"><input type="radio" name="lesson-visibility"> Bepul namuna — ro'yxatdan o'tmagan foydalanuvchilar ham ko'ra oladi</label>
+              </div>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info"><div class="settings-item-label">Holat</div><div class="settings-item-desc">Nashr etilgan darslar talabalarga ko'rinadi</div></div>
+              <span class="badge badge-green settings-item-control">Nashr etilgan</span>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-info"><div class="settings-item-label">Oldindan ko'rish ruxsati</div><div class="settings-item-desc">Marketplace sahifasida "bepul namuna" sifatida ko'rsatish</div></div>
+              <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-info"><div class="settings-item-label">Izohlarga ruxsat</div><div class="settings-item-desc">Talabalar bu darsga izoh qoldira oladi</div></div>
+              <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- PREVIEW TAB -->
+        <div data-tab-panel="preview" hidden style="margin-top:22px;">
+          <div class="lesson-preview-frame">
+            <div class="lesson-preview-video">
+              <div class="play-btn"><i class="bi bi-play-fill"></i></div>
+            </div>
+            <div class="lesson-preview-body">
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <h2 style="font-size:19px;">Kursga kirish</h2>
+                <span class="badge badge-violet">Video · 8 daq</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-700); line-height:1.7; margin-top:12px;">
+                Ushbu darsda kursga umumiy kirish qilamiz va nimalarni o'rganishingizni ko'rib chiqamiz.
+              </p>
+              <div class="section-header" style="margin-top:20px;"><h3 style="font-size:14px;">Resurslar</h3></div>
+              <div class="resource-grid">
+                <div class="card resource-card"><div class="resource-icon" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div><div class="resource-body"><div class="resource-name">Docker_cheat_sheet.pdf</div><div class="resource-meta">PDF · 340 KB</div></div></div>
+                <div class="card resource-card"><div class="resource-icon" style="background:var(--ink-500);"><i class="bi bi-file-earmark-zip-fill"></i></div><div class="resource-body"><div class="resource-name">starter-files.zip</div><div class="resource-meta">ZIP · 1.2 MB</div></div></div>
+              </div>
+              <p style="font-size:11.5px; color:var(--ink-300); margin-top:18px;"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan sahifaning taxminiy ko'rinishi — faqat oldindan ko'rish rejimi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<template id="link-row-template">
+  <div class="link-row">
+    <i class="bi bi-box-arrow-up-right" style="color:var(--ink-500);"></i>
+    <input placeholder="https://...">
+    <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+  </div>
+</template>
+
+<template id="download-row-template">
+  <div class="download-row">
+    <i class="bi bi-file-earmark-arrow-down-fill" style="color:var(--ink-500);"></i>
+    <input placeholder="fayl-nomi.pdf">
+    <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+  </div>
+</template>
+
+<template id="resource-card-template">
+  <div class="card resource-card" draggable="true" data-sortable-item>
+    <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
+    <div class="resource-icon" style="background:var(--ink-300);"><i class="bi bi-file-earmark-fill"></i></div>
+    <div class="resource-body"><div class="resource-name">Yangi resurs</div><div class="resource-meta">Fayl</div></div>
+    <div class="resource-actions"><button class="row-action" aria-label="Yuklab olish"><i class="bi bi-download"></i></button><button class="row-action" aria-label="O'chirish" data-remove-row><i class="bi bi-trash"></i></button></div>
+  </div>
+</template>
+
+<!-- AI DRAWER (Sprint 8A) -->
+<div id="ai-drawer-mount"></div>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/unsaved-guard.js"></script>
+<script src="../../js/sortable.js"></script>
+<script src="../../js/tabs.js"></script>
+<script src="../../js/course-wizard.js"></script>
+<script src="../../js/lesson-editor.js"></script>
+<script src="../../js/ai-assistant.js"></script>
+<script src="../../js/ai-panel.js"></script>
+<script src="../../js/ai-chat.js"></script>
+</body>
+</html>
