@@ -19,101 +19,58 @@
     <header class="topbar">
       <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><span class="current">Bildirishnomalar</span></nav>
       <div class="topbar-actions">
+        <a href="notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
         <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
       </div>
     </header>
 
-    <main class="content" data-filterable>
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-        <div>
-          <h1 style="font-size:24px;">Bildirishnomalar</h1>
-          <p style="color:var(--ink-500); margin-top:4px;"><span data-notif-count="unread">0</span> ta o'qilmagan bildirishnoma.</p>
-        </div>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Bildirishnoma qidirish..." aria-label="Bildirishnoma qidirish"></div>
-          <button class="btn btn-outline btn-sm" data-notif-mark-all><i class="bi bi-check2-all"></i> Barchasini o'qilgan</button>
-        </div>
+    <main class="content">
+      <div style="margin-bottom:18px;">
+        <h1 style="font-size:24px;">Bildirishnomalar</h1>
+        <p style="color:var(--ink-500); margin-top:4px;">So'nggi yangiliklar va xabarlar</p>
       </div>
 
-      <div class="notif-layout">
-        <!-- FILTER RAIL -->
-        <div class="filter-col" data-filter-group="cat" style="display:flex; flex-direction:column; gap:4px;">
-          <button class="nav-item active" data-filter-value="all"><i class="bi bi-inbox-fill"></i> Barchasi <span class="count" data-notif-count="all">0</span></button>
-          <div class="nav-label" style="padding-left:12px;">Turi bo'yicha</div>
-          <button class="nav-item" data-filter-value="student"><i class="bi bi-people"></i> Talabalar</button>
-          <button class="nav-item" data-filter-value="assignment"><i class="bi bi-file-earmark-text"></i> Topshiriqlar</button>
-          <button class="nav-item" data-filter-value="course"><i class="bi bi-journal-bookmark"></i> Kurslar</button>
-          <button class="nav-item" data-filter-value="review"><i class="bi bi-star"></i> Sharhlar</button>
-          <button class="nav-item" data-filter-value="payment"><i class="bi bi-cash-stack"></i> To'lovlar</button>
-          <button class="nav-item" data-filter-value="message"><i class="bi bi-at"></i> Xabarlar</button>
-          <button class="nav-item" data-filter-value="discussion"><i class="bi bi-chat-square-text"></i> Muhokamalar</button>
-          <button class="nav-item" data-filter-value="live"><i class="bi bi-camera-video"></i> Jonli sessiyalar</button>
-          <button class="nav-item" data-filter-value="announcement"><i class="bi bi-megaphone"></i> E'lonlar</button>
-          <button class="nav-item" data-filter-value="ai"><i class="bi bi-stars"></i> AI Yordamchi</button>
-          <button class="nav-item" data-filter-value="system"><i class="bi bi-gear"></i> Tizim</button>
-          <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border-soft);">
-            <button class="nav-item" data-notif-show-archived><i class="bi bi-archive"></i> Arxiv</button>
-            <a href="../instructor/settings.html" class="nav-item" style="color:var(--teach-green);"><i class="bi bi-sliders"></i> Bildirishnoma sozlamalari</a>
+      <div class="card" style="max-width:640px;">
+        <!-- Faqat so'nggi yangiliklar/xabarlar ro'yxati — filtr, arxiv va qidiruv ataylab olib tashlangan -->
+        <div class="notif-row unread">
+          <div class="notif-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-person-plus-fill"></i></div>
+          <div>
+            <div class="notif-title">Yangi talaba ro'yxatga olindi</div>
+            <div class="notif-desc">Samarqand Islomov "Python Backend" kursiga yozildi</div>
           </div>
+          <div class="notif-time">10 daqiqa</div>
         </div>
-
-        <div>
-          <div class="card">
-            <div class="notif-row unread" data-filter-item data-notif-item data-cat="student" data-read="false" data-filter-text="Yangi talaba ro'yxatga olindi">
-              <div class="notif-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-person-plus-fill"></i></div>
-              <div><div class="notif-title filter-title">Yangi talaba ro'yxatga olindi</div><div class="notif-desc">Samarqand Islomov "Python Backend" kursiga yozildi</div></div>
-              <div class="notif-time">10 daqiqa</div>
-              <div class="notif-actions"><button class="notif-action-btn" data-notif-read aria-label="O'qilgan"><i class="bi bi-check-lg"></i></button><button class="notif-action-btn" data-notif-archive aria-label="Arxivlash"><i class="bi bi-archive"></i></button><button class="notif-action-btn del" data-notif-delete aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
-            </div>
-            <div class="notif-row unread" data-filter-item data-notif-item data-cat="assignment" data-read="false" data-filter-text="Yangi topshiriq topshirildi">
-              <div class="notif-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-file-earmark-check-fill"></i></div>
-              <div><div class="notif-title filter-title">Yangi topshiriq topshirildi</div><div class="notif-desc">Javohir Rasimov "REST API endpointlari" topshirig'ini yubordi</div></div>
-              <div class="notif-time">1 soat</div>
-              <div class="notif-actions"><button class="notif-action-btn" data-notif-read aria-label="O'qilgan"><i class="bi bi-check-lg"></i></button><button class="notif-action-btn" data-notif-archive aria-label="Arxivlash"><i class="bi bi-archive"></i></button><button class="notif-action-btn del" data-notif-delete aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
-            </div>
-            <div class="notif-row unread" data-filter-item data-notif-item data-cat="payment" data-read="false" data-filter-text="Yangi to'lov qabul qilindi">
-              <div class="notif-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-cash-stack"></i></div>
-              <div><div class="notif-title filter-title">Yangi to'lov qabul qilindi</div><div class="notif-desc">"Python Backend" kursi sotildi — +$45.00</div></div>
-              <div class="notif-time">2 soat</div>
-              <div class="notif-actions"><button class="notif-action-btn" data-notif-read aria-label="O'qilgan"><i class="bi bi-check-lg"></i></button><button class="notif-action-btn" data-notif-archive aria-label="Arxivlash"><i class="bi bi-archive"></i></button><button class="notif-action-btn del" data-notif-delete aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
-            </div>
-            <div class="notif-row unread" data-filter-item data-notif-item data-cat="review" data-read="false" data-filter-text="Yangi sharh qoldirildi">
-              <div class="notif-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-star-fill"></i></div>
-              <div><div class="notif-title filter-title">Yangi sharh qoldirildi</div><div class="notif-desc">Bekzod Odilov 5 ★ sharh qoldirdi: "Ajoyib kurs!"</div></div>
-              <div class="notif-time">4 soat</div>
-              <div class="notif-actions"><button class="notif-action-btn" data-notif-read aria-label="O'qilgan"><i class="bi bi-check-lg"></i></button><button class="notif-action-btn" data-notif-archive aria-label="Arxivlash"><i class="bi bi-archive"></i></button><button class="notif-action-btn del" data-notif-delete aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
-            </div>
-            <div class="notif-row unread" data-filter-item data-notif-item data-cat="ai" data-read="false" data-filter-text="AI tahlili tayyor">
-              <div class="notif-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-stars"></i></div>
-              <div><div class="notif-title filter-title">AI tahlili tayyor</div><div class="notif-desc">5 talaba xavf ostida — haftalik tahlilni ko'ring</div></div>
-              <div class="notif-time">6 soat</div>
-              <div class="notif-actions"><button class="notif-action-btn" data-notif-read aria-label="O'qilgan"><i class="bi bi-check-lg"></i></button><button class="notif-action-btn" data-notif-archive aria-label="Arxivlash"><i class="bi bi-archive"></i></button><button class="notif-action-btn del" data-notif-delete aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
-            </div>
-            <div class="notif-row" data-filter-item data-notif-item data-cat="message" data-read="true" data-filter-text="Talabadan yangi xabar">
-              <div class="notif-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-at"></i></div>
-              <div><div class="notif-title filter-title">Talabadan yangi xabar</div><div class="notif-desc">Nodira Yusupova: "Ustoz, 5-dars bo'yicha savolim bor edi"</div></div>
-              <div class="notif-time">Kecha</div>
-              <div class="notif-actions"><button class="notif-action-btn" data-notif-archive aria-label="Arxivlash"><i class="bi bi-archive"></i></button><button class="notif-action-btn del" data-notif-delete aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
-            </div>
-            <div class="notif-row" data-filter-item data-notif-item data-cat="course" data-read="true" data-filter-text="Kurs tekshiruvdan o'tdi">
-              <div class="notif-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-journal-check"></i></div>
-              <div><div class="notif-title filter-title">Kurs tekshiruvdan o'tdi</div><div class="notif-desc">"Django REST Masterclass" nashr etishga tayyor</div></div>
-              <div class="notif-time">2 kun</div>
-              <div class="notif-actions"><button class="notif-action-btn" data-notif-archive aria-label="Arxivlash"><i class="bi bi-archive"></i></button><button class="notif-action-btn del" data-notif-delete aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
-            </div>
-            <div class="notif-row" data-filter-item data-notif-item data-cat="system" data-read="true" data-filter-text="To'lov usuli tasdiqlandi">
-              <div class="notif-icon" style="background:var(--bg-app); color:var(--ink-700);"><i class="bi bi-gear-fill"></i></div>
-              <div><div class="notif-title filter-title">To'lov usuli tasdiqlandi</div><div class="notif-desc">Daromadni yechish uchun hisobingiz tayyor</div></div>
-              <div class="notif-time">3 kun</div>
-              <div class="notif-actions"><button class="notif-action-btn" data-notif-archive aria-label="Arxivlash"><i class="bi bi-archive"></i></button><button class="notif-action-btn del" data-notif-delete aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
-            </div>
+        <div class="notif-row unread">
+          <div class="notif-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-file-earmark-check-fill"></i></div>
+          <div>
+            <div class="notif-title">Yangi topshiriq topshirildi</div>
+            <div class="notif-desc">Javohir Rasimov "REST API endpointlari" topshirig'ini yubordi</div>
           </div>
-
-          <div class="empty-state" data-filter-empty style="display:none;">
-            <div class="empty-icon"><i class="bi bi-bell-slash"></i></div>
-            <div class="empty-title">Bildirishnoma yo'q</div>
-            <div class="empty-sub">Bu turkum bo'yicha hozircha hech narsa yo'q.</div>
+          <div class="notif-time">1 soat</div>
+        </div>
+        <div class="notif-row">
+          <div class="notif-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-cash-stack"></i></div>
+          <div>
+            <div class="notif-title">Yangi to'lov qabul qilindi</div>
+            <div class="notif-desc">"Python Backend" kursi sotildi — +$45.00</div>
           </div>
+          <div class="notif-time">2 soat</div>
+        </div>
+        <div class="notif-row">
+          <div class="notif-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-star-fill"></i></div>
+          <div>
+            <div class="notif-title">Yangi sharh qoldirildi</div>
+            <div class="notif-desc">Bekzod Odilov 5 ★ sharh qoldirdi: "Ajoyib kurs!"</div>
+          </div>
+          <div class="notif-time">4 soat</div>
+        </div>
+        <div class="notif-row">
+          <div class="notif-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-journal-check"></i></div>
+          <div>
+            <div class="notif-title">Kurs tekshiruvdan o'tdi</div>
+            <div class="notif-desc">"Django REST Masterclass" nashr etishga tayyor</div>
+          </div>
+          <div class="notif-time">2 kun</div>
         </div>
       </div>
     </main>
@@ -122,7 +79,5 @@
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
-<script src="../../js/filterable.js"></script>
-<script src="../../js/notifications.js"></script>
 </body>
 </html>

@@ -24,7 +24,6 @@ const NAV_CONFIG = {
     { key: 'bookmarks',      label: 'Saqlangan',         icon: 'bi-bookmark-star',          href: 'bookmarks.html' },
     { key: 'profile',        label: 'Profil',            icon: 'bi-person-circle',          href: 'profile.html' },
     { key: 'settings',       label: 'Sozlamalar',        icon: 'bi-gear-fill',              href: 'settings.html' },
-    { key: 'notifications',  label: 'Bildirishnomalar',  icon: 'bi-bell-fill',              href: '../shared/notifications.html' },
     { key: 'components',     label: 'Komponentlar',      icon: 'bi-grid-3x3-gap-fill',      href: '../shared/components.html' }
   ],
 
@@ -44,7 +43,6 @@ const NAV_CONFIG = {
     { key: 'reviews',       label: 'Sharhlar',     icon: 'bi-star-fill',             href: '../instructor/reviews.html' },
     { key: 'revenue',       label: 'Daromad',      icon: 'bi-cash-stack',            href: '../instructor/revenue.html' },
     { key: 'ai-assistant',  label: 'AI Yordamchi', icon: 'bi-stars',                 href: '../instructor/ai-assistant.html' },
-    { key: 'notifications', label: 'Bildirishnomalar', icon: 'bi-bell-fill',         href: '../instructor/notifications.html' },
     { key: 'profile',       label: 'Profil',       icon: 'bi-person-circle',         href: '../instructor/profile.html' },
     { key: 'settings',      label: 'Sozlamalar',   icon: 'bi-gear-fill',             href: '../instructor/settings.html' }
   ],
