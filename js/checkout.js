@@ -80,6 +80,7 @@ function isloh_initCheckout() {
 
   document.querySelectorAll('[data-checkout-submit]').forEach((btn) => {
     btn.addEventListener('click', () => {
+      if (typeof isloh_finalizeCartCheckout === 'function') isloh_finalizeCartCheckout();
       isloh_showCheckoutPanel('success');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });

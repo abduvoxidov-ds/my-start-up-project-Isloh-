@@ -60,17 +60,10 @@
 
       <div class="section-head">
         <h3 style="font-size:17px;">Tavsiya etilgan kurslar</h3>
-        <a href="courses.html" style="font-size:13px; color:var(--violet-600); font-weight:600;">Barchasini ko'rish</a>
       </div>
 
       <div class="mkt-toolbar">
-        <div class="filter-bar" data-filter-group="category">
-          <button class="filter-chip active" data-filter-value="all">Barchasi</button>
-          <button class="filter-chip" data-filter-value="dev">Dasturlash</button>
-          <button class="filter-chip" data-filter-value="design">Dizayn</button>
-          <button class="filter-chip" data-filter-value="ai">AI</button>
-          <button class="filter-chip" data-filter-value="data">Ma'lumotlar bazasi</button>
-        </div>
+        <div class="filter-bar" data-filter-group="category"></div>
         <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Saralash">
           <option>Mashhurligi bo'yicha</option>
           <option>Narx: pastdan yuqoriga</option>
@@ -80,52 +73,7 @@
         </select>
       </div>
 
-      <div class="mkt-grid" style="margin-top:14px;">
-        <div class="card mkt-card" data-filter-item data-category="dev" data-filter-text="Python Backend Development">
-          <div class="mkt-cover" style="background:linear-gradient(135deg,#306998,#FFD43B);">
-            <i class="bi bi-filetype-py"></i>
-            <button class="fav-toggle" data-wishlist-toggle aria-label="Xohishlar ro'yxatiga qo'shish"><i class="bi bi-heart"></i></button>
-          </div>
-          <div class="card-pad" style="padding-top:14px;">
-            <a href="course-landing.html" style="font-weight:700; font-size:14px; color:inherit; text-decoration:none;" class="filter-title">Python Backend Development</a>
-            <div class="price-row"><span class="price-now">249 000 so'm</span><span class="price-old">420 000</span><span class="discount-badge">-40%</span></div>
-            <button class="btn btn-primary btn-sm btn-block" style="margin-top:10px;" data-mkt-add-cart>Savatga qo'shish</button>
-          </div>
-        </div>
-        <div class="card mkt-card" data-filter-item data-category="dev" data-filter-text="React The Complete Guide">
-          <div class="mkt-cover" style="background:linear-gradient(135deg,#0EA5E9,#1E3A8A);">
-            <i class="bi bi-atom"></i>
-            <button class="fav-toggle" data-wishlist-toggle aria-label="Xohishlar ro'yxatiga qo'shish"><i class="bi bi-heart"></i></button>
-          </div>
-          <div class="card-pad" style="padding-top:14px;">
-            <div style="font-weight:700; font-size:14px;" class="filter-title">React — The Complete Guide</div>
-            <div class="price-row"><span class="price-now">299 000 so'm</span></div>
-            <button class="btn btn-primary btn-sm btn-block" style="margin-top:10px;" data-mkt-add-cart>Savatga qo'shish</button>
-          </div>
-        </div>
-        <div class="card mkt-card" data-filter-item data-category="design" data-filter-text="UI UX Design Fundamentals">
-          <div class="mkt-cover" style="background:linear-gradient(135deg,#8E44EC,#3B82F6);">
-            <i class="bi bi-palette-fill"></i>
-            <button class="fav-toggle active" data-wishlist-toggle aria-label="Xohishlar ro'yxatiga qo'shish"><i class="bi bi-heart-fill"></i></button>
-          </div>
-          <div class="card-pad" style="padding-top:14px;">
-            <div style="font-weight:700; font-size:14px;" class="filter-title">UI/UX Design Fundamentals</div>
-            <div class="price-row"><span class="price-now">189 000 so'm</span><span class="price-old">250 000</span><span class="discount-badge">-24%</span></div>
-            <button class="btn btn-primary btn-sm btn-block" style="margin-top:10px;" data-mkt-add-cart>Savatga qo'shish</button>
-          </div>
-        </div>
-        <div class="card mkt-card" data-filter-item data-category="ai" data-filter-text="Machine Learning A-Z">
-          <div class="mkt-cover" style="background:linear-gradient(135deg,#06B6D4,#0E7490);">
-            <i class="bi bi-cpu-fill"></i>
-            <button class="fav-toggle active" data-wishlist-toggle aria-label="Xohishlar ro'yxatiga qo'shish"><i class="bi bi-heart-fill"></i></button>
-          </div>
-          <div class="card-pad" style="padding-top:14px;">
-            <div style="font-weight:700; font-size:14px;" class="filter-title">Machine Learning A-Z</div>
-            <div class="price-row"><span class="price-now">349 000 so'm</span></div>
-            <button class="btn btn-primary btn-sm btn-block" style="margin-top:10px;" data-mkt-add-cart>Savatga qo'shish</button>
-          </div>
-        </div>
-      </div>
+      <div class="mkt-grid" id="mkt-grid" style="margin-top:14px;"></div>
 
       <div class="empty-state card" data-filter-empty style="display:none; margin-top:16px;">
         <div class="empty-icon"><i class="bi bi-search"></i></div>
@@ -272,27 +220,8 @@
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
-<script src="../../js/filterable.js"></script>
 <script src="../../js/wishlist.js"></script>
 <script src="../../js/marketplace.js"></script>
-<script>
-  // Page-local: Marketplace has its own topbar cart badge but no full
-  // [data-cart-list] (that lives on cart.html), so js/cart.js's engine
-  // doesn't apply here. This just increments the badge + shows a toast,
-  // consistent with the project's frontend-only, no-persistence rule.
-  document.addEventListener('DOMContentLoaded', () => {
-    let count = 0;
-    document.querySelectorAll('[data-mkt-add-cart]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        count++;
-        document.querySelectorAll('[data-cart-count]').forEach((el) => {
-          el.textContent = count;
-          el.classList.toggle('badge-empty', count === 0);
-        });
-        isloh_showToast("Kurs savatga qo'shildi", 'success');
-      });
-    });
-  });
-</script>
+<script src="../../js/filterable.js"></script>
 </body>
 </html>

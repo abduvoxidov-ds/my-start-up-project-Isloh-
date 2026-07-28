@@ -30,23 +30,22 @@
   </aside>
 
   <div class="main-col">
-    <!-- TOPBAR -->
-    <header class="topbar">
-      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
-      <div class="topbar-actions">
-        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar">SM</div>
-      </div>
-    </header>
-
     <main class="content">
-      <h1 style="font-size:24px;">Salom, Samar! 👋</h1>
-      <p style="color:var(--ink-500); margin-top:4px;">Davom eting: siz ajoyib ketyapsiz.</p>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <h1 style="font-size:24px;">Salom, <span id="dash-user-name">Samar</span>! 👋</h1>
+          <p style="color:var(--ink-500); margin-top:4px;">Davom eting: siz ajoyib ketyapsiz.</p>
+        </div>
+        <div class="topbar-actions">
+          <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+          <div class="avatar">SM</div>
+        </div>
+      </div>
 
       <div class="grid-4" style="margin-top:22px;">
         <div class="card card-pad stat-card">
           <div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-clock-fill"></i></div>
-          <div class="stat-value">3<span style="font-size:14px; color:var(--ink-500); font-weight:600;">soat 00m</span></div>
+          <div class="stat-value"><span id="dash-hours-spent">3</span><span style="font-size:14px; color:var(--ink-500); font-weight:600;">soat</span></div>
           <div class="stat-label">Bugungi maqsad</div>
         </div>
         <div class="card card-pad stat-card">
@@ -56,7 +55,7 @@
         </div>
         <div class="card card-pad stat-card">
           <div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-journal-check"></i></div>
-          <div class="stat-value">5</div>
+          <div class="stat-value" id="dash-active-courses-count">5</div>
           <div class="stat-label">Jarayondagi kurslar</div>
         </div>
         <div class="card card-pad stat-card">
@@ -74,23 +73,25 @@
           <div style="display:flex; align-items:center; gap:16px; margin-top:16px;">
             <div class="course-cover" style="width:64px; height:64px; border-radius:14px; background:linear-gradient(135deg,#306998,#FFD43B); flex-shrink:0;"><i class="bi bi-filetype-py" style="font-size:26px;"></i></div>
             <div style="flex:1;">
-              <div style="font-weight:700; font-size:14px;">Python Backend Development</div>
+              <div style="font-weight:700; font-size:14px;" id="dash-course-title">Python Backend Development</div>
               <div style="font-size:12px; color:var(--ink-500); margin:4px 0 8px;">Django & DRF kursi</div>
-              <div class="progress-track"><div class="progress-fill" style="width:63%;"></div></div>
+              <div class="progress-track"><div class="progress-fill" id="dash-course-progress" style="width:63%;"></div></div>
             </div>
-            <a href="course-player.html" class="btn btn-primary btn-sm">Davom etish</a>
+            <a href="course-detail.html" class="btn btn-primary btn-sm" id="dash-course-link">Davom etish</a>
           </div>
 
-          <h3 style="font-size:16px; margin-top:26px;">Bugungi reja</h3>
-          <div class="plan-row"><span><i class="bi bi-circle" style="color:var(--violet-500);"></i>&nbsp; 10:00 — Django modellari</span><span class="badge badge-neutral">45 min</span></div>
-          <div class="plan-row"><span><i class="bi bi-circle" style="color:var(--violet-500);"></i>&nbsp; 14:00 — DRF ViewSets</span><span class="badge badge-neutral">30 min</span></div>
-          <div class="plan-row"><span><i class="bi bi-circle" style="color:var(--violet-500);"></i>&nbsp; 16:00 — 4-uy vazifasi</span><span class="badge badge-neutral">1 soat</span></div>
+          <h3 style="font-size:16px; margin-top:26px;">Bugungi reja <span class="badge badge-neutral" id="dash-tasks-completed-badge"></span></h3>
+          <div id="dash-schedule-list">
+            <div class="plan-row"><span><i class="bi bi-circle" style="color:var(--violet-500);"></i>&nbsp; 10:00 — Django modellari</span><span class="badge badge-neutral">45 min</span></div>
+            <div class="plan-row"><span><i class="bi bi-circle" style="color:var(--violet-500);"></i>&nbsp; 14:00 — DRF ViewSets</span><span class="badge badge-neutral">30 min</span></div>
+            <div class="plan-row"><span><i class="bi bi-circle" style="color:var(--violet-500);"></i>&nbsp; 16:00 — 4-uy vazifasi</span><span class="badge badge-neutral">1 soat</span></div>
+          </div>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:18px;">
           <div class="card card-pad">
             <div style="display:flex; align-items:center; gap:8px;"><i class="bi bi-stars" style="color:var(--violet-600);"></i><h3 style="font-size:15px;">AI Tavsiyasi</h3></div>
-            <p style="font-size:13px; color:var(--ink-700); margin-top:10px;">Odatda soat 16:30 dan keyin biroz tanaffus qilasiz. Hozir mavzuni takrorlab qo'ying.</p>
+            <p style="font-size:13px; color:var(--ink-700); margin-top:10px;" id="dash-ai-message">Odatda soat 16:30 dan keyin biroz tanaffus qilasiz. Hozir mavzuni takrorlab qo'ying.</p>
             <button class="btn btn-outline btn-sm" style="margin-top:10px;">Rad etish</button>
           </div>
           <div class="card card-pad">
@@ -112,7 +113,7 @@
       <div class="card card-pad" style="margin-top:18px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h3 style="font-size:16px;">So'nggi xabarlar</h3>
-          <a href="courses.html" style="font-size:13px; color:var(--violet-600); font-weight:600;">Barchasini ko'rish</a>
+          <a href="discussions.html" style="font-size:13px; color:var(--violet-600); font-weight:600;">Barchasini ko'rish</a>
         </div>
         <div class="msg-row">
           <div class="avatar" style="background:linear-gradient(135deg,#F97316,#EA580C);">BK</div>
@@ -129,12 +130,12 @@
       <!-- Quick actions -->
       <div class="section-header" style="margin-top:26px;"><h3>Tezkor amallar</h3></div>
       <div class="quick-actions">
-        <a href="courses.html" class="quick-action">
+        <a href="course-detail.html" class="quick-action">
           <div class="qa-icon"><i class="bi bi-play-circle-fill"></i></div>
           <div class="qa-title">Darsni davom ettirish</div>
           <div class="qa-sub">Python Backend</div>
         </a>
-        <a href="tasks.html" class="quick-action">
+        <a href="calendar.html" class="quick-action">
           <div class="qa-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-plus-square-fill"></i></div>
           <div class="qa-title">Vazifa qo'shish</div>
           <div class="qa-sub">Bugun 3 ta faol</div>
@@ -269,6 +270,7 @@
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
+<script src="../../js/student-dashboard.js"></script>
 <script>
   // Fill the dashboard learning-heatmap preview (visual only, 60 cells).
   (function () {
