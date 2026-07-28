@@ -134,7 +134,8 @@ function isloh_initTasks() {
   const search = document.getElementById('task-search');
   if (search) search.addEventListener('input', isloh_applyTaskFilters);
 
-  const switchWrap = document.querySelector('.view-switch');
+  const listBtn = document.querySelector('.view-switch button[data-view="list"]');
+  const switchWrap = listBtn ? listBtn.closest('.view-switch') : null;
   if (switchWrap) {
     switchWrap.querySelectorAll('button[data-view]').forEach((btn) => {
       btn.addEventListener('click', () => {

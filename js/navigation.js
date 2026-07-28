@@ -13,10 +13,8 @@
 const NAV_CONFIG = {
   student: [
     { key: 'dashboard',      label: 'Dashboard',         icon: 'bi-grid-1x2-fill',          href: 'dashboard.html' },
-    { key: 'courses',        label: 'Kurslar',           icon: 'bi-journal-bookmark-fill',  href: 'courses.html' },
     { key: 'marketplace',    label: 'Marketplace',       icon: 'bi-bag-fill',               href: 'marketplace.html' },
-    { key: 'calendar',       label: 'Kalendar',          icon: 'bi-calendar3',              href: 'calendar.html' },
-    { key: 'tasks',          label: 'Vazifalar',         icon: 'bi-check2-square',          href: 'tasks.html' },
+    { key: 'calendar',       label: 'Vazifalar',         icon: 'bi-check2-square',          href: 'calendar.html' },
     { key: 'chat',           label: 'Chat',               icon: 'bi-chat-dots-fill',         href: 'chat.html' },
     { key: 'ai-assistant',   label: 'AI Yordamchi',      icon: 'bi-stars',                  href: 'ai-assistant.html' },
     { key: 'analytics',      label: 'Analitika',         icon: 'bi-bar-chart-fill',         href: 'analytics.html' },
