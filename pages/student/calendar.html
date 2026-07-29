@@ -13,13 +13,19 @@
      .priority-badge, .kanban, .filter-chip, .empty-state) come from
      css/widgets.css. */
   .cal-layout { display:grid; grid-template-columns: 1fr 300px; gap:18px; align-items:start; }
-  @media (max-width:1100px){ .cal-layout{ grid-template-columns:1fr; } }
+  .cal-layout .wk-col { position:sticky; top:88px; max-height:calc(100vh - 108px); overflow-y:auto; }
+  @media (max-width:1100px){
+    .cal-layout{ grid-template-columns:1fr; }
+    .cal-layout .wk-col{ position:static; max-height:none; overflow:visible; }
+  }
   .task-group { margin-top:22px; }
   .task-group-head { display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:14px; font-weight:700; }
   .task-group-head .grp-count { font-size:11px; font-weight:600; background:var(--bg-app); color:var(--ink-500); padding:2px 8px; border-radius:var(--r-pill); border:1px solid var(--border-soft); }
-  .quick-add-bar { display:flex; gap:10px; margin-top:20px; }
-  .quick-add-bar input { flex:1; padding:12px 14px; border-radius:var(--r-md); border:1.5px solid var(--border-soft); background:var(--bg-app); font-size:14px; outline:none; }
-  .quick-add-bar input:focus { border-color:var(--violet-500); background:#fff; }
+  .quick-add-bar { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+  .quick-add-bar input[type="text"] { flex:1; padding:12px 14px; border-radius:var(--r-md); border:1.5px solid var(--border-soft); background:var(--bg-app); font-size:14px; outline:none; }
+  .quick-add-bar input[type="text"]:focus { border-color:var(--violet-500); background:#fff; }
+  .quick-add-bar input[type="date"] { flex:0 0 150px; padding:12px 14px; border-radius:var(--r-md); border:1.5px solid var(--border-soft); background:var(--bg-app); font-size:13.5px; outline:none; }
+  .quick-add-bar select { flex:0 0 120px; padding:12px 14px; border-radius:var(--r-md); border:1.5px solid var(--border-soft); background:var(--bg-app); font-size:13.5px; outline:none; }
 </style>
 </head>
 <body>
@@ -31,14 +37,6 @@
   </aside>
 
   <div class="main-col">
-    <header class="topbar">
-      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Kalendarni qidirish..." aria-label="Kalendarni qidirish"></div>
-      <div class="topbar-actions">
-        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar">SM</div>
-      </div>
-    </header>
-
     <main class="content">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
         <div>
@@ -133,187 +131,37 @@
             <div class="progress-track"><div class="progress-fill" id="task-progress-fill" style="width:0;"></div></div>
           </div>
 
-          <!-- FILTER BAR -->
+          <!-- FILTER: muhimlik bo'yicha -->
           <div class="filter-bar" style="margin-top:20px;">
-            <button class="filter-chip active" data-task-filter="all">Barchasi</button>
-            <button class="filter-chip" data-task-filter="today">Bugun</button>
-            <button class="filter-chip" data-task-filter="upcoming">Kelgusi</button>
-            <button class="filter-chip" data-task-filter="overdue">Muddati o'tgan</button>
-            <button class="filter-chip" data-task-filter="completed">Bajarilgan</button>
-            <div style="width:1px; height:24px; background:var(--border-soft); margin:0 4px;"></div>
             <button class="filter-chip active" data-priority-filter="all">Barcha muhimlik</button>
             <button class="filter-chip" data-priority-filter="high"><span class="priority-dot high"></span>&nbsp; Yuqori</button>
             <button class="filter-chip" data-priority-filter="medium"><span class="priority-dot medium"></span>&nbsp; O'rta</button>
             <button class="filter-chip" data-priority-filter="low"><span class="priority-dot low"></span>&nbsp; Past</button>
           </div>
 
-          <!-- Quick add -->
-          <div class="quick-add-bar">
-            <input id="quick-add-input" placeholder="Yangi vazifa qo'shish va Enter bosing..." aria-label="Yangi vazifa">
-            <button class="btn btn-primary" data-quick-add><i class="bi bi-plus-lg"></i> Qo'shish</button>
+          <!-- AI suggested -->
+          <div class="card card-pad" data-ai-suggestion style="margin-top:16px; border:1px dashed var(--violet-500); background:var(--violet-100);">
+            <div style="display:flex; align-items:center; gap:8px;"><i class="bi bi-stars" style="color:var(--violet-600);"></i><h3 style="font-size:14px;">AI tavsiya qilgan vazifa</h3></div>
+            <p style="font-size:13px; color:var(--ink-700); margin-top:8px;">Django kursida 3 kun tanaffus qildingiz. "REST API asoslari"ni takrorlashni tavsiya qilamiz.</p>
+            <div style="display:flex; gap:8px; margin-top:12px;">
+              <button class="btn btn-primary btn-sm" data-ai-suggestion-add><i class="bi bi-plus-lg"></i> Qo'shish</button>
+              <button class="btn btn-outline btn-sm" data-ai-suggestion-reject>Rad etish</button>
+            </div>
           </div>
 
           <!-- LIST VIEW -->
           <div data-task-view-panel="list">
-            <!-- Today -->
-            <div class="task-group" data-task-group="today">
-              <div class="task-group-head"><i class="bi bi-calendar-day" style="color:var(--violet-600);"></i> Bugun <span class="grp-count">3</span></div>
-              <div class="task-group-body">
-                <div class="task-card" data-status="today" data-priority="high">
-                  <div class="task-check" role="checkbox" aria-checked="false" tabindex="0"></div>
-                  <div class="task-body">
-                    <div class="task-title">Django modellari darsini yakunlash</div>
-                    <div class="task-meta">
-                      <span class="priority-badge priority-high"><span class="priority-dot high"></span> Yuqori</span>
-                      <span><i class="bi bi-journal-bookmark"></i> Python Backend</span>
-                      <span><i class="bi bi-clock"></i> Bugun 16:00</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="task-card" data-status="today" data-priority="medium">
-                  <div class="task-check" role="checkbox" aria-checked="false" tabindex="0"></div>
-                  <div class="task-body">
-                    <div class="task-title">DRF ViewSets amaliyotini bajarish</div>
-                    <div class="task-meta">
-                      <span class="priority-badge priority-medium"><span class="priority-dot medium"></span> O'rta</span>
-                      <span><i class="bi bi-journal-bookmark"></i> Python Backend</span>
-                      <span><i class="bi bi-clock"></i> Bugun 18:00</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="task-card" data-status="today" data-priority="low">
-                  <div class="task-check" role="checkbox" aria-checked="false" tabindex="0"></div>
-                  <div class="task-body">
-                    <div class="task-title">JavaScript eslatmalarini takrorlash</div>
-                    <div class="task-meta">
-                      <span class="priority-badge priority-low"><span class="priority-dot low"></span> Past</span>
-                      <span><i class="bi bi-journal-bookmark"></i> JavaScript</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Overdue -->
-            <div class="task-group" data-task-group="overdue">
-              <div class="task-group-head"><i class="bi bi-exclamation-circle" style="color:var(--danger);"></i> Muddati o'tgan <span class="grp-count">1</span></div>
-              <div class="task-group-body">
-                <div class="task-card" data-status="overdue" data-priority="high">
-                  <div class="task-check" role="checkbox" aria-checked="false" tabindex="0"></div>
-                  <div class="task-body">
-                    <div class="task-title">UI/UX topshirig'ini yuborish</div>
-                    <div class="task-meta">
-                      <span class="priority-badge priority-high"><span class="priority-dot high"></span> Yuqori</span>
-                      <span style="color:var(--danger);"><i class="bi bi-clock-history"></i> 1 kun kechikkan</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Upcoming -->
-            <div class="task-group" data-task-group="upcoming">
-              <div class="task-group-head"><i class="bi bi-calendar-week" style="color:var(--ink-500);"></i> Kelgusi <span class="grp-count">2</span></div>
-              <div class="task-group-body">
-                <div class="task-card" data-status="upcoming" data-priority="medium">
-                  <div class="task-check" role="checkbox" aria-checked="false" tabindex="0"></div>
-                  <div class="task-body">
-                    <div class="task-title">Loyiha hujjatlarini tayyorlash</div>
-                    <div class="task-meta">
-                      <span class="priority-badge priority-medium"><span class="priority-dot medium"></span> O'rta</span>
-                      <span><i class="bi bi-clock"></i> 3 kundan keyin</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="task-card" data-status="upcoming" data-priority="high">
-                  <div class="task-check" role="checkbox" aria-checked="false" tabindex="0"></div>
-                  <div class="task-body">
-                    <div class="task-title">Oraliq imtihonga tayyorgarlik</div>
-                    <div class="task-meta">
-                      <span class="priority-badge priority-high"><span class="priority-dot high"></span> Yuqori</span>
-                      <span><i class="bi bi-clock"></i> 7 kundan keyin</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Completed -->
-            <div class="task-group" data-task-group="completed">
-              <div class="task-group-head"><i class="bi bi-check2-circle" style="color:var(--teach-green);"></i> Bajarilgan <span class="grp-count">2</span></div>
-              <div class="task-group-body">
-                <div class="task-card done" data-status="completed" data-priority="low" data-prev-status="today">
-                  <div class="task-check checked" role="checkbox" aria-checked="true" tabindex="0"><i class="bi bi-check-lg"></i></div>
-                  <div class="task-body">
-                    <div class="task-title">HTML asoslari darsi</div>
-                    <div class="task-meta"><span><i class="bi bi-journal-bookmark"></i> Frontend</span></div>
-                  </div>
-                </div>
-                <div class="task-card done" data-status="completed" data-priority="medium" data-prev-status="today">
-                  <div class="task-check checked" role="checkbox" aria-checked="true" tabindex="0"><i class="bi bi-check-lg"></i></div>
-                  <div class="task-body">
-                    <div class="task-title">Git repository sozlash</div>
-                    <div class="task-meta"><span><i class="bi bi-journal-bookmark"></i> DevOps</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- AI suggested -->
-            <div class="card card-pad" style="margin-top:22px; border:1px dashed var(--violet-500); background:var(--violet-100);">
-              <div style="display:flex; align-items:center; gap:8px;"><i class="bi bi-stars" style="color:var(--violet-600);"></i><h3 style="font-size:14px;">AI tavsiya qilgan vazifa</h3></div>
-              <p style="font-size:13px; color:var(--ink-700); margin-top:8px;">Django kursida 3 kun tanaffus qildingiz. "REST API asoslari"ni takrorlashni tavsiya qilamiz.</p>
-              <div style="display:flex; gap:8px; margin-top:12px;">
-                <button class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Qo'shish</button>
-                <button class="btn btn-outline btn-sm">Rad etish</button>
-              </div>
+            <div data-task-list></div>
+            <div class="empty-state card" data-tasks-empty style="display:none; margin-top:16px;">
+              <div class="empty-icon"><i class="bi bi-list-check"></i></div>
+              <div class="empty-title">Hozircha vazifalar yo'q</div>
+              <div class="empty-sub">Yuqoridagi maydon orqali yangi vazifa qo'shing yoki filtrni o'zgartiring.</div>
             </div>
           </div>
 
-          <!-- KANBAN VIEW (UI only) -->
+          <!-- KANBAN VIEW (synced with the same isloh_tasks state as List view) -->
           <div data-task-view-panel="kanban" hidden style="margin-top:22px;">
-            <div class="kanban">
-              <div class="kanban-col">
-                <div class="kanban-col-head">Rejalashtirilgan <span class="kanban-count">2</span></div>
-                <div class="kanban-card">
-                  <div class="kanban-card-title">Loyiha hujjatlari</div>
-                  <div class="kanban-card-meta"><span class="priority-badge priority-medium"><span class="priority-dot medium"></span> O'rta</span><span>3 kun</span></div>
-                </div>
-                <div class="kanban-card">
-                  <div class="kanban-card-title">Imtihonga tayyorgarlik</div>
-                  <div class="kanban-card-meta"><span class="priority-badge priority-high"><span class="priority-dot high"></span> Yuqori</span><span>7 kun</span></div>
-                </div>
-              </div>
-              <div class="kanban-col">
-                <div class="kanban-col-head">Bajarilmoqda <span class="kanban-count">2</span></div>
-                <div class="kanban-card">
-                  <div class="kanban-card-title">Django modellari</div>
-                  <div class="kanban-card-meta"><span class="priority-badge priority-high"><span class="priority-dot high"></span> Yuqori</span><span>Bugun</span></div>
-                </div>
-                <div class="kanban-card">
-                  <div class="kanban-card-title">DRF ViewSets</div>
-                  <div class="kanban-card-meta"><span class="priority-badge priority-medium"><span class="priority-dot medium"></span> O'rta</span><span>Bugun</span></div>
-                </div>
-              </div>
-              <div class="kanban-col">
-                <div class="kanban-col-head">Ko'rib chiqishda <span class="kanban-count">1</span></div>
-                <div class="kanban-card">
-                  <div class="kanban-card-title">UI/UX topshirig'i</div>
-                  <div class="kanban-card-meta"><span class="priority-badge priority-high"><span class="priority-dot high"></span> Yuqori</span><span style="color:var(--danger);">Kechikkan</span></div>
-                </div>
-              </div>
-              <div class="kanban-col">
-                <div class="kanban-col-head">Bajarilgan <span class="kanban-count">2</span></div>
-                <div class="kanban-card">
-                  <div class="kanban-card-title">HTML asoslari</div>
-                  <div class="kanban-card-meta"><span class="priority-badge priority-low"><span class="priority-dot low"></span> Past</span><span><i class="bi bi-check-lg" style="color:var(--teach-green);"></i></span></div>
-                </div>
-                <div class="kanban-card">
-                  <div class="kanban-card-title">Git sozlash</div>
-                  <div class="kanban-card-meta"><span class="priority-badge priority-medium"><span class="priority-dot medium"></span> O'rta</span><span><i class="bi bi-check-lg" style="color:var(--teach-green);"></i></span></div>
-                </div>
-              </div>
-            </div>
+            <div class="kanban" data-kanban-board></div>
           </div>
         </div>
         </div>
@@ -328,49 +176,16 @@
             <div class="mini-cal-grid" id="mini-cal-grid"></div>
           </div>
 
-          <!-- Today's timeline -->
+          <!-- Today's timeline (rendered from isloh_tasks — dueDate === bugun) -->
           <div class="card card-pad">
             <div class="section-header"><h3>Bugungi jadval</h3></div>
-            <div class="timeline">
-              <div class="timeline-item">
-                <div class="timeline-time">10:00 — 10:45</div>
-                <div class="timeline-title">Django modellari</div>
-              </div>
-              <div class="timeline-item tl-warning">
-                <div class="timeline-time">14:00 — 14:30</div>
-                <div class="timeline-title">DRF ViewSets amaliyot</div>
-              </div>
-              <div class="timeline-item tl-green">
-                <div class="timeline-time">16:00</div>
-                <div class="timeline-title">4-uy vazifasini topshirish</div>
-              </div>
-            </div>
+            <div class="timeline" data-today-timeline></div>
           </div>
 
-          <!-- Upcoming -->
+          <!-- Upcoming (rendered from isloh_tasks — dueDate > bugun) -->
           <div class="card card-pad">
             <div class="section-header"><h3>Yaqinlashayotgan</h3></div>
-            <div class="upcoming-row">
-              <div class="upcoming-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-flag-fill"></i></div>
-              <div class="upcoming-body">
-                <div class="upcoming-title">Loyiha topshirish</div>
-                <div class="upcoming-sub">3 kundan keyin</div>
-              </div>
-            </div>
-            <div class="upcoming-row">
-              <div class="upcoming-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-mortarboard-fill"></i></div>
-              <div class="upcoming-body">
-                <div class="upcoming-title">JavaScript testi</div>
-                <div class="upcoming-sub">2 kundan keyin</div>
-              </div>
-            </div>
-            <div class="upcoming-row">
-              <div class="upcoming-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-camera-video-fill"></i></div>
-              <div class="upcoming-body">
-                <div class="upcoming-title">Mentor uchrashuvi</div>
-                <div class="upcoming-sub">5 kundan keyin</div>
-              </div>
-            </div>
+            <div data-upcoming-rail></div>
           </div>
 
           <!-- Category legend -->
@@ -395,9 +210,36 @@
     </main>
   </div>
 </div>
+
+<div class="modal-overlay" id="add-task-modal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <h3 style="font-size:15px;">Yangi vazifa qo'shish</h3>
+      <button class="icon-btn" data-modal-close aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="quick-add-bar" style="margin-top:0;">
+        <input type="text" id="quick-add-input" placeholder="Vazifa nomini kiriting..." aria-label="Yangi vazifa">
+        <input type="date" id="quick-add-date" aria-label="Muddat">
+        <select id="quick-add-priority" aria-label="Muhimlik">
+          <option value="high">Yuqori</option>
+          <option value="medium" selected>O'rta</option>
+          <option value="low">Past</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-modal-close>Bekor qilish</button>
+      <button class="btn btn-primary" data-quick-add><i class="bi bi-plus-lg"></i> Qo'shish</button>
+    </div>
+  </div>
+</div>
+
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
 <script src="../../js/calendar.js"></script>
 <script src="../../js/tasks.js"></script>
 </body>
