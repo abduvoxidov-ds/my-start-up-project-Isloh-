@@ -1,35 +1,60 @@
 /* ==========================================================================
-   ISLOH — Cart module  (Sprint 9)
-   Powers pages/student/cart.html. Frontend-only: nothing is persisted or
-   sent anywhere — quantity/remove/save-for-later/coupon all mutate the DOM
-   and the price summary recalculates from what's currently rendered.
-   Mirrors the declarative, data-attribute style of js/bookmarks.js and
-   js/courses.js rather than introducing a new pattern.
+   ISLOH — Cart module
+   Powers pages/student/cart.html by rendering directly from ISLOH_CART_KEY
+   (js/marketplace.js), so it reflects whatever was added from Marketplace
+   or Wishlist. Quantity and "Keyinga saqlash" stay session-only (DOM
+   state) — the cart item list itself is the persisted source of truth.
 
    Markup contract:
-     [data-cart-list]                     → container of cart rows
-       [data-cart-item][data-price="0"]   → one row, price in so'm (number)
-         [data-qty-value]                 → text node showing quantity
-         [data-qty-inc] / [data-qty-dec]  → stepper buttons
-         [data-cart-remove]               → removes the row
+     [data-cart-list]                     → container, rendered from
+                                            isloh_getCartItems()
+       [data-cart-item][data-course-id][data-price="0"]
+         [data-qty-value] / [data-qty-inc] / [data-qty-dec]
+         [data-cart-remove]               → removes the row + storage entry
          [data-cart-save]                 → moves row to "saved for later"
+                                            (removed from storage meanwhile)
      [data-saved-list]                    → container for saved-for-later rows
-       [data-cart-restore]                → moves row back to the cart
-     [data-cart-count]                    → topbar badge, shown as N
+       [data-cart-restore]                → moves row back to cart + storage
+     [data-cart-count]                    → topbar badge
      [data-cart-empty]                    → shown when the cart has 0 items
-     #coupon-input / #coupon-apply        → coupon UI (visual only)
+     [data-checkout-btn]                  → gets .btn-disabled when empty
+     #coupon-input / #coupon-apply        → coupon UI (ISLOH_COUPON, marketplace.js)
      [data-sum-subtotal] / [data-sum-discount] / [data-sum-total]
-     ========================================================================== */
+   ========================================================================== */
 
-const ISLOH_COUPON = { code: 'ISLOH2026', percent: 15 };
 let isloh_couponApplied = false;
+
+function isloh_cartRowHtml(item) {
+  const meta = [item.instructor, item.duration, item.level].filter(Boolean).join(' &middot; ');
+  return `<div class="cart-item" data-cart-item data-course-id="${item.id}" data-price="${item.price}">
+    <div class="cart-item-cover" style="background:${item.cover};"><i class="${item.icon}"></i></div>
+    <div class="cart-item-body">
+      <div class="cart-item-title">${item.title}</div>
+      ${meta ? `<div class="cart-item-meta">${meta}</div>` : ''}
+    </div>
+    <div class="qty-stepper"><button type="button" data-qty-dec aria-label="Kamaytirish"><i class="bi bi-dash"></i></button><span data-qty-value>1</span><button type="button" data-qty-inc aria-label="Ko'paytirish"><i class="bi bi-plus"></i></button></div>
+    <div class="cart-item-price"><div style="font-weight:800; font-size:14px;">${isloh_formatSom(item.price)} so'm</div></div>
+    <div class="cart-item-actions">
+      <button type="button" class="link-btn" data-cart-save>Keyinga saqlash</button>
+      <button type="button" class="link-btn danger" data-cart-remove>O'chirish</button>
+    </div>
+  </div>`;
+}
+
+function isloh_renderCartRows() {
+  const list = document.querySelector('[data-cart-list]');
+  if (!list) return;
+  const items = typeof isloh_getCartItems === 'function' ? isloh_getCartItems() : [];
+  list.innerHTML = items.map(isloh_cartRowHtml).join('');
+}
 
 function isloh_cartItems() {
   return [...document.querySelectorAll('[data-cart-list] [data-cart-item]')];
 }
 
-function isloh_formatSom(n) {
-  return Math.round(n).toLocaleString('uz-UZ') + " so'm";
+function isloh_removeFromCartStorage(id) {
+  if (typeof isloh_getCartItems !== 'function') return;
+  isloh_saveCartItems(isloh_getCartItems().filter((c) => c.id !== id));
 }
 
 function isloh_recalcCart() {
@@ -46,13 +71,12 @@ function isloh_recalcCart() {
   const discEl = document.querySelector('[data-sum-discount]');
   const discRow = document.querySelector('[data-sum-discount-row]');
   const totEl = document.querySelector('[data-sum-total]');
-  if (subEl) subEl.textContent = isloh_formatSom(subtotal);
-  if (discEl) discEl.textContent = '−' + isloh_formatSom(discount);
+  if (subEl) subEl.textContent = isloh_formatSom(subtotal) + " so'm";
+  if (discEl) discEl.textContent = '−' + isloh_formatSom(discount) + " so'm";
   if (discRow) discRow.hidden = !isloh_couponApplied;
-  if (totEl) totEl.textContent = isloh_formatSom(total);
+  if (totEl) totEl.textContent = isloh_formatSom(total) + " so'm";
 
-  const countEls = document.querySelectorAll('[data-cart-count]');
-  countEls.forEach((el) => {
+  document.querySelectorAll('[data-cart-count]').forEach((el) => {
     el.textContent = items.length;
     el.classList.toggle('badge-empty', items.length === 0);
   });
@@ -64,13 +88,15 @@ function isloh_recalcCart() {
     empty.style.display = items.length === 0 ? '' : 'none';
     list.closest('.card').style.display = items.length === 0 ? 'none' : '';
   }
-  if (checkoutBtn) checkoutBtn.disabled = items.length === 0;
+  if (checkoutBtn) checkoutBtn.classList.toggle('btn-disabled', items.length === 0);
 }
 
 function isloh_initCart() {
   const list = document.querySelector('[data-cart-list]');
   const saved = document.querySelector('[data-saved-list]');
   if (!list) return;
+
+  isloh_renderCartRows();
 
   document.body.addEventListener('click', (e) => {
     const incBtn = e.target.closest('[data-qty-inc]');
@@ -90,6 +116,7 @@ function isloh_initCart() {
 
     if (removeBtn) {
       const row = removeBtn.closest('[data-cart-item]');
+      isloh_removeFromCartStorage(row.dataset.courseId);
       row.remove();
       isloh_recalcCart();
       if (typeof isloh_showToast === 'function') isloh_showToast("Kurs savatdan o'chirildi", 'success');
@@ -97,6 +124,7 @@ function isloh_initCart() {
 
     if (saveBtn && saved) {
       const row = saveBtn.closest('[data-cart-item]');
+      isloh_removeFromCartStorage(row.dataset.courseId);
       row.classList.add('saved-later');
       saveBtn.remove();
       const restoreBtnEl = document.createElement('button');
@@ -112,6 +140,15 @@ function isloh_initCart() {
 
     if (restoreBtn) {
       const row = restoreBtn.closest('[data-cart-item]');
+      if (typeof isloh_addToCart === 'function') {
+        isloh_addToCart({
+          id: row.dataset.courseId,
+          title: row.querySelector('.cart-item-title')?.textContent,
+          cover: row.querySelector('.cart-item-cover')?.style.background,
+          icon: row.querySelector('.cart-item-cover i')?.className,
+          price: parseFloat(row.dataset.price) || 0
+        });
+      }
       row.classList.remove('saved-later');
       restoreBtn.remove();
       const removeBtnEl = document.createElement('button');

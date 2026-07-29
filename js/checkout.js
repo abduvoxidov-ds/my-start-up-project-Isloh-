@@ -1,8 +1,9 @@
 /* ==========================================================================
-   ISLOH — Checkout module  (Sprint 9)
-   Frontend-only multi-step checkout for pages/student/checkout.html. No
-   backend/payment processing — "Buyurtmani tasdiqlash" only swaps the
-   visible step panel to a Success (or, rarely, Failure) placeholder state.
+   ISLOH — Checkout module
+   Multi-step checkout for pages/student/checkout.html, driven by the same
+   ISLOH_CART_KEY cart (js/marketplace.js) that Marketplace/Cart write to —
+   the order review (step 3) and the summary sidebar render straight from
+   it, and "Buyurtmani tasdiqlash" finalizes + empties that same cart.
 
    Markup contract:
      [data-checkout-steps] [data-step]                → step indicator (1..3)
@@ -10,12 +11,17 @@
      [data-checkout-next] / [data-checkout-back]       → step navigation
      [data-payment-card]                               → click selects a
        radio input inside it and adds .selected
-     #promo-input / #promo-apply                       → promo code (visual)
+     [data-checkout-review]                            → step-3 line items,
+       rendered from isloh_getCartItems()
+     [data-checkout-count] / [data-checkout-subtotal] /
+       [data-checkout-discount-row] / [data-checkout-discount] /
+       [data-checkout-total]                           → summary sidebar
+     #promo-input / #promo-apply                       → promo code (ISLOH_COUPON)
      [data-checkout-submit]                            → moves to success
      [data-checkout-retry]                             → failure → step 2
    ========================================================================== */
 
-const ISLOH_PROMO = { code: 'ISLOH2026', label: "−15% chegirma qo'llandi" };
+let isloh_checkoutPromoApplied = false;
 
 function isloh_showCheckoutPanel(step) {
   document.querySelectorAll('[data-checkout-panel]').forEach((panel) => {
@@ -31,17 +37,43 @@ function isloh_showCheckoutPanel(step) {
   });
 }
 
+function isloh_renderCheckoutSummary() {
+  const items = typeof isloh_getCartItems === 'function' ? isloh_getCartItems() : [];
+  const subtotal = items.reduce((sum, item) => sum + (item.price || 0), 0);
+  const discount = isloh_checkoutPromoApplied ? subtotal * (ISLOH_COUPON.percent / 100) : 0;
+  const total = subtotal - discount;
+
+  const review = document.querySelector('[data-checkout-review]');
+  if (review) {
+    const rows = items.map((item) => `<div style="display:flex; justify-content:space-between; font-size:13px; padding:5px 0;"><span>${item.title}</span><span>${isloh_formatSom(item.price)} so'm</span></div>`).join('');
+    review.innerHTML = rows + `<div style="display:flex; justify-content:space-between; font-size:14px; font-weight:800; padding-top:10px; margin-top:6px; border-top:1px solid var(--border-soft);"><span>Jami</span><span>${isloh_formatSom(total)} so'm</span></div>`;
+  }
+
+  const countEl = document.querySelector('[data-checkout-count]');
+  if (countEl) countEl.textContent = `${items.length} ta kurs`;
+  const subEl = document.querySelector('[data-checkout-subtotal]');
+  if (subEl) subEl.textContent = isloh_formatSom(subtotal) + " so'm";
+  const discRow = document.querySelector('[data-checkout-discount-row]');
+  const discEl = document.querySelector('[data-checkout-discount]');
+  if (discRow) discRow.hidden = !isloh_checkoutPromoApplied;
+  if (discEl) discEl.textContent = '−' + isloh_formatSom(discount) + " so'm";
+  const totEl = document.querySelector('[data-checkout-total]');
+  if (totEl) totEl.textContent = isloh_formatSom(total) + " so'm";
+}
+
 function isloh_initCheckout() {
   const steps = document.querySelector('[data-checkout-steps]');
   if (!steps && !document.querySelector('[data-checkout-panel]')) return;
 
   let current = 1;
   isloh_showCheckoutPanel(current);
+  isloh_renderCheckoutSummary();
 
   document.querySelectorAll('[data-checkout-next]').forEach((btn) => {
     btn.addEventListener('click', () => {
       current = Math.min(3, current + 1);
       isloh_showCheckoutPanel(current);
+      if (current === 3) isloh_renderCheckoutSummary();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
@@ -68,9 +100,12 @@ function isloh_initCheckout() {
       const input = document.getElementById('promo-input');
       const value = (input?.value || '').trim().toUpperCase();
       const note = document.getElementById('promo-note');
-      if (value === ISLOH_PROMO.code) {
-        if (note) { note.textContent = ISLOH_PROMO.label; note.style.color = 'var(--teach-green)'; }
-        if (typeof isloh_showToast === 'function') isloh_showToast(ISLOH_PROMO.label, 'success');
+      if (value === ISLOH_COUPON.code) {
+        isloh_checkoutPromoApplied = true;
+        isloh_renderCheckoutSummary();
+        const label = `−${ISLOH_COUPON.percent}% chegirma qo'llandi`;
+        if (note) { note.textContent = label; note.style.color = 'var(--teach-green)'; }
+        if (typeof isloh_showToast === 'function') isloh_showToast(label, 'success');
       } else {
         if (note) { note.textContent = "Promo-kod topilmadi"; note.style.color = 'var(--danger)'; }
         if (typeof isloh_showToast === 'function') isloh_showToast("Promo-kod topilmadi", 'error');

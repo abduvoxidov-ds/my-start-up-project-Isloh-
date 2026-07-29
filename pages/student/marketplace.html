@@ -58,18 +58,77 @@
         <div class="price-tag">-40%</div>
       </div>
 
-      <div class="section-head">
-        <h3 style="font-size:17px;">Tavsiya etilgan kurslar</h3>
+      <div>
+        <div class="section-head">
+          <h3 style="font-size:17px;">Tavsiya etilgan siz uchun</h3>
+        </div>
+        <div class="mkt-strip">
+          <div class="card mkt-strip-card">
+            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#F97316,#EA580C); font-size:20px;"><i class="bi bi-boxes"></i></div>
+            <div class="card-pad" style="padding:12px;">
+              <div style="font-weight:700; font-size:13px;">Docker for Beginners</div>
+              <div class="price-row"><span class="price-now" style="font-size:13.5px;">159 000 so'm</span></div>
+            </div>
+          </div>
+          <div class="card mkt-strip-card">
+            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#0F766E,#14B8A6); font-size:20px;"><i class="bi bi-database-fill"></i></div>
+            <div class="card-pad" style="padding:12px;">
+              <div style="font-weight:700; font-size:13px;">Django REST Masterclass</div>
+              <div class="price-row"><span class="price-now" style="font-size:13.5px;">219 000 so'm</span></div>
+            </div>
+          </div>
+          <div class="card mkt-strip-card">
+            <div class="mkt-cover" style="height:80px; background:#1F2937; font-size:20px;"><i class="bi bi-box-seam"></i></div>
+            <div class="card-pad" style="padding:12px;">
+              <div style="font-weight:700; font-size:13px;">PostgreSQL Complete Guide</div>
+              <div class="price-row"><span class="price-now" style="font-size:13.5px;">179 000 so'm</span></div>
+            </div>
+          </div>
+          <div class="card mkt-strip-card">
+            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#6366F1,#818CF8); font-size:20px;"><i class="bi bi-code-slash"></i></div>
+            <div class="card-pad" style="padding:12px;">
+              <div style="font-weight:700; font-size:13px;">Advanced API Design</div>
+              <div class="price-row"><span class="price-now" style="font-size:13.5px;">229 000 so'm</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <h3 style="font-size:17px;">Yaqinda ko'rilgan</h3>
+        </div>
+        <div class="mkt-strip">
+          <div class="card mkt-strip-card">
+            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#8E44EC,#3B82F6); font-size:20px;"><i class="bi bi-palette-fill"></i></div>
+            <div class="card-pad" style="padding:12px;">
+              <div style="font-weight:700; font-size:13px;">UI/UX Design Fundamentals</div>
+              <div class="price-row"><span class="price-now" style="font-size:13.5px;">189 000 so'm</span></div>
+            </div>
+          </div>
+          <div class="card mkt-strip-card">
+            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#306998,#FFD43B); font-size:20px;"><i class="bi bi-filetype-py"></i></div>
+            <div class="card-pad" style="padding:12px;">
+              <div style="font-weight:700; font-size:13px;">Python Backend Development</div>
+              <div class="price-row"><span class="price-now" style="font-size:13.5px;">249 000 so'm</span></div>
+            </div>
+          </div>
+          <div class="card mkt-strip-card">
+            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#DB2777,#F472B6); font-size:20px;"><i class="bi bi-megaphone-fill"></i></div>
+            <div class="card-pad" style="padding:12px;">
+              <div style="font-weight:700; font-size:13px;">Digital Marketing 101</div>
+              <div class="price-row"><span class="price-now" style="font-size:13.5px;">129 000 so'm</span></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="mkt-toolbar">
         <div class="filter-bar" data-filter-group="category"></div>
-        <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Saralash">
-          <option>Mashhurligi bo'yicha</option>
-          <option>Narx: pastdan yuqoriga</option>
-          <option>Narx: yuqoridan pastga</option>
-          <option>Reyting bo'yicha</option>
-          <option>Yangi qo'shilganlar</option>
+        <select class="btn btn-outline" id="mkt-sort" style="border-radius:var(--r-md);" aria-label="Saralash">
+          <option value="popular">Mashhurligi bo'yicha</option>
+          <option value="price-asc">Narx: pastdan yuqoriga</option>
+          <option value="price-desc">Narx: yuqoridan pastga</option>
+          <option value="rating">Reyting bo'yicha</option>
+          <option value="newest">Yangi qo'shilganlar</option>
         </select>
       </div>
 
@@ -79,92 +138,6 @@
         <div class="empty-icon"><i class="bi bi-search"></i></div>
         <div class="empty-title">Kurslar topilmadi</div>
         <div class="empty-sub">Boshqa kategoriya yoki qidiruv so'zini sinab ko'ring.</div>
-      </div>
-
-      <div class="section-head">
-        <h3 style="font-size:17px;">Tavsiya etilgan siz uchun</h3>
-      </div>
-      <div class="mkt-strip">
-        <div class="card mkt-strip-card">
-          <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#F97316,#EA580C); font-size:20px;"><i class="bi bi-boxes"></i></div>
-          <div class="card-pad" style="padding:12px;">
-            <div style="font-weight:700; font-size:13px;">Docker for Beginners</div>
-            <div class="price-row"><span class="price-now" style="font-size:13.5px;">159 000 so'm</span></div>
-          </div>
-        </div>
-        <div class="card mkt-strip-card">
-          <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#0F766E,#14B8A6); font-size:20px;"><i class="bi bi-database-fill"></i></div>
-          <div class="card-pad" style="padding:12px;">
-            <div style="font-weight:700; font-size:13px;">Django REST Masterclass</div>
-            <div class="price-row"><span class="price-now" style="font-size:13.5px;">219 000 so'm</span></div>
-          </div>
-        </div>
-        <div class="card mkt-strip-card">
-          <div class="mkt-cover" style="height:80px; background:#1F2937; font-size:20px;"><i class="bi bi-box-seam"></i></div>
-          <div class="card-pad" style="padding:12px;">
-            <div style="font-weight:700; font-size:13px;">PostgreSQL Complete Guide</div>
-            <div class="price-row"><span class="price-now" style="font-size:13.5px;">179 000 so'm</span></div>
-          </div>
-        </div>
-        <div class="card mkt-strip-card">
-          <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#6366F1,#818CF8); font-size:20px;"><i class="bi bi-code-slash"></i></div>
-          <div class="card-pad" style="padding:12px;">
-            <div style="font-weight:700; font-size:13px;">Advanced API Design</div>
-            <div class="price-row"><span class="price-now" style="font-size:13.5px;">229 000 so'm</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-head">
-        <h3 style="font-size:17px;">Yaqinda ko'rilgan</h3>
-      </div>
-      <div class="mkt-strip">
-        <div class="card mkt-strip-card">
-          <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#8E44EC,#3B82F6); font-size:20px;"><i class="bi bi-palette-fill"></i></div>
-          <div class="card-pad" style="padding:12px;">
-            <div style="font-weight:700; font-size:13px;">UI/UX Design Fundamentals</div>
-            <div class="price-row"><span class="price-now" style="font-size:13.5px;">189 000 so'm</span></div>
-          </div>
-        </div>
-        <div class="card mkt-strip-card">
-          <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#306998,#FFD43B); font-size:20px;"><i class="bi bi-filetype-py"></i></div>
-          <div class="card-pad" style="padding:12px;">
-            <div style="font-weight:700; font-size:13px;">Python Backend Development</div>
-            <div class="price-row"><span class="price-now" style="font-size:13.5px;">249 000 so'm</span></div>
-          </div>
-        </div>
-        <div class="card mkt-strip-card">
-          <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#DB2777,#F472B6); font-size:20px;"><i class="bi bi-megaphone-fill"></i></div>
-          <div class="card-pad" style="padding:12px;">
-            <div style="font-weight:700; font-size:13px;">Digital Marketing 101</div>
-            <div class="price-row"><span class="price-now" style="font-size:13.5px;">129 000 so'm</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-head">
-        <h3 style="font-size:17px;">Kurslarni solishtirish</h3>
-      </div>
-      <div class="card">
-        <div class="compare-table-wrap">
-          <table class="compare-table">
-            <thead>
-              <tr>
-                <th></th>
-                <th><div class="compare-col-title">Python Backend Development</div><button class="compare-remove" aria-label="Solishtirishdan olib tashlash"><i class="bi bi-x-lg"></i></button></th>
-                <th><div class="compare-col-title">React — The Complete Guide</div><button class="compare-remove" aria-label="Solishtirishdan olib tashlash"><i class="bi bi-x-lg"></i></button></th>
-                <th><div class="compare-col-title">Machine Learning A-Z</div><button class="compare-remove" aria-label="Solishtirishdan olib tashlash"><i class="bi bi-x-lg"></i></button></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>Narx</td><td>249 000 so'm</td><td>299 000 so'm</td><td>349 000 so'm</td></tr>
-              <tr><td>Davomiyligi</td><td>42 soat</td><td>38 soat</td><td>56 soat</td></tr>
-              <tr><td>Daraja</td><td>Barcha darajalar</td><td>O'rta daraja</td><td>Yuqori daraja</td></tr>
-              <tr><td>Reyting</td><td>4.9 ★ (312)</td><td>4.8 ★ (204)</td><td>4.7 ★ (98)</td></tr>
-              <tr><td>Sertifikat</td><td><i class="bi bi-check-lg" style="color:var(--teach-green);"></i></td><td><i class="bi bi-check-lg" style="color:var(--teach-green);"></i></td><td><i class="bi bi-check-lg" style="color:var(--teach-green);"></i></td></tr>
-            </tbody>
-          </table>
-        </div>
       </div>
 
       <div class="section-head">
@@ -182,7 +155,7 @@
         </div>
         <div style="text-align:right;">
           <div class="price-row" style="justify-content:flex-end;"><span class="price-now">459 000 so'm</span><span class="price-old">690 000</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:8px;">To'plamni sotib olish</button>
+          <button class="btn btn-primary btn-sm" style="margin-top:8px;" data-bundle-buy data-bundle-id="backend-bundle" data-bundle-title="Backend Mutaxassis to'plami" data-bundle-price="459000" data-bundle-cover="linear-gradient(135deg,#306998,#0EA5E9)" data-bundle-icon="bi bi-boxes">To'plamni sotib olish</button>
         </div>
       </div>
 
@@ -190,8 +163,8 @@
         <h3 style="font-size:17px;">Kupon qo'llash</h3>
       </div>
       <div class="card card-pad coupon-row">
-        <input type="text" placeholder="Kupon kodini kiriting" style="flex:1; border:1.5px solid var(--border-soft); border-radius:var(--r-md); padding:11px 14px; font-size:14px; outline:none;">
-        <button class="btn btn-primary">Qo'llash</button>
+        <input type="text" id="mkt-coupon-input" placeholder="Kupon kodini kiriting" style="flex:1; border:1.5px solid var(--border-soft); border-radius:var(--r-md); padding:11px 14px; font-size:14px; outline:none;">
+        <button class="btn btn-primary" id="mkt-coupon-apply">Qo'llash</button>
         <span class="coupon-code">ISLOH2026</span>
       </div>
 
@@ -199,20 +172,7 @@
         <h3 style="font-size:17px;">Xaridlar tarixi</h3>
         <a href="orders.html" style="font-size:13px; color:var(--violet-600); font-weight:600;">Barchasini ko'rish</a>
       </div>
-      <div class="card">
-        <div style="display:flex; align-items:center; gap:14px; padding:14px 20px; border-bottom:1px solid var(--border-soft);">
-          <div class="mkt-cover" style="width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,#306998,#FFD43B); font-size:14px;"><i class="bi bi-filetype-py"></i></div>
-          <div style="flex:1;"><div style="font-weight:600; font-size:13.5px;">Python Backend Development</div><div style="font-size:12px; color:var(--ink-500);">Buyurtma #10245 &middot; 12-iyul, 2026</div></div>
-          <span class="badge badge-green">To'landi</span>
-          <span style="font-weight:700; font-size:13.5px;">249 000 so'm</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:14px; padding:14px 20px;">
-          <div class="mkt-cover" style="width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,#8E44EC,#3B82F6); font-size:14px;"><i class="bi bi-palette-fill"></i></div>
-          <div style="flex:1;"><div style="font-weight:600; font-size:13.5px;">UI/UX Design Fundamentals</div><div style="font-size:12px; color:var(--ink-500);">Buyurtma #10198 &middot; 2-iyul, 2026</div></div>
-          <span class="badge badge-green">To'landi</span>
-          <span style="font-weight:700; font-size:13.5px;">189 000 so'm</span>
-        </div>
-      </div>
+      <div class="card" data-mkt-recent-orders></div>
     </main>
   </div>
 </div>

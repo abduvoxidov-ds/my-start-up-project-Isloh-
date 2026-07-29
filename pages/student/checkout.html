@@ -103,11 +103,7 @@
               <button class="btn btn-outline" id="promo-apply">Qo'llash</button>
             </div>
             <p id="promo-note" style="font-size:12.5px; margin-top:-8px; margin-bottom:16px; min-height:16px;"></p>
-            <div class="receipt-preview">
-              <div style="display:flex; justify-content:space-between; font-size:13px; padding:5px 0;"><span>Python Backend Development</span><span>249 000 so'm</span></div>
-              <div style="display:flex; justify-content:space-between; font-size:13px; padding:5px 0;"><span>React — The Complete Guide</span><span>299 000 so'm</span></div>
-              <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:800; padding-top:10px; margin-top:6px; border-top:1px solid var(--border-soft);"><span>Jami</span><span>548 000 so'm</span></div>
-            </div>
+            <div class="receipt-preview" data-checkout-review></div>
             <div style="display:flex; gap:10px; margin-top:16px;">
               <button class="btn btn-outline" data-checkout-back><i class="bi bi-arrow-left"></i> Orqaga</button>
               <button class="btn btn-primary" style="flex:1;" data-checkout-submit><i class="bi bi-check2-circle"></i> Buyurtmani tasdiqlash</button>
@@ -121,7 +117,7 @@
             <p style="color:var(--ink-500); font-size:13.5px; margin-top:8px;">Buyurtma #10312 tasdiqlandi. Kurslaringiz endi "Mening kurslarim" bo'limida mavjud.</p>
             <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
               <a href="orders.html" class="btn btn-outline"><i class="bi bi-receipt"></i> Buyurtmani ko'rish</a>
-              <a href="courses.html" class="btn btn-primary"><i class="bi bi-play-circle"></i> O'qishni boshlash</a>
+              <a href="bookmarks.html" class="btn btn-primary"><i class="bi bi-play-circle"></i> O'qishni boshlash</a>
             </div>
           </div>
 
@@ -136,9 +132,9 @@
 
         <div class="card card-pad checkout-summary">
           <h3 style="font-size:16px; margin-bottom:14px;">Buyurtma xulosasi</h3>
-          <div class="cs-row"><span>2 ta kurs</span><span>548 000 so'm</span></div>
-          <div class="cs-row cs-discount" id="promo-summary-row" hidden><span>Chegirma</span><span>−82 200 so'm</span></div>
-          <div class="cs-row cs-total"><span>Jami</span><span>548 000 so'm</span></div>
+          <div class="cs-row"><span data-checkout-count>0 ta kurs</span><span data-checkout-subtotal>0 so'm</span></div>
+          <div class="cs-row cs-discount" data-checkout-discount-row hidden><span>Chegirma</span><span data-checkout-discount>0 so'm</span></div>
+          <div class="cs-row cs-total"><span>Jami</span><span data-checkout-total>0 so'm</span></div>
         </div>
       </div>
     </main>

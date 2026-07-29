@@ -86,6 +86,7 @@
 .btn-outline:hover { background: var(--bg-app); }
 .btn-ghost { background: transparent; color: var(--violet-600); padding: 10px 14px; }
 .btn-sm { padding: 7px 14px; font-size: 13px; }
+.btn-disabled { opacity: .5; pointer-events: none; cursor: not-allowed; box-shadow: none; }
 
 /* --- Form field --- */
 .field { margin-bottom: 16px; }
