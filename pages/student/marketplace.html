@@ -27,6 +27,7 @@
   .mkt-cover { position:relative; }
   .mkt-cover .fav-toggle { position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.85); }
   .mkt-toolbar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin:16px 0 4px; }
+  .topbar-marketplace { background: var(--violet-100); }
 </style>
 </head>
 <body>
@@ -37,18 +38,16 @@
     <div class="sidebar-footer" id="sidebar-footer-nav"></div>
   </aside>
 
-  <div class="main-col">
-    <header class="topbar">
+  <div class="main-col" data-filterable>
+    <header class="topbar topbar-marketplace">
       <div class="topbar-search"><i class="bi bi-search"></i><input data-filter-search placeholder="Kurs, bundle, kupon qidirish..." aria-label="Kurs, bundle, kupon qidirish"></div>
       <div class="topbar-actions">
         <a href="wishlist.html" class="icon-btn" aria-label="Xohishlar ro'yxati"><i class="bi bi-heart-fill"></i><span class="count-badge" data-wishlist-count>2</span></a>
         <a href="cart.html" class="icon-btn" aria-label="Savat"><i class="bi bi-cart-fill"></i><span class="count-badge badge-empty" data-cart-count>0</span></a>
-        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i></a>
-        <div class="avatar">SM</div>
       </div>
     </header>
 
-    <main class="content" data-filterable>
+    <main class="content">
       <div class="hero-banner">
         <div>
           <div class="badge" style="background:rgba(255,255,255,0.15); color:#fff;">Yozgi chegirma</div>
