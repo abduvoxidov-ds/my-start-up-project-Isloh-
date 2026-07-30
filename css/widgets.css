@@ -1031,6 +1031,33 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .completion-stat-row { display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--border-soft); font-size:13.5px; }
 .completion-stat-row:last-child { border-bottom:none; }
 
+/* --- Certificate: public verification banner (Coursera-style "Officially Verified") --- */
+.cert-verify-banner { display:flex; align-items:center; gap:12px; background:var(--teach-green-100); color:var(--teach-green); border-radius:var(--r-md); padding:14px 16px; margin-bottom:14px; }
+.cert-verify-banner .bi { font-size:22px; flex-shrink:0; }
+.cert-verify-banner-title { font-weight:700; font-size:14px; }
+.cert-verify-banner-sub { font-size:12px; margin-top:2px; opacity:.85; }
+
+/* --- Certificate: optional instructor organization co-branding -----------
+   Both wrappers are empty + [hidden] when no org is affiliated, so a
+   standard individual-instructor certificate is pixel-identical to before.
+   .cert-org-logo sits top-of-certificate, .cert-org-seal sits bottom,
+   in the signature row next to the instructor/date/id line. --- */
+.cert-org-logo { position:absolute; top:16px; right:16px; width:40px; height:40px; border-radius:50%; overflow:hidden; background:rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; z-index:1; }
+.cert-org-logo img { width:100%; height:100%; object-fit:cover; }
+.certificate-signature-row { display:flex; align-items:center; gap:12px; margin-top:22px; padding-top:18px; border-top:1px solid rgba(255,255,255,.25); width:100%; max-width:420px; }
+.certificate-org-info { flex:1; text-align:left; }
+.certificate-org-label { font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6); }
+.certificate-org-name { font-size:13.5px; font-weight:700; margin-top:2px; }
+.cert-org-seal { width:36px; height:36px; border-radius:50%; border:1px dashed rgba(255,255,255,.5); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.cert-org-seal img { width:100%; height:100%; border-radius:50%; object-fit:cover; }
+
+/* --- Course settings: organization affiliation live preview (pages/instructor/course-settings.html) --- */
+.cert-org-preview { display:flex; align-items:center; gap:12px; margin-top:12px; padding:12px 14px; background:var(--bg-app); border:1px solid var(--border-soft); border-radius:var(--r-md); }
+.cert-org-preview-mark { width:36px; height:36px; border-radius:50%; overflow:hidden; background:var(--violet-100); color:var(--violet-600); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; font-weight:700; }
+.cert-org-preview-mark img { width:100%; height:100%; object-fit:cover; }
+.cert-org-preview-label { font-size:11px; color:var(--ink-500); }
+.cert-org-preview-name { font-size:13.5px; font-weight:700; margin-top:2px; }
+
 /* --- Enrollment / Landing --- */
 .enroll-price-box { text-align:center; padding:20px; }
 .enroll-price { font-family:var(--font-display); font-weight:800; font-size:28px; }
@@ -1379,3 +1406,33 @@ button.suggest-card { font-family:inherit; text-align:left; }
    hooks (Invoices, Refunds, Email/Security/Storage settings) --- */
 .placeholder-note { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-500); background:var(--bg-app); border:1px dashed var(--border-soft); border-radius:var(--r-sm); padding:9px 12px; }
 .placeholder-note .bi { color:var(--violet-500); }
+
+/* ==========================================================================
+   Certificate — print / PDF export (pages/student/certificate-preview.html)
+   window.print() + "Save as PDF" is the download path — no jsPDF/html2pdf.
+   Only .certificate-card and the completion-summary card print; app chrome
+   and [data-cert-print-hide] elements (back link, action buttons) are
+   stripped. Scoped to .cert-preview-shell so it can't affect print output
+   on any other page.
+   ========================================================================== */
+@media print {
+  .sidebar, .topbar, [data-cert-print-hide], .toast-container { display:none !important; }
+  body, .app-shell, .main-col, .content { background:#fff !important; margin:0 !important; padding:0 !important; }
+  .cert-preview-shell { max-width:none !important; margin:0 !important; }
+  .cert-preview-shell .card { box-shadow:none !important; }
+  .certificate-card { border-radius:0 !important; margin:0 !important; }
+  .certificate-face {
+    background:var(--indigo-950) !important;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    width:100%; margin:0; border-radius:0;
+  }
+  /* Org co-branding: keep the badge backgrounds/borders instead of printing
+     them blank (some engines drop translucent backgrounds by default), and
+     pin the logo/seal to the same corner + signature-row position as on
+     screen so nothing drifts or gets clipped in the printed/PDF output. */
+  .cert-org-logo, .cert-org-seal {
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    background:rgba(255,255,255,.15) !important;
+  }
+  .cert-org-logo img, .cert-org-seal img { image-rendering:auto; }
+}

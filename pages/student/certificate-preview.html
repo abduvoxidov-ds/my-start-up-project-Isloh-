@@ -20,44 +20,57 @@
   </aside>
 
   <div class="main-col">
-    <header class="topbar">
-      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
-      <div class="topbar-actions">
-        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar">SM</div>
-      </div>
-    </header>
-
     <main class="content">
-      <a href="certificates.html" class="back-link"><i class="bi bi-arrow-left"></i> Sertifikatlarga qaytish</a>
+      <a href="certificates.html" class="back-link" data-cert-print-hide><i class="bi bi-arrow-left"></i> Sertifikatlarga qaytish</a>
 
-      <div class="cert-preview-shell">
-        <div class="card certificate-card">
-          <div class="certificate-face">
-            <div class="certificate-seal-lg"><i class="bi bi-patch-check-fill"></i></div>
-            <div class="certificate-kicker">Yakunlash sertifikati</div>
-            <div class="certificate-name">Samar Mirzayev</div>
-            <div class="certificate-course">"Python Backend Development" kursini muvaffaqiyatli yakunladi</div>
-            <div class="certificate-meta-row">
-              <span>O'qituvchi: Akmal Yuldashev</span>
-              <span>Sana: 2026-yil Iyun</span>
-              <span>ID: ISL-2026-10245</span>
-            </div>
-          </div>
-          <div class="card-pad" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-            <button class="btn btn-teach btn-sm"><i class="bi bi-download"></i> Yuklab olish (placeholder)</button>
-            <button class="btn btn-outline btn-sm"><i class="bi bi-share"></i> Ulashish (placeholder)</button>
-            <button class="btn btn-outline btn-sm"><i class="bi bi-shield-check"></i> Tasdiqlash havolasi</button>
+      <div class="cert-preview-shell" data-cert-preview>
+        <!-- Coursera-style "Officially Verified Certificate" banner, shown whenever ?id= or ?verify= resolves -->
+        <div class="cert-verify-banner" data-cert-verify-banner hidden>
+          <i class="bi bi-patch-check-fill"></i>
+          <div>
+            <div class="cert-verify-banner-title">Rasmiy tasdiqlangan sertifikat</div>
+            <div class="cert-verify-banner-sub" data-cert-verify-timestamp></div>
           </div>
         </div>
 
-        <div class="card card-pad" style="margin-top:18px;">
-          <h3 style="font-size:15px; margin-bottom:6px;">Yakunlash xulosasi</h3>
-          <div class="completion-stat-row"><span style="color:var(--ink-500);">Kurs</span><span style="font-weight:600;">Python Backend Development</span></div>
-          <div class="completion-stat-row"><span style="color:var(--ink-500);">Jami darslar</span><span style="font-weight:600;">48 / 48</span></div>
-          <div class="completion-stat-row"><span style="color:var(--ink-500);">Testlar o'rtacha bali</span><span style="font-weight:600;">92%</span></div>
-          <div class="completion-stat-row"><span style="color:var(--ink-500);">Sarflangan vaqt</span><span style="font-weight:600;">42 soat 10 daqiqa</span></div>
-          <div class="completion-stat-row"><span style="color:var(--ink-500);">Yakunlangan sana</span><span style="font-weight:600;">2026-yil 18-iyun</span></div>
+        <div data-cert-content hidden>
+          <div class="card certificate-card">
+            <div class="certificate-face">
+              <!-- Optional instructor organization co-branding (js/certificate-engine.js isloh_renderCertOrganization) -->
+              <div class="cert-org-logo" data-cert-org-logo hidden></div>
+
+              <div class="certificate-seal-lg"><i class="bi bi-patch-check-fill"></i></div>
+              <div class="certificate-kicker">Yakunlash sertifikati</div>
+              <div class="certificate-name" data-cert-name></div>
+              <div class="certificate-course" data-cert-course></div>
+              <div class="certificate-meta-row">
+                <span data-cert-instructor></span>
+                <span data-cert-date></span>
+                <span data-cert-id></span>
+              </div>
+              <div class="certificate-signature-row" data-cert-org hidden></div>
+            </div>
+            <div class="card-pad" data-cert-print-hide style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+              <button class="btn btn-teach btn-sm" data-cert-action="download"><i class="bi bi-download"></i> Yuklab olish</button>
+              <button class="btn btn-outline btn-sm" data-cert-action="linkedin"><i class="bi bi-linkedin"></i> LinkedIn'ga qo'shish</button>
+              <button class="btn btn-outline btn-sm" data-cert-action="share"><i class="bi bi-share"></i> Ulashish</button>
+            </div>
+          </div>
+
+          <div class="card card-pad" style="margin-top:18px;">
+            <h3 style="font-size:15px; margin-bottom:6px;">Yakunlash xulosasi</h3>
+            <div class="completion-stat-row"><span style="color:var(--ink-500);">Kurs</span><span style="font-weight:600;" data-cert-stat-course></span></div>
+            <div class="completion-stat-row"><span style="color:var(--ink-500);">Jami darslar</span><span style="font-weight:600;" data-cert-stat-lessons></span></div>
+            <div class="completion-stat-row"><span style="color:var(--ink-500);">Testlar o'rtacha bali</span><span style="font-weight:600;" data-cert-stat-quiz></span></div>
+            <div class="completion-stat-row"><span style="color:var(--ink-500);">Sarflangan vaqt</span><span style="font-weight:600;" data-cert-stat-time></span></div>
+            <div class="completion-stat-row"><span style="color:var(--ink-500);">Yakunlangan sana</span><span style="font-weight:600;" data-cert-stat-completed-date></span></div>
+          </div>
+        </div>
+
+        <div class="empty-state" data-cert-not-found hidden>
+          <div class="empty-icon"><i class="bi bi-patch-question"></i></div>
+          <div class="empty-title">Sertifikat topilmadi</div>
+          <div class="empty-sub">Havola noto'g'ri yoki sertifikat hali berilmagan.</div>
         </div>
       </div>
     </main>
@@ -66,5 +79,7 @@
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/certificate-engine.js"></script>
 </body>
 </html>

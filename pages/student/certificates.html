@@ -16,36 +16,11 @@
   </aside>
 
   <div class="main-col">
-    <header class="topbar">
-      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
-      <div class="topbar-actions">
-        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar">SM</div>
-      </div>
-    </header>
-
     <main class="content" data-filterable>
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
         <div>
           <h1 style="font-size:24px;">Sertifikatlar</h1>
           <p style="color:var(--ink-500); margin-top:4px;">Qo'lga kiritgan va kutilayotgan sertifikatlaringiz.</p>
-        </div>
-        <div class="topbar-search" style="width:260px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Sertifikat qidirish..." aria-label="Sertifikat qidirish"></div>
-      </div>
-
-      <!-- STATS -->
-      <div class="wk-grid-3" style="margin-top:20px;">
-        <div class="card card-pad stat-card">
-          <div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-patch-check-fill"></i></div>
-          <div class="stat-value">3</div><div class="stat-label">Qo'lga kiritilgan</div>
-        </div>
-        <div class="card card-pad stat-card">
-          <div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-hourglass-split"></i></div>
-          <div class="stat-value">2</div><div class="stat-label">Jarayonda</div>
-        </div>
-        <div class="card card-pad stat-card">
-          <div class="stat-icon" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-lock-fill"></i></div>
-          <div class="stat-value">4</div><div class="stat-label">Qulflangan</div>
         </div>
       </div>
 
@@ -57,116 +32,8 @@
         <button class="filter-chip" data-filter-value="locked">Qulflangan</button>
       </div>
 
-      <!-- GRID -->
-      <div class="cert-grid" style="margin-top:18px;">
-        <!-- Earned -->
-        <div class="card cert-card" data-filter-item data-status="earned" data-filter-text="Python Backend Development">
-          <a href="certificate-preview.html" class="cert-cover" style="text-decoration:none; color:inherit;">
-            <div class="cert-seal"><i class="bi bi-patch-check-fill"></i></div>
-            <span class="badge badge-green cert-ribbon">Tasdiqlangan</span>
-          </a>
-          <div class="cert-body">
-            <div class="cert-title filter-title">Python Backend Development</div>
-            <div class="cert-meta">O'qituvchi: Akmal Yuldashev · 2026-yil Iyun</div>
-            <div class="cert-foot">
-              <span class="cert-verify"><i class="bi bi-shield-check"></i> Tasdiqlangan</span>
-              <button class="btn btn-primary btn-sm"><i class="bi bi-download"></i> Yuklab olish</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card cert-card" data-filter-item data-status="earned" data-filter-text="UI/UX Design Fundamentals">
-          <div class="cert-cover" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">
-            <div class="cert-seal"><i class="bi bi-patch-check-fill"></i></div>
-            <span class="badge badge-green cert-ribbon">Tasdiqlangan</span>
-          </div>
-          <div class="cert-body">
-            <div class="cert-title filter-title">UI/UX Design Fundamentals</div>
-            <div class="cert-meta">O'qituvchi: Dilnoza R. · 2026-yil May</div>
-            <div class="cert-foot">
-              <span class="cert-verify"><i class="bi bi-shield-check"></i> Tasdiqlangan</span>
-              <button class="btn btn-primary btn-sm"><i class="bi bi-download"></i> Yuklab olish</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card cert-card" data-filter-item data-status="earned" data-filter-text="JavaScript Advanced">
-          <div class="cert-cover" style="background:linear-gradient(135deg,#F7DF1E,#E7A63B);">
-            <div class="cert-seal" style="color:var(--ink-900);"><i class="bi bi-patch-check-fill"></i></div>
-            <span class="badge badge-green cert-ribbon">Tasdiqlangan</span>
-          </div>
-          <div class="cert-body">
-            <div class="cert-title filter-title">JavaScript Advanced</div>
-            <div class="cert-meta">O'qituvchi: Javohir M. · 2026-yil Fevral</div>
-            <div class="cert-foot">
-              <span class="cert-verify"><i class="bi bi-shield-check"></i> Tasdiqlangan</span>
-              <button class="btn btn-primary btn-sm"><i class="bi bi-download"></i> Yuklab olish</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- In progress -->
-        <div class="card cert-card" data-filter-item data-status="progress" data-filter-text="Django REST Framework">
-          <div class="cert-cover" style="background:linear-gradient(135deg,#0F766E,#14B8A6);">
-            <div class="cert-seal"><i class="bi bi-hourglass-split"></i></div>
-            <span class="badge badge-neutral cert-ribbon" style="background:#FEF3E2; color:var(--warning);">63%</span>
-          </div>
-          <div class="cert-body">
-            <div class="cert-title filter-title">Django REST Framework</div>
-            <div class="cert-meta">Kursni yakunlang · 63%</div>
-            <div class="progress-track" style="margin-top:12px;"><div class="progress-fill" style="width:63%;"></div></div>
-            <div class="cert-foot">
-              <span style="font-size:11.5px; color:var(--ink-500);">37% qoldi</span>
-              <a href="course-detail.html" class="btn btn-outline btn-sm">Davom etish</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="card cert-card" data-filter-item data-status="progress" data-filter-text="Machine Learning Asoslari">
-          <div class="cert-cover" style="background:linear-gradient(135deg,#DB2777,#F472B6);">
-            <div class="cert-seal"><i class="bi bi-hourglass-split"></i></div>
-            <span class="badge badge-neutral cert-ribbon" style="background:#FEF3E2; color:var(--warning);">16%</span>
-          </div>
-          <div class="cert-body">
-            <div class="cert-title filter-title">Machine Learning Asoslari</div>
-            <div class="cert-meta">Kursni yakunlang · 16%</div>
-            <div class="progress-track" style="margin-top:12px;"><div class="progress-fill" style="width:16%;"></div></div>
-            <div class="cert-foot">
-              <span style="font-size:11.5px; color:var(--ink-500);">84% qoldi</span>
-              <a href="course-detail.html" class="btn btn-outline btn-sm">Davom etish</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Locked -->
-        <div class="card cert-card locked" data-filter-item data-status="locked" data-filter-text="DevOps with Docker">
-          <div class="cert-cover">
-            <div class="cert-locked-overlay"><i class="bi bi-lock-fill" style="font-size:28px;"></i><span style="font-size:12px;">Qulflangan</span></div>
-          </div>
-          <div class="cert-body">
-            <div class="cert-title filter-title">DevOps with Docker</div>
-            <div class="cert-meta">Kursni sotib oling va yakunlang</div>
-            <div class="cert-foot">
-              <span style="font-size:11.5px; color:var(--ink-300);">Hali boshlanmagan</span>
-              <a href="marketplace.html" class="btn btn-outline btn-sm">Ko'rish</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="card cert-card locked" data-filter-item data-status="locked" data-filter-text="System Design Basics">
-          <div class="cert-cover">
-            <div class="cert-locked-overlay"><i class="bi bi-lock-fill" style="font-size:28px;"></i><span style="font-size:12px;">Qulflangan</span></div>
-          </div>
-          <div class="cert-body">
-            <div class="cert-title filter-title">System Design Basics</div>
-            <div class="cert-meta">Kursni sotib oling va yakunlang</div>
-            <div class="cert-foot">
-              <span style="font-size:11.5px; color:var(--ink-300);">Hali boshlanmagan</span>
-              <a href="marketplace.html" class="btn btn-outline btn-sm">Ko'rish</a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- GRID (rendered by js/certificate-engine.js from isloh_certificates + isloh_course_progress + isloh_purchased_courses) -->
+      <div class="cert-grid" data-cert-grid style="margin-top:18px;"></div>
 
       <!-- EMPTY STATE -->
       <div class="empty-state" data-filter-empty style="display:none;">
@@ -180,6 +47,9 @@
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
+<script src="../../js/marketplace.js"></script>
+<script src="../../js/lesson-viewer.js"></script>
+<script src="../../js/certificate-engine.js"></script>
 <script src="../../js/filterable.js"></script>
 </body>
 </html>

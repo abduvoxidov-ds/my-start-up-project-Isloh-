@@ -24,7 +24,7 @@
       </div>
     </header>
 
-    <main class="content">
+    <main class="content" data-course-id="py-101">
       <div class="page-header">
         <div><h1>Python Backend Development — sozlamalar</h1><p>Kursning ko'rinishi, narxi va boshqa parametrlarini boshqaring.</p></div>
         <a href="course-details.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kursga qaytish</a>
@@ -118,6 +118,19 @@
               <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
             </div>
             <div class="field"><label>Minimal yakunlash foizi</label><input value="100%"></div>
+
+            <div class="settings-item-info" style="margin-top:18px;"><div class="settings-item-label">O'quv markazi / Tashkilot biriktirish (Ixtiyoriy)</div><div class="settings-item-desc">Biriktirilsa, sertifikatda tashkilot logotipi va muhri instruktor imzosi bilan birga ko'rinadi.</div></div>
+            <div class="field"><label>Tashkilot nomi</label><input data-org-name placeholder="Masalan: Isloh IT Academy"></div>
+            <div class="field"><label>Logotip havolasi (URL, ixtiyoriy)</label><input data-org-logo placeholder="https://..."></div>
+            <div class="field"><label>Muhr havolasi (URL, ixtiyoriy)</label><input data-org-seal placeholder="https://..."></div>
+            <div class="cert-org-preview" data-org-preview hidden>
+              <div class="cert-org-preview-mark" data-org-preview-mark></div>
+              <div>
+                <div class="cert-org-preview-label">Sertifikatda shunday ko'rinadi</div>
+                <div class="cert-org-preview-name" data-org-preview-name></div>
+              </div>
+            </div>
+            <div style="margin-top:12px;"><button class="btn btn-teach btn-sm" data-org-save>Tashkilot ma'lumotlarini saqlash</button></div>
           </div>
 
           <!-- NOTIFICATIONS -->
@@ -194,6 +207,8 @@
 <script src="../../js/theme.js"></script>
 <script src="../../js/settings.js"></script>
 <script src="../../js/modal.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/certificate-engine.js"></script>
 <script>
   document.querySelectorAll('[data-modal-open]').forEach((btn) => {
     btn.addEventListener('click', () => isloh_openModal(btn.dataset.modalOpen));
