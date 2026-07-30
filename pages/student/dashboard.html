@@ -15,8 +15,6 @@
   .bar-chart .bar { flex:1; background: linear-gradient(180deg, var(--violet-500), var(--violet-600)); border-radius: 6px 6px 2px 2px; opacity: .85; }
   .bar-chart .bar.light { background: var(--border-soft); }
   .msg-row { display:flex; gap:12px; align-items:center; padding: 10px 0; }
-  .dash-heatmap { display:grid; grid-template-columns:repeat(20,1fr); gap:4px; margin-top:14px; }
-  .dash-heatmap .hcell { aspect-ratio:1; border-radius:3px; background:var(--border-soft); }
   @media (max-width: 1100px){ .grid-4{grid-template-columns:repeat(2,1fr);} .grid-2{grid-template-columns:1fr;} }
 </style>
 </head>
@@ -181,20 +179,20 @@
           </div>
         </div>
 
-        <!-- Focus score -->
+        <!-- Focus score (wired to isloh_analytics via js/progress-metrics.js) -->
         <div class="card card-pad">
           <div class="section-header"><h3>E'tibor bali</h3></div>
           <div style="display:flex; align-items:center; gap:16px;">
             <div class="progress-ring ring-warning">
               <svg width="74" height="74" viewBox="0 0 74 74">
                 <circle class="ring-track" cx="37" cy="37" r="31"></circle>
-                <circle class="ring-fill" cx="37" cy="37" r="31" stroke-dasharray="194.8" stroke-dashoffset="27.3"></circle>
+                <circle class="ring-fill" cx="37" cy="37" r="31" stroke-dasharray="194.8" stroke-dashoffset="27.3" data-attention-circle></circle>
               </svg>
-              <div class="ring-label"><span class="ring-val">86</span><span class="ring-sub">bal</span></div>
+              <div class="ring-label"><span class="ring-val" data-attention-value>86</span><span class="ring-sub">bal</span></div>
             </div>
             <div>
               <div style="font-size:13px; color:var(--ink-700);">Ajoyib diqqat!</div>
-              <div style="font-size:12px; color:var(--ink-500); margin-top:4px;">O'tgan haftaga nisbatan <span style="color:var(--teach-green); font-weight:700;">+4%</span></div>
+              <div style="font-size:12px; color:var(--ink-500); margin-top:4px;">O'tgan haftaga nisbatan <span data-attention-trend></span></div>
             </div>
           </div>
         </div>
@@ -250,11 +248,11 @@
           </div>
         </div>
 
-        <!-- Learning heatmap preview -->
+        <!-- Learning heatmap (wired to isloh_analytics via js/progress-metrics.js) -->
         <div class="card card-pad">
-          <div class="section-header"><h3>O'quv faolligi</h3><a href="analytics.html" class="section-action">Batafsil</a></div>
-          <div class="dash-heatmap" id="dash-heatmap"></div>
-          <div style="font-size:12px; color:var(--ink-500); margin-top:12px;">So'nggi 60 kun • 42 faol kun</div>
+          <div class="section-header"><h3>O'quv faolligi</h3></div>
+          <div class="heatmap" id="heatmap"></div>
+          <div style="font-size:12px; color:var(--ink-500); margin-top:12px;">Oxirgi 30 kun</div>
         </div>
 
         <!-- Daily motivation -->
@@ -264,6 +262,20 @@
           <div style="font-size:12px; color:rgba(255,255,255,.7); margin-top:12px;">12 kunlik seriya davom etmoqda 🔥</div>
         </div>
       </div>
+
+      <!-- Category time breakdown + attention insight (wired to isloh_analytics via js/progress-metrics.js) -->
+      <div class="wk-grid-2" style="margin-top:18px;">
+        <div class="card card-pad">
+          <h3 style="font-size:15px;">Kurs kategoriyalari bo'yicha vaqt</h3>
+          <div class="donut" data-category-donut><div class="donut-inner"><div style="font-weight:800; font-size:18px;" data-category-total></div><div style="font-size:11px; color:var(--ink-500);">jami</div></div></div>
+          <div data-category-legend></div>
+        </div>
+
+        <div class="card card-pad">
+          <h3 style="font-size:15px;">E'tibor tahlili</h3>
+          <p style="font-size:13px; color:var(--ink-700); margin-top:10px; line-height:1.6;">Sizning eng samarali vaqtingiz <b>10:00–12:00</b> oralig'ida. <span data-best-day></span> kunlari eng yuqori natija ko'rsatasiz.</p>
+        </div>
+      </div>
     </main>
   </div>
 </div>
@@ -271,19 +283,6 @@
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/student-dashboard.js"></script>
-<script>
-  // Fill the dashboard learning-heatmap preview (visual only, 60 cells).
-  (function () {
-    const grid = document.getElementById('dash-heatmap');
-    if (!grid) return;
-    const shades = ['var(--border-soft)', '#DED8F7', '#B9AEF0', '#8B7BE6', 'var(--violet-600)'];
-    let html = '';
-    for (let i = 0; i < 60; i++) {
-      const lvl = Math.random() < 0.3 ? 0 : 1 + Math.floor(Math.random() * 4);
-      html += `<div class="hcell" style="background:${shades[lvl]};"></div>`;
-    }
-    grid.innerHTML = html;
-  })();
-</script>
+<script src="../../js/progress-metrics.js"></script>
 </body>
 </html>

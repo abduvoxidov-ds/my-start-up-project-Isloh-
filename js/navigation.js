@@ -17,7 +17,6 @@ const NAV_CONFIG = {
     { key: 'calendar',       label: 'Vazifalar',         icon: 'bi-check2-square',          href: 'calendar.html' },
     { key: 'chat',           label: 'Chat',               icon: 'bi-chat-dots-fill',         href: 'chat.html' },
     { key: 'ai-assistant',   label: 'AI Yordamchi',      icon: 'bi-stars',                  href: 'ai-assistant.html' },
-    { key: 'analytics',      label: 'Analitika',         icon: 'bi-bar-chart-fill',         href: 'analytics.html' },
     { key: 'certificates',   label: 'Sertifikatlar',     icon: 'bi-patch-check-fill',       href: 'certificates.html' },
     { key: 'bookmarks',      label: 'Saqlangan',         icon: 'bi-bookmark-star',          href: 'bookmarks.html' },
     { key: 'profile',        label: 'Profil',            icon: 'bi-person-circle',          href: 'profile.html' },

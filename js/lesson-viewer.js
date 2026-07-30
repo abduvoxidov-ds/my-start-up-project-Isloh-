@@ -9,7 +9,10 @@
 
    Markup contract:
      [data-cps-module-toggle]      → collapses a .cps-lesson-list
-     [data-cps-lesson]             → sidebar lesson row (also a .tab-item)
+     [data-course-id]              → anywhere on the page, identifies the
+       course for the persisted-progress schema below
+     [data-cps-lesson]             → sidebar lesson row (also a .tab-item);
+       its data-tab-target doubles as the lesson id for that schema
        [data-lesson-done]          → optional, marks the row already complete
      [data-mark-complete]          → button inside the active lesson panel
      [data-lesson-bookmark]        → bookmark toggle button
@@ -17,10 +20,82 @@
      [data-course-progress-fill] / [data-course-progress-pct] → recomputed
        whenever a lesson is marked complete
      [data-notes-save]             → saves the notes textarea (state only)
+
+   Persisted progress: localStorage key ISLOH_COURSE_PROGRESS_KEY holds
+   { [courseId]: { [lessonId]: true } } so completed lessons survive a
+   reload instead of resetting to whatever is-done classes are baked into
+   the HTML — mirrors the {courseId: {lessonId: true}} shape planned for
+   the future backend API, so swapping the storage layer later doesn't
+   require redesigning the schema.
    ========================================================================== */
+
+const ISLOH_COURSE_PROGRESS_KEY = 'isloh_course_progress';
 
 function isloh_lessonRows() {
   return [...document.querySelectorAll('[data-cps-lesson]')];
+}
+
+function isloh_courseId() {
+  const el = document.querySelector('[data-course-id]');
+  return el ? el.dataset.courseId : null;
+}
+
+function isloh_lessonId(row) {
+  return row ? row.dataset.tabTarget || null : null;
+}
+
+function isloh_getCourseProgress() {
+  let all = null;
+  try { all = JSON.parse(localStorage.getItem(ISLOH_COURSE_PROGRESS_KEY)); } catch (e) { all = null; }
+  return all || {};
+}
+
+function isloh_saveCourseProgress(all) {
+  localStorage.setItem(ISLOH_COURSE_PROGRESS_KEY, JSON.stringify(all));
+}
+
+function isloh_persistLessonDone(row) {
+  const courseId = isloh_courseId();
+  const lessonId = isloh_lessonId(row);
+  if (!courseId || !lessonId) return;
+  const all = isloh_getCourseProgress();
+  if (!all[courseId]) all[courseId] = {};
+  all[courseId][lessonId] = true;
+  isloh_saveCourseProgress(all);
+}
+
+/* Runs before isloh_updateCourseProgress() so the first paint already
+   reflects real history. First time a course is seen on this device there's
+   nothing stored yet, so whatever is-done classes are already baked into
+   the HTML become the seeded baseline instead of being silently discarded. */
+function isloh_restoreLessonProgress() {
+  const courseId = isloh_courseId();
+  if (!courseId) return;
+  const all = isloh_getCourseProgress();
+  const courseProgress = all[courseId] || {};
+  let seeded = false;
+
+  isloh_lessonRows().forEach((row) => {
+    const lessonId = isloh_lessonId(row);
+    if (!lessonId) return;
+    const stored = courseProgress[lessonId];
+    const markupDone = row.classList.contains('is-done');
+
+    if (stored === undefined) {
+      courseProgress[lessonId] = markupDone;
+      seeded = true;
+      return;
+    }
+    if (stored === markupDone) return;
+    row.classList.toggle('is-done', stored);
+    const check = row.querySelector('[data-cps-lesson-check]');
+    if (check) check.hidden = !stored;
+  });
+
+  if (seeded) {
+    all[courseId] = courseProgress;
+    isloh_saveCourseProgress(all);
+  }
 }
 
 function isloh_updateCourseProgress() {
@@ -55,6 +130,8 @@ function isloh_markLessonDone(row) {
   const check = row.querySelector('[data-cps-lesson-check]');
   if (check) check.hidden = false;
   isloh_updateCourseProgress();
+  isloh_persistLessonDone(row);
+  if (typeof isloh_recordLessonCompleted === 'function') isloh_recordLessonCompleted();
 }
 
 function isloh_initMarkComplete() {
@@ -100,16 +177,30 @@ function isloh_initNotesSave() {
   });
 }
 
+/* Feeds real study time into js/progress-metrics.js while a lesson page is
+   open: one minute per tick, only while the tab is actually visible, so
+   Analitika's totalStudyMinutes/heatmap reflect time actually spent instead
+   of staying frozen at the seeded defaults. */
+function isloh_initStudyTimer() {
+  if (typeof isloh_recordStudyMinutes !== 'function') return;
+  setInterval(() => {
+    if (document.hidden) return;
+    isloh_recordStudyMinutes(1);
+  }, 60000);
+}
+
 function isloh_initLessonViewer() {
   // Module expand/collapse is reused on plain curriculum previews (e.g.
   // course-landing.html) too, so it always initializes.
   isloh_initModuleToggles();
   if (!isloh_lessonRows().length) return;
+  isloh_restoreLessonProgress();
   isloh_initMarkComplete();
   isloh_initBookmarkToggle();
   isloh_initPrevNext();
   isloh_initNotesSave();
   isloh_updateCourseProgress();
+  isloh_initStudyTimer();
 }
 
 document.addEventListener('DOMContentLoaded', isloh_initLessonViewer);

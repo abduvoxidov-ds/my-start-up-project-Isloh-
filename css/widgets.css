@@ -12,6 +12,7 @@
 .wk-grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
 .wk-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
 .wk-grid-2 { display:grid; grid-template-columns:1.4fr 1fr; gap:18px; }
+.wk-grid-2-even { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
 .wk-col    { display:flex; flex-direction:column; gap:18px; }
 
 /* --- Section header (title + optional action) --- */
@@ -168,6 +169,7 @@
   .wk-grid-4 { grid-template-columns:repeat(2,1fr); }
   .wk-grid-3 { grid-template-columns:1fr 1fr; }
   .wk-grid-2 { grid-template-columns:1fr; }
+  .wk-grid-2-even { grid-template-columns:1fr; }
   .quick-actions { grid-template-columns:repeat(2,1fr); }
   .kanban { grid-template-columns:repeat(2,1fr); }
 }
@@ -320,8 +322,8 @@
    .empty-state, .filter-bar, .wk-grid-*) are reused, not redefined.
    ========================================================================== */
 
-/* --- Trend pill (promoted here so instructor pages don't redefine it;
-       the Student analytics page keeps its identical page-local copy) --- */
+/* --- Trend pill (shared by Student + Instructor analytics; both pages'
+       page-local copies have been removed in favor of this one) --- */
 .trend-pill { display:inline-flex; align-items:center; font-size:12px; font-weight:700; padding:3px 9px; border-radius:var(--r-pill); }
 .trend-up { background:var(--teach-green-100); color:var(--teach-green); }
 .trend-down { background:#FDEBEC; color:var(--danger); }
@@ -357,6 +359,27 @@
 .chart-bars .cb-fill { width:100%; border-radius:6px 6px 2px 2px; background:linear-gradient(180deg, #4ED88A, var(--teach-green)); }
 .chart-bars .cb-fill.light { background:var(--border-soft); }
 .chart-bars .cb-lbl { font-size:11px; color:var(--ink-500); }
+
+/* --- Student analytics: stacked weekly bars, category donut, activity
+       heatmap (promoted from page-local <style>; rendered by js/analytics.js
+       from the isloh_analytics localStorage state, not hardcoded per-page) --- */
+.bars { display:flex; align-items:flex-end; gap:14px; height:150px; margin-top:18px; }
+.bars .col { flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; }
+.bars .stack { width:100%; display:flex; flex-direction:column-reverse; height:120px; border-radius:6px; overflow:hidden; }
+.bars .seg-a { background:var(--violet-600); }
+.bars .seg-b { background:var(--violet-100); }
+.bars .lbl { font-size:11px; color:var(--ink-500); }
+
+.donut { width:130px; height:130px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto; }
+.donut-inner { width:88px; height:88px; border-radius:50%; background:var(--bg-card); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.legend-row { display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-700); margin-top:8px; }
+.legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+
+.heatmap { display:grid; grid-template-columns:repeat(26,12px); grid-auto-rows:12px; gap:3px; margin-top:14px; }
+.heatmap .cell { border-radius:3px; background:var(--border-soft); }
+.heatmap .cell.lvl-1 { background:var(--violet-100); }
+.heatmap .cell.lvl-2 { background:#A79CEE; }
+.heatmap .cell.lvl-3 { background:var(--violet-600); }
 
 /* --- Activity row (avatar/icon + text + time) --- */
 .activity-row { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--border-soft); }

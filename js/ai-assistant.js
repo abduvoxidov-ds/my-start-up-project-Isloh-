@@ -94,6 +94,30 @@ const ISLOH_AI_CONTEXTS = {
       { key:'continue',   icon:'bi-play-circle',     title:"Keyingi darsni tavsiya qil", sub:"Progressga mos ravishda keyingi qadamni taklif qiladi",
         response:"<p><b>Tavsiya:</b> \"Docker image nima?\" darsidan davom eting — taxminan 9 daqiqa vaqt talab qiladi.</p>" }
     ]
+  },
+  'student-chat': {
+    role: 'student',
+    label: "AI Yordamchi",
+    templates: [
+      { key:'today-plan', icon:'bi-lightbulb-fill', title:"Bugun nima o'rganay?", sub:"O'quv rejangiz asosida bugungi darslarni taklif qiladi",
+        response:"<p>Ajoyib reja! Bugungi darslar asosida quyidagilarni tavsiya qilaman:</p><ul><li>DRF Views va Serializers</li><li>Permissions bo'limi</li><li>Taxminiy vaqt: 1 soat 20 daqiqa</li></ul>" },
+      { key:'focus-check', icon:'bi-clipboard-check', title:"E'tiborimni qanday tekshiray?", sub:"So'nggi sessiyalar asosida diqqat darajangizni tahlil qiladi",
+        response:"<p>Mana DRF'da ValidationError ushlashning odatiy usuli — shu kabi amaliy mashqlar diqqatni sinash uchun yaxshi:</p><div class=\"code-block\"><div class=\"head\"><span>python</span><span><i class=\"bi bi-clipboard\"></i></span></div>def validate_email(self, value):\n    if User.objects.filter(email=value).exists():\n        raise serializers.ValidationError(\n            \"Bu email allaqachon ro'yxatdan o'tgan.\"\n        )\n    return value</div>" },
+      { key:'motivation', icon:'bi-graph-up-arrow', title:"Motivatsiyani tahlil qil", sub:"So'nggi faollik va progressga qarab motivatsiya darajasini baholaydi",
+        response:"<p><b>Motivatsiya tahlili:</b></p><ul><li>So'nggi 7 kunda faollik: yuqori</li><li>O'rtacha kunlik davomiylik: 42 daqiqa</li><li>Tavsiya: joriy sur'atni saqlang, kichik tanaffuslar bilan</li></ul>" }
+    ]
+  },
+  'instructor-chat': {
+    role: 'instructor',
+    label: "AI Yordamchi",
+    templates: [
+      { key:'at-risk', icon:'bi-exclamation-triangle', title:"Xavf ostidagi talabalarni topib ber", sub:"Faolligi pasaygan talabalarni tahlil qilib topadi",
+        response:"<p><b>Xavf ostidagi talabalar tahlili:</b></p><ul><li>4-bo'lim (Permissions & Auth): tark etish 34%</li><li>5 ta talaba 7 kundan beri faol emas</li><li>Umumiy yakunlash darajasi: 85%</li></ul>" },
+      { key:'rubric-chat', icon:'bi-clipboard-check', title:"Topshiriq uchun rubrika tuz", sub:"Amaliy topshiriq uchun baholash mezonlarini shakllantiradi",
+        response:"<p><b>Baholash mezonlari:</b></p><ul><li>To'g'ri ishlaydigan yechim — 50%</li><li>Kod tozaligi va izohlar — 20%</li><li>Muddatga rioya qilish — 30%</li></ul>" },
+      { key:'improve-course', icon:'bi-graph-up-arrow', title:"Kursimni qanday yaxshilay?", sub:"Kurs statistikasiga asoslangan yaxshilash takliflari beradi",
+        response:"<p><b>Tavsiyalar:</b></p><ul><li>4-bo'lim video darsini 2 qismga bo'ling (hozirgi 22 daqiqa juda uzun)</li><li>2-bo'limdagi test savollarini yangilang — o'tish darajasi past</li><li>Amaliy topshiriqlar sonini oshiring</li></ul>" }
+    ]
   }
 };
 
