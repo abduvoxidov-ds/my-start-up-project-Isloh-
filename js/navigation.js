@@ -13,12 +13,15 @@
 const NAV_CONFIG = {
   student: [
     { key: 'dashboard',      label: 'Dashboard',         icon: 'bi-grid-1x2-fill',          href: 'dashboard.html' },
+    /* Kurs darajasidagi ma'lumot (sotib olingan + saqlangan kurslar) shu
+       sahifada — "Saqlanganlar" endi faqat dars materiallari bilan ishlaydi. */
+    { key: 'courses',        label: 'Mening kurslarim',  icon: 'bi-journal-bookmark-fill',  href: 'courses.html' },
     { key: 'marketplace',    label: 'Marketplace',       icon: 'bi-bag-fill',               href: 'marketplace.html' },
+    { key: 'bookmarks',      label: 'Saqlanganlar',      icon: 'bi-bookmark-star',          href: 'bookmarks.html' },
     { key: 'calendar',       label: 'Vazifalar',         icon: 'bi-check2-square',          href: 'calendar.html' },
     { key: 'chat',           label: 'Chat',               icon: 'bi-chat-dots-fill',         href: 'chat.html' },
     { key: 'ai-assistant',   label: 'AI Yordamchi',      icon: 'bi-stars',                  href: 'ai-assistant.html' },
     { key: 'certificates',   label: 'Sertifikatlar',     icon: 'bi-patch-check-fill',       href: 'certificates.html' },
-    { key: 'bookmarks',      label: 'Saqlangan',         icon: 'bi-bookmark-star',          href: 'bookmarks.html' },
     { key: 'profile',        label: 'Profil',            icon: 'bi-person-circle',          href: 'profile.html' },
     { key: 'settings',       label: 'Sozlamalar',        icon: 'bi-gear-fill',              href: 'settings.html' },
     { key: 'components',     label: 'Komponentlar',      icon: 'bi-grid-3x3-gap-fill',      href: '../shared/components.html' }

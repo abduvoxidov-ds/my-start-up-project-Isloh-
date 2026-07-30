@@ -144,16 +144,73 @@ function isloh_initMarkComplete() {
   });
 }
 
+// Dars qatoridagi .lt-* klassi material turini bildiradi — "Saqlanganlar"
+// sahifasidagi filtr chiplariga shu yerda moslanadi.
+const ISLOH_LESSON_TYPE_MAP = { 'lt-video': 'lesson', 'lt-article': 'article', 'lt-code': 'code', 'lt-quiz': 'lesson' };
+
+function isloh_lessonMaterialType(row) {
+  const ic = row?.querySelector('.cps-lesson-ic');
+  const hit = ic && [...ic.classList].find((c) => ISLOH_LESSON_TYPE_MAP[c]);
+  return hit ? ISLOH_LESSON_TYPE_MAP[hit] : 'lesson';
+}
+
+// Faol darsdan "Saqlanganlar" uchun material obyektini yig'adi
+function isloh_activeLessonMaterial() {
+  const row = document.querySelector('[data-cps-lesson].active');
+  if (!row) return null;
+  const courseId = isloh_courseId();
+  const lessonId = isloh_lessonId(row);
+  const title = row.querySelector('.cps-lesson-name')?.textContent.trim() || 'Dars';
+  const time = row.querySelector('.cps-lesson-time')?.textContent.trim() || '';
+  const course = document.querySelector('.cps-course-title')?.textContent.trim() || '';
+
+  return {
+    id: `${courseId || 'course'}:${lessonId || title}`,
+    type: isloh_lessonMaterialType(row),
+    title,
+    sub: [time, course].filter(Boolean).join(' · '),
+    href: `course-player.html${courseId ? '?id=' + courseId : ''}`
+  };
+}
+
+// Faol darsning xatcho'p holatini tugmada ko'rsatadi
+function isloh_syncLessonBookmarkBtn() {
+  if (typeof isloh_isBookmarked !== 'function') return;
+  const material = isloh_activeLessonMaterial();
+  const on = material ? isloh_isBookmarked(material.id) : false;
+  document.querySelectorAll('[data-lesson-bookmark]').forEach((btn) => {
+    btn.classList.toggle('active', on);
+    const icon = btn.querySelector('i');
+    if (icon) {
+      icon.classList.toggle('bi-bookmark', !on);
+      icon.classList.toggle('bi-bookmark-fill', on);
+    }
+  });
+}
+
 function isloh_initBookmarkToggle() {
   document.querySelectorAll('[data-lesson-bookmark]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      btn.classList.toggle('active');
-      const on = btn.classList.contains('active');
+      const material = isloh_activeLessonMaterial();
+      // js/bookmarks.js yuklanmagan bo'lsa — eski vizual xatti-harakat
+      if (!material || typeof isloh_toggleBookmark !== 'function') {
+        btn.classList.toggle('active');
+        return;
+      }
+      const on = isloh_toggleBookmark(material);
+      isloh_syncLessonBookmarkBtn();
       if (typeof isloh_showToast === 'function') {
         isloh_showToast(on ? "Darsga xatcho'p qo'yildi" : "Xatcho'p olib tashlandi", 'info');
       }
     });
   });
+
+  // Dars almashganda tugma holati ham yangilansin
+  document.querySelectorAll('[data-cps-lesson]').forEach((row) => {
+    row.addEventListener('click', () => setTimeout(isloh_syncLessonBookmarkBtn, 0));
+  });
+
+  isloh_syncLessonBookmarkBtn();
 }
 
 function isloh_initPrevNext() {

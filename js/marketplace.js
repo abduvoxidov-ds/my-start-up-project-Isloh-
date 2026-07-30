@@ -4,9 +4,9 @@
    from a single mock object shaped like the future REST response (GET
    /api/marketplace). Also owns the shared cart/coupon/order-history
    helpers used by js/cart.js, js/checkout.js (finalizes a purchase on
-   submit) and js/bookmarks.js (reads purchased courses) — so this file is
-   loaded on marketplace.html, cart.html, checkout.html, wishlist.html and
-   bookmarks.html; every render function below guards on its target
+   submit) and js/my-courses.js (reads purchased + saved courses) — so this
+   file is loaded on marketplace.html, cart.html, checkout.html,
+   wishlist.html and courses.html; every render function below guards on its target
    element so loading it purely for the helpers, on a page without that
    element, is a safe no-op.
 
@@ -23,7 +23,14 @@
                               instructor, duration, level } added via
                               "Savatga qo'shish", cleared on checkout submit.
      isloh_purchased_courses — array of { id, title, cover, icon }, read by
-                              js/bookmarks.js under "Mening kurslarim".
+                              js/my-courses.js under "Boshlangan kurslar".
+     isloh_saved_courses    — array of { id, date }; only the course id is
+                              persisted, the card data is looked up from
+                              ISLOH_MARKETPLACE_DATA so nothing is duplicated.
+                              Rendered by js/my-courses.js ("Saqlangan
+                              kurslar"). NOTE: kurs darajasidagi ma'lumot
+                              "Saqlanganlar" (bookmarks.html) sahifasiga
+                              KIRMAYDI — u faqat dars materiallari uchun.
    ========================================================================== */
 
 const ISLOH_MARKETPLACE_DATA = {
@@ -66,9 +73,16 @@ const ISLOH_COUPON = { code: 'ISLOH2026', percent: 15 };
 
 const ISLOH_CART_KEY = 'isloh_cart_items';
 const ISLOH_PURCHASED_KEY = 'isloh_purchased_courses';
+const ISLOH_SAVED_KEY = 'isloh_saved_courses';
 
 function isloh_categorySlug(name) {
   return name === 'Barchasi' ? 'all' : name.toLowerCase();
+}
+
+// Kurs ma'lumotini ID bo'yicha yagona manbadan oladi — saqlanganlar ro'yxati
+// faqat ID saqlagani uchun kartochka shu yerdan to'ldiriladi.
+function isloh_findCourseById(id) {
+  return ISLOH_MARKETPLACE_DATA.featured_courses.find((c) => c.id === id) || null;
 }
 
 function isloh_formatSom(n) {
@@ -123,6 +137,75 @@ function isloh_addPurchasedCourse(course) {
   localStorage.setItem(ISLOH_PURCHASED_KEY, JSON.stringify(list));
 }
 
+// --- Saqlanganlar ("Saqlangan" sahifasi, pages/student/bookmarks.html) ---
+// localStorage'da faqat { id, date } saqlanadi; qolgan hamma narsa
+// ISLOH_MARKETPLACE_DATA'dan olinadi.
+function isloh_getSavedCourses() {
+  try { return JSON.parse(localStorage.getItem(ISLOH_SAVED_KEY)) || []; } catch (e) { return []; }
+}
+function isloh_setSavedCourses(items) {
+  localStorage.setItem(ISLOH_SAVED_KEY, JSON.stringify(items));
+}
+function isloh_isSavedCourse(id) {
+  return isloh_getSavedCourses().some((c) => c.id === id);
+}
+function isloh_removeSavedCourse(id) {
+  isloh_setSavedCourses(isloh_getSavedCourses().filter((c) => c.id !== id));
+}
+
+// Global toggle — istalgan sahifadagi kurs kartochkasi shu funksiyani chaqiradi.
+// Qaytaradi: true — saqlandi, false — saqlanganlardan olib tashlandi.
+function isloh_toggleSaveCourse(courseId) {
+  const items = isloh_getSavedCourses();
+  const idx = items.findIndex((c) => c.id === courseId);
+  if (idx > -1) {
+    items.splice(idx, 1);
+    isloh_setSavedCourses(items);
+    return false;
+  }
+  items.push({ id: courseId, date: new Date().toISOString().slice(0, 10) });
+  isloh_setSavedCourses(items);
+  return true;
+}
+
+// Tugmaning vizual holati (ikonka + .active) — bitta joyda
+function isloh_syncSaveToggle(btn, saved) {
+  btn.classList.toggle('active', saved);
+  const icon = btn.querySelector('i');
+  if (icon) {
+    icon.classList.toggle('bi-bookmark', !saved);
+    icon.classList.toggle('bi-bookmark-fill', saved);
+  }
+}
+
+// Tugma qaysi kursga tegishli ekanini aniqlaydi: o'z data-course-id'si yoki
+// eng yaqin [data-course-id] kartochkasidan.
+function isloh_saveToggleCourseId(btn) {
+  return btn.dataset.courseId || btn.closest('[data-course-id]')?.dataset.courseId || null;
+}
+
+// [data-save-toggle] tugmalari uchun yagona delegatsiyalangan hodisa —
+// marketplace.js yuklangan har qanday sahifada ishlaydi.
+function isloh_initSaveToggles() {
+  document.body.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-save-toggle]');
+    if (!btn) return;
+    const id = isloh_saveToggleCourseId(btn);
+    if (!id) return;
+
+    const saved = isloh_toggleSaveCourse(id);
+    // Bir kurs sahifada bir necha marta ko'rinishi mumkin — hammasini yangilaymiz
+    document.querySelectorAll('[data-save-toggle]').forEach((el) => {
+      if (isloh_saveToggleCourseId(el) === id) isloh_syncSaveToggle(el, saved);
+    });
+    // "Mening kurslarim" sahifasida ro'yxat darhol yangilansin
+    if (typeof isloh_renderSavedCourses === 'function') isloh_renderSavedCourses();
+    if (typeof isloh_showToast === 'function') {
+      isloh_showToast(saved ? "Saqlanganlarga qo'shildi" : 'Saqlanganlardan olib tashlandi', 'success');
+    }
+  });
+}
+
 // checkout.js "Buyurtmani tasdiqlash"da shu funksiyani chaqiradi:
 // savatdagi barcha kurslarni sotib olingan deb belgilaydi va savatni bo'shatadi.
 function isloh_finalizeCartCheckout() {
@@ -160,6 +243,7 @@ function isloh_renderMarketplaceCourses(courses) {
       ? `<span class="price-now">${isloh_formatSom(course.discount_price)} so'm</span><span class="price-old">${isloh_formatSom(course.price)}</span><span class="discount-badge">-${Math.round((1 - course.discount_price / course.price) * 100)}%</span>`
       : `<span class="price-now">${isloh_formatSom(course.price)} so'm</span>`;
     const wishlisted = typeof isloh_isInWishlist === 'function' && isloh_isInWishlist(course.id);
+    const saved = isloh_isSavedCourse(course.id);
 
     return `
       <div class="card mkt-card" data-filter-item data-category="${isloh_categorySlug(course.category)}" data-filter-text="${course.title}"
@@ -167,7 +251,10 @@ function isloh_renderMarketplaceCourses(courses) {
            data-course-price="${course.price}"${course.discount_price ? ` data-course-discount-price="${course.discount_price}"` : ''}>
         <div class="mkt-cover" style="background:${course.cover};">
           <i class="${course.icon}"></i>
-          <button class="fav-toggle${wishlisted ? ' active' : ''}" data-wishlist-toggle aria-label="Xohishlar ro'yxatiga qo'shish"><i class="bi ${wishlisted ? 'bi-heart-fill' : 'bi-heart'}"></i></button>
+          <div class="card-fav-actions">
+            <button class="fav-toggle fav-save${saved ? ' active' : ''}" data-save-toggle aria-label="Saqlanganlarga qo'shish"><i class="bi ${saved ? 'bi-bookmark-fill' : 'bi-bookmark'}"></i></button>
+            <button class="fav-toggle${wishlisted ? ' active' : ''}" data-wishlist-toggle aria-label="Xohishlar ro'yxatiga qo'shish"><i class="bi ${wishlisted ? 'bi-heart-fill' : 'bi-heart'}"></i></button>
+          </div>
         </div>
         <div class="card-pad" style="padding-top:14px;">
           <div style="font-weight:700; font-size:14px;" class="filter-title">${course.title}</div>
@@ -290,6 +377,7 @@ function isloh_initMarketplace() {
   isloh_initCompareTable();
   isloh_initBundleBuy();
   isloh_initMarketplaceCoupon();
+  isloh_initSaveToggles(); // sahifadan qat'i nazar ishlaydi
 }
 
 document.addEventListener('DOMContentLoaded', isloh_initMarketplace);

@@ -292,6 +292,24 @@
 .bookmark-tags { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
 .bookmark-remove { background:transparent; border:none; color:var(--ink-300); cursor:pointer; font-size:16px; padding:4px; border-radius:6px; }
 .bookmark-remove:hover { color:var(--danger); background:#FDEBEC; }
+/* Kartochkaning o'ng tomonidagi amallar (Ochish + o'chirish) — avval har bir
+   kartochkada inline style bilan takrorlanar edi */
+.bookmark-actions { display:flex; align-items:center; gap:6px; }
+.bookmark-progress { margin-top:8px; }
+.bookmark-progress-label { font-size:12px; color:var(--ink-500); margin-top:4px; }
+/* pages/student/bookmarks.html ("Saqlanganlar") sahifa karkasi — avval sahifa
+   ichidagi inline <style> blokida edi */
+.bm-layout { display:grid; grid-template-columns:1fr 280px; gap:18px; align-items:start; margin-top:18px; }
+.bm-list { display:flex; flex-direction:column; gap:12px; }
+
+/* --- Talaba kurs katakchalari (pages/student/courses.html — "Mening
+   kurslarim"); avval sahifa ichidagi inline <style> blokida edi.
+   Instruktor varianti alohida: .course-grid-instr --- */
+.course-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.course-meta { display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--ink-500); margin-top:10px; }
+.course-card-title { font-weight:700; font-size:14.5px; }
+.course-card-sub { font-size:12px; color:var(--ink-500); margin-top:4px; }
+.course-section { margin-top:28px; }
 .collection-card { display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; }
 .collection-icon { width:44px; height:44px; border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; font-size:19px; color:#fff; flex-shrink:0; }
 
@@ -306,9 +324,12 @@
   .settings-layout { grid-template-columns:1fr; }
   .settings-nav { position:static; flex-direction:row; flex-wrap:wrap; }
   .cert-grid { grid-template-columns:repeat(2,1fr); }
+  .bm-layout { grid-template-columns:1fr; }
+  .course-grid { grid-template-columns:repeat(2,1fr); }
 }
 @media (max-width:700px) {
   .cert-grid { grid-template-columns:1fr; }
+  .course-grid { grid-template-columns:1fr; }
   .profile-head { flex-direction:column; align-items:flex-start; }
   .profile-actions { padding-bottom:0; }
 }
@@ -878,6 +899,14 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .fav-toggle { border:none; background:transparent; color:var(--ink-300); cursor:pointer; font-size:16px; padding:4px; border-radius:6px; flex-shrink:0; }
 .fav-toggle:hover { color:var(--warning); }
 .fav-toggle.active { color:var(--warning); }
+
+/* --- Kurs kartochkasi muqovasidagi tezkor amallar qatori: bir nechta
+   .fav-toggle (saqlash + xohishlar ro'yxati) yonma-yon joylashadi.
+   Ota-element position:relative bo'lishi kerak (masalan .mkt-cover). --- */
+.card-fav-actions { position:absolute; top:8px; right:8px; display:flex; gap:6px; z-index:1; }
+.card-fav-actions .fav-toggle { background:rgba(255,255,255,0.85); }
+/* Saqlash tugmasi violet, xohishlar (yurak) esa --warning rangda qoladi */
+.fav-toggle.fav-save:hover, .fav-toggle.fav-save.active { color:var(--violet-600); }
 
 @media (max-width:700px) {
   .upload-progress { flex-wrap:wrap; }
