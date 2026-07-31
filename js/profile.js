@@ -44,15 +44,29 @@ const ISLOH_USER_DEFAULTS = {
 
 /* --- 1) Do'kon ----------------------------------------------------------- */
 
+/* Hisob o'chirilganda profil qayta ekilmasligi kerak: aks holda tozalashdan
+   keyingi har qanday o'qish uni darhol tiklab qo'yadi (sahifa hali ochiq
+   turganda). js/settings-danger.js shu bayroqni ko'taradi. */
+let isloh_userSeedSuppressed = false;
+
+function isloh_suppressUserSeeding() {
+  isloh_userSeedSuppressed = true;
+}
+
+/* Do'kondan faqat o'qiydi — hech qachon yozmaydi. `stored` null bo'lishi
+   do'konda yozuv yo'qligini bildiradi. */
+function isloh_readUserProfile() {
+  let stored = null;
+  try { stored = JSON.parse(localStorage.getItem(ISLOH_USER_KEY)); } catch (e) { stored = null; }
+  return { stored: stored, user: Object.assign({}, ISLOH_USER_DEFAULTS, stored || {}) };
+}
+
 /* Joriy profilni qaytaradi. Birinchi chaqiruvda standart profil ekiladi,
    shunda demo sahifalar hech qachon bo'sh ko'rinmaydi. */
 function isloh_getUserProfile() {
-  let stored = null;
-  try { stored = JSON.parse(localStorage.getItem(ISLOH_USER_KEY)); } catch (e) { stored = null; }
-
-  const user = Object.assign({}, ISLOH_USER_DEFAULTS, stored || {});
-  if (!stored) isloh_persistUserProfile(user);
-  return user;
+  const result = isloh_readUserProfile();
+  if (!result.stored && !isloh_userSeedSuppressed) isloh_persistUserProfile(result.user);
+  return result.user;
 }
 
 /* Yozishning o'zi. Kvota to'lgan bo'lsa (katta avatar) false qaytaradi —
@@ -143,8 +157,11 @@ function isloh_getPageRole() {
   return aside ? aside.dataset.role : '';
 }
 
-function isloh_syncUserUI() {
-  const user = isloh_getUserProfile();
+/* `options.noSeed` — do'kon bo'sh bo'lsa ham standart profil YOZILMAYDI.
+   Boshqa tabdagi o'zgarishga javob berganda shu rejim ishlatiladi: aks holda
+   bir tabda hisob o'chirilganda, ikkinchi tab uni darhol tiklab qo'yardi. */
+function isloh_syncUserUI(options) {
+  const user = (options && options.noSeed) ? isloh_readUserProfile().user : isloh_getUserProfile();
 
   Object.keys(ISLOH_USER_TEXT_BINDINGS).forEach((attr) => {
     document.querySelectorAll('[' + attr + ']').forEach((el) => {
@@ -283,8 +300,21 @@ function isloh_openSettingsSectionFromHash() {
   const id = (location.hash || '').replace('#', '');
   if (!id || !/^[a-z][a-z0-9-]*$/i.test(id)) return;
 
+  // Bo'lim chap menyuda bo'lsa — oddiygina bosamiz
   const item = document.querySelector('.settings-nav-item[data-settings-target="' + id + '"]');
-  if (item) item.click();
+  if (item) { item.click(); return; }
+
+  /* Menyuda ko'rsatilmagan bo'lim ("Hisob" — unga faqat profil sahifasidagi
+     "Profilni tahrirlash" tugmasi orqali kelinadi): panelni to'g'ridan-to'g'ri
+     ochamiz. js/settings.js ga tegilmaydi — foydalanuvchi keyin boshqa
+     bo'limni bosganda u o'z ishini odatdagidek bajaradi. */
+  const target = document.querySelector('.settings-section[data-settings-panel="' + id + '"]');
+  if (!target) return;
+
+  document.querySelectorAll('.settings-section[data-settings-panel]').forEach((panel) => {
+    panel.hidden = panel !== target;
+  });
+  document.querySelectorAll('.settings-nav-item').forEach((nav) => nav.classList.remove('active'));
 }
 
 function isloh_initProfileModule() {
@@ -294,9 +324,10 @@ function isloh_initProfileModule() {
   isloh_openSettingsSectionFromHash();
 }
 
-/* Boshqa tabda profil o'zgarsa, bu sahifa ham yangilanadi. */
+/* Boshqa tabda profil o'zgarsa, bu sahifa ham yangilanadi — lekin do'konga
+   hech narsa yozmasdan (yuqoridagi noSeed izohiga qarang). */
 window.addEventListener('storage', (e) => {
-  if (e.key === ISLOH_USER_KEY) isloh_syncUserUI();
+  if (e.key === ISLOH_USER_KEY) isloh_syncUserUI({ noSeed: true });
 });
 
 document.addEventListener('DOMContentLoaded', isloh_initProfileModule);

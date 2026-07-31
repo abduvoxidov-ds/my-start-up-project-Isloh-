@@ -39,3 +39,43 @@ input:focus-visible,
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: var(--ink-300); border-radius: var(--r-pill); }
 ::-webkit-scrollbar-track { background: transparent; }
+
+/* ==========================================================================
+   Foydalanuvchi afzalliklari
+   Klasslar js/theme.js tomonidan `isloh_settings` asosida <body>ga qo'yiladi.
+   Tungi rejim va yuqori kontrast token qiymatlarini almashtiradi, shuning
+   uchun ular css/tokens.css da. Bu yerda esa hujjat darajasidagi
+   o'lcham/harakat sozlamalari.
+   ========================================================================== */
+
+/* --- Animatsiyalarni o'chirish ---
+   0 emas, 0.001s ishlatiladi: `animationend` hodisasi baribir yuborilsin,
+   aks holda unga tayangan kod (masalan js/settings-security.js dagi seans
+   qatorini olib tashlash) elementni hech qachon o'chirmay qoladi. */
+body.no-animations *,
+body.no-animations *::before,
+body.no-animations *::after {
+  animation-duration: 0.001s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0.001s !important;
+  transition-delay: 0s !important;
+}
+
+/* --- Ixcham rejim: elementlar orasidagi masofa kamayadi --- */
+body.compact-mode .content { padding: 18px; }
+body.compact-mode .card-pad { padding: 14px; }
+body.compact-mode .wk-col { gap: 12px; }
+body.compact-mode .wk-grid-4,
+body.compact-mode .wk-grid-3,
+body.compact-mode .wk-grid-2,
+body.compact-mode .wk-grid-2-even { gap: 12px; }
+body.compact-mode .settings-item { padding: 10px 0; }
+body.compact-mode .profile-stat-row { margin-top: 12px; }
+
+/* --- Katta shrift ---
+   Dizayn tizimi px asosida qurilgan (rem emas), shuning uchun body'ning
+   font-size'ini oshirish deyarli hech narsani o'zgartirmaydi — o'lchamlar
+   bolalarda qattiq belgilangan. Shu sababli o'qish maydoni `zoom` bilan
+   kattalashtiriladi: sidebar va topbar o'z o'lchamida qoladi, matn esa
+   haqiqatan yiriklashadi. */
+body.a11y-large-text .content { zoom: 1.12; }

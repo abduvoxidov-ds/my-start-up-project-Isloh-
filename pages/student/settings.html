@@ -16,14 +16,6 @@
   </aside>
 
   <div class="main-col">
-    <header class="topbar">
-      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Sozlamalarni qidirish..." aria-label="Sozlamalarni qidirish"></div>
-      <div class="topbar-actions">
-        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" data-user-avatar></div>
-      </div>
-    </header>
-
     <main class="content">
       <h1 class="page-title">Sozlamalar</h1>
       <p class="page-sub">Hisob, maxfiylik va ilova sozlamalarini boshqaring.</p>
@@ -31,8 +23,10 @@
       <div class="settings-layout">
         <!-- SETTINGS NAV -->
         <nav class="settings-nav" aria-label="Sozlamalar bo'limlari">
-          <div class="settings-nav-item active" data-settings-target="account" role="button" tabindex="0"><i class="bi bi-person"></i> Hisob</div>
-          <div class="settings-nav-item" data-settings-target="notifications" role="button" tabindex="0"><i class="bi bi-bell"></i> Bildirishnomalar</div>
+          <!-- "Hisob" bo'limi ataylab menyuda yo'q: unga profil sahifasidagi
+               "Profilni tahrirlash" tugmasi (settings.html#account) orqali
+               kelinadi. Panelning o'zi quyida turibdi. -->
+          <div class="settings-nav-item active" data-settings-target="notifications" role="button" tabindex="0"><i class="bi bi-bell"></i> Bildirishnomalar</div>
           <div class="settings-nav-item" data-settings-target="appearance" role="button" tabindex="0"><i class="bi bi-palette"></i> Ko'rinish</div>
           <div class="settings-nav-item" data-settings-target="language" role="button" tabindex="0"><i class="bi bi-translate"></i> Til va hudud</div>
           <div class="settings-nav-item" data-settings-target="privacy" role="button" tabindex="0"><i class="bi bi-shield-lock"></i> Maxfiylik</div>
@@ -45,7 +39,7 @@
         <!-- SETTINGS PANELS -->
         <div>
           <!-- ACCOUNT -->
-          <div class="card card-pad settings-section" data-settings-panel="account">
+          <div class="card card-pad settings-section" data-settings-panel="account" hidden>
             <div class="settings-section-title">Hisob</div>
             <div class="settings-section-sub">Shaxsiy ma'lumotlaringiz va profil.</div>
             <!-- Maydonlar js/profile.js orqali isloh_user'dan yuklanadi va o'sha yerga saqlanadi -->
@@ -58,28 +52,29 @@
           </div>
 
           <!-- NOTIFICATIONS -->
-          <div class="card card-pad settings-section" data-settings-panel="notifications" hidden>
+          <div class="card card-pad settings-section" data-settings-panel="notifications">
             <div class="settings-section-title">Bildirishnomalar</div>
             <div class="settings-section-sub">Qaysi hodisalar haqida xabar olishni tanlang.</div>
+            <!-- Holatlar js/settings-store.js orqali isloh_settings'dan yuklanadi -->
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Email bildirishnomalari</div><div class="settings-item-desc">Muhim yangiliklar emailingizga yuboriladi</div></div>
-              <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="notif_email"><span class="slider"></span></label>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Dars eslatmalari</div><div class="settings-item-desc">Rejalashtirilgan darslardan oldin eslatma</div></div>
-              <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="notif_lessons"><span class="slider"></span></label>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Vazifa muddatlari</div><div class="settings-item-desc">Muddat yaqinlashganda ogohlantirish</div></div>
-              <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="notif_deadlines"><span class="slider"></span></label>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">AI tavsiyalari</div><div class="settings-item-desc">AI yordamchidan shaxsiy takliflar</div></div>
-              <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="notif_ai"><span class="slider"></span></label>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Marketing xabarlari</div><div class="settings-item-desc">Chegirmalar va yangi kurslar</div></div>
-              <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="notif_marketing"><span class="slider"></span></label>
             </div>
           </div>
 
@@ -88,18 +83,18 @@
             <div class="settings-section-title">Ko'rinish</div>
             <div class="settings-section-sub">Ilova ko'rinishini sozlang.</div>
             <div class="settings-item">
-              <div class="settings-item-info"><div class="settings-item-label">Mavzu</div><div class="settings-item-desc">Yorug' yoki tungi rejim (tez orada)</div></div>
-              <div class="view-switch settings-item-control">
-                <button class="active">Yorug'</button><button>Tungi</button><button>Avto</button>
+              <div class="settings-item-info"><div class="settings-item-label">Mavzu</div><div class="settings-item-desc">"Avto" tizim sozlamasiga ergashadi</div></div>
+              <div class="view-switch settings-item-control" data-setting-group="appear_theme" role="group" aria-label="Mavzu">
+                <button type="button" data-setting-value="light">Yorug'</button><button type="button" data-setting-value="dark">Tungi</button><button type="button" data-setting-value="auto">Avto</button>
               </div>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Ixcham rejim</div><div class="settings-item-desc">Elementlar orasidagi masofani kamaytirish</div></div>
-              <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="appear_compact"><span class="slider"></span></label>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Animatsiyalar</div><div class="settings-item-desc">O'tish effektlarini yoqish</div></div>
-              <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="appear_animations"><span class="slider"></span></label>
             </div>
           </div>
 
@@ -107,11 +102,17 @@
           <div class="card card-pad settings-section" data-settings-panel="language" hidden>
             <div class="settings-section-title">Til va hudud</div>
             <div class="settings-section-sub">Interfeys tili va vaqt mintaqasi.</div>
+            <!-- option'larda aniq `value` bor: do'konda ko'rinadigan matn emas,
+                 barqaror kod saqlanadi (matn o'zgarsa sozlama buzilmasin) -->
             <div class="field"><label for="lang-ui">Interfeys tili</label>
-              <select id="lang-ui"><option>O'zbek</option><option>Ingliz</option><option>Rus</option></select>
+              <select id="lang-ui" data-setting="lang_ui">
+                <option value="uz">O'zbek</option><option value="en">Ingliz</option><option value="ru">Rus</option>
+              </select>
             </div>
             <div class="field"><label for="lang-tz">Vaqt mintaqasi</label>
-              <select id="lang-tz"><option>(GMT+5) Toshkent</option><option>(GMT+3) Moskva</option></select>
+              <select id="lang-tz" data-setting="lang_tz">
+                <option value="GMT+5">(GMT+5) Toshkent</option><option value="GMT+3">(GMT+3) Moskva</option>
+              </select>
             </div>
           </div>
 
@@ -121,15 +122,15 @@
             <div class="settings-section-sub">Ma'lumotlaringiz kim uchun ko'rinishini boshqaring.</div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Profil ko'rinishi</div><div class="settings-item-desc">Boshqa talabalar profilingizni ko'ra oladi</div></div>
-              <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="privacy_profile"><span class="slider"></span></label>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">O'quv statistikasi</div><div class="settings-item-desc">Yutuqlaringiz reytingda ko'rinsin</div></div>
-              <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="privacy_stats"><span class="slider"></span></label>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Onlayn holat</div><div class="settings-item-desc">Faolligingizni ko'rsatish</div></div>
-              <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="privacy_online"><span class="slider"></span></label>
             </div>
           </div>
 
@@ -137,26 +138,52 @@
           <div class="card card-pad settings-section" data-settings-panel="security" hidden>
             <div class="settings-section-title">Xavfsizlik</div>
             <div class="settings-section-sub">Parol, ikki bosqichli tekshiruv va faol seanslar.</div>
-            <div class="field"><label for="sec-current-pass">Joriy parol</label><input id="sec-current-pass" type="password" value="********"></div>
-            <div class="field"><label for="sec-new-pass">Yangi parol</label><input id="sec-new-pass" type="password" placeholder="Yangi parolni kiriting"></div>
-            <div class="settings-form-actions"><button class="btn btn-primary btn-sm">Parolni yangilash</button></div>
+            <!-- Parol hech qayerga saqlanmaydi — js/settings-security.js faqat
+                 formatni tekshiradi (izohga qarang). novalidate: xabarlar
+                 brauzernikidan emas, o'zimizdan chiqadi -->
+            <form data-password-form novalidate>
+              <div class="field">
+                <label for="sec-current-pass">Joriy parol</label>
+                <input id="sec-current-pass" type="password" autocomplete="current-password" placeholder="Joriy parolingiz" data-password-field="current">
+                <div class="field-error" data-error-for="current" hidden></div>
+              </div>
+              <div class="field">
+                <label for="sec-new-pass">Yangi parol</label>
+                <input id="sec-new-pass" type="password" autocomplete="new-password" placeholder="Kamida 6 belgi" data-password-field="new">
+                <div class="field-error" data-error-for="new" hidden></div>
+              </div>
+              <div class="field">
+                <label for="sec-confirm-pass">Yangi parolni tasdiqlash</label>
+                <input id="sec-confirm-pass" type="password" autocomplete="new-password" placeholder="Yangi parolni takrorlang" data-password-field="confirm">
+                <div class="field-error" data-error-for="confirm" hidden></div>
+              </div>
+              <div class="settings-form-actions"><button type="submit" class="btn btn-primary btn-sm">Parolni yangilash</button></div>
+            </form>
 
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Ikki bosqichli tekshiruv (2FA)</div><div class="settings-item-desc">Qo'shimcha xavfsizlik qatlami</div></div>
-              <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="security_2fa"><span class="slider"></span></label>
             </div>
 
             <h4 class="settings-subtitle">Faol seanslar</h4>
-            <div class="device-row">
+            <!-- Yakunlangan seanslar isloh_revoked_sessions'da saqlanadi, shuning
+                 uchun qator sahifa yangilangach qaytib kelmaydi -->
+            <div class="device-row" data-session-id="macbook-chrome">
               <div class="device-icon"><i class="bi bi-laptop"></i></div>
               <div class="device-info"><div class="device-name">MacBook Pro · Chrome</div><div class="device-meta">Toshkent · Hozir faol</div></div>
               <span class="badge badge-green">Joriy</span>
             </div>
-            <div class="device-row">
+            <div class="device-row" data-session-id="iphone-app">
               <div class="device-icon"><i class="bi bi-phone"></i></div>
               <div class="device-info"><div class="device-name">iPhone · Isloh App</div><div class="device-meta">Toshkent · 2 soat oldin</div></div>
-              <button class="btn btn-outline btn-sm">Chiqarish</button>
+              <button class="btn btn-outline btn-sm" data-session-revoke>Chiqarish</button>
             </div>
+            <div class="device-row" data-session-id="ipad-safari">
+              <div class="device-icon"><i class="bi bi-tablet"></i></div>
+              <div class="device-info"><div class="device-name">iPad · Safari</div><div class="device-meta">Samarqand · 3 kun oldin</div></div>
+              <button class="btn btn-outline btn-sm" data-session-revoke>Chiqarish</button>
+            </div>
+            <div class="device-empty" data-sessions-empty hidden>Boshqa faol seanslar yo'q.</div>
           </div>
 
           <!-- ACCESSIBILITY -->
@@ -165,15 +192,15 @@
             <div class="settings-section-sub">Ilovadan foydalanishni osonlashtiruvchi sozlamalar.</div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Katta shrift</div><div class="settings-item-desc">Matnni kattaroq ko'rsatish</div></div>
-              <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="a11y_large_text"><span class="slider"></span></label>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Yuqori kontrast</div><div class="settings-item-desc">Ranglar farqini oshirish</div></div>
-              <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="a11y_contrast"><span class="slider"></span></label>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Klaviatura yorliqlari</div><div class="settings-item-desc">Tezkor navigatsiya uchun</div></div>
-              <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-setting="a11y_shortcuts"><span class="slider"></span></label>
             </div>
           </div>
 
@@ -181,13 +208,15 @@
           <div class="card card-pad settings-section danger-zone" data-settings-panel="danger" hidden>
             <div class="settings-section-title">Xavfli hudud</div>
             <div class="settings-section-sub">Bu amallar qaytarilmaydi. Ehtiyot bo'ling.</div>
+            <!-- Ikkala tugma ham faqat tasdiqlash dialogini ochadi; haqiqiy
+                 amal js/settings-danger.js da dialog tasdiqlangach bajariladi -->
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Hisobni vaqtincha to'xtatish</div><div class="settings-item-desc">Profilingiz vaqtincha yashiriladi</div></div>
-              <button class="btn btn-outline btn-sm settings-item-control">To'xtatish</button>
+              <button class="btn btn-outline btn-sm settings-item-control" data-danger-deactivate>To'xtatish</button>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label danger">Hisobni butunlay o'chirish</div><div class="settings-item-desc">Barcha ma'lumotlar o'chiriladi</div></div>
-              <button class="btn btn-danger btn-sm settings-item-control">O'chirish</button>
+              <button class="btn btn-danger btn-sm settings-item-control" data-danger-delete>O'chirish</button>
             </div>
           </div>
         </div>
@@ -195,11 +224,65 @@
     </main>
   </div>
 </div>
+
+<!-- ===== Tasdiqlash dialoglari (js/settings-danger.js ochadi) ===== -->
+<div class="modal-overlay" id="modal-deactivate" role="dialog" aria-modal="true" aria-labelledby="modal-deactivate-title" hidden>
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <span class="modal-title" id="modal-deactivate-title">Hisobni vaqtincha to'xtatasizmi?</span>
+      <button type="button" class="modal-close" data-modal-close="modal-deactivate" aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      Profilingiz boshqa foydalanuvchilardan yashiriladi va tizimdan chiqasiz.
+      Kurslaringiz, sertifikatlaringiz va o'quv progressingiz saqlanib qoladi —
+      qaytib kirganingizda hammasi joyida bo'ladi.
+      <div class="modal-warning">
+        <i class="bi bi-info-circle-fill"></i>
+        <span>Profil ma'lumotlaringiz va sozlamalaringiz shu qurilmadan tozalanadi.</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-outline btn-sm" data-modal-close="modal-deactivate" data-modal-autofocus>Bekor qilish</button>
+      <button type="button" class="btn btn-primary btn-sm" data-deactivate-confirm>Ha, to'xtatish</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay modal-danger" id="modal-delete" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title" hidden>
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <span class="modal-title" id="modal-delete-title">Hisobni butunlay o'chirish</span>
+      <button type="button" class="modal-close" data-modal-close="modal-delete" aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      Bu amalni <strong>qaytarib bo'lmaydi</strong>. Profilingiz, sozlamalaringiz,
+      xatcholaringiz, sertifikatlaringiz va butun o'quv progressingiz butunlay
+      o'chiriladi.
+      <div class="modal-warning">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span>Tasdiqlash uchun quyidagi maydonga <span class="modal-confirm-word">O'CHIRISH</span> so'zini yozing.</span>
+      </div>
+      <div class="field mt-16">
+        <label for="delete-confirm-input">Tasdiq so'zi</label>
+        <input id="delete-confirm-input" type="text" autocomplete="off" placeholder="O'CHIRISH" data-delete-confirm-input data-modal-autofocus>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-outline btn-sm" data-modal-close="modal-delete">Bekor qilish</button>
+      <button type="button" class="btn btn-danger btn-sm btn-disabled" data-delete-confirm disabled>Butunlay o'chirish</button>
+    </div>
+  </div>
+</div>
+
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/settings.js"></script>
 <script src="../../js/toast.js"></script>
+<script src="../../js/settings-store.js"></script>
+<script src="../../js/settings-security.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/settings-danger.js"></script>
 <!-- settings.js'dan KEYIN yuklanadi: hash orqali bo'lim ochish uchun avval
      settings.js o'zining boshlang'ich panelini faollashtirib olishi kerak -->
 <script src="../../js/profile.js"></script>

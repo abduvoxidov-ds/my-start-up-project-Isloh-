@@ -90,7 +90,7 @@
 .btn-teach:hover { background: #189950; }
 .btn-danger { background: var(--danger); color: #fff; box-shadow: 0 4px 14px rgba(229,72,77,0.3); }
 .btn-danger:hover { background: #CE3F44; }
-.btn-outline { background: #fff; color: var(--ink-700); border: 1px solid var(--border-soft); }
+.btn-outline { background:var(--bg-card); color: var(--ink-700); border: 1px solid var(--border-soft); }
 .btn-outline:hover { background: var(--bg-app); }
 .btn-ghost { background: transparent; color: var(--violet-600); padding: 10px 14px; }
 .btn-sm { padding: 7px 14px; font-size: 13px; }
@@ -119,11 +119,19 @@
 }
 .field input:focus,
 .field select:focus,
-.field textarea:focus { border-color: var(--violet-500); background: #fff; }
+.field textarea:focus { border-color: var(--violet-500); background:var(--bg-card); }
 /* Ko'p qatorli maydon (bio va shunga o'xshashlar) */
 .field textarea { font-family: inherit; line-height: 1.55; min-height: 92px; resize: vertical; }
 .field select { font-family: inherit; cursor: pointer; }
 .field-hint { font-size: 12px; color: var(--ink-500); margin-top: 5px; }
+/* Validatsiya holati — maydon ostidagi xato matni va qizil hoshiya */
+.field input.is-invalid,
+.field select.is-invalid,
+.field textarea.is-invalid { border-color: var(--danger); background: var(--danger-100); }
+.field-error {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; color: var(--danger); margin-top: 5px;
+}
 
 /* --- Badge / status --- */
 .badge {
@@ -138,8 +146,8 @@
 .badge-violet { background: var(--violet-100); color: var(--violet-600); }
 .badge-green { background: var(--teach-green-100); color: var(--teach-green); }
 .badge-neutral { background: var(--bg-app); color: var(--ink-500); }
-.badge-warning { background: #FEF3E2; color: var(--warning); }
-.badge-danger { background: #FDEBEC; color: var(--danger); }
+.badge-warning { background: var(--warning-100); color: var(--warning); }
+.badge-danger { background: var(--danger-100); color: var(--danger); }
 
 /* --- Progress --- */
 .progress-track {
@@ -165,12 +173,18 @@
   display: flex; align-items: center; justify-content: center;
   font-size: 18px; margin-bottom: 8px;
 }
-/* Ikonka rang variantlari — avval har bir kartochkada inline style bilan
-   takrorlanardi (profile.html, dashboard.html va h.k.) */
-.stat-icon.tint-violet  { background: var(--violet-100);      color: var(--violet-600); }
-.stat-icon.tint-green   { background: var(--teach-green-100); color: var(--teach-green); }
-.stat-icon.tint-warning { background: var(--warning-100);     color: var(--warning); }
-.stat-icon.tint-danger  { background: var(--danger-100);      color: var(--danger); }
+/* --- Ikonka rang variantlari (tint) --------------------------------------
+   Avval har bir sahifada `style="background:#FEF3E2; color:var(--warning)"`
+   ko'rinishida inline yozilardi. Qattiq kodlangan hex tungi rejimga
+   bo'ysunmasdi — endi ikkala rang ham tokendan keladi, shuning uchun
+   `body.is-dark-theme` ostida avtomat quyuqlashadi.
+
+   Elementga bog'lanmagan: .stat-icon, .qa-icon, .upcoming-icon yoki
+   istalgan boshqa ikonka konteyneriga qo'shsa bo'ladi. */
+.tint-violet  { background: var(--violet-100);      color: var(--violet-600); }
+.tint-green   { background: var(--teach-green-100); color: var(--teach-green); }
+.tint-warning { background: var(--warning-100);     color: var(--warning); }
+.tint-danger  { background: var(--danger-100);      color: var(--danger); }
 
 /* --- Role select card (onboarding) --- */
 .role-card {
@@ -226,7 +240,7 @@
 
 /* Dropdown */
 .dropdown { position:relative; display:inline-block; }
-.dropdown-menu { position:absolute; top:calc(100% + 6px); left:0; background:#fff; border:1px solid var(--border-soft); border-radius:var(--r-md); box-shadow:var(--shadow-md); min-width:170px; padding:6px; display:none; z-index:var(--z-dropdown); }
+.dropdown-menu { position:absolute; top:calc(100% + 6px); left:0; background:var(--bg-card); border:1px solid var(--border-soft); border-radius:var(--r-md); box-shadow:var(--shadow-md); min-width:170px; padding:6px; display:none; z-index:var(--z-dropdown); }
 .dropdown.open .dropdown-menu { display:block; }
 .dropdown-item { padding:9px 12px; border-radius:var(--r-sm); font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:8px; }
 .dropdown-item:hover { background:var(--bg-app); }
@@ -237,7 +251,7 @@
 .tooltip-wrap:hover .tooltip-box { opacity:1; }
 
 /* Toast */
-.toast-demo { display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--border-soft); border-radius:var(--r-md); box-shadow:var(--shadow-md); padding:12px 16px; font-size:13.5px; max-width:320px; }
+.toast-demo { display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-soft); border-radius:var(--r-md); box-shadow:var(--shadow-md); padding:12px 16px; font-size:13.5px; max-width:320px; }
 .toast-container { position: fixed; top: 20px; right: 20px; z-index: var(--z-toast); display: flex; flex-direction: column; gap: 10px; }
 
 /* Chip / tag */
@@ -250,11 +264,27 @@
 .breadcrumb-demo .current { color:var(--ink-900); font-weight:600; }
 
 /* Modal (also used as the real overlay target by js/modal.js) */
-.modal-demo, .modal { border:1px solid var(--border-soft); border-radius:var(--r-lg); box-shadow:var(--shadow-lg); max-width:340px; background:#fff; }
+.modal-demo, .modal { border:1px solid var(--border-soft); border-radius:var(--r-lg); box-shadow:var(--shadow-lg); max-width:340px; background:var(--bg-card); }
 .modal-demo .modal-head, .modal .modal-head { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; border-bottom:1px solid var(--border-soft); }
 .modal-demo .modal-body, .modal .modal-body { padding:18px; font-size:13.5px; color:var(--ink-700); }
 .modal-demo .modal-foot, .modal .modal-foot { display:flex; justify-content:flex-end; gap:8px; padding:14px 18px; border-top:1px solid var(--border-soft); }
 .modal-overlay { position: fixed; inset: 0; background: rgba(23,18,59,0.45); display:flex; align-items:center; justify-content:center; z-index: var(--z-overlay); }
 .modal-overlay[hidden] { display: none; }
+/* Sarlavha va yopish tugmasi — avval pages/shared/components.html demosida
+   inline style bilan yozilgan edi */
+.modal-title { font-weight:700; font-size:14.5px; }
+.modal-close { background:transparent; border:none; color:var(--ink-500); cursor:pointer; font-size:15px; line-height:1; padding:4px; border-radius:6px; }
+.modal-close:hover { background:var(--bg-app); color:var(--ink-900); }
+/* Tasdiqlash dialoglari: matn + maydon sig'ishi uchun kengroq */
+.modal-confirm { max-width:420px; }
+.modal-danger .modal-title { color:var(--danger); }
+/* Dialog ichidagi ogohlantirish bloki */
+.modal-warning {
+  display:flex; align-items:flex-start; gap:10px;
+  margin-top:14px; padding:12px 14px;
+  border-radius:var(--r-md); background:var(--danger-100);
+  color:var(--danger); font-size:12.5px; line-height:1.5;
+}
+.modal-confirm-word { font-weight:700; }
 
 code.inline { background:var(--bg-app); padding:2px 6px; border-radius:5px; font-size:12px; color:var(--violet-600); }

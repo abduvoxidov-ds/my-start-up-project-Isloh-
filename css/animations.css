@@ -31,3 +31,8 @@
 
 .anim-fade-in { animation: isloh-fade-in var(--t-slow) var(--ease-standard); }
 .anim-slide-up { animation: isloh-slide-up var(--t-slow) var(--ease-standard); }
+
+/* Ro'yxatdan olib tashlanayotgan qator (seansni yakunlash kabi) — element
+   DOM'dan animatsiya tugagach o'chiriladi */
+@keyframes isloh-row-out { to { opacity: 0; transform: translateX(-14px); } }
+.anim-row-out { animation: isloh-row-out var(--t-slow) var(--ease-standard) forwards; pointer-events: none; }
