@@ -43,22 +43,17 @@
    ========================================================================== */
 
 const ISLOH_CERTIFICATES_KEY = 'isloh_certificates';
-const ISLOH_USER_KEY = 'isloh_user';
 const ISLOH_COURSE_SETTINGS_KEY = 'isloh_course_settings';
 const ISLOH_CERT_MONTH_LABELS = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];
 
-/* --- Identity fallback --------------------------------------------------
-   Mock Auth (login/register -> isloh_user) isn't wired yet (see
-   CLAUDE.md Phase 2), so the certificate module seeds a minimal student
-   profile the first time it's needed instead of blocking on that work. */
-function isloh_seedUserFallback() {
-  let user = null;
-  try { user = JSON.parse(localStorage.getItem(ISLOH_USER_KEY)); } catch (e) { user = null; }
-  if (!user) {
-    user = { id: 'std-001', name: 'Samar Mirzayev', role: 'student' };
-    localStorage.setItem(ISLOH_USER_KEY, JSON.stringify(user));
-  }
-  return user;
+/* --- Identity ------------------------------------------------------------
+   js/profile.js owns the isloh_user store (single source of truth) and seeds
+   it on first read. Wrapped + typeof-guarded like the cross-module deps in
+   the header above, so this file still renders if profile.js isn't on the
+   page. Certificates only need id + name. */
+function isloh_certCurrentUser() {
+  if (typeof isloh_getUserProfile === 'function') return isloh_getUserProfile();
+  return { id: 'std-001', name: 'Samar Mirzayev', role: 'student' };
 }
 
 /* --- Deterministic id / verification helpers (djb2-style, no crypto lib) */
@@ -167,7 +162,7 @@ function isloh_buildCertificateRecord(courseId, user, details) {
    seeded users+threads. Never reseeds once a (possibly empty) object has
    been saved. */
 function isloh_certificatesSeedDefaults() {
-  const user = isloh_seedUserFallback();
+  const user = isloh_certCurrentUser();
   const seeds = [
     { courseId: 'py-101', issuedAt: '2026-06-18T00:00:00.000Z', totalLessons: 48, completedLessons: 48, averageQuizScore: 92, studyMinutes: 2530 },
     { courseId: 'uiux-301', issuedAt: '2026-05-10T00:00:00.000Z', totalLessons: 32, completedLessons: 32, averageQuizScore: 88, studyMinutes: 1610 }
@@ -213,7 +208,7 @@ function isloh_certificateProgressStats(courseId) {
 
 /* --- Public API: issue / verify / share ---------------------------------- */
 function isloh_issueCertificate(courseId) {
-  const user = isloh_seedUserFallback();
+  const user = isloh_certCurrentUser();
   const all = isloh_getCertificates();
   const existing = isloh_findCertificateByCourseAndStudent(all, courseId, user.id);
   if (existing) return existing;
@@ -300,7 +295,7 @@ function isloh_copyToClipboard(text) {
 function isloh_computeCertificateBoard() {
   const board = { earned: [], inProgress: [], locked: [] };
   if (typeof ISLOH_MARKETPLACE_DATA === 'undefined') return board;
-  const user = isloh_seedUserFallback();
+  const user = isloh_certCurrentUser();
 
   ISLOH_MARKETPLACE_DATA.featured_courses.forEach((course) => {
     const certs = isloh_getCertificates();
@@ -577,7 +572,7 @@ function isloh_initCourseOrganizationSettings() {
 }
 
 function isloh_initCertificateEngine() {
-  isloh_seedUserFallback();
+  isloh_certCurrentUser();
   isloh_renderCertificatesPage();
   isloh_renderCertificatePreview();
   isloh_initCourseOrganizationSettings();

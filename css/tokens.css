@@ -17,6 +17,7 @@
   --violet-100: #EEEBFC;
   --teach-green: #1FAE5E;
   --teach-green-100: #E4F8ED;
+  --teach-green-400: #4ED88A;
 
   /* --- Neutrals --- */
   --bg-app: #F5F5FB;
@@ -31,6 +32,9 @@
   --success: #1FAE5E;
   --warning: #E7A63B;
   --danger: #E5484D;
+  /* Yumshoq fon variantlari (badge/stat-icon tint'lari uchun) */
+  --warning-100: #FEF3E2;
+  --danger-100: #FDEBEC;
 
   /* --- Typography --- */
   --font-display: 'Manrope', sans-serif;

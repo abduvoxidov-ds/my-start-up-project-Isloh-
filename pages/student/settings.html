@@ -20,13 +20,13 @@
       <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Sozlamalarni qidirish..." aria-label="Sozlamalarni qidirish"></div>
       <div class="topbar-actions">
         <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar">SM</div>
+        <div class="avatar" data-user-avatar></div>
       </div>
     </header>
 
     <main class="content">
-      <h1 style="font-size:24px;">Sozlamalar</h1>
-      <p style="color:var(--ink-500); margin-top:4px;">Hisob, maxfiylik va ilova sozlamalarini boshqaring.</p>
+      <h1 class="page-title">Sozlamalar</h1>
+      <p class="page-sub">Hisob, maxfiylik va ilova sozlamalarini boshqaring.</p>
 
       <div class="settings-layout">
         <!-- SETTINGS NAV -->
@@ -39,7 +39,7 @@
           <div class="settings-nav-item" data-settings-target="security" role="button" tabindex="0"><i class="bi bi-key"></i> Xavfsizlik</div>
           <div class="settings-nav-item" data-settings-target="accessibility" role="button" tabindex="0"><i class="bi bi-universal-access"></i> Qulaylik</div>
           <div class="settings-nav-label">Xavfli hudud</div>
-          <div class="settings-nav-item" data-settings-target="danger" role="button" tabindex="0" style="color:var(--danger);"><i class="bi bi-exclamation-octagon"></i> Hisobni o'chirish</div>
+          <div class="settings-nav-item danger" data-settings-target="danger" role="button" tabindex="0"><i class="bi bi-exclamation-octagon"></i> Hisobni o'chirish</div>
         </nav>
 
         <!-- SETTINGS PANELS -->
@@ -48,10 +48,13 @@
           <div class="card card-pad settings-section" data-settings-panel="account">
             <div class="settings-section-title">Hisob</div>
             <div class="settings-section-sub">Shaxsiy ma'lumotlaringiz va profil.</div>
-            <div class="field"><label>To'liq ism</label><input value="Samar Mirzayev"></div>
-            <div class="field"><label>Email</label><input value="samar@example.com" type="email"></div>
-            <div class="field"><label>Bio</label><input value="Backend dasturchi bo'lishga intilayotgan talaba"></div>
-            <div style="margin-top:8px;"><button class="btn btn-primary btn-sm">O'zgarishlarni saqlash</button></div>
+            <!-- Maydonlar js/profile.js orqali isloh_user'dan yuklanadi va o'sha yerga saqlanadi -->
+            <div class="field"><label for="acc-name">To'liq ism</label><input id="acc-name" data-user-field="name"></div>
+            <div class="field"><label for="acc-email">Email</label><input id="acc-email" type="email" data-user-field="email"></div>
+            <div class="field"><label for="acc-headline">Qisqa sarlavha</label><input id="acc-headline" data-user-field="headline"></div>
+            <div class="field"><label for="acc-location">Joylashuv</label><input id="acc-location" data-user-field="location"></div>
+            <div class="field"><label for="acc-bio">Bio</label><textarea id="acc-bio" data-user-field="bio"></textarea></div>
+            <div class="settings-form-actions"><button class="btn btn-primary btn-sm" data-user-save>O'zgarishlarni saqlash</button></div>
           </div>
 
           <!-- NOTIFICATIONS -->
@@ -104,11 +107,11 @@
           <div class="card card-pad settings-section" data-settings-panel="language" hidden>
             <div class="settings-section-title">Til va hudud</div>
             <div class="settings-section-sub">Interfeys tili va vaqt mintaqasi.</div>
-            <div class="field"><label>Interfeys tili</label>
-              <select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option>O'zbek</option><option>Ingliz</option><option>Rus</option></select>
+            <div class="field"><label for="lang-ui">Interfeys tili</label>
+              <select id="lang-ui"><option>O'zbek</option><option>Ingliz</option><option>Rus</option></select>
             </div>
-            <div class="field"><label>Vaqt mintaqasi</label>
-              <select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option>(GMT+5) Toshkent</option><option>(GMT+3) Moskva</option></select>
+            <div class="field"><label for="lang-tz">Vaqt mintaqasi</label>
+              <select id="lang-tz"><option>(GMT+5) Toshkent</option><option>(GMT+3) Moskva</option></select>
             </div>
           </div>
 
@@ -134,24 +137,24 @@
           <div class="card card-pad settings-section" data-settings-panel="security" hidden>
             <div class="settings-section-title">Xavfsizlik</div>
             <div class="settings-section-sub">Parol, ikki bosqichli tekshiruv va faol seanslar.</div>
-            <div class="field"><label>Joriy parol</label><input type="password" value="********"></div>
-            <div class="field"><label>Yangi parol</label><input type="password" placeholder="Yangi parolni kiriting"></div>
-            <div style="margin:6px 0 18px;"><button class="btn btn-primary btn-sm">Parolni yangilash</button></div>
+            <div class="field"><label for="sec-current-pass">Joriy parol</label><input id="sec-current-pass" type="password" value="********"></div>
+            <div class="field"><label for="sec-new-pass">Yangi parol</label><input id="sec-new-pass" type="password" placeholder="Yangi parolni kiriting"></div>
+            <div class="settings-form-actions"><button class="btn btn-primary btn-sm">Parolni yangilash</button></div>
 
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Ikki bosqichli tekshiruv (2FA)</div><div class="settings-item-desc">Qo'shimcha xavfsizlik qatlami</div></div>
               <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
             </div>
 
-            <h4 style="font-size:14px; margin-top:20px;">Faol seanslar</h4>
+            <h4 class="settings-subtitle">Faol seanslar</h4>
             <div class="device-row">
               <div class="device-icon"><i class="bi bi-laptop"></i></div>
-              <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">MacBook Pro · Chrome</div><div style="font-size:12px; color:var(--ink-500);">Toshkent · Hozir faol</div></div>
+              <div class="device-info"><div class="device-name">MacBook Pro · Chrome</div><div class="device-meta">Toshkent · Hozir faol</div></div>
               <span class="badge badge-green">Joriy</span>
             </div>
             <div class="device-row">
               <div class="device-icon"><i class="bi bi-phone"></i></div>
-              <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">iPhone · Isloh App</div><div style="font-size:12px; color:var(--ink-500);">Toshkent · 2 soat oldin</div></div>
+              <div class="device-info"><div class="device-name">iPhone · Isloh App</div><div class="device-meta">Toshkent · 2 soat oldin</div></div>
               <button class="btn btn-outline btn-sm">Chiqarish</button>
             </div>
           </div>
@@ -175,7 +178,7 @@
           </div>
 
           <!-- DANGER ZONE -->
-          <div class="card card-pad settings-section danger-zone" data-settings-panel="danger" hidden style="border:1.5px solid var(--danger);">
+          <div class="card card-pad settings-section danger-zone" data-settings-panel="danger" hidden>
             <div class="settings-section-title">Xavfli hudud</div>
             <div class="settings-section-sub">Bu amallar qaytarilmaydi. Ehtiyot bo'ling.</div>
             <div class="settings-item">
@@ -183,8 +186,8 @@
               <button class="btn btn-outline btn-sm settings-item-control">To'xtatish</button>
             </div>
             <div class="settings-item">
-              <div class="settings-item-info"><div class="settings-item-label" style="color:var(--danger);">Hisobni butunlay o'chirish</div><div class="settings-item-desc">Barcha ma'lumotlar o'chiriladi</div></div>
-              <button class="btn btn-sm settings-item-control" style="background:var(--danger); color:#fff;">O'chirish</button>
+              <div class="settings-item-info"><div class="settings-item-label danger">Hisobni butunlay o'chirish</div><div class="settings-item-desc">Barcha ma'lumotlar o'chiriladi</div></div>
+              <button class="btn btn-danger btn-sm settings-item-control">O'chirish</button>
             </div>
           </div>
         </div>
@@ -196,5 +199,9 @@
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/settings.js"></script>
+<script src="../../js/toast.js"></script>
+<!-- settings.js'dan KEYIN yuklanadi: hash orqali bo'lim ochish uchun avval
+     settings.js o'zining boshlang'ich panelini faollashtirib olishi kerak -->
+<script src="../../js/profile.js"></script>
 </body>
 </html>

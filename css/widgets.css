@@ -191,25 +191,98 @@
    .progress-track, .stat-card) reused, not redefined.
    ========================================================================== */
 
-/* --- Profile header / cover --- */
+/* --- Profil sahifasi karkasi ---------------------------------------------
+   Avval pages/student/profile.html va pages/instructor/profile.html ichidagi
+   bir xil inline <style> bloklarida takrorlanardi — endi bitta ta'rif. */
+.profile-grid { display:grid; grid-template-columns:1fr 320px; gap:18px; align-items:start; margin-top:18px; }
+.profile-stat-row { margin-top:18px; }
+
+/* --- Profil sarlavha kartochkasi ------------------------------------------
+   Tuzilishi:
+     .profile-header-card
+       .profile-cover      -> faqat gradient banner, ichida matn YO'Q
+       .profile-body       -> oq maydon: avatar + ism + tugmalar + bio
+         .profile-avatar-wrap  (banner ustiga manfiy margin bilan chiqadi)
+         .profile-main         (matn ustuni | amal tugmalari)
+         .profile-bio
+
+   Ilgari ism va tugmalar butun qator bilan birga banner ichiga tortilardi
+   (.profile-head margin-top:-46px), natijada quyuq gradient ustida quyuq
+   matn o'qilmay qolardi. Endi bannerga faqat avatar chiqadi, qolgan hamma
+   narsa oq maydonda. */
+.profile-header-card { overflow:hidden; }
 .profile-cover {
-  height:150px; border-radius:var(--r-lg) var(--r-lg) 0 0;
+  height:140px;
   background:linear-gradient(120deg, var(--indigo-900), var(--violet-600) 70%, var(--violet-500));
-  position:relative;
 }
-.profile-header-card { border-top-left-radius:0; border-top-right-radius:0; }
-.profile-head { display:flex; align-items:flex-end; gap:18px; margin-top:-46px; padding:0 24px; position:relative; }
+/* Instruktor varianti — yashil aksent */
+.profile-cover.cover-teach { background:linear-gradient(120deg, var(--indigo-900), var(--teach-green) 70%, var(--teach-green-400)); }
+
+.profile-body { padding:0 24px 22px; }
+
+/* Avatar bannerning pastki qirrasidan 48px chiqib turadi; 4px oq hoshiya
+   kartochka foni bilan bir xil (--bg-card) — shu bilan gradientdan toza
+   ajralib turadi. */
+.profile-avatar-wrap { position:relative; width:96px; margin-top:-48px; }
 .profile-avatar-lg {
-  width:96px; height:96px; border-radius:24px; flex-shrink:0;
+  width:96px; height:96px; border-radius:24px;
   background:linear-gradient(135deg, var(--violet-500), var(--violet-600));
   display:flex; align-items:center; justify-content:center; color:#fff;
   font-family:var(--font-display); font-weight:800; font-size:34px;
   border:4px solid var(--bg-card); box-shadow:var(--shadow-md);
+  overflow:hidden;
 }
-.profile-headline { flex:1; padding-bottom:6px; }
-.profile-name { font-family:var(--font-display); font-weight:800; font-size:20px; }
-.profile-role { font-size:13px; color:var(--ink-500); margin-top:2px; }
-.profile-actions { display:flex; gap:8px; padding-bottom:8px; }
+.profile-avatar-lg.avatar-teach { background:linear-gradient(135deg, var(--teach-green-400), var(--teach-green)); }
+
+/* Matn ustuni chapda, amal tugmalari o'ngda. `min-width:0` muhim — usiz
+   uzun sarlavha tugmalar yoniga siqilib, har bir so'z alohida qatorga
+   tushib ketardi. */
+.profile-main {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:16px; flex-wrap:wrap; margin-top:14px;
+}
+.profile-headline { flex:1 1 260px; min-width:0; }
+.profile-name { font-family:var(--font-display); font-weight:800; font-size:22px; line-height:1.25; }
+.profile-role { font-size:13.5px; color:var(--ink-500); margin-top:3px; }
+.profile-location { display:flex; align-items:center; gap:5px; font-size:12.5px; color:var(--ink-500); margin-top:7px; }
+.profile-location .bi { font-size:13px; }
+.profile-actions { display:flex; gap:8px; flex-shrink:0; }
+/* Sarlavha kartochkasidagi bio matni */
+.profile-bio { font-size:13.5px; color:var(--ink-700); line-height:1.6; max-width:640px; margin:16px 0 0; }
+
+/* --- Avatar yuklash (js/profile.js) --------------------------------------
+   Fayl tanlash inputi ko'zdan yashiriladi, lekin klaviatura uchun fokusda
+   qoladi; bosish esa ustidagi kamera tugmasi (<label>) orqali bo'ladi —
+   shu bilan inline onclick kerak emas (CLAUDE.md §2). */
+.avatar-upload-input { position:absolute; left:0; bottom:0; width:1px; height:1px; opacity:0; pointer-events:none; }
+.avatar-upload-btn {
+  position:absolute; right:-2px; bottom:-2px;
+  width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--bg-card); color:var(--violet-600);
+  border:var(--border-w-thick) solid var(--border-soft); box-shadow:var(--shadow-sm);
+  font-size:14px; cursor:pointer;
+  transition:background var(--t-base) var(--ease-standard), color var(--t-base) var(--ease-standard);
+}
+.avatar-upload-btn:hover { background:var(--violet-100); }
+.avatar-upload-input:focus-visible + .avatar-upload-btn { outline:2px solid var(--violet-500); outline-offset:2px; }
+
+/* --- Teg / chip qatorlari (ko'nikmalar, yo'nalishlar) --- */
+.skill-row { display:flex; flex-wrap:wrap; gap:10px; }
+.chip-row  { display:flex; flex-wrap:wrap; gap:8px; }
+
+/* --- Yorliq + qiymat ro'yxati ("Shaxsiy ma'lumot" kartochkasi) --- */
+.info-list  { display:flex; flex-direction:column; gap:14px; font-size:13.5px; }
+.info-label { color:var(--ink-500); font-size:12px; }
+.info-value { font-weight:600; }
+
+/* --- Kurs muqovasi gradientlari ------------------------------------------
+   Statik markup uchun (profil sahifalaridagi "So'nggi kurslar" qatorlari).
+   JS chizadigan kartochkalarda rang katalogdan keladi — js/marketplace.js
+   `cover` maydoni, shuning uchun u yerda inline background qoladi. */
+.cover-python { background:linear-gradient(135deg,#306998,#FFD43B); color:#fff; }
+.cover-design { background:linear-gradient(135deg, var(--violet-500), var(--violet-600)); color:#fff; }
+.cover-db     { background:linear-gradient(135deg,#0F766E,#14B8A6); color:#fff; }
 
 /* --- Skill tag --- */
 .skill-tag { display:inline-flex; align-items:center; gap:6px; padding:6px 13px; border-radius:var(--r-pill); font-size:12.5px; font-weight:600; background:var(--violet-100); color:var(--violet-600); }
@@ -236,6 +309,10 @@
 .goal-text { font-size:13.5px; font-weight:500; flex:1; }
 .goal-item.done .goal-text { color:var(--ink-500); text-decoration:line-through; }
 
+/* --- Sahifa sarlavhasi (oddiy, kartochkasiz sahifalar uchun) --- */
+.page-title { font-size:24px; }
+.page-sub   { color:var(--ink-500); margin-top:4px; }
+
 /* --- Settings layout --- */
 .settings-layout { display:grid; grid-template-columns:230px 1fr; gap:20px; align-items:start; margin-top:20px; }
 .settings-nav { display:flex; flex-direction:column; gap:2px; position:sticky; top:88px; }
@@ -247,23 +324,33 @@
 .settings-nav-item:hover { background:var(--bg-app); }
 .settings-nav-item.active { background:var(--violet-100); color:var(--violet-600); font-weight:600; }
 .settings-nav-item .bi { font-size:16px; width:18px; text-align:center; }
+.settings-nav-item.danger { color:var(--danger); }
+.settings-nav-item.danger:hover { background:var(--danger-100); }
 .settings-nav-label { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-500); font-weight:700; padding:14px 12px 6px; }
 
 .settings-section-title { font-family:var(--font-display); font-weight:800; font-size:18px; margin-bottom:4px; }
 .settings-section-sub { font-size:13px; color:var(--ink-500); margin-bottom:18px; }
+/* Panel ichidagi kichik sarlavha ("Faol seanslar" kabi) */
+.settings-subtitle { font-size:14px; margin:20px 0 4px; }
+/* Forma tugmalari qatori (Saqlash / Parolni yangilash) */
+.settings-form-actions { margin-top:8px; }
 .settings-item { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 0; border-bottom:1px solid var(--border-soft); }
 .settings-item:last-child { border-bottom:none; }
 .settings-item-info { min-width:0; }
 .settings-item-label { font-size:14px; font-weight:600; }
+.settings-item-label.danger { color:var(--danger); }
 .settings-item-desc { font-size:12.5px; color:var(--ink-500); margin-top:2px; }
 .settings-item-control { flex-shrink:0; }
-.danger-zone { border-color:var(--danger); }
+.danger-zone { border:var(--border-w-thick) solid var(--danger); }
 .danger-zone .settings-section-title { color:var(--danger); }
 
 /* --- Device / session row --- */
 .device-row { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border-soft); }
 .device-row:last-child { border-bottom:none; }
 .device-icon { width:38px; height:38px; border-radius:var(--r-md); background:var(--bg-app); color:var(--ink-700); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.device-info { flex:1; min-width:0; }
+.device-name { font-size:13.5px; font-weight:600; }
+.device-meta { font-size:12px; color:var(--ink-500); }
 
 /* --- Certificate card --- */
 .cert-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
@@ -328,12 +415,15 @@
   .cert-grid { grid-template-columns:repeat(2,1fr); }
   .bm-layout { grid-template-columns:1fr; }
   .course-grid { grid-template-columns:repeat(2,1fr); }
+  .profile-grid { grid-template-columns:1fr; }
 }
 @media (max-width:700px) {
   .cert-grid { grid-template-columns:1fr; }
   .course-grid { grid-template-columns:1fr; }
-  .profile-head { flex-direction:column; align-items:flex-start; }
-  .profile-actions { padding-bottom:0; }
+  /* Tor ekranda tugmalar matn ostiga to'liq kenglikda tushadi */
+  .profile-body { padding:0 18px 18px; }
+  .profile-actions { width:100%; }
+  .profile-actions .btn { flex:1; }
 }
 
 /* ==========================================================================
