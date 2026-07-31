@@ -300,6 +300,8 @@
 /* pages/student/bookmarks.html ("Saqlanganlar") sahifa karkasi — avval sahifa
    ichidagi inline <style> blokida edi */
 .bm-layout { display:grid; grid-template-columns:1fr 280px; gap:18px; align-items:start; margin-top:18px; }
+/* Hech narsa saqlanmagan bo'lsa o'ng ustun yashiriladi — bo'sh ustun qolmasin */
+.bm-layout-solo { grid-template-columns:1fr; }
 .bm-list { display:flex; flex-direction:column; gap:12px; }
 
 /* --- Talaba kurs katakchalari (pages/student/courses.html — "Mening

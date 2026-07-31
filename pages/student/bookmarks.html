@@ -10,20 +10,12 @@
 <body>
 <div class="app-shell">
   <aside class="sidebar" data-role="student" data-active="bookmarks">
-    <div class="brand"><div class="brand-mark" aria-hidden="true"></div> Isloh</div>
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
     <nav class="nav-group" id="sidebar-nav"></nav>
     <div class="sidebar-footer" id="sidebar-footer-nav"></div>
   </aside>
 
   <div class="main-col">
-    <header class="topbar">
-      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
-      <div class="topbar-actions">
-        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar">SM</div>
-      </div>
-    </header>
-
     <main class="content" data-filterable>
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
         <div>
@@ -32,10 +24,6 @@
         </div>
         <div style="display:flex; gap:10px; align-items:center;">
           <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Saqlangan qidirish..." aria-label="Saqlangan qidirish"></div>
-          <select id="bookmark-sort" class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Saralash">
-            <option value="recent">Eng yangi</option>
-            <option value="title">Nomi bo'yicha</option>
-          </select>
         </div>
       </div>
 
@@ -50,123 +38,22 @@
       </div>
 
       <div class="bm-layout">
-        <!-- LIST -->
+        <!-- LIST — barcha kartochkalar js/bookmarks.js orqali
+             isloh_bookmarks do'konidan chiziladi (statik demo yo'q) -->
         <div class="bm-list" data-bookmark-list>
-          <div class="card bookmark-card" data-filter-item data-bookmark-item data-type="lesson" data-title="Django ORM chuqur tahlil" data-date="2026-06-15" data-filter-text="Django ORM chuqur tahlil">
-            <div class="bookmark-thumb" style="background:linear-gradient(135deg,#0F766E,#14B8A6);"><i class="bi bi-play-circle-fill"></i></div>
-            <div class="bookmark-body">
-              <div class="bookmark-title filter-title">Django ORM chuqur tahlil</div>
-              <div class="bookmark-sub">Dars · 24 daqiqa · Python Backend</div>
-              <div class="bookmark-tags"><span class="badge badge-neutral">Dars</span></div>
-            </div>
-            <div class="bookmark-actions">
-              <a href="course-detail.html" class="btn btn-outline btn-sm">Ochish</a>
-              <button class="bookmark-remove" data-bookmark-remove aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
-            </div>
-          </div>
-
-          <div class="card bookmark-card" data-filter-item data-bookmark-item data-type="note" data-title="REST API dizayn qoidalari" data-date="2026-06-10" data-filter-text="REST API dizayn qoidalari">
-            <div class="bookmark-thumb" style="background:linear-gradient(135deg,#E7A63B,#F59E0B);"><i class="bi bi-journal-text"></i></div>
-            <div class="bookmark-body">
-              <div class="bookmark-title filter-title">REST API dizayn qoidalari</div>
-              <div class="bookmark-sub">Eslatma · Shaxsiy · 2 sahifa</div>
-              <div class="bookmark-tags"><span class="badge badge-neutral">Eslatma</span></div>
-            </div>
-            <div class="bookmark-actions">
-              <button class="btn btn-outline btn-sm">Ochish</button>
-              <button class="bookmark-remove" data-bookmark-remove aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
-            </div>
-          </div>
-
-          <div class="card bookmark-card" data-filter-item data-bookmark-item data-type="article" data-title="12 Factor App metodologiyasi" data-date="2026-05-28" data-filter-text="12 Factor App metodologiyasi">
-            <div class="bookmark-thumb" style="background:linear-gradient(135deg,#6C5DD3,#8B5CF6);"><i class="bi bi-file-earmark-richtext"></i></div>
-            <div class="bookmark-body">
-              <div class="bookmark-title filter-title">12 Factor App metodologiyasi</div>
-              <div class="bookmark-sub">Maqola · 8 daqiqa o'qish</div>
-              <div class="bookmark-tags"><span class="badge badge-neutral">Maqola</span><span class="badge badge-neutral">DevOps</span></div>
-            </div>
-            <div class="bookmark-actions">
-              <button class="btn btn-outline btn-sm">Ochish</button>
-              <button class="bookmark-remove" data-bookmark-remove aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
-            </div>
-          </div>
-
-          <div class="card bookmark-card" data-filter-item data-bookmark-item data-type="code" data-title="Dockerfile multi-stage build" data-date="2026-05-20" data-filter-text="Dockerfile multi-stage build">
-            <div class="bookmark-thumb" style="background:linear-gradient(135deg,#1F2937,#4B5563);"><i class="bi bi-code-slash"></i></div>
-            <div class="bookmark-body">
-              <div class="bookmark-title filter-title">Dockerfile multi-stage build</div>
-              <div class="bookmark-sub">Kod · 18 qator · Docker for Beginners</div>
-              <div class="bookmark-tags"><span class="badge badge-neutral">Kod</span></div>
-            </div>
-            <div class="bookmark-actions">
-              <a href="course-player.html" class="btn btn-outline btn-sm">Ochish</a>
-              <button class="bookmark-remove" data-bookmark-remove aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
-            </div>
-          </div>
-
-          <div class="card bookmark-card" data-filter-item data-bookmark-item data-type="lesson" data-title="Git branching strategiyalari" data-date="2026-05-12" data-filter-text="Git branching strategiyalari">
-            <div class="bookmark-thumb" style="background:linear-gradient(135deg,#F97316,#EA580C);"><i class="bi bi-git"></i></div>
-            <div class="bookmark-body">
-              <div class="bookmark-title filter-title">Git branching strategiyalari</div>
-              <div class="bookmark-sub">Dars · 18 daqiqa · DevOps</div>
-              <div class="bookmark-tags"><span class="badge badge-neutral">Dars</span></div>
-            </div>
-            <div class="bookmark-actions">
-              <button class="btn btn-outline btn-sm">Ochish</button>
-              <button class="bookmark-remove" data-bookmark-remove aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
-            </div>
-          </div>
-
-          <div class="card bookmark-card" data-filter-item data-bookmark-item data-type="note" data-title="SQL JOIN turlari" data-date="2026-04-30" data-filter-text="SQL JOIN turlari">
-            <div class="bookmark-thumb" style="background:linear-gradient(135deg,#0369A1,#0EA5E9);"><i class="bi bi-journal-text"></i></div>
-            <div class="bookmark-body">
-              <div class="bookmark-title filter-title">SQL JOIN turlari</div>
-              <div class="bookmark-sub">Eslatma · Shaxsiy · 1 sahifa</div>
-              <div class="bookmark-tags"><span class="badge badge-neutral">Eslatma</span></div>
-            </div>
-            <div class="bookmark-actions">
-              <button class="btn btn-outline btn-sm">Ochish</button>
-              <button class="bookmark-remove" data-bookmark-remove aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
-            </div>
-          </div>
-
-          <!-- EMPTY STATE -->
+          <!-- EMPTY STATE — matni do'kon bo'shligiga qarab JS'da almashadi -->
           <div class="empty-state" data-filter-empty style="display:none;">
             <div class="empty-icon"><i class="bi bi-bookmark-x"></i></div>
-            <div class="empty-title">Hech narsa topilmadi</div>
-            <div class="empty-sub">Bu filtr yoki qidiruv bo'yicha saqlangan element yo'q.</div>
+            <div class="empty-title" data-bookmark-empty-title>Hech narsa topilmadi</div>
+            <div class="empty-sub" data-bookmark-empty-sub>Bu filtr yoki qidiruv bo'yicha saqlangan element yo'q.</div>
           </div>
         </div>
 
-        <!-- COLLECTIONS SIDEBAR -->
+        <!-- SIDEBAR — so'nggi saqlanganlar, shu do'kondan -->
         <div class="wk-col">
-          <div class="card card-pad">
-            <div class="section-header"><h3>To'plamlar</h3></div>
-            <div class="collection-card" style="padding:10px 0;">
-              <div class="collection-icon" style="background:linear-gradient(135deg,#6C5DD3,#8B5CF6);"><i class="bi bi-collection-fill"></i></div>
-              <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">Backend yo'l xaritasi</div><div style="font-size:12px; color:var(--ink-500);">4 ta element</div></div>
-            </div>
-            <div class="collection-card" style="padding:10px 0;">
-              <div class="collection-icon" style="background:linear-gradient(135deg,#0F766E,#14B8A6);"><i class="bi bi-bookmark-heart-fill"></i></div>
-              <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">Sevimlilar</div><div style="font-size:12px; color:var(--ink-500);">2 ta element</div></div>
-            </div>
-            <div class="collection-card" style="padding:10px 0;">
-              <div class="collection-icon" style="background:linear-gradient(135deg,#E7A63B,#F59E0B);"><i class="bi bi-lightbulb-fill"></i></div>
-              <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">Keyinroq o'qish</div><div style="font-size:12px; color:var(--ink-500);">1 ta element</div></div>
-            </div>
-            <button class="btn btn-outline btn-sm btn-block" style="margin-top:12px;"><i class="bi bi-plus-lg"></i> Yangi to'plam</button>
-          </div>
-
-          <div class="card card-pad">
+          <div class="card card-pad" data-recent-card>
             <div class="section-header"><h3>So'nggi saqlangan</h3></div>
-            <div class="upcoming-row">
-              <div class="upcoming-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-play-circle-fill"></i></div>
-              <div class="upcoming-body"><div class="upcoming-title">Django ORM chuqur tahlil</div><div class="upcoming-sub">2 kun oldin</div></div>
-            </div>
-            <div class="upcoming-row">
-              <div class="upcoming-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-code-slash"></i></div>
-              <div class="upcoming-body"><div class="upcoming-title">Dockerfile multi-stage</div><div class="upcoming-sub">5 kun oldin</div></div>
-            </div>
+            <div data-recent-bookmarks></div>
           </div>
         </div>
       </div>

@@ -137,9 +137,11 @@ function isloh_addPurchasedCourse(course) {
   localStorage.setItem(ISLOH_PURCHASED_KEY, JSON.stringify(list));
 }
 
-// --- Saqlanganlar ("Saqlangan" sahifasi, pages/student/bookmarks.html) ---
+// --- Saqlangan kurslar (Marketplace kartochkasidagi xatcho'p tugmasi) ---
 // localStorage'da faqat { id, date } saqlanadi; qolgan hamma narsa
-// ISLOH_MARKETPLACE_DATA'dan olinadi.
+// ISLOH_MARKETPLACE_DATA'dan olinadi. Eslatma: hozircha bu do'kon uchun
+// alohida ko'rish sahifasi yo'q — "Mening kurslarim"da faqat sotib
+// olingan kurslar chiqadi.
 function isloh_getSavedCourses() {
   try { return JSON.parse(localStorage.getItem(ISLOH_SAVED_KEY)) || []; } catch (e) { return []; }
 }
@@ -198,8 +200,6 @@ function isloh_initSaveToggles() {
     document.querySelectorAll('[data-save-toggle]').forEach((el) => {
       if (isloh_saveToggleCourseId(el) === id) isloh_syncSaveToggle(el, saved);
     });
-    // "Mening kurslarim" sahifasida ro'yxat darhol yangilansin
-    if (typeof isloh_renderSavedCourses === 'function') isloh_renderSavedCourses();
     if (typeof isloh_showToast === 'function') {
       isloh_showToast(saved ? "Saqlanganlarga qo'shildi" : 'Saqlanganlardan olib tashlandi', 'success');
     }

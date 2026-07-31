@@ -2,16 +2,17 @@
    ISLOH — Bookmarks module  ("Saqlanganlar" — pages/student/bookmarks.html)
 
    SCOPE: faqat DARS DARAJASIDAGI materiallar — video darslar, maqolalar,
-   kod parchalari va eslatmalar. Kurs darajasidagi ma'lumot (sotib olingan
-   yoki saqlangan kurslar) bu yerga UMUMAN kirmaydi — u "Mening kurslarim"
-   sahifasiga ko'chirilgan (pages/student/courses.html + js/my-courses.js).
+   kod parchalari va eslatmalar. Kurs darajasidagi ma'lumot bu yerga UMUMAN
+   kirmaydi — sotib olingan kurslar "Mening kurslarim" sahifasida
+   (pages/student/courses.html + js/my-courses.js).
 
    Ikki vazifasi bor:
      1) ISLOH_BOOKMARKS_KEY do'koni — istalgan sahifa (course-player.html,
         lesson-player.html) material qo'shishi/olib tashlashi uchun.
         Shu sababli bu fayl faqat helper'lar uchun ham yuklanishi mumkin:
         pastdagi har bir render funksiyasi o'z elementini tekshiradi.
-     2) bookmarks.html ro'yxatini render qilish, o'chirish va saralash.
+     2) bookmarks.html ro'yxatini to'liq do'kondan chizish — sahifada statik
+        demo kartochka yo'q, hamma narsa localStorage'dan keladi.
    Filtrlash + qidiruv umumiy js/filterable.js dvigatelidan keladi.
 
    Material obyekti:
@@ -20,17 +21,16 @@
 
    Markup contract (filterable'nikiga qo'shimcha):
      [data-bookmark-list]                     — ro'yxat konteyneri
-     [data-bookmark-item]                     — har bir element
-       [data-bookmark-remove]                 — o'chirish tugmasi
-       data-bookmark-id="<id>"                — do'kondan kelgan material
-       data-type, data-title, data-date       — filtr va saralash uchun
-     #bookmark-sort (<select>), #bookmark-total
+       [data-filter-empty]                    — bo'sh holat bloki
+         [data-bookmark-empty-title] / [data-bookmark-empty-sub]
+     [data-recent-card] / [data-recent-bookmarks]  — "So'nggi saqlangan"
+     #bookmark-total                          — jami hisoblagich
    ========================================================================== */
 
 const ISLOH_BOOKMARKS_KEY = 'isloh_bookmarks';
 
-// Har bir render'da qayta yaratiladigan (dinamik) elementlar belgisi
-const ISLOH_BM_DYNAMIC_ATTR = 'data-bookmark-dynamic';
+// "So'nggi saqlangan" panelida nechta element ko'rsatiladi
+const ISLOH_BM_RECENT_LIMIT = 3;
 
 // Material turlari uchun standart ikonka va rang — bitta joyda
 const ISLOH_MATERIAL_STYLE = {
@@ -82,7 +82,37 @@ function isloh_toggleBookmark(material) {
 }
 
 /* --------------------------------------------------------------------------
-   2) bookmarks.html ro'yxati
+   2) Umumiy yordamchilar
+   -------------------------------------------------------------------------- */
+// Do'kondagi matn HTML'ga qo'yilishidan oldin xavfsizlantiriladi
+function isloh_bmEscape(text) {
+  const div = document.createElement('div');
+  div.textContent = text == null ? '' : String(text);
+  return div.innerHTML;
+}
+
+// Eng yangisi birinchi bo'lgan nusxa
+function isloh_bookmarksNewestFirst() {
+  return isloh_getBookmarks()
+    .slice()
+    .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+}
+
+// "Bugun" / "Kecha" / "5 kun oldin" ko'rinishidagi qisqa sana
+function isloh_bmRelativeDate(dateStr) {
+  if (!dateStr) return '';
+  const then = new Date(`${dateStr}T00:00:00`);
+  if (isNaN(then)) return dateStr;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const days = Math.round((today - then) / 86400000);
+  if (days <= 0) return 'Bugun';
+  if (days === 1) return 'Kecha';
+  return `${days} kun oldin`;
+}
+
+/* --------------------------------------------------------------------------
+   3) bookmarks.html ro'yxati
    -------------------------------------------------------------------------- */
 function isloh_bookmarkMaterialCard(material) {
   const style = ISLOH_MATERIAL_STYLE[material.type] || ISLOH_MATERIAL_STYLE.lesson;
@@ -91,7 +121,6 @@ function isloh_bookmarkMaterialCard(material) {
   el.className = 'card bookmark-card';
   el.setAttribute('data-filter-item', '');
   el.setAttribute('data-bookmark-item', '');
-  el.setAttribute(ISLOH_BM_DYNAMIC_ATTR, '');
   el.dataset.bookmarkId = material.id;
   el.dataset.type = material.type;
   el.dataset.title = material.title;
@@ -99,14 +128,14 @@ function isloh_bookmarkMaterialCard(material) {
   el.dataset.filterText = material.title;
 
   const open = material.href
-    ? `<a href="${material.href}" class="btn btn-outline btn-sm">Ochish</a>`
+    ? `<a href="${isloh_bmEscape(material.href)}" class="btn btn-outline btn-sm">Ochish</a>`
     : '<button class="btn btn-outline btn-sm">Ochish</button>';
 
   el.innerHTML = `
-    <div class="bookmark-thumb" style="background:${material.cover};"><i class="${material.icon}"></i></div>
+    <div class="bookmark-thumb" style="background:${material.cover || style.cover};"><i class="${material.icon || style.icon}"></i></div>
     <div class="bookmark-body">
-      <div class="bookmark-title filter-title">${material.title}</div>
-      <div class="bookmark-sub">${material.sub}</div>
+      <div class="bookmark-title filter-title">${isloh_bmEscape(material.title)}</div>
+      <div class="bookmark-sub">${isloh_bmEscape(material.sub)}</div>
       <div class="bookmark-tags"><span class="badge badge-neutral">${style.label}</span></div>
     </div>
     <div class="bookmark-actions">
@@ -116,51 +145,75 @@ function isloh_bookmarkMaterialCard(material) {
   return el;
 }
 
-// Do'kondagi materiallarni qaytadan chizadi (statik demo elementlarga tegmaydi)
-function isloh_renderDynamicBookmarks() {
+// Ro'yxatni do'kondan to'liq qayta chizadi (eng yangisi birinchi)
+function isloh_renderBookmarkList() {
   const list = document.querySelector('[data-bookmark-list]');
   if (!list) return;
 
-  list.querySelectorAll(`[${ISLOH_BM_DYNAMIC_ATTR}]`).forEach((el) => el.remove());
+  list.querySelectorAll('[data-bookmark-item]').forEach((el) => el.remove());
 
-  const cards = isloh_getBookmarks()
-    .slice()
-    .sort((a, b) => (b.date || '').localeCompare(a.date || '')) // eng yangisi birinchi
-    .map(isloh_bookmarkMaterialCard);
-
-  if (cards.length) list.prepend(...cards);
+  const empty = list.querySelector('[data-filter-empty]');
+  isloh_bookmarksNewestFirst().forEach((material) => {
+    const card = isloh_bookmarkMaterialCard(material);
+    // Bo'sh holat bloki har doim ro'yxat oxirida qolishi kerak
+    if (empty) list.insertBefore(card, empty); else list.appendChild(card);
+  });
 }
 
+// O'ng ustundagi "So'nggi saqlangan" paneli — shu do'kondan
+function isloh_renderRecentBookmarks() {
+  const box = document.querySelector('[data-recent-bookmarks]');
+  if (!box) return;
+
+  const items = isloh_bookmarksNewestFirst().slice(0, ISLOH_BM_RECENT_LIMIT);
+  box.innerHTML = items.map((m) => {
+    const style = ISLOH_MATERIAL_STYLE[m.type] || ISLOH_MATERIAL_STYLE.lesson;
+    return `
+      <div class="upcoming-row">
+        <div class="upcoming-icon" style="background:${m.cover || style.cover}; color:#fff;"><i class="${m.icon || style.icon}"></i></div>
+        <div class="upcoming-body">
+          <div class="upcoming-title">${isloh_bmEscape(m.title)}</div>
+          <div class="upcoming-sub">${isloh_bmRelativeDate(m.date)}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Bitta ham saqlangan material bo'lmasa — panel yashiriladi va
+  // ro'yxat butun kenglikni egallaydi (.bm-layout-solo)
+  const card = document.querySelector('[data-recent-card]');
+  if (card) card.hidden = items.length === 0;
+  document.querySelector('.bm-layout')?.classList.toggle('bm-layout-solo', items.length === 0);
+}
+
+// Hisoblagich + bo'sh holat matni + filtrni qayta qo'llash
 function isloh_recountBookmarks() {
-  const n = document.querySelectorAll('[data-bookmark-item]').length;
-  const el = document.getElementById('bookmark-total');
-  if (el) el.textContent = n;
+  const total = isloh_getBookmarks().length;
+
+  const totalEl = document.getElementById('bookmark-total');
+  if (totalEl) totalEl.textContent = total;
+
+  // Do'kon bo'sh bo'lsa boshqa xabar — "filtr bo'yicha topilmadi" emas
+  const title = document.querySelector('[data-bookmark-empty-title]');
+  const sub = document.querySelector('[data-bookmark-empty-sub]');
+  if (title && sub) {
+    title.textContent = total === 0 ? 'Hali hech narsa saqlanmagan' : 'Hech narsa topilmadi';
+    sub.textContent = total === 0
+      ? "Kurs darsini ochib, yuqoridagi xatcho'p tugmasini bosing — material shu yerda paydo bo'ladi."
+      : "Bu filtr yoki qidiruv bo'yicha saqlangan element yo'q.";
+  }
+
   // Filtrni qayta qo'llaymiz — bo'sh holat (.empty-state) shu yerda ko'rinadi
   const scope = document.querySelector('[data-filterable]');
   if (scope && typeof isloh_applyFilterable === 'function') isloh_applyFilterable(scope);
 }
 
-// Boshqa modul (masalan course-player) material qo'shganda chaqiriladi
+// Sahifadagi hamma narsani do'kon bilan sinxronlaydi.
+// Boshqa modul (masalan course-player) material qo'shganda ham chaqiriladi.
 function isloh_refreshBookmarks() {
   if (!document.querySelector('[data-bookmark-list]')) return;
-  isloh_renderDynamicBookmarks();
-  isloh_sortBookmarks(document.getElementById('bookmark-sort')?.value || 'recent');
+  isloh_renderBookmarkList();
+  isloh_renderRecentBookmarks();
   isloh_recountBookmarks();
-}
-
-function isloh_sortBookmarks(mode) {
-  document.querySelectorAll('[data-bookmark-list]').forEach((list) => {
-    const items = [...list.querySelectorAll('[data-bookmark-item]')];
-    items.sort((a, b) => {
-      if (mode === 'title') return (a.dataset.title || '').localeCompare(b.dataset.title || '');
-      // default: eng yangisi birinchi
-      return (b.dataset.date || '').localeCompare(a.dataset.date || '');
-    });
-    items.forEach((i) => list.appendChild(i));
-    // Bo'sh holat bloki har doim ro'yxat oxirida qolishi kerak
-    const empty = list.querySelector('[data-filter-empty]');
-    if (empty) list.appendChild(empty);
-  });
 }
 
 // O'chirish — delegatsiya orqali, shuning uchun dinamik kartochkalar ham ishlaydi
@@ -175,10 +228,9 @@ function isloh_initBookmarkRemoval() {
     const item = btn.closest('[data-bookmark-item]');
     if (!item) return;
 
-    // Do'kondan kelgan material bo'lsa — localStorage'dan ham o'chiramiz
-    if (item.dataset.bookmarkId) isloh_removeBookmark(item.dataset.bookmarkId);
-
+    isloh_removeBookmark(item.dataset.bookmarkId);
     item.remove();
+    isloh_renderRecentBookmarks();
     isloh_recountBookmarks();
     if (typeof isloh_showToast === 'function') {
       isloh_showToast('Saqlanganlardan olib tashlandi', 'success');
@@ -187,17 +239,15 @@ function isloh_initBookmarkRemoval() {
 }
 
 function isloh_initBookmarks() {
-  const list = document.querySelector('[data-bookmark-list]');
-  if (!list) return; // helper'lar uchun yuklangan sahifalarda — no-op
+  if (!document.querySelector('[data-bookmark-list]')) return; // helper'lar uchun — no-op
 
-  isloh_renderDynamicBookmarks();
+  isloh_refreshBookmarks();
   isloh_initBookmarkRemoval();
 
-  const sort = document.getElementById('bookmark-sort');
-  if (sort) sort.addEventListener('change', () => isloh_sortBookmarks(sort.value));
-
-  isloh_sortBookmarks('recent');
-  isloh_recountBookmarks();
+  // Boshqa tabda material qo'shilsa/o'chirilsa — ro'yxat o'zi yangilanadi
+  window.addEventListener('storage', (e) => {
+    if (e.key === ISLOH_BOOKMARKS_KEY) isloh_refreshBookmarks();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', isloh_initBookmarks);
