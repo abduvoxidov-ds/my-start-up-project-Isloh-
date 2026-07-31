@@ -14,4 +14,7 @@
 @media (max-width: 700px) {
   .content { padding: 18px; }
   .topbar { padding: 0 16px; }
+  /* Tor ekranda qidiruv maydoni topbar'ni sindiradi (tugma + qidiruv +
+     amallar sig'maydi) — mobil konvensiyasiga ko'ra yashiriladi */
+  .topbar-search { display: none; }
 }

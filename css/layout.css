@@ -144,11 +144,76 @@
 }
 .auth-form-inner { width: 100%; max-width: 380px; }
 
-/* --- Responsive foundation ---
-   Desktop appearance is unchanged. Below 900px the search field shrinks so
-   the topbar doesn't overflow. A full icon-only sidebar collapse is left
-   for the sprint that introduces the mobile nav toggle (needs a JS-driven
-   open/close control, not just CSS — see js/sidebar.js TODO). */
+/* --- Mobil navigatsiya (off-canvas drawer) -------------------------------
+   900px dan pastda sidebar oqimdan chiqib, chapdan suriladigan panelga
+   aylanadi va .main-col butun kenglikni oladi. Ilgari sidebar 232px'da
+   qotib qolar, natijada 375px ekranda kontentga ~36px joy qolib, butun
+   sahifa gorizontal chiqib ketardi.
+
+   Markup (tugma + backdrop) js/sidebar.js tomonidan qo'shiladi — 60 ta
+   HTML faylga qo'lda yozilmaydi (CLAUDE.md §2 — DRY). */
+.nav-toggle {
+  display: none; /* desktopda umuman ko'rinmaydi */
+  width: 40px; height: 40px;
+  align-items: center; justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border-soft);
+  background: var(--bg-card);
+  color: var(--ink-700);
+  font-size: 19px;
+  cursor: pointer;
+  transition: background var(--t-base) var(--ease-standard);
+}
+.nav-toggle:hover { background: var(--bg-app); }
+
+/* Topbar'i yo'q sahifalar (dashboard, chat, marketplace...) uchun ixcham
+   mobil satr — tugma shu yerda turadi */
+.mobile-nav-bar {
+  display: none;
+  align-items: center; gap: 12px;
+  height: 58px; padding: 0 16px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-soft);
+  position: sticky; top: 0;
+  z-index: var(--z-topbar);
+}
+.mobile-nav-title { font-family: var(--font-display); font-weight: 800; font-size: 16px; }
+
+.sidebar-backdrop { display: none; }
+
 @media (max-width: 900px) {
   .topbar-search { width: 200px; }
+  .nav-toggle { display: inline-flex; }
+  .mobile-nav-bar { display: flex; }
+
+  .sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 264px; max-width: 82vw; height: 100vh;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    /* Yopiq holatda tab bilan ham topilmasin */
+    visibility: hidden;
+    box-shadow: var(--shadow-lg);
+    z-index: var(--z-modal);
+    transition: transform var(--t-slow) var(--ease-standard), visibility 0s linear var(--t-slow);
+  }
+  .sidebar.is-open {
+    transform: none;
+    visibility: visible;
+    transition: transform var(--t-slow) var(--ease-standard), visibility 0s;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed; inset: 0;
+    background: rgba(23, 18, 59, 0.45);
+    z-index: var(--z-overlay);
+    opacity: 0; pointer-events: none;
+    transition: opacity var(--t-base) var(--ease-standard);
+  }
+  .sidebar-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+  /* Drawer ochiq bo'lsa orqa fon skroll qilinmaydi */
+  body.nav-open { overflow: hidden; }
 }
