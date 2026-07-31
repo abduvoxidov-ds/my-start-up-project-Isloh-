@@ -14,17 +14,15 @@
   font-weight: 800;
   font-size: 20px;
 }
+/* Brend belgisi — logotip rasmi shu yerda bir marta ta'riflanadi, shuning uchun
+   logoni almashtirish uchun faqat shu url o'zgartiriladi. Yo'l css/ papkasiga
+   nisbatan hisoblanadi, ya'ni sahifa qaysi chuqurlikda bo'lishidan qat'i nazar
+   ishlaydi. */
 .brand-mark {
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--violet-500), var(--violet-600));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: 800;
-  font-size: 16px;
+  background: #fff url('../assets/images/logo.jpg') center / cover no-repeat;
   flex-shrink: 0;
 }
 
