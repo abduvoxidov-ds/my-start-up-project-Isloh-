@@ -52,7 +52,7 @@ function isloh_aiRenderDrawer(mount) {
         <button class="icon-btn" data-ai-pin aria-label="Qadab qo'yish"><i class="bi bi-pin-angle"></i></button>
         <button class="icon-btn" data-ai-minimize aria-label="Kichraytirish"><i class="bi bi-dash-lg"></i></button>
         <button class="icon-btn" data-ai-clear aria-label="Suhbatni tozalash"><i class="bi bi-trash3"></i></button>
-        <button class="icon-btn" onclick="isloh_closeModal('ai-drawer-overlay')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
+        <button class="icon-btn" data-ai-drawer-close aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
       </div>
     </div>
     <div class="ai-drawer-context"><i class="bi bi-bookmark-star-fill"></i> Kontekst: ${ctx.label}</div>
@@ -96,8 +96,31 @@ function isloh_aiRenderDrawer(mount) {
 </div>`;
 }
 
+/* Drawer'ni ochish/yopish.
+
+   Sahifalarda `[data-ai-drawer-trigger]` atributi allaqachon bor edi, lekin
+   hech qachon ulanmagan — tugmalar inline `onclick="isloh_openModal(...)"`
+   bilan ishlardi, bu esa CLAUDE.md §2 da taqiqlangan. Endi bog'lash shu
+   yerda, ya'ni atribut qo'yilgan har bir sahifada avtomat ishlaydi
+   (course-player, lesson-player, learning-progress). Fon bosish va Escape
+   avvalgidek js/modal.js zimmasida. */
+function isloh_initAiDrawerControls() {
+  document.querySelectorAll('[data-ai-drawer-trigger]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (typeof isloh_openModal === 'function') isloh_openModal('ai-drawer-overlay');
+    });
+  });
+
+  document.querySelectorAll('[data-ai-drawer-close]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (typeof isloh_closeModal === 'function') isloh_closeModal('ai-drawer-overlay');
+    });
+  });
+}
+
 (function isloh_aiPanelInit() {
   const mount = document.getElementById('ai-drawer-mount');
   if (!mount) return;
   isloh_aiRenderDrawer(mount);
+  document.addEventListener('DOMContentLoaded', isloh_initAiDrawerControls);
 })();

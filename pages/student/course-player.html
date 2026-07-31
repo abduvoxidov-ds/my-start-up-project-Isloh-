@@ -17,18 +17,18 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a href="courses.html" style="color:inherit;">Kurslar</a><span class="sep">/</span><span class="current">Docker for Beginners</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a href="courses.html">Kurslar</a><span class="sep">/</span><span class="current">Docker for Beginners</span></nav>
       <div class="topbar-actions">
-        <button class="btn btn-outline btn-sm" data-ai-drawer-trigger onclick="isloh_openModal('ai-drawer-overlay')"><i class="bi bi-stars"></i> AI Yordamchi</button>
+        <button class="btn btn-outline btn-sm" data-ai-drawer-trigger><i class="bi bi-stars"></i> AI Yordamchi</button>
         <a href="learning-progress.html" class="btn btn-outline btn-sm"><i class="bi bi-graph-up"></i> Jarayonim</a>
         <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar">SM</div>
+        <div class="avatar" data-user-avatar></div>
       </div>
     </header>
 
     <main class="content" data-ai-context="course-player" data-course-id="docker-for-beginners">
       <!-- COMPLETION BANNER (hidden until 100%; toggled by js/lesson-viewer.js) -->
-      <div class="completion-banner" data-completion-banner hidden style="margin-bottom:18px;">
+      <div class="completion-banner" data-completion-banner hidden>
         <div class="completion-banner-icon"><i class="bi bi-trophy-fill"></i></div>
         <div>
           <div class="completion-banner-title">Tabriklaymiz! Kursni yakunladingiz</div>
@@ -45,8 +45,8 @@
         <aside class="card card-pad course-player-sidebar">
           <div class="cps-course-head">
             <div class="cps-course-title">Docker for Beginners</div>
-            <div class="progress-track"><div class="progress-fill" data-course-progress-fill style="width:0%;"></div></div>
-            <div class="cps-course-meta"><span data-course-progress-pct>0%</span><span>24 dars</span></div>
+            <div class="progress-track"><div class="progress-fill" data-course-progress-fill></div></div>
+            <div class="cps-course-meta"><span data-course-progress-pct>0%</span><span data-course-lesson-total></span></div>
           </div>
 
           <!-- MODULE 1 -->
@@ -54,7 +54,7 @@
             <button class="cps-module-head" data-cps-module-toggle>
               <i class="bi bi-chevron-down cps-module-toggle" aria-hidden="true"></i>
               <span class="cps-module-title">1-modul: Kirish va sozlash</span>
-              <span class="cps-module-meta">3/6</span>
+              <span class="cps-module-meta" data-module-counter></span>
             </button>
             <div class="cps-lesson-list">
               <button class="tab-item cps-lesson active is-done" data-cps-lesson data-tab-target="lesson-intro">
@@ -101,7 +101,7 @@
             <button class="cps-module-head" data-cps-module-toggle>
               <i class="bi bi-chevron-down cps-module-toggle collapsed" aria-hidden="true"></i>
               <span class="cps-module-title">2-modul: Docker asoslari</span>
-              <span class="cps-module-meta">0/7</span>
+              <span class="cps-module-meta" data-module-counter></span>
             </button>
             <div class="cps-lesson-list collapsed">
               <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-compose">
@@ -120,20 +120,20 @@
           </div>
 
           <div class="cps-progress-foot">
-            <div class="ai-widget" style="padding:10px 4px; border-top:1px solid var(--border-soft); padding-top:14px;">
+            <div class="ai-widget cps-ai-widget">
               <div class="ai-widget-icon"><i class="bi bi-stars"></i></div>
-              <div style="flex:1;">
+              <div class="flex-1">
                 <div class="ai-widget-title">AI tavsiyasi</div>
                 <div class="ai-widget-sub">Ushbu darsni tezroq o'zlashtirish uchun fleshkartalarni sinab ko'ring.</div>
-                <div class="ai-widget-foot" style="display:flex; gap:6px; flex-wrap:wrap;">
+                <div class="ai-widget-foot chip-row">
                   <button class="ai-action-chip" data-ai-quick="course-player:flashcards"><i class="bi bi-layers"></i> Fleshkartalar</button>
                   <button class="ai-action-chip" data-ai-quick="course-player:quizme"><i class="bi bi-patch-question-fill"></i> Sinab ko'r</button>
                 </div>
               </div>
             </div>
-            <a href="learning-progress.html" style="font-size:12.5px; color:var(--violet-600); font-weight:600; display:block; margin-top:12px;"><i class="bi bi-graph-up"></i> To'liq jarayonni ko'rish</a>
-            <a href="live-sessions.html" style="font-size:12.5px; color:var(--violet-600); font-weight:600; display:block; margin-top:8px;"><i class="bi bi-camera-video"></i> Jonli sessiyalar</a>
-            <a href="notes.html" style="font-size:12.5px; color:var(--violet-600); font-weight:600; display:block; margin-top:8px;"><i class="bi bi-journal-text"></i> Izohlarim</a>
+            <a href="learning-progress.html" class="cps-foot-link"><i class="bi bi-graph-up"></i> To'liq jarayonni ko'rish</a>
+            <a href="live-sessions.html" class="cps-foot-link"><i class="bi bi-camera-video"></i> Jonli sessiyalar</a>
+            <a href="notes.html" class="cps-foot-link"><i class="bi bi-journal-text"></i> Izohlarim</a>
           </div>
         </aside>
 
@@ -141,10 +141,11 @@
         <section class="lesson-viewer">
           <div class="lesson-header">
             <div>
-              <div class="lesson-header-title">Kursga kirish</div>
+              <!-- Sarlavha va meta faol dars qatoridan js/lesson-viewer.js orqali to'ldiriladi -->
+              <div class="lesson-header-title" data-lesson-title></div>
               <div class="lesson-header-meta">
-                <span><i class="bi bi-collection-play"></i> 1-modul</span>
-                <span><i class="bi bi-clock"></i> Taxminiy vaqt: 8 daqiqa</span>
+                <span data-lesson-meta-item><i class="bi bi-collection-play"></i> <span data-lesson-module></span></span>
+                <span data-lesson-meta-item><i class="bi bi-clock"></i> <span data-lesson-time></span></span>
               </div>
             </div>
             <div class="lesson-header-actions">
@@ -157,8 +158,8 @@
           <div data-tab-panel="lesson-intro">
             <div class="lv-stage lv-stage-video">
               <div class="play-btn"><i class="bi bi-play-fill"></i></div>
-              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>2:14 / 8:24</span><i class="bi bi-volume-up" style="margin-left:auto;"></i><i class="bi bi-arrows-fullscreen"></i></div>
-              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill"></div></div>
+              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>2:14 / 8:24</span><i class="bi bi-volume-up ml-auto"></i><i class="bi bi-arrows-fullscreen"></i></div>
+              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill scrub-watched"></div></div>
             </div>
           </div>
           <div data-tab-panel="lesson-setup" hidden>
@@ -172,15 +173,15 @@
           <div data-tab-panel="lesson-terminal" hidden>
             <div class="lv-stage lv-stage-video">
               <div class="play-btn"><i class="bi bi-play-fill"></i></div>
-              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 10:05</span><i class="bi bi-volume-up" style="margin-left:auto;"></i><i class="bi bi-arrows-fullscreen"></i></div>
-              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill" style="width:0%;"></div></div>
+              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 10:05</span><i class="bi bi-volume-up ml-auto"></i><i class="bi bi-arrows-fullscreen"></i></div>
+              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill"></div></div>
             </div>
           </div>
           <div data-tab-panel="lesson-images" hidden>
             <div class="lv-stage lv-stage-video">
               <div class="play-btn"><i class="bi bi-play-fill"></i></div>
-              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 9:40</span><i class="bi bi-volume-up" style="margin-left:auto;"></i><i class="bi bi-arrows-fullscreen"></i></div>
-              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill" style="width:0%;"></div></div>
+              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 9:40</span><i class="bi bi-volume-up ml-auto"></i><i class="bi bi-arrows-fullscreen"></i></div>
+              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill"></div></div>
             </div>
           </div>
           <div data-tab-panel="lesson-code" hidden>
@@ -200,8 +201,8 @@
           <div data-tab-panel="lesson-compose" hidden>
             <div class="lv-stage lv-stage-video">
               <div class="play-btn"><i class="bi bi-play-fill"></i></div>
-              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 11:20</span><i class="bi bi-volume-up" style="margin-left:auto;"></i><i class="bi bi-arrows-fullscreen"></i></div>
-              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill" style="width:0%;"></div></div>
+              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 11:20</span><i class="bi bi-volume-up ml-auto"></i><i class="bi bi-arrows-fullscreen"></i></div>
+              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill"></div></div>
             </div>
           </div>
           <div data-tab-panel="lesson-assignment1" hidden>
@@ -213,7 +214,7 @@
             </div>
           </div>
 
-          <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <div class="lesson-actions-row">
             <button class="btn btn-outline btn-sm" data-mark-complete><i class="bi bi-check2"></i> Yakunlandi deb belgilash</button>
           </div>
         </section>
@@ -221,34 +222,41 @@
 
       <!-- TABS: Notes / Downloads / Resources / Discussion (own data-tabs scope,
            kept outside .player-shell so it doesn't mix with the lesson switcher) -->
-      <div class="card card-pad" style="margin-top:18px;" data-tabs>
+      <div class="card card-pad mt-16" data-tabs>
         <div class="tab-strip">
           <div class="tab-item active" data-tab-target="tab-notes">Izohlarim</div>
           <div class="tab-item" data-tab-target="tab-downloads">Yuklab olishlar</div>
           <div class="tab-item" data-tab-target="tab-resources">Resurslar</div>
           <div class="tab-item" data-tab-target="tab-discussion">Muhokama</div>
         </div>
-        <div data-tab-panel="tab-notes" style="margin-top:16px;">
-          <textarea class="editor-textarea" placeholder="Ushbu dars bo'yicha izohlaringizni yozing..." style="min-height:100px;"></textarea>
-          <button class="btn btn-teach btn-sm" style="margin-top:10px;" data-notes-save><i class="bi bi-save"></i> Izohni saqlash</button>
+        <!-- Izohlar dars bo'yicha alohida saqlanadi (js/lesson-viewer.js,
+             isloh_notes) — dars almashganda mos izoh qaytariladi -->
+        <div data-tab-panel="tab-notes" class="mt-16">
+          <textarea class="editor-textarea lesson-notes-input" placeholder="Ushbu dars bo'yicha izohlaringizni yozing..." data-notes-input></textarea>
+          <div class="lesson-notes-foot">
+            <button class="btn btn-teach btn-sm" data-notes-save><i class="bi bi-save"></i> Izohni saqlash</button>
+            <span class="lesson-notes-status" data-notes-status hidden></span>
+          </div>
         </div>
-        <div data-tab-panel="tab-downloads" hidden style="margin-top:16px;">
+        <div data-tab-panel="tab-downloads" class="mt-16" hidden>
           <div class="resource-grid">
-            <div class="card resource-card"><div class="resource-icon" style="background:var(--danger);"><i class="bi bi-filetype-pdf"></i></div><div class="resource-body"><div class="resource-name">Docker-cheat-sheet.pdf</div><div class="resource-meta">1.2 MB</div></div><div class="resource-actions"><button class="icon-btn" aria-label="Yuklab olish"><i class="bi bi-download"></i></button></div></div>
-            <div class="card resource-card"><div class="resource-icon" style="background:var(--ink-700);"><i class="bi bi-file-earmark-zip"></i></div><div class="resource-body"><div class="resource-name">boshlangich-loyiha.zip</div><div class="resource-meta">4.8 MB</div></div><div class="resource-actions"><button class="icon-btn" aria-label="Yuklab olish"><i class="bi bi-download"></i></button></div></div>
+            <div class="card resource-card"><div class="resource-icon ic-danger"><i class="bi bi-filetype-pdf"></i></div><div class="resource-body"><div class="resource-name">Docker-cheat-sheet.pdf</div><div class="resource-meta">1.2 MB</div></div><div class="resource-actions"><button class="icon-btn" aria-label="Yuklab olish"><i class="bi bi-download"></i></button></div></div>
+            <div class="card resource-card"><div class="resource-icon ic-ink"><i class="bi bi-file-earmark-zip"></i></div><div class="resource-body"><div class="resource-name">boshlangich-loyiha.zip</div><div class="resource-meta">4.8 MB</div></div><div class="resource-actions"><button class="icon-btn" aria-label="Yuklab olish"><i class="bi bi-download"></i></button></div></div>
           </div>
         </div>
-        <div data-tab-panel="tab-resources" hidden style="margin-top:16px;">
+        <div data-tab-panel="tab-resources" class="mt-16" hidden>
           <div class="resource-grid">
-            <div class="card resource-card"><div class="resource-icon" style="background:var(--violet-600);"><i class="bi bi-link-45deg"></i></div><div class="resource-body"><div class="resource-name">Docker rasmiy hujjatlari</div><div class="resource-meta">Tashqi havola</div></div></div>
-            <div class="card resource-card"><div class="resource-icon" style="background:var(--teach-green);"><i class="bi bi-github"></i></div><div class="resource-body"><div class="resource-name">Dars kodi (GitHub)</div><div class="resource-meta">Tashqi havola</div></div></div>
+            <div class="card resource-card"><div class="resource-icon ic-violet"><i class="bi bi-link-45deg"></i></div><div class="resource-body"><div class="resource-name">Docker rasmiy hujjatlari</div><div class="resource-meta">Tashqi havola</div></div></div>
+            <div class="card resource-card"><div class="resource-icon ic-green"><i class="bi bi-github"></i></div><div class="resource-body"><div class="resource-name">Dars kodi (GitHub)</div><div class="resource-meta">Tashqi havola</div></div></div>
           </div>
         </div>
-        <div data-tab-panel="tab-discussion" hidden style="margin-top:16px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <div style="font-size:12.5px; color:var(--ink-500);">Ushbu dars bo'yicha 3 ta muhokama</div>
-            <a href="discussions.html" style="font-size:12.5px; color:var(--violet-600); font-weight:600;">Barchasini ko'rish <i class="bi bi-arrow-right"></i></a>
+        <div data-tab-panel="tab-discussion" class="mt-16" hidden data-comment-thread>
+          <div class="discussion-head">
+            <!-- Son ro'yxatdagi kartochkalardan hisoblanadi (js/comments.js) -->
+            <div class="discussion-count">Ushbu dars bo'yicha <span data-comment-count></span></div>
+            <a href="discussions.html" class="section-action">Barchasini ko'rish <i class="bi bi-arrow-right"></i></a>
           </div>
+          <div class="discussion-comments-list" data-comment-list>
           <div class="comment-card">
             <div class="avatar-sm">FR</div>
             <div class="comment-body">
@@ -261,7 +269,7 @@
             </div>
           </div>
           <div class="comment-card">
-            <div class="avatar-sm" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+            <div class="avatar-sm avatar-teach">AY</div>
             <div class="comment-body">
               <div class="comment-head"><span class="comment-name">Akmal Yuldashev</span><span class="role-badge instructor">O'qituvchi</span><span class="comment-time">20 daqiqa oldin</span></div>
               <div class="comment-text" data-comment-text>Bind mount — mashinangizdagi papkani to'g'ridan-to'g'ri bog'laydi, volume esa Docker o'zi boshqaradigan alohida joy.</div>
@@ -271,16 +279,17 @@
               </div>
             </div>
           </div>
-          <div style="display:flex; gap:8px; margin-top:14px;">
-            <input placeholder="Savolingizni yozing..." aria-label="Savolingizni yozing" style="flex:1; border:1px solid var(--border-soft); border-radius:var(--r-sm); padding:8px 12px; font-size:13px;">
-            <button class="btn btn-teach btn-sm">Yuborish</button>
           </div>
+          <form class="comment-composer" data-comment-composer>
+            <input data-comment-input placeholder="Savolingizni yozing..." aria-label="Savolingizni yozing">
+            <button type="submit" class="btn btn-teach btn-sm">Yuborish</button>
+          </form>
         </div>
       </div>
 
-      <div class="lesson-nav-bar" style="margin-top:18px;">
+      <div class="lesson-nav-bar">
         <button class="btn btn-outline btn-sm" data-lesson-prev><i class="bi bi-arrow-left"></i> Oldingi</button>
-        <span class="lnb-center"><i class="bi bi-collection-play"></i> Dars 1 / 24</span>
+        <span class="lnb-center"><i class="bi bi-collection-play"></i> <span data-lesson-counter></span></span>
         <button class="btn btn-teach btn-sm" data-lesson-next>Keyingi <i class="bi bi-arrow-right"></i></button>
       </div>
     </main>
@@ -295,8 +304,11 @@
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>
+<!-- Topbar avatari isloh_user'dan to'ldiriladi (data-user-avatar) -->
+<script src="../../js/profile.js"></script>
 <script src="../../js/tabs.js"></script>
 <script src="../../js/bookmarks.js"></script>
+<script src="../../js/notes-store.js"></script>
 <script src="../../js/lesson-viewer.js"></script>
 <script src="../../js/progress-metrics.js"></script>
 <script src="../../js/comments.js"></script>

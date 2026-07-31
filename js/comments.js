@@ -12,7 +12,85 @@
      [data-comment-delete]    → removes the comment-card
      [data-comment-react]     → like/heart reaction toggle + count
      [data-comment-pin]       → instructor-only pin toggle (adds .pinned)
+
+   Yangi izoh yozish formasi (avval hech qayerga ulanmagan edi — tugma
+   bosilganda hech narsa bo'lmasdi):
+     [data-comment-thread]    → forma va ro'yxatni bir doiraga oladi
+       [data-comment-list]    → yangi izoh shu ro'yxat BOSHIGA qo'shiladi
+       [data-comment-count]   → ro'yxatdagi izohlar soni (avtomat yangilanadi)
+       [data-comment-composer]→ <form>; ichida [data-comment-input]
+
+   ESLATMA: yuborilgan izoh saqlanmaydi — muhokama serverga tegishli va
+   backend hali yo'q (CLAUDE.md 4-bosqich). Shaxsiy ma'lumot (izohlar,
+   xatcho'plar) localStorage'da saqlanadi, lekin boshqalarga ko'rinadigan
+   post'ni mahalliy saqlash uni "yuborilgan" qilib ko'rsatib qo'yardi.
    ========================================================================== */
+
+/* Joriy foydalanuvchi — js/profile.js ulangan sahifada haqiqiy profil,
+   aks holda umumiy zaxira */
+function isloh_commentAuthor() {
+  if (typeof isloh_getUserProfile === 'function') {
+    const user = isloh_getUserProfile();
+    const initials = typeof isloh_getUserInitials === 'function' ? isloh_getUserInitials(user.name) : 'SM';
+    return { name: user.name || 'Siz', initials: initials };
+  }
+  return { name: 'Siz', initials: 'SM' };
+}
+
+/* Bitta izoh kartochkasi — javob va yangi izoh uchun umumiy */
+function isloh_buildCommentCard(text, options) {
+  const author = isloh_commentAuthor();
+  const card = document.createElement('div');
+  card.className = 'comment-card' + (options && options.nested ? ' nested' : '');
+  card.innerHTML =
+    '<div class="avatar-sm"></div>' +
+    '<div class="comment-body">' +
+      '<div class="comment-head"><span class="comment-name"></span>' +
+        '<span class="role-badge student">Talaba</span><span class="comment-time">hozir</span></div>' +
+      '<div class="comment-text" data-comment-text></div>' +
+      '<div class="comment-actions">' +
+        '<button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>0</span></button>' +
+        '<button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>' +
+      '</div>' +
+    '</div>';
+  // Matnlar textContent orqali — foydalanuvchi kiritgani HTML sifatida talqin qilinmasin
+  card.querySelector('.avatar-sm').textContent = author.initials;
+  card.querySelector('.comment-name').textContent = author.name;
+  card.querySelector('[data-comment-text]').textContent = text;
+  return card;
+}
+
+function isloh_refreshCommentCounts() {
+  document.querySelectorAll('[data-comment-list]').forEach((list) => {
+    const scope = list.closest('[data-comment-thread]') || list.parentElement;
+    const label = scope && scope.querySelector('[data-comment-count]');
+    if (!label) return;
+    label.textContent = list.querySelectorAll(':scope > .comment-card').length + ' ta muhokama';
+  });
+}
+
+function isloh_initCommentComposer() {
+  document.querySelectorAll('[data-comment-composer]').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // file:// ostida sahifa qayta yuklanmasin
+
+      const input = form.querySelector('[data-comment-input]');
+      const text = input ? input.value.trim() : '';
+      if (!text) { if (input) input.focus(); return; }
+
+      const scope = form.closest('[data-comment-thread]');
+      const list = scope && scope.querySelector('[data-comment-list]');
+      if (!list) return;
+
+      list.prepend(isloh_buildCommentCard(text));
+      input.value = '';
+      isloh_refreshCommentCounts();
+      if (typeof isloh_showToast === 'function') isloh_showToast('Izohingiz yuborildi', 'success');
+    });
+  });
+
+  isloh_refreshCommentCounts();
+}
 
 function isloh_commentsInit() {
   document.addEventListener('click', (e) => {
@@ -80,22 +158,14 @@ function isloh_commentsInit() {
       const card = sendBtn.closest('.comment-card');
       const list = card?.closest('[data-reply-list]') || card?.parentElement;
       if (!input?.value.trim() || !list) return;
-      const newComment = document.createElement('div');
-      newComment.className = 'comment-card nested';
-      newComment.innerHTML = `<div class="avatar-sm">SM</div>
-        <div class="comment-body">
-          <div class="comment-head"><span class="comment-name">Siz</span><span class="role-badge student">Talaba</span><span class="comment-time">hozir</span></div>
-          <div class="comment-text" data-comment-text></div>
-          <div class="comment-actions">
-            <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>0</span></button>
-            <button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>
-          </div>
-        </div>`;
-      newComment.querySelector('[data-comment-text]').textContent = input.value.trim();
-      card.after(newComment);
+      card.after(isloh_buildCommentCard(input.value.trim(), { nested: true }));
       box.remove();
+      isloh_refreshCommentCounts();
     }
   });
 }
 
-document.addEventListener('DOMContentLoaded', isloh_commentsInit);
+document.addEventListener('DOMContentLoaded', () => {
+  isloh_commentsInit();
+  isloh_initCommentComposer();
+});

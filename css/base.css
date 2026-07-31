@@ -24,6 +24,14 @@ h1, h2, h3, h4, .font-display {
 a { text-decoration: none; color: inherit; }
 button { font-family: inherit; }
 
+/* `hidden` atributi HAR DOIM ishlashi uchun.
+   Brauzerning o'z [hidden] qoidasi eng zaif, shuning uchun `display:flex`
+   beruvchi istalgan klass uni bekor qiladi — natijada JS `el.hidden = true`
+   desa ham element ekranda qolib ketadi. Loyihada bu bir necha marta
+   sodir bo'lgan (muhokamadagi javob qutilari, dars meta bandlari).
+   normalize.css ham aynan shu yechimni beradi. */
+[hidden] { display: none !important; }
+
 /* --- Accessibility: visible focus state for keyboard navigation --- */
 a:focus-visible,
 button:focus-visible,

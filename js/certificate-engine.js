@@ -12,11 +12,11 @@
      js/lesson-viewer.js  -> isloh_getCourseProgress()
 
    Course IDs are standardized on the Marketplace catalog ids (py-101,
-   react-201, ...). NOTE: pages/student/course-player.html and
-   lesson-player.html currently hardcode data-course-id="docker-for-beginners",
-   which has no matching Marketplace entry, so real lesson-by-lesson
-   progress for that demo course never surfaces here. Flagged in the
-   Certificates audit — out of scope for this module to fix.
+   react-201, ...). The player pages' data-course-id="docker-for-beginners"
+   used to have no matching Marketplace entry, so lesson-by-lesson progress
+   from course-player.html / lesson-player.html never surfaced here; that
+   course is now part of the catalog (js/marketplace.js), which closes the
+   progress -> certificate chain.
 
    Persisted record shape (ISLOH_CERTIFICATES_KEY, keyed by cert id):
      { [certId]: { id, courseId, courseTitle, instructorName, studentName,

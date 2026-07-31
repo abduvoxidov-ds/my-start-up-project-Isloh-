@@ -34,65 +34,35 @@
       </div>
 
       <!-- COMPOSER (hidden until "Yangi izoh" is clicked) -->
-      <div class="card card-pad" data-note-composer hidden style="margin-top:16px;">
+      <div class="card card-pad mt-16" data-note-composer hidden>
         <div class="field"><label for="note-title-input">Sarlavha</label><input id="note-title-input" data-note-title-input placeholder="Izoh sarlavhasi"></div>
-        <div class="field" style="margin-bottom:0;"><label for="note-body-input">Matn</label><textarea id="note-body-input" data-note-body-input class="editor-textarea" style="min-height:90px;" placeholder="Izohingizni yozing..."></textarea></div>
-        <div style="display:flex; justify-content:flex-end; margin-top:10px;"><button class="btn btn-teach btn-sm" data-note-save><i class="bi bi-save"></i> Saqlash</button></div>
+        <div class="field"><label for="note-body-input">Matn</label><textarea id="note-body-input" data-note-body-input class="editor-textarea note-body-input" placeholder="Izohingizni yozing..."></textarea></div>
+        <div class="field field-last"><label for="note-tags-input">Teglar</label><input id="note-tags-input" data-note-tags-input placeholder="Vergul bilan ajrating: docker, muhim"></div>
+        <div class="note-composer-foot"><button class="btn btn-teach btn-sm" data-note-save><i class="bi bi-save"></i> Saqlash</button></div>
       </div>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:16px;">
-        <div data-filter-group="scope" style="display:flex; gap:6px;">
+      <div class="notes-filter-bar">
+        <div class="chip-row" data-filter-group="scope">
           <button class="category-chip active" data-filter-value="all">Barchasi</button>
           <button class="category-chip" data-filter-value="personal">Shaxsiy</button>
           <button class="category-chip" data-filter-value="shared">Bo'lishilgan</button>
           <button class="category-chip" data-filter-value="pinned">Qadalgan</button>
         </div>
-        <div class="topbar-search" style="width:240px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Izohlarni qidirish..." aria-label="Izohlarni qidirish"></div>
+        <div class="topbar-search notes-search"><i class="bi bi-search"></i><input data-filter-search placeholder="Izohlarni qidirish..." aria-label="Izohlarni qidirish"></div>
       </div>
 
-      <div style="margin-top:12px; display:flex; gap:6px; flex-wrap:wrap;" data-note-tag-filter>
-        <button class="category-chip active" data-tag="all">Barcha teglar</button>
-        <button class="category-chip" data-tag="docker">Docker</button>
-        <button class="category-chip" data-tag="compose">Compose</button>
-        <button class="category-chip" data-tag="muhim">Muhim</button>
-      </div>
+      <!-- Teg chiplari do'kondagi haqiqiy teglardan chiziladi (js/notes.js) -->
+      <div class="chip-row notes-tag-row" data-note-tag-filter hidden></div>
 
-      <div class="notes-grid" data-notes-grid style="margin-top:16px;">
-        <div class="card shared-note-card pinned" data-filter-item data-scope="personal" data-tags="docker,muhim" data-filter-text="Docker buyruqlari yodnoma">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div class="note-title">Docker buyruqlari yodnoma</div>
-            <button class="fav-toggle active" data-note-favorite aria-label="Sevimli"><i class="bi bi-star-fill"></i></button>
-          </div>
-          <div class="note-body">docker ps, docker exec -it, docker logs -f — eng ko'p ishlatadigan buyruqlarim.</div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="note-tag-pill">Docker</span><span class="note-tag-pill">Muhim</span></div>
-          <div class="note-card-foot"><span>2 kun oldin</span><span>Shaxsiy</span></div>
-        </div>
+      <!-- Kartochkalar js/notes.js tomonidan isloh_notes do'konidan chiziladi -->
+      <div class="notes-grid mt-16" data-notes-grid></div>
 
-        <div class="card shared-note-card" data-filter-item data-scope="shared" data-tags="compose" data-filter-text="Guruh: Compose fayl namunasi">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div class="note-title">Guruh: Compose fayl namunasi</div>
-            <button class="fav-toggle" data-note-favorite aria-label="Sevimli"><i class="bi bi-star"></i></button>
-          </div>
-          <div class="note-body">Farrux bilan birga tayyorlagan ikki xizmatli (web+db) docker-compose.yml namunasi.</div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="note-tag-pill">Compose</span></div>
-          <div class="note-card-foot"><span>Kecha &middot; Farrux R. bilan</span><span>Bo'lishilgan</span></div>
-        </div>
-
-        <div class="card shared-note-card" data-filter-item data-scope="personal" data-tags="docker" data-filter-text="Networking eslatmalari">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div class="note-title">Networking eslatmalari</div>
-            <button class="fav-toggle" data-note-favorite aria-label="Sevimli"><i class="bi bi-star"></i></button>
-          </div>
-          <div class="note-body">Bridge network — standart. Konteynerlar bir-birini nom orqali topa oladi.</div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="note-tag-pill">Docker</span></div>
-          <div class="note-card-foot"><span>3 soat oldin</span><span>Shaxsiy</span></div>
-        </div>
-      </div>
-
-      <div class="empty-state" data-filter-empty style="display:none;">
+      <!-- Ko'rinishini js/filterable.js boshqaradi (style.display) — shuning
+           uchun bu yerda hidden/inline style qo'yilmaydi -->
+      <div class="empty-state" data-filter-empty>
         <div class="empty-icon"><i class="bi bi-journal-text"></i></div>
-        <div class="empty-title">Izoh topilmadi</div>
-        <div class="empty-sub">Boshqa filtr yoki qidiruv so'zini sinab ko'ring.</div>
+        <div class="empty-title" data-notes-empty-title>Izoh topilmadi</div>
+        <div class="empty-sub" data-notes-empty-sub>Boshqa filtr yoki qidiruv so'zini sinab ko'ring.</div>
       </div>
     </main>
   </div>
@@ -102,6 +72,7 @@
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/filterable.js"></script>
+<script src="../../js/notes-store.js"></script>
 <script src="../../js/notes.js"></script>
 </body>
 </html>

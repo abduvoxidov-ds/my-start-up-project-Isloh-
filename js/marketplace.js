@@ -40,7 +40,14 @@ const ISLOH_MARKETPLACE_DATA = {
     { id: 'uiux-301', title: 'UI/UX Design Fundamentals', instructor: 'Dilnoza R.', price: 250000, discount_price: 189000, category: 'Dizayn', rating: 4.7, duration: '26 soat', level: "Boshlang'ich", cover: 'linear-gradient(135deg,#8E44EC,#3B82F6)', icon: 'bi bi-palette-fill' },
     { id: 'ml-401', title: 'Machine Learning A-Z', instructor: 'Aziz Karimov', price: 349000, discount_price: null, category: 'Backend', rating: 4.6, duration: '56 soat', level: 'Yuqori daraja', cover: 'linear-gradient(135deg,#06B6D4,#0E7490)', icon: 'bi bi-cpu-fill' },
     { id: 'flutter-501', title: 'Flutter Mobile Development', instructor: 'Javlon Rahimov', price: 320000, discount_price: 219000, category: 'Mobile', rating: 4.7, duration: '34 soat', level: "O'rta daraja", cover: 'linear-gradient(135deg,#02569B,#13B9FD)', icon: 'bi bi-phone-fill' },
-    { id: 'devops-601', title: 'Docker & Kubernetes DevOps', instructor: 'Sardor Aliyev', price: 380000, discount_price: null, category: 'DevOps', rating: 4.8, duration: '46 soat', level: 'Yuqori daraja', cover: 'linear-gradient(135deg,#2496ED,#326CE5)', icon: 'bi bi-boxes' }
+    { id: 'devops-601', title: 'Docker & Kubernetes DevOps', instructor: 'Sardor Aliyev', price: 380000, discount_price: null, category: 'DevOps', rating: 4.8, duration: '46 soat', level: 'Yuqori daraja', cover: 'linear-gradient(135deg,#2496ED,#326CE5)', icon: 'bi bi-boxes' },
+    /* Talaba yozilgan demo kurs — course-player.html, course-landing.html,
+       notes/discussions/live-sessions sahifalari shu kursni ko'rsatadi.
+       Ilgari katalogda yo'q edi, shuning uchun pleerdagi progress
+       sertifikatlar sahifasiga umuman chiqmasdi (js/certificate-engine.js
+       sarlavhasida ham shu kamchilik qayd etilgan edi). Qiymatlar
+       course-landing.html dagi ma'lumotdan olindi. */
+    { id: 'docker-for-beginners', title: 'Docker for Beginners', instructor: 'Akmal Yuldashev', price: 159000, discount_price: null, category: 'DevOps', rating: 4.7, duration: '18 soat', level: "Boshlang'ich", cover: 'linear-gradient(135deg,#F97316,#EA580C)', icon: 'bi bi-boxes' }
   ],
   categories: ['Barchasi', 'Backend', 'Frontend', 'Mobile', 'Dizayn', 'DevOps'],
   user_cart: { items_count: 0, items: [] }
