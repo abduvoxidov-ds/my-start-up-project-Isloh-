@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Docker for Beginners — Player — Isloh</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
@@ -20,7 +20,8 @@
       <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a href="courses.html">Kurslar</a><span class="sep">/</span><span class="current">Docker for Beginners</span></nav>
       <div class="topbar-actions">
         <button class="btn btn-outline btn-sm" data-ai-drawer-trigger><i class="bi bi-stars"></i> AI Yordamchi</button>
-        <a href="learning-progress.html" class="btn btn-outline btn-sm"><i class="bi bi-graph-up"></i> Jarayonim</a>
+        <!-- "Jarayonim" tugmasi olib tashlandi: chapdagi sidebar'da ham,
+             yon paneldagi havolada ham aynan shu sahifa bor edi -->
         <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
         <div class="avatar" data-user-avatar></div>
       </div>
@@ -40,109 +41,18 @@
         </div>
       </div>
 
-      <div class="player-shell" data-tabs>
-        <!-- SIDEBAR: MODULES / LESSONS -->
-        <aside class="card card-pad course-player-sidebar">
-          <div class="cps-course-head">
-            <div class="cps-course-title">Docker for Beginners</div>
-            <div class="progress-track"><div class="progress-fill" data-course-progress-fill></div></div>
-            <div class="cps-course-meta"><span data-course-progress-pct>0%</span><span data-course-lesson-total></span></div>
-          </div>
+      <!-- Dars almashganini skrin-riderga e'lon qiladi (js/lesson-viewer.js) -->
+      <div class="sr-only" aria-live="polite" data-lesson-announcer></div>
 
-          <!-- MODULE 1 -->
-          <div class="cps-module">
-            <button class="cps-module-head" data-cps-module-toggle>
-              <i class="bi bi-chevron-down cps-module-toggle" aria-hidden="true"></i>
-              <span class="cps-module-title">1-modul: Kirish va sozlash</span>
-              <span class="cps-module-meta" data-module-counter></span>
-            </button>
-            <div class="cps-lesson-list">
-              <button class="tab-item cps-lesson active is-done" data-cps-lesson data-tab-target="lesson-intro">
-                <span class="cps-lesson-ic lt-video"><i class="bi bi-play-fill"></i></span>
-                <span class="cps-lesson-name">Kursga kirish</span>
-                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check></i>
-                <span class="cps-lesson-time">8:24</span>
-              </button>
-              <button class="tab-item cps-lesson is-done" data-cps-lesson data-tab-target="lesson-setup">
-                <span class="cps-lesson-ic lt-article"><i class="bi bi-file-text-fill"></i></span>
-                <span class="cps-lesson-name">Muhitni sozlash</span>
-                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check></i>
-                <span class="cps-lesson-time">12 daq</span>
-              </button>
-              <button class="tab-item cps-lesson is-done" data-cps-lesson data-tab-target="lesson-terminal">
-                <span class="cps-lesson-ic lt-video"><i class="bi bi-play-fill"></i></span>
-                <span class="cps-lesson-name">Terminal buyruqlari</span>
-                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check></i>
-                <span class="cps-lesson-time">10:05</span>
-              </button>
-              <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-images">
-                <span class="cps-lesson-ic lt-video"><i class="bi bi-play-fill"></i></span>
-                <span class="cps-lesson-name">Docker image nima?</span>
-                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check hidden></i>
-                <span class="cps-lesson-time">9:40</span>
-              </button>
-              <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-code">
-                <span class="cps-lesson-ic lt-code"><i class="bi bi-code-slash"></i></span>
-                <span class="cps-lesson-name">Birinchi Dockerfile</span>
-                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check hidden></i>
-                <span class="cps-lesson-time">15 daq</span>
-              </button>
-              <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-quiz1">
-                <span class="cps-lesson-ic lt-quiz"><i class="bi bi-patch-question-fill"></i></span>
-                <span class="cps-lesson-name">Bilimni tekshirish: 1-modul</span>
-                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check hidden></i>
-                <span class="cps-lesson-time">5 daq</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- MODULE 2 -->
-          <div class="cps-module">
-            <button class="cps-module-head" data-cps-module-toggle>
-              <i class="bi bi-chevron-down cps-module-toggle collapsed" aria-hidden="true"></i>
-              <span class="cps-module-title">2-modul: Docker asoslari</span>
-              <span class="cps-module-meta" data-module-counter></span>
-            </button>
-            <div class="cps-lesson-list collapsed">
-              <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-compose">
-                <span class="cps-lesson-ic lt-video"><i class="bi bi-play-fill"></i></span>
-                <span class="cps-lesson-name">Docker Compose kirish</span>
-                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check hidden></i>
-                <span class="cps-lesson-time">11:20</span>
-              </button>
-              <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-assignment1">
-                <span class="cps-lesson-ic lt-assignment"><i class="bi bi-file-earmark-text-fill"></i></span>
-                <span class="cps-lesson-name">Amaliy topshiriq: Compose fayli</span>
-                <i class="bi bi-check-circle-fill cps-lesson-check" data-cps-lesson-check hidden></i>
-                <span class="cps-lesson-time">1 soat</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="cps-progress-foot">
-            <div class="ai-widget cps-ai-widget">
-              <div class="ai-widget-icon"><i class="bi bi-stars"></i></div>
-              <div class="flex-1">
-                <div class="ai-widget-title">AI tavsiyasi</div>
-                <div class="ai-widget-sub">Ushbu darsni tezroq o'zlashtirish uchun fleshkartalarni sinab ko'ring.</div>
-                <div class="ai-widget-foot chip-row">
-                  <button class="ai-action-chip" data-ai-quick="course-player:flashcards"><i class="bi bi-layers"></i> Fleshkartalar</button>
-                  <button class="ai-action-chip" data-ai-quick="course-player:quizme"><i class="bi bi-patch-question-fill"></i> Sinab ko'r</button>
-                </div>
-              </div>
-            </div>
-            <a href="learning-progress.html" class="cps-foot-link"><i class="bi bi-graph-up"></i> To'liq jarayonni ko'rish</a>
-            <a href="live-sessions.html" class="cps-foot-link"><i class="bi bi-camera-video"></i> Jonli sessiyalar</a>
-            <a href="notes.html" class="cps-foot-link"><i class="bi bi-journal-text"></i> Izohlarim</a>
-          </div>
-        </aside>
-
-        <!-- MAIN VIEWER -->
+      <div class="player-shell">
+        <!-- ASOSIY SAHNA (chapda, kengroq ustun) -->
         <section class="lesson-viewer">
           <div class="lesson-header">
             <div>
-              <!-- Sarlavha va meta faol dars qatoridan js/lesson-viewer.js orqali to'ldiriladi -->
-              <div class="lesson-header-title" data-lesson-title></div>
+              <!-- Sarlavha va meta faol dars qatoridan js/lesson-viewer.js orqali
+                   to'ldiriladi. tabindex="-1" — dars almashganda fokus shu yerga
+                   ko'chiriladi (skrin-rider va klaviatura foydalanuvchilari uchun). -->
+              <h1 class="lesson-header-title" data-lesson-title tabindex="-1"></h1>
               <div class="lesson-header-meta">
                 <span data-lesson-meta-item><i class="bi bi-collection-play"></i> <span data-lesson-module></span></span>
                 <span data-lesson-meta-item><i class="bi bi-clock"></i> <span data-lesson-time></span></span>
@@ -150,67 +60,100 @@
             </div>
             <div class="lesson-header-actions">
               <button class="icon-btn" data-lesson-bookmark aria-label="Xatcho'p"><i class="bi bi-bookmark"></i></button>
-              <a href="lesson-player.html" class="icon-btn" aria-label="To'liq ekran"><i class="bi bi-arrows-fullscreen"></i></a>
+              <a href="lesson-player.html" class="icon-btn" aria-label="Chalg'itmaydigan rejim"><i class="bi bi-arrows-fullscreen"></i></a>
             </div>
           </div>
 
-          <!-- LESSON PANELS (one per lesson type; switched via js/tabs.js using data-tab-panel) -->
-          <div data-tab-panel="lesson-intro">
-            <div class="lv-stage lv-stage-video">
-              <div class="play-btn"><i class="bi bi-play-fill"></i></div>
-              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>2:14 / 8:24</span><i class="bi bi-volume-up ml-auto"></i><i class="bi bi-arrows-fullscreen"></i></div>
-              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill scrub-watched"></div></div>
+          <!-- ================= SAHNALAR =================
+               Butun sahifada BITTA <video> bor: dars almashganda faqat manba
+               almashadi. Har dars uchun alohida <video> yaratilsa, brauzer
+               har biri uchun dekoder va bufer ushlab turardi. -->
+
+          <!-- VIDEO -->
+          <div class="lv-stage lv-stage-video" data-stage="video" data-video-stage hidden>
+            <video class="lv-video" data-lesson-video preload="metadata" playsinline
+                   controlslist="nodownload" aria-label="Dars videosi">
+              <track kind="captions" srclang="uz" label="O'zbekcha" default>
+              Brauzeringiz video formatini qo'llab-quvvatlamaydi.
+            </video>
+
+            <div class="lv-scrim" aria-hidden="true"></div>
+
+            <button class="lv-big-play" data-video-bigplay aria-label="O'ynatish">
+              <i class="bi bi-play-fill" aria-hidden="true"></i>
+            </button>
+
+            <div class="lv-controls" data-video-controls>
+              <button class="lv-btn" data-video-toggle aria-label="O'ynatish"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+              <button class="lv-btn" data-video-seek="-10" aria-label="10 soniya orqaga"><i class="bi bi-skip-backward-fill" aria-hidden="true"></i></button>
+              <button class="lv-btn" data-video-seek="10" aria-label="10 soniya oldinga"><i class="bi bi-skip-forward-fill" aria-hidden="true"></i></button>
+
+              <span class="lv-time"><span data-video-current>0:00</span> / <span data-video-duration>0:00</span></span>
+
+              <!-- Ko'rinishi 4px, bosish maydoni 24px (WCAG 2.5.8) -->
+              <span class="lv-scrub-wrap">
+                <span class="lv-scrub-fill" data-video-progress aria-hidden="true"></span>
+                <input class="lv-scrub" type="range" min="0" max="0" step="1" value="0"
+                       data-video-scrub aria-label="Video pozitsiyasi">
+              </span>
+
+              <button class="lv-btn" data-video-mute aria-label="Ovozni o'chirish"><i class="bi bi-volume-up-fill" aria-hidden="true"></i></button>
+              <input class="lv-volume" type="range" min="0" max="1" step="0.05" value="1"
+                     data-video-volume aria-label="Ovoz balandligi">
+
+              <select class="lv-select" data-video-speed aria-label="O'ynatish tezligi">
+                <option value="0.75">0.75×</option>
+                <option value="1" selected>1×</option>
+                <option value="1.25">1.25×</option>
+                <option value="1.5">1.5×</option>
+                <option value="1.75">1.75×</option>
+                <option value="2">2×</option>
+              </select>
+
+              <button class="lv-btn" data-video-captions aria-label="Subtitr" aria-pressed="false"><i class="bi bi-badge-cc-fill" aria-hidden="true"></i></button>
+              <button class="lv-btn" data-video-pip aria-label="Alohida oynada"><i class="bi bi-pip" aria-hidden="true"></i></button>
+              <button class="lv-btn" data-video-fullscreen aria-label="To'liq ekran"><i class="bi bi-arrows-fullscreen" aria-hidden="true"></i></button>
+            </div>
+
+            <!-- Yuklanish / bufer -->
+            <div class="lv-stage-state lv-stage-loading" data-video-loading hidden>
+              <div class="lv-spinner" aria-hidden="true"></div>
+              <span class="sr-only">Video yuklanmoqda</span>
+            </div>
+
+            <!-- Xatolik: HTMLMediaElement.error kodi bo'yicha aniq xabar -->
+            <div class="lv-stage-state lv-stage-error" data-video-error hidden role="alert">
+              <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+              <div class="lv-stage-error-title">Videoni yuklab bo'lmadi</div>
+              <div class="lv-stage-error-sub" data-video-error-sub></div>
+              <button class="btn btn-outline btn-sm" data-video-retry><i class="bi bi-arrow-clockwise"></i> Qayta urinish</button>
+            </div>
+
+            <div class="lv-offline-badge" data-video-offline hidden>
+              <i class="bi bi-wifi-off" aria-hidden="true"></i> Internet aloqasi yo'q
             </div>
           </div>
-          <div data-tab-panel="lesson-setup" hidden>
-            <div class="lv-article-body">
-              <h2>Muhitni sozlash</h2>
-              <p>Ushbu darsda siz Docker, VS Code va Git'ni o'rnatasiz hamda birinchi konteyneringizni ishga tushirasiz.</p>
-              <h3>1-qadam: Docker Desktop o'rnatish</h3>
-              <p>Rasmiy saytdan operatsion tizimingizga mos versiyani yuklab oling va o'rnating.</p>
-            </div>
+
+          <!-- MAQOLA -->
+          <div data-stage="article" hidden>
+            <div class="lv-article-body"></div>
           </div>
-          <div data-tab-panel="lesson-terminal" hidden>
-            <div class="lv-stage lv-stage-video">
-              <div class="play-btn"><i class="bi bi-play-fill"></i></div>
-              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 10:05</span><i class="bi bi-volume-up ml-auto"></i><i class="bi bi-arrows-fullscreen"></i></div>
-              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill"></div></div>
-            </div>
-          </div>
-          <div data-tab-panel="lesson-images" hidden>
-            <div class="lv-stage lv-stage-video">
-              <div class="play-btn"><i class="bi bi-play-fill"></i></div>
-              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 9:40</span><i class="bi bi-volume-up ml-auto"></i><i class="bi bi-arrows-fullscreen"></i></div>
-              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill"></div></div>
-            </div>
-          </div>
-          <div data-tab-panel="lesson-code" hidden>
+
+          <!-- KOD -->
+          <div data-stage="code" hidden>
             <div class="lv-code-body">
-              <div class="editor-block-label"><i class="bi bi-file-code"></i> Dockerfile</div>
-              <div class="lv-code-block"><span class="cm"># Asosiy image</span><br><span class="kw">FROM</span> python:3.12-slim<br><span class="kw">WORKDIR</span> /app<br><span class="kw">COPY</span> . .<br><span class="kw">RUN</span> pip install -r requirements.txt<br><span class="kw">CMD</span> [<span class="st">"python"</span>, <span class="st">"app.py"</span>]</div>
+              <div class="editor-block-label"></div>
+              <div class="lv-code-block"></div>
             </div>
           </div>
-          <div data-tab-panel="lesson-quiz1" hidden>
+
+          <!-- TEST / TOPSHIRIQ -->
+          <div data-stage="launch" hidden>
             <div class="lv-launch-card">
-              <div class="lv-launch-icon lt-quiz"><i class="bi bi-patch-question-fill"></i></div>
-              <div class="lv-launch-title">Bilimni tekshirish: 1-modul</div>
-              <div class="lv-launch-sub">10 ta savoldan iborat test. O'tish balli: 70%. Cheklanmagan urinish soni.</div>
-              <button class="btn btn-teach"><i class="bi bi-play-fill"></i> Testni boshlash</button>
-            </div>
-          </div>
-          <div data-tab-panel="lesson-compose" hidden>
-            <div class="lv-stage lv-stage-video">
-              <div class="play-btn"><i class="bi bi-play-fill"></i></div>
-              <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 11:20</span><i class="bi bi-volume-up ml-auto"></i><i class="bi bi-arrows-fullscreen"></i></div>
-              <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill"></div></div>
-            </div>
-          </div>
-          <div data-tab-panel="lesson-assignment1" hidden>
-            <div class="lv-launch-card">
-              <div class="lv-launch-icon lt-assignment"><i class="bi bi-file-earmark-text-fill"></i></div>
-              <div class="lv-launch-title">Amaliy topshiriq: Compose fayli</div>
-              <div class="lv-launch-sub">Ikki xizmatli (web + db) docker-compose.yml faylini yarating va topshiring. Muddat: 3 kun.</div>
-              <button class="btn btn-teach"><i class="bi bi-upload"></i> Topshiriqni ochish</button>
+              <div class="lv-launch-icon"></div>
+              <div class="lv-launch-title"></div>
+              <div class="lv-launch-sub"></div>
+              <button class="btn btn-teach" data-launch-action></button>
             </div>
           </div>
 
@@ -218,20 +161,72 @@
             <button class="btn btn-outline btn-sm" data-mark-complete><i class="bi bi-check2"></i> Yakunlandi deb belgilash</button>
           </div>
         </section>
+
+        <!-- YON PANEL: kurs tarkibi. DOM'da sahnadan KEYIN turadi — shuning
+             uchun ustunlar yig'ilganda (<=1100px) video birinchi ko'rinadi
+             va CSS `order` xakisi umuman kerak bo'lmaydi. -->
+        <aside class="card card-pad course-player-sidebar" aria-label="Kurs tarkibi">
+          <div class="cps-course-head">
+            <div class="cps-course-title"></div>
+            <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                 aria-valuenow="0" aria-label="Kurs jarayoni">
+              <div class="progress-fill" data-course-progress-fill></div>
+            </div>
+            <div class="cps-course-meta"><span data-course-progress-pct>0%</span><span data-course-lesson-total></span></div>
+          </div>
+
+          <!-- Modul/dars ro'yxati js/course-data.js dan chiziladi. Ilgari bu
+               yerda har bir dars qo'lda yozilgan edi; 96 darsli kursda bu
+               ~2000 qatorlik takror markup degani. -->
+          <!-- Skeleton: ro'yxat JS bilan chizilgani uchun birinchi kadrda
+               bo'sh joy ko'rinmasin. js/course-player.js uni almashtiradi. -->
+          <div data-player-modules>
+            <div class="cps-skeleton" aria-hidden="true">
+              <div class="skeleton skeleton-line sk-60"></div>
+              <div class="skeleton skeleton-line sk-100"></div>
+              <div class="skeleton skeleton-line sk-100"></div>
+              <div class="skeleton skeleton-line sk-80"></div>
+              <div class="skeleton skeleton-line sk-40"></div>
+              <div class="skeleton skeleton-line sk-100"></div>
+            </div>
+          </div>
+
+          <!-- OLIB TASHLANDI (3-bosqich, kognitiv yukni kamaytirish):
+               · "To'liq jarayonni ko'rish" / "Jonli sessiyalar" / "Izohlarim"
+                 — uchalasi ham chapdagi asosiy sidebar'da bor edi;
+               · AI vidjeti — `flashcards` va `quizme` shablonlari AI
+                 panelida allaqachon mavjud (js/ai-assistant.js), topbardagi
+                 "AI Yordamchi" tugmasi bilan ochiladi.
+               Yon panel endi faqat bitta ishni bajaradi: kurs tarkibi. -->
+        </aside>
       </div>
 
       <!-- TABS: Notes / Downloads / Resources / Discussion (own data-tabs scope,
            kept outside .player-shell so it doesn't mix with the lesson switcher) -->
       <div class="card card-pad mt-16" data-tabs>
         <div class="tab-strip">
-          <div class="tab-item active" data-tab-target="tab-notes">Izohlarim</div>
+          <div class="tab-item active" data-tab-target="tab-transcript">Transkript</div>
+          <div class="tab-item" data-tab-target="tab-notes">Izohlarim</div>
           <div class="tab-item" data-tab-target="tab-downloads">Yuklab olishlar</div>
           <div class="tab-item" data-tab-target="tab-resources">Resurslar</div>
           <div class="tab-item" data-tab-target="tab-discussion">Muhokama</div>
         </div>
+        <!-- Transkript videoning o'z .vtt subtitr faylidan chiziladi
+             (js/lesson-transcript.js) — alohida ma'lumot manbai yo'q -->
+        <div data-tab-panel="tab-transcript" class="mt-16">
+          <input class="input tr-search" type="search" data-transcript-search
+                 placeholder="Transkriptdan qidirish..." aria-label="Transkriptdan qidirish" hidden>
+          <div class="tr-list" data-transcript-list></div>
+          <div class="empty-state" data-transcript-empty hidden>
+            <div class="empty-icon"><i class="bi bi-card-text"></i></div>
+            <div class="empty-title">Bu dars uchun transkript yo'q</div>
+            <div class="empty-sub">Transkript video darslarda, subtitr fayli mavjud bo'lganda ko'rinadi.</div>
+          </div>
+        </div>
+
         <!-- Izohlar dars bo'yicha alohida saqlanadi (js/lesson-viewer.js,
              isloh_notes) — dars almashganda mos izoh qaytariladi -->
-        <div data-tab-panel="tab-notes" class="mt-16">
+        <div data-tab-panel="tab-notes" class="mt-16" hidden>
           <textarea class="editor-textarea lesson-notes-input" placeholder="Ushbu dars bo'yicha izohlaringizni yozing..." data-notes-input></textarea>
           <div class="lesson-notes-foot">
             <button class="btn btn-teach btn-sm" data-notes-save><i class="bi bi-save"></i> Izohni saqlash</button>
@@ -299,21 +294,28 @@
 <!-- AI DRAWER (Sprint 8A) -->
 <div id="ai-drawer-mount"></div>
 
-<script src="../../js/navigation.js"></script>
-<script src="../../js/sidebar.js"></script>
-<script src="../../js/theme.js"></script>
-<script src="../../js/toast.js"></script>
-<script src="../../js/modal.js"></script>
+<script defer src="../../js/navigation.js"></script>
+<script defer src="../../js/sidebar.js"></script>
+<script defer src="../../js/theme.js"></script>
+<script defer src="../../js/toast.js"></script>
+<script defer src="../../js/modal.js"></script>
 <!-- Topbar avatari isloh_user'dan to'ldiriladi (data-user-avatar) -->
-<script src="../../js/profile.js"></script>
-<script src="../../js/tabs.js"></script>
-<script src="../../js/bookmarks.js"></script>
-<script src="../../js/notes-store.js"></script>
-<script src="../../js/lesson-viewer.js"></script>
-<script src="../../js/progress-metrics.js"></script>
-<script src="../../js/comments.js"></script>
-<script src="../../js/ai-assistant.js"></script>
-<script src="../../js/ai-panel.js"></script>
-<script src="../../js/ai-chat.js"></script>
+<script defer src="../../js/profile.js"></script>
+<script defer src="../../js/tabs.js"></script>
+<script defer src="../../js/bookmarks.js"></script>
+<script defer src="../../js/notes-store.js"></script>
+<!-- TARTIB MUHIM: course-data (ma'lumot) -> lesson-video (pleer tinglovchilari
+     ulanadi) -> course-player (ro'yxatni chizadi va birinchi darsni yuklaydi)
+     -> lesson-viewer (chizilgan qatorlarni kuchaytiradi). -->
+<script defer src="../../js/course-data.js"></script>
+<script defer src="../../js/lesson-video.js"></script>
+<script defer src="../../js/course-player.js"></script>
+<script defer src="../../js/lesson-transcript.js"></script>
+<script defer src="../../js/lesson-viewer.js"></script>
+<script defer src="../../js/progress-metrics.js"></script>
+<script defer src="../../js/comments.js"></script>
+<script defer src="../../js/ai-assistant.js"></script>
+<script defer src="../../js/ai-panel.js"></script>
+<script defer src="../../js/ai-chat.js"></script>
 </body>
 </html>

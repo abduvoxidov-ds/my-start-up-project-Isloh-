@@ -1079,11 +1079,14 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .lt-resource   { background:linear-gradient(135deg,#059669,#10B981); }
 
 /* --- Player shell: sidebar + main viewer (Course Player / Lesson Player) --- */
-.player-shell { display:grid; grid-template-columns: 320px 1fr; gap:18px; align-items:start; }
+/* Sahna chapda va kengroq, kurs tarkibi o'ngda — Coursera/Udemy naqshi.
+   DOM tartibi ham shunday (sahna birinchi), shuning uchun ustunlar
+   yig'ilganda video avtomat tepada qoladi: `order` xakisi kerak emas. */
+.player-shell { display:grid; grid-template-columns: 1fr 320px; gap:18px; align-items:start; }
 .player-shell.is-fullscreen { grid-template-columns: 1fr; max-width:920px; margin:0 auto; }
-@media (max-width:1100px) { .player-shell { grid-template-columns: 1fr; } }
 
 .course-player-sidebar { position:sticky; top:88px; max-height:calc(100vh - 108px); overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
+.cps-skeleton { display:flex; flex-direction:column; gap:4px; padding:8px 0; }
 .cps-course-head { display:flex; flex-direction:column; gap:8px; }
 .cps-course-title { font-size:14.5px; font-weight:700; line-height:1.3; }
 .cps-course-meta { display:flex; justify-content:space-between; font-size:12px; color:var(--ink-500); }
@@ -1124,20 +1127,113 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .fs-body { max-width:920px; margin:0 auto; padding:26px 24px 60px; }
 /* Faqat skript uchun mavjud dars ro'yxati (Oldingi/Keyingi shu qatorlarni
    bosadi) — ko'rinmaydi, lekin DOM'da turishi shart */
-.cps-lesson-list.is-registry { display:none; }
+/* Chalg'itmaydigan rejimda dars ro'yxati chiziladi, lekin ko'rinmaydi —
+   Oldingi/Keyingi va jarayon mantig'i aynan shu qatorlar ustida ishlaydi */
+.is-registry { display:none; }
 
 /* --- Lesson viewer (main pane) --- */
 .lesson-viewer { display:flex; flex-direction:column; gap:16px; }
 .lv-stage { border-radius:var(--r-lg); overflow:hidden; background:linear-gradient(135deg, var(--indigo-900), var(--violet-600)); position:relative; }
-.lv-stage-video { aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; color:#fff; position:relative; }
-.lv-stage-video .play-btn { width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-size:26px; cursor:pointer; }
-.lv-stage-video .lv-progress-scrub { position:absolute; left:0; right:0; bottom:0; height:4px; background:rgba(255,255,255,.25); }
-/* Standart holat — bo'sh. Ko'rilgan qismni ko'rsatish uchun .scrub-watched
-   qo'shiladi (avval sahifalarda `style="width:0%"` bilan bekor qilinardi) */
-.lv-stage-video .lv-progress-scrub-fill { height:100%; width:0; background:#fff; }
-.lv-stage-video .lv-progress-scrub-fill.scrub-watched { width:38%; }
-.lv-stage-controls { position:absolute; left:0; right:0; bottom:10px; display:flex; align-items:center; gap:12px; padding:0 16px; color:#fff; font-size:13px; }
-.lv-stage-controls .bi { cursor:pointer; }
+
+/* ==========================================================================
+   VIDEO PLEER (2-bosqich)
+   Ilgari bu yerda soxta maket bor edi: `.play-btn` div, qotib qolgan vaqt
+   matni va CSS'dan keladigan `width:38%` chizig'i. Endi haqiqiy <video> va
+   uning boshqaruvlari.
+   ========================================================================== */
+.lv-stage-video { aspect-ratio:16/9; background:#000; color:#fff; }
+.lv-video { width:100%; height:100%; display:block; object-fit:contain; background:#000; cursor:pointer; }
+
+/* Boshqaruvlar ostidagi qorayish — oq matn yorug' kadr ustida ham o'qiladi.
+   Avval scrim umuman yo'q edi va oq matn yorug' slaydda ko'rinmasdi. */
+.lv-scrim { position:absolute; left:0; right:0; bottom:0; height:120px; pointer-events:none;
+  background:linear-gradient(transparent, rgba(0,0,0,.72)); opacity:1; transition:opacity var(--t-base) var(--ease-standard); }
+
+.lv-big-play { position:absolute; inset:0; margin:auto; width:72px; height:72px; border:none; border-radius:50%;
+  background:rgba(255,255,255,.22); color:#fff; font-size:30px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  backdrop-filter:blur(2px); transition:transform var(--t-base) var(--ease-standard), background var(--t-base); }
+.lv-big-play:hover { background:rgba(255,255,255,.32); transform:scale(1.06); }
+
+.lv-controls { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; gap:6px;
+  padding:8px 12px 10px; color:#fff; font-size:12.5px; opacity:1; transition:opacity var(--t-base) var(--ease-standard); }
+/* O'ynatish paytida 3 soniyadan keyin yashirinadi (js/lesson-video.js).
+   Fokus ichkarida bo'lsa yashirilmaydi — klaviatura foydalanuvchisi
+   ko'rinmaydigan tugmada qolib ketmasligi uchun. */
+.lv-stage-video.controls-hidden .lv-controls,
+.lv-stage-video.controls-hidden .lv-scrim { opacity:0; }
+.lv-stage-video.controls-hidden .lv-video { cursor:none; }
+
+.lv-btn { width:34px; height:34px; flex-shrink:0; border:none; border-radius:var(--r-sm); background:transparent;
+  color:#fff; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.lv-btn:hover { background:rgba(255,255,255,.16); }
+.lv-btn:focus-visible, .lv-scrub:focus-visible, .lv-select:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+.lv-btn.active { color:var(--teach-green); }
+.lv-time { flex-shrink:0; font-variant-numeric:tabular-nums; padding:0 4px; }
+
+/* Scrub: ko'rinishi ingichka, lekin bosish maydoni 24px (WCAG 2.5.8).
+   input[type=range] tanlandi — klaviatura (strelkalar, Home/End) va
+   skrin-rider qo'llab-quvvatlashi tekinga keladi. */
+.lv-scrub-wrap { flex:1; position:relative; display:flex; align-items:center; height:24px; min-width:60px; }
+.lv-scrub { width:100%; height:24px; margin:0; background:transparent; -webkit-appearance:none; appearance:none; cursor:pointer; }
+.lv-scrub::-webkit-slider-runnable-track { height:4px; border-radius:2px; background:rgba(255,255,255,.3); }
+.lv-scrub::-moz-range-track { height:4px; border-radius:2px; background:rgba(255,255,255,.3); }
+.lv-scrub::-webkit-slider-thumb { -webkit-appearance:none; width:13px; height:13px; margin-top:-4.5px; border-radius:50%; background:#fff; border:none; }
+.lv-scrub::-moz-range-thumb { width:13px; height:13px; border-radius:50%; background:#fff; border:none; }
+.lv-scrub-fill { position:absolute; left:0; height:4px; border-radius:2px; background:var(--violet-600); pointer-events:none; }
+
+.lv-volume { width:64px; height:24px; -webkit-appearance:none; appearance:none; background:transparent; cursor:pointer; }
+.lv-volume::-webkit-slider-runnable-track { height:4px; border-radius:2px; background:rgba(255,255,255,.3); }
+.lv-volume::-webkit-slider-thumb { -webkit-appearance:none; width:11px; height:11px; margin-top:-3.5px; border-radius:50%; background:#fff; }
+.lv-volume::-moz-range-track { height:4px; border-radius:2px; background:rgba(255,255,255,.3); }
+.lv-volume::-moz-range-thumb { width:11px; height:11px; border-radius:50%; background:#fff; border:none; }
+
+.lv-select { height:28px; border:none; border-radius:var(--r-sm); background:rgba(255,255,255,.16);
+  color:#fff; font-family:inherit; font-size:12px; padding:0 4px; cursor:pointer; }
+.lv-select option { color:var(--ink-900); }
+
+/* --- Subtitr ------------------------------------------------------------
+   Standart holatda WebVTT kadrning eng pastiga chiziladi va boshqaruvlar
+   paneli bilan ustma-ust tushadi. Trek konteynerini boshqaruvlar balandligi
+   qadar tepaga suramiz; boshqaruvlar yashiringanda esa joyiga qaytadi.
+   ::-webkit-media-text-track-container — Chrome/Edge/Safari uchun; Firefox
+   uni qo'llab-quvvatlamaydi, lekin u yerda subtitr allaqachon tepaqroq
+   chiziladi, shuning uchun vizual muammo yuzaga kelmaydi. */
+.lv-stage-video video::-webkit-media-text-track-container {
+  transform:translateY(-42px); transition:transform var(--t-base) var(--ease-standard);
+}
+.lv-stage-video.controls-hidden video::-webkit-media-text-track-container { transform:none; }
+.lv-stage-video video::cue {
+  background:rgba(0,0,0,.72); color:#fff; font-family:var(--font-body); font-size:.9em; line-height:1.4;
+}
+
+/* --- Transkript (js/lesson-transcript.js) --------------------------------
+   Manba — videoning o'z .vtt subtitr fayli, alohida ma'lumot yo'q. */
+.tr-search { width:100%; margin-bottom:12px; }
+.tr-list { max-height:320px; overflow-y:auto; display:flex; flex-direction:column; gap:2px; }
+.tr-line { display:flex; gap:12px; align-items:flex-start; width:100%; text-align:left;
+  padding:8px 10px; border:none; border-radius:var(--r-sm); background:none; cursor:pointer;
+  font-family:inherit; font-size:13px; line-height:1.6; color:var(--ink-700); }
+.tr-line:hover { background:var(--bg-app); }
+.tr-line.active { background:var(--violet-100); color:var(--violet-600); font-weight:600; }
+.tr-time { flex-shrink:0; font-size:11.5px; font-variant-numeric:tabular-nums; color:var(--ink-300); padding-top:2px; }
+.tr-line.active .tr-time { color:var(--violet-600); }
+
+/* --- Holatlar: yuklanish / xatolik / oflayn ------------------------------- */
+.lv-stage-state { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px; text-align:center; padding:24px; background:rgba(10,8,30,.72); color:#fff; }
+.lv-stage-error i { font-size:30px; color:var(--warning); }
+.lv-stage-error-title { font-family:var(--font-display); font-weight:800; font-size:15px; }
+.lv-stage-error-sub { font-size:12.5px; opacity:.75; max-width:320px; }
+.lv-spinner { width:34px; height:34px; border-radius:50%; border:3px solid rgba(255,255,255,.25);
+  border-top-color:#fff; animation:isloh-spin .8s linear infinite; }
+@keyframes isloh-spin { to { transform:rotate(360deg); } }
+body.no-animations .lv-spinner { animation:none; }
+
+.lv-offline-badge { position:absolute; top:12px; left:12px; display:flex; align-items:center; gap:6px;
+  padding:5px 10px; border-radius:999px; background:rgba(10,8,30,.75); color:#fff; font-size:11.5px; }
+
+/* To'liq ekranda video butun maydonni egallasin */
+.lv-stage-video:fullscreen { aspect-ratio:auto; width:100vw; height:100vh; border-radius:0; }
 .lv-article-body, .lv-code-body { padding:26px 28px; background:var(--bg-card); border-radius:var(--r-lg); border:1px solid var(--border-soft); }
 .lv-article-body { font-size:14px; line-height:1.75; color:var(--ink-700); }
 .lv-article-body h2, .lv-article-body h3 { color:var(--ink-900); margin:18px 0 8px; }
@@ -1153,6 +1249,10 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 
 .lesson-header { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; }
 .lesson-header-title { font-size:18px; font-weight:800; font-family:var(--font-display); }
+/* Dars almashganda fokus shu sarlavhaga ko'chadi (js/lesson-viewer.js).
+   Sichqoncha bilan bosilganda halqa chiqmasligi uchun — faqat :focus-visible */
+.lesson-header-title:focus { outline:none; }
+.lesson-header-title:focus-visible { outline:2px solid var(--violet-600); outline-offset:4px; border-radius:var(--r-sm); }
 .lesson-header-meta { display:flex; gap:14px; font-size:12.5px; color:var(--ink-500); margin-top:6px; flex-wrap:wrap; }
 .lesson-header-meta span { display:inline-flex; align-items:center; gap:5px; }
 .lesson-header-actions { display:flex; gap:8px; flex-shrink:0; }

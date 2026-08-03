@@ -1,0 +1,17 @@
+WEBVTT
+
+NOTE
+Namuna subtitr fayli. Haqiqiy dars videolari qo'shilganda har bir video uchun
+o'z .vtt fayli yoziladi va js/course-data.js dagi `captions` maydoniga ulanadi.
+
+1
+00:00:00.000 --> 00:00:03.000
+Assalomu alaykum, ushbu darsga xush kelibsiz.
+
+2
+00:00:03.000 --> 00:00:06.500
+Bugun biz asosiy tushunchalar bilan tanishamiz.
+
+3
+00:00:06.500 --> 00:00:10.000
+Keling, birinchi misoldan boshlaymiz.

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kursga kirish — Lesson Player — Isloh</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
           <!-- Sarlavha va meta faol dars qatoridan js/lesson-viewer.js orqali
                to'ldiriladi. Bu yerdagi qatorlarda modul/vaqt yo'q, shuning
                uchun bo'sh meta bandlari avtomat yashiriladi. -->
-          <div class="lesson-header-title" data-lesson-title></div>
+          <h1 class="lesson-header-title" data-lesson-title tabindex="-1"></h1>
           <div class="lesson-header-meta">
             <span data-lesson-meta-item><i class="bi bi-collection-play"></i> <span data-lesson-module></span></span>
             <span data-lesson-meta-item><i class="bi bi-clock"></i> <span data-lesson-time></span></span>
@@ -37,40 +37,107 @@
         </div>
       </div>
 
-      <!-- Hidden lesson-row registry + panels share one data-tabs scope: lets
-           js/lesson-viewer.js's prev/next + progress logic, and js/tabs.js's
-           panel switching, work identically to course-player.html without
-           duplicating the full sidebar in this distraction-free view.
-           display:none rows are still clickable via script (used by the
-           Oldingi/Keyingi buttons below). -->
-      <div data-tabs>
-        <div class="cps-lesson-list is-registry" aria-hidden="true">
-          <button class="tab-item cps-lesson active" data-cps-lesson data-tab-target="lesson-intro"><span class="cps-lesson-name">Kursga kirish</span><i class="cps-lesson-check" data-cps-lesson-check hidden></i></button>
-          <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-setup"><span class="cps-lesson-name">Muhitni sozlash</span><i class="cps-lesson-check" data-cps-lesson-check hidden></i></button>
-          <button class="tab-item cps-lesson" data-cps-lesson data-tab-target="lesson-terminal"><span class="cps-lesson-name">Terminal buyruqlari</span><i class="cps-lesson-check" data-cps-lesson-check hidden></i></button>
+      <!-- Dars almashganini skrin-riderga e'lon qiladi (js/lesson-viewer.js) -->
+      <div class="sr-only" aria-live="polite" data-lesson-announcer></div>
+
+      <!-- Dars ro'yxati bu yerda ham js/course-data.js dan chiziladi, lekin
+           ko'rinmaydi (.is-registry): chalg'itmaydigan rejimda yon panel yo'q,
+           ammo Oldingi/Keyingi, jarayon va izohlar mantig'i aynan bir xil
+           qatorlar ustida ishlaydi — markup takrorlanmaydi. -->
+      <div class="is-registry" data-player-modules aria-hidden="true"></div>
+
+        <!-- ================= SAHNALAR =================
+             Butun sahifada BITTA <video> bor: dars almashganda faqat manba
+             almashadi. Har dars uchun alohida <video> yaratilsa, brauzer
+             har biri uchun dekoder va bufer ushlab turardi. -->
+
+        <!-- VIDEO -->
+        <div class="lv-stage lv-stage-video" data-stage="video" data-video-stage hidden>
+          <video class="lv-video" data-lesson-video preload="metadata" playsinline
+                 controlslist="nodownload" aria-label="Dars videosi">
+            <track kind="captions" srclang="uz" label="O'zbekcha" default>
+            Brauzeringiz video formatini qo'llab-quvvatlamaydi.
+          </video>
+
+          <div class="lv-scrim" aria-hidden="true"></div>
+
+          <button class="lv-big-play" data-video-bigplay aria-label="O'ynatish">
+            <i class="bi bi-play-fill" aria-hidden="true"></i>
+          </button>
+
+          <div class="lv-controls" data-video-controls>
+            <button class="lv-btn" data-video-toggle aria-label="O'ynatish"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+            <button class="lv-btn" data-video-seek="-10" aria-label="10 soniya orqaga"><i class="bi bi-skip-backward-fill" aria-hidden="true"></i></button>
+            <button class="lv-btn" data-video-seek="10" aria-label="10 soniya oldinga"><i class="bi bi-skip-forward-fill" aria-hidden="true"></i></button>
+
+            <span class="lv-time"><span data-video-current>0:00</span> / <span data-video-duration>0:00</span></span>
+
+            <!-- Ko'rinishi 4px, bosish maydoni 24px (WCAG 2.5.8) -->
+            <span class="lv-scrub-wrap">
+              <span class="lv-scrub-fill" data-video-progress aria-hidden="true"></span>
+              <input class="lv-scrub" type="range" min="0" max="0" step="1" value="0"
+                     data-video-scrub aria-label="Video pozitsiyasi">
+            </span>
+
+            <button class="lv-btn" data-video-mute aria-label="Ovozni o'chirish"><i class="bi bi-volume-up-fill" aria-hidden="true"></i></button>
+            <input class="lv-volume" type="range" min="0" max="1" step="0.05" value="1"
+                   data-video-volume aria-label="Ovoz balandligi">
+
+            <select class="lv-select" data-video-speed aria-label="O'ynatish tezligi">
+              <option value="0.75">0.75×</option>
+              <option value="1" selected>1×</option>
+              <option value="1.25">1.25×</option>
+              <option value="1.5">1.5×</option>
+              <option value="1.75">1.75×</option>
+              <option value="2">2×</option>
+            </select>
+
+            <button class="lv-btn" data-video-captions aria-label="Subtitr" aria-pressed="false"><i class="bi bi-badge-cc-fill" aria-hidden="true"></i></button>
+            <button class="lv-btn" data-video-pip aria-label="Alohida oynada"><i class="bi bi-pip" aria-hidden="true"></i></button>
+            <button class="lv-btn" data-video-fullscreen aria-label="To'liq ekran"><i class="bi bi-arrows-fullscreen" aria-hidden="true"></i></button>
+          </div>
+
+          <!-- Yuklanish / bufer -->
+          <div class="lv-stage-state lv-stage-loading" data-video-loading hidden>
+            <div class="lv-spinner" aria-hidden="true"></div>
+            <span class="sr-only">Video yuklanmoqda</span>
+          </div>
+
+          <!-- Xatolik: HTMLMediaElement.error kodi bo'yicha aniq xabar -->
+          <div class="lv-stage-state lv-stage-error" data-video-error hidden role="alert">
+            <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+            <div class="lv-stage-error-title">Videoni yuklab bo'lmadi</div>
+            <div class="lv-stage-error-sub" data-video-error-sub></div>
+            <button class="btn btn-outline btn-sm" data-video-retry><i class="bi bi-arrow-clockwise"></i> Qayta urinish</button>
+          </div>
+
+          <div class="lv-offline-badge" data-video-offline hidden>
+            <i class="bi bi-wifi-off" aria-hidden="true"></i> Internet aloqasi yo'q
+          </div>
         </div>
 
-        <div data-tab-panel="lesson-intro">
-          <div class="lv-stage lv-stage-video">
-            <div class="play-btn"><i class="bi bi-play-fill"></i></div>
-            <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>2:14 / 8:24</span><i class="bi bi-volume-up ml-auto"></i><i class="bi bi-arrows-fullscreen"></i></div>
-            <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill scrub-watched"></div></div>
+        <!-- MAQOLA -->
+        <div data-stage="article" hidden>
+          <div class="lv-article-body"></div>
+        </div>
+
+        <!-- KOD -->
+        <div data-stage="code" hidden>
+          <div class="lv-code-body">
+            <div class="editor-block-label"></div>
+            <div class="lv-code-block"></div>
           </div>
         </div>
-        <div data-tab-panel="lesson-setup" hidden>
-          <div class="lv-article-body">
-            <h2>Muhitni sozlash</h2>
-            <p>Ushbu darsda siz Docker, VS Code va Git'ni o'rnatasiz hamda birinchi konteyneringizni ishga tushirasiz.</p>
+
+        <!-- TEST / TOPSHIRIQ -->
+        <div data-stage="launch" hidden>
+          <div class="lv-launch-card">
+            <div class="lv-launch-icon"></div>
+            <div class="lv-launch-title"></div>
+            <div class="lv-launch-sub"></div>
+            <button class="btn btn-teach" data-launch-action></button>
           </div>
         </div>
-        <div data-tab-panel="lesson-terminal" hidden>
-          <div class="lv-stage lv-stage-video">
-            <div class="play-btn"><i class="bi bi-play-fill"></i></div>
-            <div class="lv-stage-controls"><i class="bi bi-play-fill"></i> <span>0:00 / 10:05</span><i class="bi bi-volume-up ml-auto"></i><i class="bi bi-arrows-fullscreen"></i></div>
-            <div class="lv-progress-scrub"><div class="lv-progress-scrub-fill"></div></div>
-          </div>
-        </div>
-      </div>
 
       <div class="lesson-actions-row">
         <button class="btn btn-outline btn-sm" data-mark-complete><i class="bi bi-check2"></i> Yakunlandi deb belgilash</button>
@@ -88,16 +155,20 @@
 <!-- AI DRAWER (Sprint 8A) -->
 <div id="ai-drawer-mount"></div>
 
-<script src="../../js/theme.js"></script>
-<script src="../../js/toast.js"></script>
-<script src="../../js/modal.js"></script>
-<script src="../../js/tabs.js"></script>
-<script src="../../js/bookmarks.js"></script>
-<script src="../../js/notes-store.js"></script>
-<script src="../../js/lesson-viewer.js"></script>
-<script src="../../js/progress-metrics.js"></script>
-<script src="../../js/ai-assistant.js"></script>
-<script src="../../js/ai-panel.js"></script>
-<script src="../../js/ai-chat.js"></script>
+<script defer src="../../js/theme.js"></script>
+<script defer src="../../js/toast.js"></script>
+<script defer src="../../js/modal.js"></script>
+<script defer src="../../js/tabs.js"></script>
+<script defer src="../../js/bookmarks.js"></script>
+<script defer src="../../js/notes-store.js"></script>
+<!-- TARTIB MUHIM — course-player.html dagi bilan bir xil sabab -->
+<script defer src="../../js/course-data.js"></script>
+<script defer src="../../js/lesson-video.js"></script>
+<script defer src="../../js/course-player.js"></script>
+<script defer src="../../js/lesson-viewer.js"></script>
+<script defer src="../../js/progress-metrics.js"></script>
+<script defer src="../../js/ai-assistant.js"></script>
+<script defer src="../../js/ai-panel.js"></script>
+<script defer src="../../js/ai-chat.js"></script>
 </body>
 </html>

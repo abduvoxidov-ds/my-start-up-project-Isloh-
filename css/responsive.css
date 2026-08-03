@@ -17,4 +17,81 @@
   /* Tor ekranda qidiruv maydoni topbar'ni sindiradi (tugma + qidiruv +
      amallar sig'maydi) — mobil konvensiyasiga ko'ra yashiriladi */
   .topbar-search { display: none; }
+
+  /* Breadcrumb ham xuddi shu sababdan: 375px da nav-toggle (40) +
+     breadcrumb (127) + amallar (225) + padding (32) = 424px, ya'ni sahifa
+     gorizontal skroll bilan qolardi. Sahifa sarlavhasi endi <h1> da bor,
+     shuning uchun breadcrumb mobil'da ortiqcha. */
+  .breadcrumb-demo { display: none; }
+}
+
+/* ==========================================================================
+   KURS PLEERI (3-bosqich)
+   Ilgari pleerga tegishli yagona qoida widgets.css dagi bitta
+   `@media (max-width:1100px)` edi, bu faylda esa umuman hech narsa yo'q
+   edi. Natijada mobil ekranda: (1) foydalanuvchi avval uzun dars ro'yxatini
+   ko'rar, video pastda qolardi; (2) yon panel `sticky` + `max-height` bilan
+   qolib, ichki skroll tuzog'i hosil qilardi.
+   ========================================================================== */
+
+@media (max-width: 1100px) {
+  .player-shell { grid-template-columns: 1fr; }
+
+  .course-player-sidebar {
+    position: static;        /* sticky mobilda skroll tuzog'i yaratadi */
+    max-height: none;
+    overflow: visible;
+  }
+  /* DOM tartibi sahna -> yon panel bo'lgani uchun video allaqachon
+     birinchi; qo'shimcha `order` kerak emas (widgets.css izohiga qarang) */
+}
+
+@media (max-width: 700px) {
+  /* Video ekran chetigacha cho'zilsin — .content padding'ini bekor qiladi */
+  .lesson-viewer .lv-stage { border-radius: 0; margin-left: -18px; margin-right: -18px; }
+
+  .lesson-header { flex-direction: column; align-items: stretch; }
+  .lesson-header-actions { justify-content: flex-end; }
+  .lv-article-body, .lv-code-body { padding: 18px 16px; }
+
+  /* Tab strip sig'masa gorizontal skroll — o'ralib ketmasin */
+  .tab-strip { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+  .tab-strip::-webkit-scrollbar { display: none; }
+  .tab-strip .tab-item { white-space: nowrap; flex-shrink: 0; }
+
+  /* Pastki navigatsiya: markazdagi hisoblagich joyni yeydi */
+  .lesson-nav-bar { padding: 12px; gap: 8px; }
+  .lesson-nav-bar .lnb-center { display: none; }
+
+  /* Boshqaruvlar ikki qatorga bo'linadi: pozitsiya chizig'i alohida ustki
+     qatorda, tugmalar pastda (mobil video pleerlarining standart naqshi).
+     Bitta qatorda 375px ga sig'dirishga urinilsa qator 474px bo'lib
+     kesilib qolardi — tugmalarning bir qismi umuman ko'rinmasdi. */
+  .lv-controls { flex-wrap: wrap; gap: 2px; padding: 4px 6px 8px; }
+  .lv-scrub-wrap { order: -1; flex-basis: 100%; }
+  .lv-scrim { height: 150px; }
+
+  /* 40px — WCAG 2.5.8 (AA, min 24px) dan ancha yuqori; 44px (2.5.5, AAA)
+     bo'lsa qator yana sig'masdi, shuning uchun ongli murosa */
+  .lv-btn { width: 40px; height: 40px; }
+  .lv-time { font-size: 11px; padding: 0 2px; }
+  .lv-select { height: 32px; font-size: 11px; }
+
+  /* Ovoz va PiP mobil'da olib tashlanadi: ovoz telefonning o'z tugmalari
+     bilan boshqariladi, PiP esa deyarli ishlatilmaydi. Ular qoldirilsa
+     tugmalar qatori UCHINCHI qatorga o'ralib ketardi (o'lchandi: 375px
+     ekranda qator 384px chiqardi). ±10s va tezlik esa saqlanadi —
+     o'quv videosida ular ovozdan muhimroq. */
+  .lv-volume, [data-video-mute], [data-video-pip] { display: none; }
+
+  /* Subtitr ikki qatorli boshqaruvlar ustiga chiqsin */
+  .lv-stage-video video::-webkit-media-text-track-container { transform: translateY(-88px); }
+
+  .tr-list { max-height: 260px; }
+}
+
+/* Yotiq holatdagi telefon: video butun ekranni egallasin.
+   100dvh — mobil brauzer paneli hisobga olinadi (100vh buziladi). */
+@media (max-height: 500px) and (orientation: landscape) {
+  .lesson-viewer .lv-stage-video { aspect-ratio: auto; height: 100dvh; }
 }

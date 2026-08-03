@@ -20,7 +20,12 @@
      [data-course-progress-fill] / [data-course-progress-pct] → recomputed
        whenever a lesson is marked complete
      [data-notes-input] / [data-notes-save] / [data-notes-status]
-       → per-lesson notes, persisted under ISLOH_NOTES_KEY (see below)
+       → per-lesson notes, persisted under ISLOH_NOTES_KEY (see below).
+         Avtosaqlash bilan ishlaydi — "Saqlash" tugmasi majburiy emas.
+     [data-lesson-announcer]       → aria-live doirasi; dars almashganda
+       yangi dars nomi shu yerga yoziladi (skrin-rider e'loni)
+     [role="progressbar"]          → [data-course-progress-fill] o'ramasi;
+       aria-valuenow foizga qarab yangilanadi
 
    Persisted progress: localStorage key ISLOH_COURSE_PROGRESS_KEY holds
    { [courseId]: { [lessonId]: true } } so completed lessons survive a
@@ -36,13 +41,25 @@ function isloh_lessonRows() {
   return [...document.querySelectorAll('[data-cps-lesson]')];
 }
 
+/* Kurs identifikatori: `?id=` ustuvor, sahifadagi data-course-id — zaxira.
+   Xatcho'plar `course-player.html?id=<kurs>` havolasini yozadi (pastdagi
+   isloh_activeLessonMaterial), lekin ilgari bu parametr hech qachon
+   o'qilmasdi — natijada jarayon/izohlar doim sahifaga qattiq yozilgan
+   kurs ostida saqlanardi. Dars MAZMUNINI `?id=` bo'yicha chizish 2-bosqich
+   vazifasi; bu yerda faqat saqlash identifikatori to'g'rilanadi. */
 function isloh_courseId() {
+  const fromQuery = new URLSearchParams(window.location.search).get('id');
+  if (fromQuery) return fromQuery;
   const el = document.querySelector('[data-course-id]');
   return el ? el.dataset.courseId : null;
 }
 
+/* data-lesson-id — js/course-player.js chizgan qatorlar; data-tab-target —
+   eski qo'lda yozilgan qatorlar (course-landing.html kabi sahifalarda hali
+   ishlatiladi). Saqlangan jarayon kalitlari o'zgarmasligi uchun ikkalasi
+   ham bir xil dars id'sini beradi. */
 function isloh_lessonId(row) {
-  return row ? row.dataset.tabTarget || null : null;
+  return row ? (row.dataset.lessonId || row.dataset.tabTarget || null) : null;
 }
 
 function isloh_getCourseProgress() {
@@ -51,18 +68,27 @@ function isloh_getCourseProgress() {
   return all || {};
 }
 
+/* Kvota to'lganda yoki maxfiy rejimda setItem xato tashlaydi. Ilgari bu
+   xato ushlanmasdi va bosish o'rtasida uzilardi: ekranda ✓ turar, lekin
+   hech narsa saqlanmasdi. Endi js/notes-store.js bilan bir xil shartnoma —
+   muvaffaqiyat/xato qaytariladi, chaqiruvchi UI'ni orqaga qaytaradi. */
 function isloh_saveCourseProgress(all) {
-  localStorage.setItem(ISLOH_COURSE_PROGRESS_KEY, JSON.stringify(all));
+  try {
+    localStorage.setItem(ISLOH_COURSE_PROGRESS_KEY, JSON.stringify(all));
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 function isloh_persistLessonDone(row) {
   const courseId = isloh_courseId();
   const lessonId = isloh_lessonId(row);
-  if (!courseId || !lessonId) return;
+  if (!courseId || !lessonId) return false;
   const all = isloh_getCourseProgress();
   if (!all[courseId]) all[courseId] = {};
   all[courseId][lessonId] = true;
-  isloh_saveCourseProgress(all);
+  return isloh_saveCourseProgress(all);
 }
 
 /* Runs before isloh_updateCourseProgress() so the first paint already
@@ -76,21 +102,26 @@ function isloh_restoreLessonProgress() {
   const courseProgress = all[courseId] || {};
   let seeded = false;
 
+  /* Faqat BAJARILGAN darslar saqlanadi. Ilgari har bir dars uchun `false`
+     ham yozilardi va do'kon kursdagi darslar soniga teng ravishda o'sardi
+     (96 darsli kursda — 96 ta keraksiz yozuv). Eski `false` yozuvlari shu
+     yerda bir marta tozalanadi. */
+  Object.keys(courseProgress).forEach((lessonId) => {
+    if (!courseProgress[lessonId]) { delete courseProgress[lessonId]; seeded = true; }
+  });
+
   isloh_lessonRows().forEach((row) => {
     const lessonId = isloh_lessonId(row);
     if (!lessonId) return;
-    const stored = courseProgress[lessonId];
+    const stored = courseProgress[lessonId] === true;
     const markupDone = row.classList.contains('is-done');
 
-    if (stored === undefined) {
-      courseProgress[lessonId] = markupDone;
-      seeded = true;
-      return;
-    }
+    // Markupda bajarilgan, lekin do'konda yo'q — birinchi ochilish, urug' qilamiz
+    if (markupDone && !stored) { courseProgress[lessonId] = true; seeded = true; return; }
     if (stored === markupDone) return;
-    row.classList.toggle('is-done', stored);
+    row.classList.add('is-done');
     const check = row.querySelector('[data-cps-lesson-check]');
-    if (check) check.hidden = !stored;
+    if (check) check.hidden = false;
   });
 
   if (seeded) {
@@ -170,7 +201,13 @@ function isloh_updateCourseProgress() {
   const done = rows.filter((r) => r.classList.contains('is-done')).length;
   const pct = Math.round((done / rows.length) * 100);
 
-  document.querySelectorAll('[data-course-progress-fill]').forEach((el) => { el.style.width = pct + '%'; });
+  document.querySelectorAll('[data-course-progress-fill]').forEach((el) => {
+    el.style.width = pct + '%';
+    // Vizual holat bilan birga ARIA qiymati ham yangilanadi — aks holda
+    // skrin-rider progressni har doim 0% deb o'qiydi
+    const track = el.closest('[role="progressbar"]');
+    if (track) track.setAttribute('aria-valuenow', String(pct));
+  });
   document.querySelectorAll('[data-course-progress-pct]').forEach((el) => { el.textContent = pct + '%'; });
   isloh_updateLessonCounters(rows);
 
@@ -178,51 +215,107 @@ function isloh_updateCourseProgress() {
   if (banner) banner.hidden = pct < 100;
 }
 
-/* Dars almashganda bajariladigan hamma narsa shu yerda to'planadi */
+/* Dars almashganda bajariladigan hamma narsa shu yerda to'planadi.
+   Tartib muhim: avval eski darsning izohi saqlanadi, keyingina textarea
+   yangi dars izohi bilan almashtiriladi. */
 function isloh_handleLessonChange() {
+  isloh_persistCurrentNote();
   isloh_syncLessonHeader();
   isloh_loadLessonNote();
+  isloh_syncLessonBookmarkBtn();
+  isloh_announceLesson();
 }
 
-/* js/tabs.js bu fayldan oldin yuklanadi, shuning uchun uning click
-   tinglovchisi birinchi ro'yxatdan o'tadi va `.active` klassini biz
-   o'qishimizdan oldin ko'chirib bo'ladi. */
-function isloh_initLessonChangeSync() {
-  document.querySelectorAll('[data-cps-lesson]').forEach((row) => {
-    row.addEventListener('click', isloh_handleLessonChange);
+/* Dars almashganini skrin-riderga e'lon qiladi. Ilgari "Keyingi" tugmasi
+   yashirin qatorni click() qilardi — fokus ko'chmasdi, hech qanday e'lon
+   ham bo'lmasdi, ya'ni skrin-rider foydalanuvchisi uchun sahifa jim qolardi. */
+function isloh_announceLesson() {
+  const row = isloh_activeLessonRow();
+  if (!row) return;
+  const name = row.querySelector('.cps-lesson-name')?.textContent.trim() || '';
+
+  document.querySelectorAll('[data-lesson-announcer]').forEach((el) => { el.textContent = name; });
+
+  // Ro'yxatda qaysi dars ochiqligi — faqat rang bilan emas, ARIA bilan ham
+  isloh_lessonRows().forEach((r) => {
+    if (r === row) r.setAttribute('aria-current', 'true');
+    else r.removeAttribute('aria-current');
   });
+}
+
+/* Bitta hodisa — bitta tinglovchi. Ilgari har bir dars qatoriga alohida
+   click tinglovchisi qo'yilardi (bu faylda ikkita, js/tabs.js da yana bitta)
+   va ularning ishlash tartibi <script> teglari tartibiga bog'liq edi —
+   shu sababli xatcho'p tugmasi uchun `setTimeout(..., 0)` xakisi kerak
+   bo'lgan. Endi js/course-player.js `.active` ni ko'chirib bo'lgach
+   `isloh:lesson-change` yuboradi va hamma narsa shundan keyin ishlaydi. */
+function isloh_initLessonChangeSync() {
+  document.addEventListener('isloh:lesson-change', isloh_handleLessonChange);
+
+  // course-player.js ulanmagan sahifalar (eski qo'lda yozilgan qatorlar)
+  // uchun zaxira: qator bosilganda hodisa hech kim yubormaydi
+  if (!document.querySelector('[data-player-modules]')) {
+    document.querySelectorAll('[data-cps-lesson]').forEach((row) => {
+      row.addEventListener('click', isloh_handleLessonChange);
+    });
+  }
   isloh_handleLessonChange();
 }
 
 function isloh_initModuleToggles() {
-  document.querySelectorAll('[data-cps-module-toggle]').forEach((btn) => {
+  document.querySelectorAll('[data-cps-module-toggle]').forEach((btn, i) => {
+    const container = btn.closest('.cps-module, .module-card');
+    const list = container?.querySelector('.cps-lesson-list, .module-body');
+    if (!list) return;
+
+    /* ARIA: tugma qaysi ro'yxatni boshqarishini va u ochiq/yopiqligini
+       bildiradi. Ilgari yopiq modul skrin-riderga umuman ko'rinmasdi —
+       ro'yxat borligi haqida hech qanday belgi yo'q edi. */
+    if (!list.id) list.id = 'cps-module-list-' + (i + 1);
+    btn.setAttribute('aria-controls', list.id);
+    btn.setAttribute('aria-expanded', String(!list.classList.contains('collapsed')));
+
     btn.addEventListener('click', () => {
-      const container = btn.closest('.cps-module, .module-card');
-      const list = container?.querySelector('.cps-lesson-list, .module-body');
       const icon = btn.querySelector('.cps-module-toggle') || btn;
-      if (!list) return;
-      list.classList.toggle('collapsed');
-      icon.classList.toggle('collapsed');
+      const open = !list.classList.toggle('collapsed');
+      icon.classList.toggle('collapsed', !open);
+      btn.setAttribute('aria-expanded', String(open));
     });
   });
 }
 
+/* Saqlash muvaffaqiyatsiz bo'lsa belgi orqaga qaytariladi — ekrandagi ✓
+   bilan haqiqiy holat bir-biridan ajralib qolmasligi uchun.
+   Qaytaradi: true — belgilandi, false — saqlanmadi, undefined — o'zgarish yo'q. */
 function isloh_markLessonDone(row) {
   if (!row || row.classList.contains('is-done')) return;
-  row.classList.add('is-done');
   const check = row.querySelector('[data-cps-lesson-check]');
+
+  row.classList.add('is-done');
   if (check) check.hidden = false;
+
+  if (!isloh_persistLessonDone(row)) {
+    row.classList.remove('is-done');
+    if (check) check.hidden = true;
+    isloh_updateCourseProgress();
+    if (typeof isloh_showToast === 'function') {
+      isloh_showToast("Jarayonni saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
+    }
+    return false;
+  }
+
   isloh_updateCourseProgress();
-  isloh_persistLessonDone(row);
   if (typeof isloh_recordLessonCompleted === 'function') isloh_recordLessonCompleted();
+  return true;
 }
 
 function isloh_initMarkComplete() {
   document.querySelectorAll('[data-mark-complete]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const activeRow = document.querySelector('[data-cps-lesson].active');
-      isloh_markLessonDone(activeRow);
-      if (typeof isloh_showToast === 'function') isloh_showToast("Dars yakunlandi deb belgilandi", 'success');
+      // Toast faqat haqiqatan saqlangandan keyin — xato bo'lsa o'z xabari chiqadi
+      if (isloh_markLessonDone(isloh_activeLessonRow()) === true && typeof isloh_showToast === 'function') {
+        isloh_showToast('Dars yakunlandi deb belgilandi', 'success');
+      }
     });
   });
 }
@@ -252,7 +345,10 @@ function isloh_activeLessonMaterial() {
     type: isloh_lessonMaterialType(row),
     title,
     sub: [time, course].filter(Boolean).join(' · '),
-    href: `course-player.html${courseId ? '?id=' + courseId : ''}`
+    // `?lesson=` bilan aniq darsga qaytadi — ilgari havola faqat kursni
+    // ko'rsatardi va xatcho'p har doim birinchi darsni ochardi
+    href: `course-player.html?id=${encodeURIComponent(courseId || '')}` +
+          (lessonId ? '&lesson=' + encodeURIComponent(lessonId) : '')
   };
 }
 
@@ -288,11 +384,7 @@ function isloh_initBookmarkToggle() {
     });
   });
 
-  // Dars almashganda tugma holati ham yangilansin
-  document.querySelectorAll('[data-cps-lesson]').forEach((row) => {
-    row.addEventListener('click', () => setTimeout(isloh_syncLessonBookmarkBtn, 0));
-  });
-
+  // Dars almashganda tugma holati isloh_handleLessonChange ichida yangilanadi
   isloh_syncLessonBookmarkBtn();
 }
 
@@ -304,7 +396,14 @@ function isloh_initPrevNext() {
       if (activeIndex === -1) return;
       const dir = btn.hasAttribute('data-lesson-next') ? 1 : -1;
       const target = rows[activeIndex + dir];
-      if (target) target.click();
+      if (!target) return;
+      target.click();
+
+      /* Fokusni yangi dars sarlavhasiga ko'chiramiz. lesson-player.html'da
+         dars qatorlari display:none — fokus hech qayerga ketmasdi va
+         klaviatura foydalanuvchisi qayerdaligini bilmay qolardi. */
+      const title = document.querySelector('[data-lesson-title]');
+      if (title) title.focus();
     });
   });
 }
@@ -351,32 +450,77 @@ function isloh_renderNoteStatus(note) {
   });
 }
 
-/* Dars almashganda o'sha darsning izohi textarea'ga qaytariladi */
+/* --- Izohni yo'qotmaslik mexanizmi --------------------------------------
+   MUAMMO: dars almashganda isloh_loadLessonNote() textarea qiymatini
+   yangi darsning izohi bilan almashtirardi. Foydalanuvchi yozgan, lekin
+   "Saqlash" tugmasini bosmagan matn hech qanday ogohlantirishsiz yo'qolardi.
+
+   YECHIM ikki qismli:
+     1) Avtosaqlash — yozishdan 800 ms keyin, shuningdek sahifa yopilishi
+        va tab fonga o'tishida darhol.
+     2) Textarea "bog'lanish" (isloh_noteBinding) bilan ishlaydi: matn
+        FAOL qatorga emas, textarea to'ldirilgan darsga yoziladi. Shu
+        sababli hodisalar tartibi (tabs.js .active'ni qachon ko'chirishi)
+        endi ahamiyatsiz — izoh har doim o'z darsiga tushadi.                */
+
+const ISLOH_NOTE_AUTOSAVE_MS = 800;
+let isloh_noteAutosaveTimer = null;
+let isloh_noteBinding = null;   // { courseId, lessonId, meta, savedText }
+
+/* Dars almashganda o'sha darsning izohi textarea'ga qaytariladi va
+   bog'lanish yangilanadi */
 function isloh_loadLessonNote() {
   const input = document.querySelector('[data-notes-input]');
   if (!input || !isloh_notesStoreReady()) return;
-  const note = isloh_getLessonNote(isloh_courseId(), isloh_lessonId(isloh_activeLessonRow()));
+  const courseId = isloh_courseId();
+  const lessonId = isloh_lessonId(isloh_activeLessonRow());
+  const note = isloh_getLessonNote(courseId, lessonId);
+
   input.value = note ? note.text : '';
+  isloh_noteBinding = { courseId, lessonId, meta: isloh_activeLessonNoteMeta(), savedText: input.value };
   isloh_renderNoteStatus(note);
 }
 
-function isloh_initNotesSave() {
+/* Textarea'dagi matnni BOG'LANGAN darsga yozadi. Qaytaradi: true — saqlandi
+   yoki o'zgarish yo'q edi, false — saqlab bo'lmadi. */
+function isloh_persistCurrentNote() {
+  clearTimeout(isloh_noteAutosaveTimer);
   const input = document.querySelector('[data-notes-input]');
+  const bind = isloh_noteBinding;
+  if (!input || !bind || !bind.courseId || !bind.lessonId || !isloh_notesStoreReady()) return false;
+  if (input.value === bind.savedText) return true;   // o'zgarmagan — yozish shart emas
 
+  if (!isloh_setLessonNote(bind.courseId, bind.lessonId, input.value, bind.meta)) {
+    if (typeof isloh_showToast === 'function') isloh_showToast("Saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
+    return false;
+  }
+  bind.savedText = input.value;
+  isloh_renderNoteStatus(isloh_getLessonNote(bind.courseId, bind.lessonId));
+  return true;
+}
+
+function isloh_initNotesAutosave() {
+  const input = document.querySelector('[data-notes-input]');
+  if (!input) return;
+
+  input.addEventListener('input', () => {
+    clearTimeout(isloh_noteAutosaveTimer);
+    isloh_noteAutosaveTimer = setTimeout(isloh_persistCurrentNote, ISLOH_NOTE_AUTOSAVE_MS);
+  });
+
+  // Sahifa yopilishi / boshqa tabga o'tish — debounce'ni kutmasdan yozamiz
+  window.addEventListener('pagehide', isloh_persistCurrentNote);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) isloh_persistCurrentNote();
+  });
+}
+
+function isloh_initNotesSave() {
   document.querySelectorAll('[data-notes-save]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      if (!input || !isloh_notesStoreReady()) return;
-      const courseId = isloh_courseId();
-      const lessonId = isloh_lessonId(isloh_activeLessonRow());
-      if (!courseId || !lessonId) return;
-
-      const hadText = input.value.trim().length > 0;
-      if (!isloh_setLessonNote(courseId, lessonId, input.value, isloh_activeLessonNoteMeta())) {
-        if (typeof isloh_showToast === 'function') isloh_showToast("Saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
-        return;
-      }
-
-      isloh_renderNoteStatus(isloh_getLessonNote(courseId, lessonId));
+      const input = document.querySelector('[data-notes-input]');
+      const hadText = input ? input.value.trim().length > 0 : false;
+      if (!isloh_persistCurrentNote()) return;   // xato bo'lsa o'z toast'i chiqqan
       if (typeof isloh_showToast === 'function') {
         isloh_showToast(hadText ? 'Izoh saqlandi' : "Izoh o'chirildi", 'success');
       }
@@ -384,16 +528,30 @@ function isloh_initNotesSave() {
   });
 }
 
-/* Feeds real study time into js/progress-metrics.js while a lesson page is
-   open: one minute per tick, only while the tab is actually visible, so
-   Analitika's totalStudyMinutes/heatmap reflect time actually spent instead
-   of staying frozen at the seeded defaults. */
+/* Haqiqiy o'qish vaqtini js/progress-metrics.js ga uzatadi.
+   Ilgari shart faqat `!document.hidden` edi — ochiq qoldirilgan tab tunda
+   480 "o'qish daqiqasi" yozib qo'yardi va Analitika ma'nosini yo'qotardi.
+   Endi daqiqa faqat haqiqiy faollik bo'lganda hisoblanadi: video o'ynayotgan
+   bo'lsa yoki oxirgi daqiqada foydalanuvchi harakat qilgan bo'lsa.
+   clearInterval ham qo'shildi — sahifa yopilganda taymer to'xtaydi. */
 function isloh_initStudyTimer() {
   if (typeof isloh_recordStudyMinutes !== 'function') return;
-  setInterval(() => {
+
+  let lastActivity = Date.now();
+  const bump = () => { lastActivity = Date.now(); };
+  ['pointerdown', 'keydown', 'scroll'].forEach((ev) => {
+    document.addEventListener(ev, bump, { passive: true });
+  });
+
+  const timer = setInterval(() => {
     if (document.hidden) return;
-    isloh_recordStudyMinutes(1);
+    // 2-bosqichda haqiqiy <video> qo'shilganda bu shart o'z-o'zidan ishlaydi
+    const video = document.querySelector('[data-tab-panel]:not([hidden]) video');
+    const playing = video && !video.paused && !video.ended;
+    if (playing || Date.now() - lastActivity < 60000) isloh_recordStudyMinutes(1);
   }, 60000);
+
+  window.addEventListener('pagehide', () => clearInterval(timer), { once: true });
 }
 
 function isloh_initLessonViewer() {
@@ -406,6 +564,7 @@ function isloh_initLessonViewer() {
   isloh_initBookmarkToggle();
   isloh_initPrevNext();
   isloh_initNotesSave();
+  isloh_initNotesAutosave();
   isloh_initLessonChangeSync();
   isloh_updateCourseProgress();
   isloh_initStudyTimer();
