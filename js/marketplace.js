@@ -13,7 +13,8 @@
    API contract:
      {
        featured_courses: [{ id, title, instructor, price, discount_price,
-                             category, rating, duration, level, cover, icon }],
+                             category, rating, views, duration, level,
+                             cover, icon, summary, lessons, students }],
        categories: [ "Barchasi", "Backend", ... ],
        user_cart: { items_count, items }
      }
@@ -24,55 +25,80 @@
                               "Savatga qo'shish", cleared on checkout submit.
      isloh_purchased_courses — array of { id, title, cover, icon }, read by
                               js/my-courses.js under "Boshlangan kurslar".
-     isloh_saved_courses    — array of { id, date }; only the course id is
-                              persisted, the card data is looked up from
-                              ISLOH_MARKETPLACE_DATA so nothing is duplicated.
-                              Rendered by js/my-courses.js ("Saqlangan
-                              kurslar"). NOTE: kurs darajasidagi ma'lumot
-                              "Saqlanganlar" (bookmarks.html) sahifasiga
-                              KIRMAYDI — u faqat dars materiallari uchun.
+     isloh_orders           — buyurtmalar tarixi: { id, date, status, items }.
+                              Checkout tasdiqlanganda yangi yozuv qo'shiladi;
+                              orders.html va marketplace "Xaridlar tarixi"
+                              ikkalasi ham SHU do'kondan o'qiydi.
    ========================================================================== */
 
+/* `views` — kurs sahifasi necha marta ochilgani (mock analitika). "Ko'p
+   ko'rilgan" ro'yxati aynan shu maydon bo'yicha saralanadi; backend ulangach
+   bu qiymat API'dan keladi.
+   `summary` / `lessons` / `students` — kurs sahifasi (course-landing.html)
+   sarlavhasi shu maydonlardan to'ldiriladi, ya'ni har bir kurs o'z ma'lumoti
+   bilan ochiladi. */
 const ISLOH_MARKETPLACE_DATA = {
   featured_courses: [
-    { id: 'py-101', title: 'Python Backend Development', instructor: 'Akmal Yuldashev', price: 420000, discount_price: 249000, category: 'Backend', rating: 4.9, duration: '42 soat', level: 'Barcha darajalar', cover: 'linear-gradient(135deg,#306998,#FFD43B)', icon: 'bi bi-filetype-py' },
-    { id: 'react-201', title: 'React — The Complete Guide', instructor: 'Malika Tosheva', price: 299000, discount_price: null, category: 'Frontend', rating: 4.8, duration: '38 soat', level: "O'rta daraja", cover: 'linear-gradient(135deg,#0EA5E9,#1E3A8A)', icon: 'bi bi-atom' },
-    { id: 'uiux-301', title: 'UI/UX Design Fundamentals', instructor: 'Dilnoza R.', price: 250000, discount_price: 189000, category: 'Dizayn', rating: 4.7, duration: '26 soat', level: "Boshlang'ich", cover: 'linear-gradient(135deg,#8E44EC,#3B82F6)', icon: 'bi bi-palette-fill' },
-    { id: 'ml-401', title: 'Machine Learning A-Z', instructor: 'Aziz Karimov', price: 349000, discount_price: null, category: 'Backend', rating: 4.6, duration: '56 soat', level: 'Yuqori daraja', cover: 'linear-gradient(135deg,#06B6D4,#0E7490)', icon: 'bi bi-cpu-fill' },
-    { id: 'flutter-501', title: 'Flutter Mobile Development', instructor: 'Javlon Rahimov', price: 320000, discount_price: 219000, category: 'Mobile', rating: 4.7, duration: '34 soat', level: "O'rta daraja", cover: 'linear-gradient(135deg,#02569B,#13B9FD)', icon: 'bi bi-phone-fill' },
-    { id: 'devops-601', title: 'Docker & Kubernetes DevOps', instructor: 'Sardor Aliyev', price: 380000, discount_price: null, category: 'DevOps', rating: 4.8, duration: '46 soat', level: 'Yuqori daraja', cover: 'linear-gradient(135deg,#2496ED,#326CE5)', icon: 'bi bi-boxes' },
+    { id: 'py-101', title: 'Python Backend Development', instructor: 'Akmal Yuldashev', price: 420000, discount_price: 249000, category: 'Backend', rating: 4.9, views: 18420, lessons: 96, students: 2140, duration: '42 soat', level: 'Barcha darajalar', summary: "Python va Django yordamida real backend loyihalarni noldan quring: REST API, ma'lumotlar bazasi, autentifikatsiya va deploy.", cover: 'linear-gradient(135deg,#306998,#FFD43B)', icon: 'bi bi-filetype-py' },
+    { id: 'react-201', title: 'React — The Complete Guide', instructor: 'Malika Tosheva', price: 299000, discount_price: null, category: 'Frontend', rating: 4.8, views: 15230, lessons: 84, students: 1760, duration: '38 soat', level: "O'rta daraja", summary: "Zamonaviy React: hooks, komponentlar arxitekturasi, holat boshqaruvi va ishlab chiqarishga tayyor ilova.", cover: 'linear-gradient(135deg,#0EA5E9,#1E3A8A)', icon: 'bi bi-atom' },
+    { id: 'uiux-301', title: 'UI/UX Design Fundamentals', instructor: 'Dilnoza R.', price: 250000, discount_price: 189000, category: 'Dizayn', rating: 4.7, views: 9840, lessons: 52, students: 1240, duration: '26 soat', level: "Boshlang'ich", summary: "Foydalanuvchi tadqiqotidan tayyor prototipgacha: Figma, dizayn tizimi va interfeys mantiqi asoslari.", cover: 'linear-gradient(135deg,#8E44EC,#3B82F6)', icon: 'bi bi-palette-fill' },
+    { id: 'ml-401', title: 'Machine Learning A-Z', instructor: 'Aziz Karimov', price: 349000, discount_price: null, category: 'Backend', rating: 4.6, views: 12760, lessons: 120, students: 980, duration: '56 soat', level: 'Yuqori daraja', summary: "Mashinali o'qitish algoritmlari amaliyotda: ma'lumotni tayyorlash, model qurish, baholash va joylashtirish.", cover: 'linear-gradient(135deg,#06B6D4,#0E7490)', icon: 'bi bi-cpu-fill' },
+    { id: 'flutter-501', title: 'Flutter Mobile Development', instructor: 'Javlon Rahimov', price: 320000, discount_price: 219000, category: 'Mobile', rating: 4.7, views: 7310, lessons: 72, students: 860, duration: '34 soat', level: "O'rta daraja", summary: "Bitta koddan iOS va Android ilova: Flutter widgetlari, navigatsiya, API bilan ishlash va do'konga chiqarish.", cover: 'linear-gradient(135deg,#02569B,#13B9FD)', icon: 'bi bi-phone-fill' },
+    { id: 'devops-601', title: 'Docker & Kubernetes DevOps', instructor: 'Sardor Aliyev', price: 380000, discount_price: null, category: 'DevOps', rating: 4.8, views: 11150, lessons: 88, students: 1120, duration: '46 soat', level: 'Yuqori daraja', summary: "Konteynerdan klastergacha: Docker, Kubernetes, CI/CD quvuri va ishlab chiqarishdagi monitoring.", cover: 'linear-gradient(135deg,#2496ED,#326CE5)', icon: 'bi bi-boxes' },
     /* Talaba yozilgan demo kurs — course-player.html, course-landing.html,
        notes/discussions/live-sessions sahifalari shu kursni ko'rsatadi.
        Ilgari katalogda yo'q edi, shuning uchun pleerdagi progress
        sertifikatlar sahifasiga umuman chiqmasdi (js/certificate-engine.js
        sarlavhasida ham shu kamchilik qayd etilgan edi). Qiymatlar
        course-landing.html dagi ma'lumotdan olindi. */
-    { id: 'docker-for-beginners', title: 'Docker for Beginners', instructor: 'Akmal Yuldashev', price: 159000, discount_price: null, category: 'DevOps', rating: 4.7, duration: '18 soat', level: "Boshlang'ich", cover: 'linear-gradient(135deg,#F97316,#EA580C)', icon: 'bi bi-boxes' }
+    { id: 'docker-for-beginners', title: 'Docker for Beginners', instructor: 'Akmal Yuldashev', price: 159000, discount_price: null, category: 'DevOps', rating: 4.7, views: 20480, lessons: 24, students: 890, duration: '18 soat', level: "Boshlang'ich", summary: "Konteynerlashtirish asoslarini noldan o'rganing — Docker, Dockerfile va Docker Compose yordamida zamonaviy ilovalarni joylashtiring.", cover: 'linear-gradient(135deg,#F97316,#EA580C)', icon: 'bi bi-boxes' }
   ],
   categories: ['Barchasi', 'Backend', 'Frontend', 'Mobile', 'Dizayn', 'DevOps'],
   user_cart: { items_count: 0, items: [] }
 };
 
-// Buyurtmalar tarixining yagona manbai — pages/student/orders.html shu bilan
-// mos bo'lishi kerak; marketplace.html "Xaridlar tarixi" shu ro'yxatdan
-// so'nggi to'langan buyurtmalarni render qiladi.
-const ISLOH_ORDER_HISTORY = [
-  { id: '10312', date: '18-iyul, 2026', status: 'paid', items: [
-      { title: 'Python Backend Development', cover: 'linear-gradient(135deg,#306998,#FFD43B)', icon: 'bi bi-filetype-py', price: 249000 },
-      { title: 'React — The Complete Guide', cover: 'linear-gradient(135deg,#0EA5E9,#1E3A8A)', icon: 'bi bi-atom', price: 299000 }
+/* Buyurtmalar boshlang'ich (demo) ro'yxati. Bu massiv — faqat URUG': birinchi
+   o'qishda `isloh_orders` do'koniga ekiladi, keyin haqiqiy buyurtmalar shu
+   do'konga qo'shiladi. Ilgari bu ro'yxat orders.html ichida ham qo'lda
+   takrorlangan edi va checkout'dan keyin yangi buyurtma umuman ko'rinmasdi.
+   Sana ISO ko'rinishida saqlanadi (saralash mumkin bo'lsin), foydalanuvchiga
+   isloh_formatOrderDate() orqali ko'rsatiladi. */
+const ISLOH_ORDER_SEED = [
+  { id: '10312', date: '2026-07-18', status: 'paid', items: [
+      { id: 'py-101', title: 'Python Backend Development', cover: 'linear-gradient(135deg,#306998,#FFD43B)', icon: 'bi bi-filetype-py', price: 249000 },
+      { id: 'react-201', title: 'React — The Complete Guide', cover: 'linear-gradient(135deg,#0EA5E9,#1E3A8A)', icon: 'bi bi-atom', price: 299000 }
     ] },
-  { id: '10245', date: '12-iyul, 2026', status: 'paid', items: [
-      { title: 'Python Backend Development', cover: 'linear-gradient(135deg,#306998,#FFD43B)', icon: 'bi bi-filetype-py', price: 249000 }
+  { id: '10245', date: '2026-07-12', status: 'paid', items: [
+      { id: 'py-101', title: 'Python Backend Development', cover: 'linear-gradient(135deg,#306998,#FFD43B)', icon: 'bi bi-filetype-py', price: 249000 }
     ] },
-  { id: '10198', date: '2-iyul, 2026', status: 'pending', items: [
-      { title: 'Machine Learning A-Z', cover: 'linear-gradient(135deg,#06B6D4,#0E7490)', icon: 'bi bi-cpu-fill', price: 349000 }
+  { id: '10198', date: '2026-07-02', status: 'pending', items: [
+      { id: 'ml-401', title: 'Machine Learning A-Z', cover: 'linear-gradient(135deg,#06B6D4,#0E7490)', icon: 'bi bi-cpu-fill', price: 349000 }
     ] },
-  { id: '10102', date: '20-iyun, 2026', status: 'refunded', items: [
-      { title: 'UI/UX Design Fundamentals', cover: 'linear-gradient(135deg,#8E44EC,#3B82F6)', icon: 'bi bi-palette-fill', price: 189000 }
+  { id: '10102', date: '2026-06-20', status: 'refunded', items: [
+      { id: 'uiux-301', title: 'UI/UX Design Fundamentals', cover: 'linear-gradient(135deg,#8E44EC,#3B82F6)', icon: 'bi bi-palette-fill', price: 189000 }
     ] }
 ];
-const ISLOH_ORDER_STATUS_LABEL = { paid: "To'landi", pending: 'Kutilmoqda', refunded: 'Qaytarilgan' };
-const ISLOH_ORDER_STATUS_BADGE = { paid: 'badge-green', pending: 'badge-warning', refunded: 'badge-danger' };
+/* Buyurtma holatlari. `refund_pending` — foydalanuvchi qaytarish so'rovini
+   yuborgan, lekin hali ko'rib chiqilmagan holat: ilgari "Qaytarish" tugmasi
+   hech qanday holatni o'zgartirmasdi va so'rovdan iz qolmasdi. */
+const ISLOH_ORDER_STATUS_LABEL = {
+  paid: "To'landi",
+  pending: 'Kutilmoqda',
+  refund_pending: "Qaytarish so'ralgan",
+  refunded: 'Qaytarilgan'
+};
+const ISLOH_ORDER_STATUS_BADGE = {
+  paid: 'badge-green',
+  pending: 'badge-warning',
+  refund_pending: 'badge-warning',
+  refunded: 'badge-danger'
+};
+
+/* Buyurtma sanasi uchun oy nomlari (kichik harf: "18-iyul, 2026").
+   js/profile.js dagi ISLOH_MONTH_LABELS boshqa format uchun (bosh harf bilan,
+   "2025-yil Sentabr"), shuning uchun bu alohida ro'yxat — nomi ham boshqa,
+   ikkala fayl bitta sahifada yuklansa to'qnashmaydi. */
+const ISLOH_ORDER_MONTHS = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
 
 // Savat/checkout/marketplace kuponi — bitta joyda, cart.js va checkout.js
 // shu obyektdan foydalanadi (avval ikkalasida alohida-alohida yozilgan edi).
@@ -80,20 +106,35 @@ const ISLOH_COUPON = { code: 'ISLOH2026', percent: 15 };
 
 const ISLOH_CART_KEY = 'isloh_cart_items';
 const ISLOH_PURCHASED_KEY = 'isloh_purchased_courses';
-const ISLOH_SAVED_KEY = 'isloh_saved_courses';
+const ISLOH_ORDERS_KEY = 'isloh_orders';
+
+// Tavsiyalar / "Ko'p ko'rilgan" lentalarida nechta kurs ko'rsatiladi
+const ISLOH_STRIP_LIMIT = 4;
 
 function isloh_categorySlug(name) {
   return name === 'Barchasi' ? 'all' : name.toLowerCase();
 }
 
-// Kurs ma'lumotini ID bo'yicha yagona manbadan oladi — saqlanganlar ro'yxati
-// faqat ID saqlagani uchun kartochka shu yerdan to'ldiriladi.
+// Kurs ma'lumotini ID bo'yicha yagona manbadan oladi — savat/xohishlar
+// ro'yxati faqat ID saqlagani uchun kartochka shu yerdan to'ldiriladi.
 function isloh_findCourseById(id) {
   return ISLOH_MARKETPLACE_DATA.featured_courses.find((c) => c.id === id) || null;
 }
 
-function isloh_formatSom(n) {
+// Raqamni mahalliy formatda ("18 420") ko'rsatadi — narx ham, ko'rishlar ham
+function isloh_formatCount(n) {
   return Math.round(n).toLocaleString('uz-UZ');
+}
+function isloh_formatSom(n) {
+  return isloh_formatCount(n);
+}
+
+/* Kartochka bosilganda qayerga o'tishi: sotib olingan kurs — o'quv sahifasiga,
+   qolganlari — do'kondagi kurs sahifasiga. */
+function isloh_courseLinkHref(course) {
+  return isloh_isPurchased(course.id)
+    ? `course-detail.html?id=${course.id}`
+    : `course-landing.html?id=${course.id}`;
 }
 
 // --- Cart (Savatga qo'shish -> checkout'gacha) ---
@@ -144,79 +185,103 @@ function isloh_addPurchasedCourse(course) {
   localStorage.setItem(ISLOH_PURCHASED_KEY, JSON.stringify(list));
 }
 
-// --- Saqlangan kurslar (Marketplace kartochkasidagi xatcho'p tugmasi) ---
-// localStorage'da faqat { id, date } saqlanadi; qolgan hamma narsa
-// ISLOH_MARKETPLACE_DATA'dan olinadi. Eslatma: hozircha bu do'kon uchun
-// alohida ko'rish sahifasi yo'q — "Mening kurslarim"da faqat sotib
-// olingan kurslar chiqadi.
-function isloh_getSavedCourses() {
-  try { return JSON.parse(localStorage.getItem(ISLOH_SAVED_KEY)) || []; } catch (e) { return []; }
-}
-function isloh_setSavedCourses(items) {
-  localStorage.setItem(ISLOH_SAVED_KEY, JSON.stringify(items));
-}
-function isloh_isSavedCourse(id) {
-  return isloh_getSavedCourses().some((c) => c.id === id);
-}
-function isloh_removeSavedCourse(id) {
-  isloh_setSavedCourses(isloh_getSavedCourses().filter((c) => c.id !== id));
-}
+/* --- Buyurtmalar do'koni (orders.html + marketplace "Xaridlar tarixi") ---
+   Yagona manba: localStorage'dagi `isloh_orders`. Yozuv shakli:
+     { id, date: 'YYYY-MM-DD', status: 'paid'|'pending'|'refunded',
+       items: [{ id, title, cover, icon, price }] }
+   Jami summa saqlanmaydi — u har doim qatorlardan hisoblanadi, shunda
+   qo'lda yozilgan "Jami" bilan haqiqiy qatorlar bir-biriga zid bo'lmaydi. */
 
-// Global toggle — istalgan sahifadagi kurs kartochkasi shu funksiyani chaqiradi.
-// Qaytaradi: true — saqlandi, false — saqlanganlardan olib tashlandi.
-function isloh_toggleSaveCourse(courseId) {
-  const items = isloh_getSavedCourses();
-  const idx = items.findIndex((c) => c.id === courseId);
-  if (idx > -1) {
-    items.splice(idx, 1);
-    isloh_setSavedCourses(items);
+function isloh_saveOrders(list) {
+  try {
+    localStorage.setItem(ISLOH_ORDERS_KEY, JSON.stringify(list));
+    return true;
+  } catch (e) {
     return false;
   }
-  items.push({ id: courseId, date: new Date().toISOString().slice(0, 10) });
-  isloh_setSavedCourses(items);
-  return true;
 }
 
-// Tugmaning vizual holati (ikonka + .active) — bitta joyda
-function isloh_syncSaveToggle(btn, saved) {
-  btn.classList.toggle('active', saved);
-  const icon = btn.querySelector('i');
-  if (icon) {
-    icon.classList.toggle('bi-bookmark', !saved);
-    icon.classList.toggle('bi-bookmark-fill', saved);
+/* Buyurtmalar ro'yxati, yangisidan eskisiga qarab saralangan. Do'kon bo'sh
+   bo'lsa demo urug'i ekiladi — shunda sahifalar hech qachon bo'sh ko'rinmaydi.
+   Urug' faqat BIR MARTA ekiladi: foydalanuvchi hammasini o'chirsa ham
+   (bo'sh massiv saqlangan bo'lsa) qaytib kelmaydi. */
+function isloh_getOrders() {
+  let stored = null;
+  try { stored = JSON.parse(localStorage.getItem(ISLOH_ORDERS_KEY)); } catch (e) { stored = null; }
+
+  if (!Array.isArray(stored)) {
+    stored = ISLOH_ORDER_SEED.slice();
+    isloh_saveOrders(stored);
   }
+  return stored.slice().sort((a, b) => (a.date === b.date ? Number(b.id) - Number(a.id) : (a.date < b.date ? 1 : -1)));
 }
 
-// Tugma qaysi kursga tegishli ekanini aniqlaydi: o'z data-course-id'si yoki
-// eng yaqin [data-course-id] kartochkasidan.
-function isloh_saveToggleCourseId(btn) {
-  return btn.dataset.courseId || btn.closest('[data-course-id]')?.dataset.courseId || null;
+// Buyurtma summasi — qatorlardan hisoblanadi
+function isloh_orderTotal(order) {
+  return (order.items || []).reduce((sum, item) => sum + (item.price || 0), 0);
 }
 
-// [data-save-toggle] tugmalari uchun yagona delegatsiyalangan hodisa —
-// marketplace.js yuklangan har qanday sahifada ishlaydi.
-function isloh_initSaveToggles() {
-  document.body.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-save-toggle]');
-    if (!btn) return;
-    const id = isloh_saveToggleCourseId(btn);
-    if (!id) return;
-
-    const saved = isloh_toggleSaveCourse(id);
-    // Bir kurs sahifada bir necha marta ko'rinishi mumkin — hammasini yangilaymiz
-    document.querySelectorAll('[data-save-toggle]').forEach((el) => {
-      if (isloh_saveToggleCourseId(el) === id) isloh_syncSaveToggle(el, saved);
-    });
-    if (typeof isloh_showToast === 'function') {
-      isloh_showToast(saved ? "Saqlanganlarga qo'shildi" : 'Saqlanganlardan olib tashlandi', 'success');
-    }
-  });
+// '2026-07-18' -> '18-iyul, 2026'
+function isloh_formatOrderDate(value) {
+  const d = new Date(value);
+  if (!value || isNaN(d.getTime())) return String(value || '');
+  return d.getDate() + '-' + ISLOH_ORDER_MONTHS[d.getMonth()] + ', ' + d.getFullYear();
 }
 
-// checkout.js "Buyurtmani tasdiqlash"da shu funksiyani chaqiradi:
-// savatdagi barcha kurslarni sotib olingan deb belgilaydi va savatni bo'shatadi.
+// Keyingi buyurtma raqami — mavjudlarining eng kattasidan bittaga ko'p
+function isloh_nextOrderId(orders) {
+  const max = orders.reduce((n, order) => Math.max(n, Number(order.id) || 0), 10000);
+  return String(max + 1);
+}
+
+// Bitta buyurtmani ID bo'yicha topadi
+function isloh_findOrderById(id) {
+  return isloh_getOrders().find((order) => order.id === String(id)) || null;
+}
+
+/* Buyurtma holatini o'zgartiradi va do'konga saqlaydi (qaytarish so'rovi shu
+   orqali yoziladi). Yangilangan buyurtmani qaytaradi, topilmasa null. */
+function isloh_setOrderStatus(id, status) {
+  const orders = isloh_getOrders();
+  const order = orders.find((o) => o.id === String(id));
+  if (!order) return null;
+
+  order.status = status;
+  isloh_saveOrders(orders);
+  return order;
+}
+
+/* Savat tarkibidan yangi (to'langan) buyurtma yaratadi va uni do'konga
+   qo'shadi. Yaratilgan buyurtmani qaytaradi, savat bo'sh bo'lsa null. */
+function isloh_createOrderFromCart(cartItems) {
+  const items = (cartItems || []).map((item) => ({
+    id: item.id,
+    title: item.title,
+    cover: item.cover,
+    icon: item.icon,
+    price: item.price || 0
+  }));
+  if (!items.length) return null;
+
+  const orders = isloh_getOrders();
+  const order = {
+    id: isloh_nextOrderId(orders),
+    date: new Date().toISOString().slice(0, 10),
+    status: 'paid',
+    items: items
+  };
+  orders.unshift(order);
+  isloh_saveOrders(orders);
+  return order;
+}
+
+// checkout.js "Buyurtmani tasdiqlash"da shu funksiyani chaqiradi: savatdan
+// buyurtma yozuvini yaratadi, kurslarni sotib olingan deb belgilaydi va
+// savatni bo'shatadi. Buyurtma savat tozalanishidan OLDIN yaratiladi.
 function isloh_finalizeCartCheckout() {
-  isloh_getCartItems().forEach((item) => isloh_addPurchasedCourse(item));
+  const items = isloh_getCartItems();
+  isloh_createOrderFromCart(items);
+  items.forEach((item) => isloh_addPurchasedCourse(item));
   isloh_saveCartItems([]);
   isloh_updateCartBadge();
 }
@@ -231,9 +296,17 @@ function isloh_renderMarketplaceCategories(categories) {
   }).join('');
 }
 
+/* Qidiruv uchun matn: sarlavhadan tashqari o'qituvchi, yo'nalish va daraja
+   ham hisobga olinadi — "akmal", "devops" yoki "boshlang'ich" deb qidirganda
+   ham mos kurslar chiqsin (js/filterable.js data-filter-text'ni o'qiydi). */
+function isloh_courseSearchText(course) {
+  return [course.title, course.instructor, course.category, course.level]
+    .filter(Boolean).join(' ').replace(/"/g, '&quot;');
+}
+
 function isloh_courseActionHtml(course) {
   if (isloh_isPurchased(course.id)) {
-    return `<a href="course-detail.html?id=${course.id}" class="btn btn-primary btn-sm btn-block" style="margin-top:10px;">Darsni boshlash</a>`;
+    return `<a href="${isloh_courseLinkHref(course)}" class="btn btn-primary btn-sm btn-block" style="margin-top:10px;">Darsni boshlash</a>`;
   }
   if (isloh_isInCart(course.id)) {
     return `<button class="btn btn-outline btn-sm btn-block" style="margin-top:10px;" disabled>Savatda</button>`;
@@ -250,21 +323,24 @@ function isloh_renderMarketplaceCourses(courses) {
       ? `<span class="price-now">${isloh_formatSom(course.discount_price)} so'm</span><span class="price-old">${isloh_formatSom(course.price)}</span><span class="discount-badge">-${Math.round((1 - course.discount_price / course.price) * 100)}%</span>`
       : `<span class="price-now">${isloh_formatSom(course.price)} so'm</span>`;
     const wishlisted = typeof isloh_isInWishlist === 'function' && isloh_isInWishlist(course.id);
-    const saved = isloh_isSavedCourse(course.id);
+    /* Muqova va sarlavha — havola: kartochka bosilganda kurs sahifasi ochiladi
+       va kursni sotib olmasdan turib baholash mumkin. Yurak tugmasi havolaning
+       ichida emas, yonida turadi, shuning uchun u bosilganda o'tish bo'lmaydi. */
+    const href = isloh_courseLinkHref(course);
 
     return `
-      <div class="card mkt-card" data-filter-item data-category="${isloh_categorySlug(course.category)}" data-filter-text="${course.title}"
+      <div class="card mkt-card" data-filter-item data-category="${isloh_categorySlug(course.category)}" data-filter-text="${isloh_courseSearchText(course)}"
            data-course-id="${course.id}" data-course-title="${course.title}" data-course-cover="${course.cover}" data-course-icon="${course.icon}"
            data-course-price="${course.price}"${course.discount_price ? ` data-course-discount-price="${course.discount_price}"` : ''}>
         <div class="mkt-cover" style="background:${course.cover};">
-          <i class="${course.icon}"></i>
+          <a class="mkt-cover-link" href="${href}" aria-label="${course.title}"><i class="${course.icon}"></i></a>
           <div class="card-fav-actions">
-            <button class="fav-toggle fav-save${saved ? ' active' : ''}" data-save-toggle aria-label="Saqlanganlarga qo'shish"><i class="bi ${saved ? 'bi-bookmark-fill' : 'bi-bookmark'}"></i></button>
             <button class="fav-toggle${wishlisted ? ' active' : ''}" data-wishlist-toggle aria-label="Xohishlar ro'yxatiga qo'shish"><i class="bi ${wishlisted ? 'bi-heart-fill' : 'bi-heart'}"></i></button>
           </div>
         </div>
         <div class="card-pad" style="padding-top:14px;">
-          <div style="font-weight:700; font-size:14px;" class="filter-title">${course.title}</div>
+          <a class="mkt-card-title filter-title" href="${href}">${course.title}</a>
+          <div class="mkt-card-meta"><i class="bi bi-star-fill"></i> ${course.rating} · ${course.instructor}</div>
           <div class="price-row">${priceRow}</div>
           ${isloh_courseActionHtml(course)}
         </div>
@@ -278,9 +354,91 @@ function isloh_renderMarketplaceCourses(courses) {
       isloh_addToCart(course);
       isloh_updateCartBadge();
       isloh_renderMarketplaceCourses(ISLOH_MARKETPLACE_DATA.featured_courses);
+      isloh_renderMarketplaceStrips(); // savat o'zgardi — tavsiyalar ham yangilanadi
       if (typeof isloh_showToast === 'function') isloh_showToast(`"${course.title}" savatga qo'shildi`, 'success');
     });
   });
+
+  /* Katakcha qayta chizilgach joriy filtr va qidiruv holati tiklanadi —
+     aks holda savatga qo'shishdan keyin qidiruv natijasi "unutilib",
+     butun katalog qaytib chiqardi. */
+  const scope = grid.closest('[data-filterable]');
+  if (scope && typeof isloh_applyFilterable === 'function') isloh_applyFilterable(scope);
+}
+
+/* --- Lentalar: "Tavsiya etilgan siz uchun" va "Ko'p ko'rilgan" -------------
+   Ikkalasi ham ISLOH_MARKETPLACE_DATA'dan render qilinadi (ilgari HTML'ga
+   qo'lda yozilgan, katalogda umuman mavjud bo'lmagan kurslar turardi va
+   bosilganda hech narsa bo'lmasdi). Markup shartnomasi:
+     [data-mkt-recommended]  -> tavsiyalar lentasi
+     [data-mkt-most-viewed]  -> ko'p ko'rilganlar lentasi                    */
+
+/* Foydalanuvchi qiziqishi: savat + xohishlar ro'yxati + sotib olingan
+   kurslarning yo'nalishlari. Hech qanday signal bo'lmasa bo'sh qaytadi —
+   u holda tavsiya reyting bo'yicha beriladi. */
+function isloh_getInterestCategories() {
+  const ids = isloh_getCartItems().map((c) => c.id)
+    .concat(isloh_getPurchasedCourses().map((c) => c.id))
+    .concat(typeof isloh_getWishlistItems === 'function' ? isloh_getWishlistItems().map((c) => c.id) : []);
+
+  const categories = [];
+  ids.forEach((id) => {
+    const course = isloh_findCourseById(id);
+    if (course && categories.indexOf(course.category) === -1) categories.push(course.category);
+  });
+  return categories;
+}
+
+/* Tavsiya: allaqachon sotib olingan yoki savatdagi kurslar chiqmaydi;
+   qiziqish yo'nalishiga mos kurslar oldinga, keyin reyting bo'yicha. */
+function isloh_getRecommendedCourses(limit) {
+  const interests = isloh_getInterestCategories();
+  return ISLOH_MARKETPLACE_DATA.featured_courses
+    .filter((c) => !isloh_isPurchased(c.id) && !isloh_isInCart(c.id))
+    .sort((a, b) => {
+      const match = (interests.indexOf(b.category) > -1) - (interests.indexOf(a.category) > -1);
+      return match !== 0 ? match : b.rating - a.rating;
+    })
+    .slice(0, limit || ISLOH_STRIP_LIMIT);
+}
+
+// Ko'p ko'rilgan: butun katalog bo'yicha ko'rishlar soni (umumiy reyting)
+function isloh_getMostViewedCourses(limit) {
+  return [...ISLOH_MARKETPLACE_DATA.featured_courses]
+    .sort((a, b) => b.views - a.views)
+    .slice(0, limit || ISLOH_STRIP_LIMIT);
+}
+
+// Lenta kartochkasi — ikkala lenta uchun yagona shablon (DRY)
+function isloh_courseStripCardHtml(course, metaHtml) {
+  const price = course.discount_price || course.price;
+  return `
+    <a class="card mkt-strip-card" href="${isloh_courseLinkHref(course)}">
+      <div class="mkt-cover" style="background:${course.cover};"><i class="${course.icon}"></i></div>
+      <div class="card-pad mkt-strip-body">
+        <div class="mkt-strip-title">${course.title}</div>
+        <div class="mkt-strip-meta">${metaHtml}</div>
+        <div class="price-row"><span class="price-now mkt-strip-price">${isloh_formatSom(price)} so'm</span></div>
+      </div>
+    </a>`;
+}
+
+function isloh_renderCourseStrip(selector, courses, metaFn) {
+  const el = document.querySelector(selector);
+  if (!el) return;
+  if (!courses.length) {
+    el.innerHTML = '<div class="mkt-strip-empty">Hozircha ko\'rsatadigan kurs yo\'q.</div>';
+    return;
+  }
+  el.innerHTML = courses.map((course) => isloh_courseStripCardHtml(course, metaFn(course))).join('');
+}
+
+function isloh_renderMarketplaceStrips() {
+  isloh_renderCourseStrip('[data-mkt-recommended]', isloh_getRecommendedCourses(),
+    (c) => `<i class="bi bi-star-fill"></i> ${c.rating} · ${c.category}`);
+
+  isloh_renderCourseStrip('[data-mkt-most-viewed]', isloh_getMostViewedCourses(),
+    (c) => `<i class="bi bi-eye-fill"></i> ${isloh_formatCount(c.views)} ko'rish`);
 }
 
 // --- Saralash (Sort) ---
@@ -298,10 +456,8 @@ function isloh_initMarketplaceSort() {
   const select = document.getElementById('mkt-sort');
   if (!select) return;
   select.addEventListener('change', () => {
-    const sorted = isloh_sortCourses(ISLOH_MARKETPLACE_DATA.featured_courses, select.value);
-    isloh_renderMarketplaceCourses(sorted);
-    const scope = document.querySelector('[data-filterable]');
-    if (scope && typeof isloh_applyFilterable === 'function') isloh_applyFilterable(scope);
+    // Filtr/qidiruv holatini render funksiyasining o'zi tiklaydi
+    isloh_renderMarketplaceCourses(isloh_sortCourses(ISLOH_MARKETPLACE_DATA.featured_courses, select.value));
   });
 }
 
@@ -357,20 +513,30 @@ function isloh_initMarketplaceCoupon() {
   });
 }
 
-// --- Xaridlar tarixi (marketplace.html), ISLOH_ORDER_HISTORY'dan ---
+/* --- Xaridlar tarixi (marketplace.html) ---
+   orders.html bilan bir xil do'kondan o'qiydi, shuning uchun ikkala ro'yxat
+   hech qachon bir-biriga zid bo'lmaydi. */
 function isloh_renderRecentOrders(selector, limit) {
   const el = document.querySelector(selector);
   if (!el) return;
-  const recent = ISLOH_ORDER_HISTORY.filter((o) => o.status === 'paid').slice(0, limit || 2);
+
+  const recent = isloh_getOrders().filter((o) => o.status === 'paid').slice(0, limit || 2);
+  if (!recent.length) {
+    el.innerHTML = '<div class="mkt-orders-empty">Hozircha xarid qilinmagan.</div>';
+    return;
+  }
+
   el.innerHTML = recent.map((order, i) => {
-    const total = order.items.reduce((sum, it) => sum + it.price, 0);
     const extra = order.items.length > 1 ? ` +${order.items.length - 1}` : '';
-    const border = i < recent.length - 1 ? 'border-bottom:1px solid var(--border-soft);' : '';
-    return `<div style="display:flex; align-items:center; gap:14px; padding:14px 20px; ${border}">
-      <div class="mkt-cover" style="width:44px; height:44px; border-radius:10px; background:${order.items[0].cover}; font-size:14px;"><i class="${order.items[0].icon}"></i></div>
-      <div style="flex:1;"><div style="font-weight:600; font-size:13.5px;">${order.items[0].title}${extra}</div><div style="font-size:12px; color:var(--ink-500);">Buyurtma #${order.id} &middot; ${order.date}</div></div>
+    const last = i === recent.length - 1 ? ' is-last' : '';
+    return `<div class="mkt-order-row${last}">
+      <div class="mkt-cover mkt-order-cover" style="background:${order.items[0].cover};"><i class="${order.items[0].icon}"></i></div>
+      <div class="mkt-order-info">
+        <div class="mkt-order-title">${order.items[0].title}${extra}</div>
+        <div class="mkt-order-meta">Buyurtma #${order.id} &middot; ${isloh_formatOrderDate(order.date)}</div>
+      </div>
       <span class="badge ${ISLOH_ORDER_STATUS_BADGE[order.status]}">${ISLOH_ORDER_STATUS_LABEL[order.status]}</span>
-      <span style="font-weight:700; font-size:13.5px;">${isloh_formatSom(total)} so'm</span>
+      <span class="mkt-order-total">${isloh_formatSom(isloh_orderTotal(order))} so'm</span>
     </div>`;
   }).join('');
 }
@@ -378,13 +544,13 @@ function isloh_renderRecentOrders(selector, limit) {
 function isloh_initMarketplace() {
   isloh_renderMarketplaceCategories(ISLOH_MARKETPLACE_DATA.categories);
   isloh_renderMarketplaceCourses(ISLOH_MARKETPLACE_DATA.featured_courses);
+  isloh_renderMarketplaceStrips();
   isloh_updateCartBadge();
   isloh_renderRecentOrders('[data-mkt-recent-orders]', 2);
   isloh_initMarketplaceSort();
   isloh_initCompareTable();
   isloh_initBundleBuy();
   isloh_initMarketplaceCoupon();
-  isloh_initSaveToggles(); // sahifadan qat'i nazar ishlaydi
 }
 
 document.addEventListener('DOMContentLoaded', isloh_initMarketplace);

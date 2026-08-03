@@ -1,27 +1,49 @@
 /* ==========================================================================
-   ISLOH — Enrollment module  (Sprint 7)
-   Powers pages/student/course-landing.html. Uses the existing
-   isloh_openModal / isloh_closeModal helpers from js/modal.js for the
-   confirmation dialog — no new overlay mechanism.
+   ISLOH — Enrollment module
+   pages/student/course-landing.html dagi "Kursga yozilish" tugmasini
+   boshqaradi. Ilgari tugma oraliq tasdiqlash oynasini ochardi va tasdiqlangach
+   faqat "muvaffaqiyat" bloki ko'rsatilardi — hech qanday xarid bo'lmasdi.
+   Endi tugma kursni savatga qo'shib to'g'ridan-to'g'ri xarid (checkout)
+   oynasiga olib o'tadi; kurs allaqachon sotib olingan bo'lsa — o'quv
+   sahifasiga.
 
-   Markup contract:
-     [data-enroll-cta]        → wraps the "Enroll" price box / button
-     [data-enroll-confirm]    → the confirm button inside the modal
-     [data-enroll-success]    → success-state block, hidden until confirmed
-     [data-wishlist-toggle]   → heart/bookmark-style toggle button
+   Markup shartnomasi:
+     [data-enroll-buy]        → "Kursga yozilish" tugmasi
+     [data-enroll-owned]      → "allaqachon yozilgansiz" belgisi (yashirin)
+     [data-wishlist-toggle]   → istaklar ro'yxati tugmasi
    ========================================================================== */
 
-function isloh_initEnrollFlow() {
-  const cta = document.querySelector('[data-enroll-cta]');
-  const success = document.querySelector('[data-enroll-success]');
-  const confirmBtn = document.querySelector('[data-enroll-confirm]');
-  if (!confirmBtn) return;
+// Sahifadagi kursni `?id=` bo'yicha oladi (js/course-content.js)
+function isloh_enrollCourse() {
+  if (typeof isloh_getCourseFromQuery !== 'function') return null;
+  const fallback = typeof ISLOH_LANDING_FALLBACK_ID !== 'undefined' ? ISLOH_LANDING_FALLBACK_ID : '';
+  return isloh_getCourseFromQuery(fallback);
+}
 
-  confirmBtn.addEventListener('click', () => {
-    isloh_closeModal('enroll-confirm-modal');
-    if (cta) cta.hidden = true;
-    if (success) success.hidden = false;
-    if (typeof isloh_showToast === 'function') isloh_showToast("Kursga muvaffaqiyatli yozildingiz!", 'success');
+function isloh_initEnrollFlow() {
+  const btn = document.querySelector('[data-enroll-buy]');
+  if (!btn) return;
+
+  const course = isloh_enrollCourse();
+  if (!course) return;
+
+  const owned = typeof isloh_isPurchased === 'function' && isloh_isPurchased(course.id);
+
+  /* Sotib olingan kursda tugma xaridni takrorlamaydi — o'quv sahifasini
+     ochadi va yuqorida "yozilgansiz" belgisi chiqadi. */
+  if (owned) {
+    btn.innerHTML = '<i class="bi bi-play-fill"></i> O\'rganishni boshlash';
+    document.querySelectorAll('[data-enroll-owned]').forEach((el) => { el.hidden = false; });
+  }
+
+  btn.addEventListener('click', () => {
+    if (owned) {
+      window.location.href = `course-detail.html?id=${course.id}`;
+      return;
+    }
+    // Savatga qo'shiladi (takror qo'shilmaydi) va darhol xarid oynasi ochiladi
+    if (typeof isloh_addToCart === 'function') isloh_addToCart(course);
+    window.location.href = 'checkout.html';
   });
 }
 

@@ -16,6 +16,8 @@ const NAV_CONFIG = {
     /* Kurs darajasidagi ma'lumot (sotib olingan + saqlangan kurslar) shu
        sahifada — "Saqlanganlar" endi faqat dars materiallari bilan ishlaydi. */
     { key: 'courses',        label: 'Mening kurslarim',  icon: 'bi-journal-bookmark-fill',  href: 'courses.html' },
+    /* Buyurtmalar tarixi (orders.html) ataylab menyuda yo'q — unga
+       Marketplace'dagi "Xaridlar tarixi" bo'limi orqali kiriladi. */
     { key: 'marketplace',    label: 'Marketplace',       icon: 'bi-bag-fill',               href: 'marketplace.html' },
     { key: 'bookmarks',      label: 'Saqlanganlar',      icon: 'bi-bookmark-star',          href: 'bookmarks.html' },
     { key: 'calendar',       label: 'Vazifalar',         icon: 'bi-check2-square',          href: 'calendar.html' },

@@ -27,34 +27,31 @@
     <div class="sidebar-footer" id="sidebar-footer-nav"></div>
   </aside>
 
+  <!-- Topbar ataylab yo'q: profil va sozlamalar sahifalaridagi kabi, bu
+       sahifada ham kontent to'g'ridan-to'g'ri boshlanadi. Mobil menyu
+       tugmasini js/sidebar.js kontent tepasiga o'zi qo'yadi. -->
   <div class="main-col">
-    <header class="topbar">
-      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
-      <div class="topbar-actions">
-        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar">SM</div>
-      </div>
-    </header>
-
     <main class="content">
       <a href="courses.html" class="back-link"><i class="bi bi-arrow-left"></i> Orqaga</a>
 
+      <!-- Sarlavha, dastur va progress `?id=` bo'yicha to'ldiriladi
+           (js/course-detail.js). Quyidagi matnlar — zaxira qiymatlar. -->
       <div class="detail-grid">
         <div>
           <div class="card card-pad">
             <div style="display:flex; gap:18px; align-items:center;">
-              <div class="course-cover" style="width:88px; height:88px; border-radius:16px; background:linear-gradient(135deg,#306998,#FFD43B); flex-shrink:0;"><i class="bi bi-filetype-py" style="font-size:34px;"></i></div>
+              <div class="course-cover" style="width:88px; height:88px; border-radius:16px; background:linear-gradient(135deg,#306998,#FFD43B); flex-shrink:0;" data-detail-cover><i class="bi bi-filetype-py" style="font-size:34px;" data-detail-icon></i></div>
               <div>
-                <span class="badge badge-neutral">Boshlang'ich → Yuqori</span>
-                <h2 style="font-size:20px; margin-top:8px;">Python Backend Development</h2>
-                <p style="color:var(--ink-500); font-size:13px; margin-top:4px;">Django, DRF, PostgreSQL, Docker va zamonaviy backend rivojlantirish</p>
+                <span class="badge badge-neutral" data-detail-badge>Barcha darajalar</span>
+                <h2 style="font-size:20px; margin-top:8px;" data-detail-title>Python Backend Development</h2>
+                <p style="color:var(--ink-500); font-size:13px; margin-top:4px;" data-detail-summary>Django, DRF, PostgreSQL, Docker va zamonaviy backend rivojlantirish</p>
               </div>
             </div>
             <div style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; font-size:13px;">
               <span style="font-weight:600;">Sizning progressingiz</span>
-              <span style="color:var(--violet-600); font-weight:700;">63%</span>
+              <span style="color:var(--violet-600); font-weight:700;" data-detail-progress-pct>0%</span>
             </div>
-            <div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:63%;"></div></div>
+            <div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:0%;" data-detail-progress-fill></div></div>
             <div style="margin-top:8px; text-align:right;"><a href="learning-progress.html" style="font-size:12.5px; color:var(--violet-600); font-weight:600;"><i class="bi bi-graph-up"></i> To'liq jarayonni ko'rish</a></div>
           </div>
 
@@ -66,33 +63,18 @@
               <div class="tab-item">Savol-javob</div>
             </div>
 
-            <div class="module-title">Modul 1: Python asoslari &nbsp;<span class="badge badge-green" style="margin-left:6px;">100%</span></div>
-            <a href="course-player.html" class="lesson-row" style="text-decoration:none; color:inherit; cursor:pointer;"><i class="bi bi-check-circle-fill"></i> 1. Python bilan tanishuv <span class="lesson-time">10:24</span></a>
-            <a href="course-player.html" class="lesson-row" style="text-decoration:none; color:inherit; cursor:pointer;"><i class="bi bi-check-circle-fill"></i> 2. O'zgaruvchilar va ma'lumot turlari <span class="lesson-time">18:05</span></a>
-            <a href="course-player.html" class="lesson-row" style="text-decoration:none; color:inherit; cursor:pointer;"><i class="bi bi-check-circle-fill"></i> 3. Boshqaruv oqimi <span class="lesson-time">14:10</span></a>
-
-            <div class="module-title">Modul 2: Django asoslari &nbsp;<span class="badge badge-violet" style="margin-left:6px;">3/8</span></div>
-            <a href="course-player.html" class="lesson-row" style="text-decoration:none; color:inherit; cursor:pointer;"><i class="bi bi-play-circle-fill"></i> 4. Django o'rnatish <span class="lesson-time">12:30</span></a>
-            <a href="course-player.html" class="lesson-row" style="text-decoration:none; color:inherit; cursor:pointer;"><i class="bi bi-circle" style="color:var(--ink-300);"></i> 5. Proyekt strukturasi <span class="lesson-time">14:10</span></a>
-            <a href="course-player.html" class="lesson-row" style="text-decoration:none; color:inherit; cursor:pointer;"><i class="bi bi-circle" style="color:var(--ink-300);"></i> 6. Modellar va ORM <span class="lesson-time">19:20</span></a>
+            <div data-detail-modules></div>
           </div>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:18px;">
           <div class="card card-pad">
             <h3 style="font-size:15px;">Bu kursda o'rganasiz</h3>
-            <div class="includes-row"><i class="bi bi-check2" style="color:var(--teach-green);"></i> Django REST Framework</div>
-            <div class="includes-row"><i class="bi bi-check2" style="color:var(--teach-green);"></i> Autentifikatsiya va ruxsatlar</div>
-            <div class="includes-row"><i class="bi bi-check2" style="color:var(--teach-green);"></i> PostgreSQL bilan ishlash</div>
-            <div class="includes-row"><i class="bi bi-check2" style="color:var(--teach-green);"></i> Docker va joylashtirish</div>
+            <div data-detail-outcomes></div>
           </div>
           <div class="card card-pad">
             <h3 style="font-size:15px;">Kurs tarkibi</h3>
-            <div class="includes-row"><i class="bi bi-camera-reels"></i> Barcha darslar</div>
-            <div class="includes-row"><i class="bi bi-patch-question"></i> 12 ta test</div>
-            <div class="includes-row"><i class="bi bi-kanban"></i> 5 ta amaliy loyiha</div>
-            <div class="includes-row"><i class="bi bi-award"></i> Yakunlash sertifikati</div>
-            <div class="includes-row"><i class="bi bi-infinity"></i> Umrbod kirish</div>
+            <div data-detail-includes></div>
           </div>
           <div class="card card-pad">
             <h3 style="font-size:15px; margin-bottom:10px;">Kurs bilan bo'lishing</h3>
@@ -111,5 +93,11 @@
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Katalog + kurs mazmuni, keyin sahifani `?id=` bo'yicha to'ldiruvchi
+     modul. lesson-viewer.js — faqat progress do'konini o'qish uchun. -->
+<script src="../../js/lesson-viewer.js"></script>
+<script src="../../js/marketplace.js"></script>
+<script src="../../js/course-content.js"></script>
+<script src="../../js/course-detail.js"></script>
 </body>
 </html>

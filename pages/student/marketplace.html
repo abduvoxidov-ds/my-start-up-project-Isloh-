@@ -40,7 +40,12 @@
 
   <div class="main-col" data-filterable>
     <header class="topbar topbar-marketplace">
-      <div class="topbar-search"><i class="bi bi-search"></i><input data-filter-search placeholder="Kurs, bundle, kupon qidirish..." aria-label="Kurs, bundle, kupon qidirish"></div>
+      <div class="topbar-search">
+        <i class="bi bi-search"></i>
+        <input data-filter-search placeholder="Kurs, o'qituvchi yoki yo'nalish qidirish..." aria-label="Kurs, o'qituvchi yoki yo'nalish qidirish">
+        <!-- Faqat so'rov yozilganda ko'rinadi (js/filterable.js) -->
+        <button type="button" class="search-clear" data-filter-clear aria-label="Qidiruvni tozalash" hidden><i class="bi bi-x-circle-fill"></i></button>
+      </div>
       <div class="topbar-actions">
         <a href="wishlist.html" class="icon-btn" aria-label="Xohishlar ro'yxati"><i class="bi bi-heart-fill"></i><span class="count-badge" data-wishlist-count>2</span></a>
         <a href="cart.html" class="icon-btn" aria-label="Savat"><i class="bi bi-cart-fill"></i><span class="count-badge badge-empty" data-cart-count>0</span></a>
@@ -48,7 +53,9 @@
     </header>
 
     <main class="content">
-      <div class="hero-banner">
+      <!-- Qidiruv boshlanishi bilan yashiriladigan "ko'rib chiqish" bloklari:
+           banner, tavsiyalar va yaqinda ko'rilganlar natijaga aralashmasin. -->
+      <div class="hero-banner" data-filter-hide-on-search>
         <div>
           <div class="badge" style="background:rgba(255,255,255,0.15); color:#fff;">Yozgi chegirma</div>
           <h2 style="color:#fff; font-size:22px; margin-top:10px;">Barcha Backend kurslariga -40%</h2>
@@ -57,67 +64,26 @@
         <div class="price-tag">-40%</div>
       </div>
 
-      <div>
+      <div data-filter-hide-on-search>
+        <!-- Ikkala lenta ham js/marketplace.js tomonidan katalogdan render
+             qilinadi: tavsiya — qiziqish va reyting bo'yicha, ko'p ko'rilgan —
+             ko'rishlar soni bo'yicha. Kartochka bosilsa kurs sahifasi ochiladi. -->
         <div class="section-head">
           <h3 style="font-size:17px;">Tavsiya etilgan siz uchun</h3>
         </div>
-        <div class="mkt-strip">
-          <div class="card mkt-strip-card">
-            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#F97316,#EA580C); font-size:20px;"><i class="bi bi-boxes"></i></div>
-            <div class="card-pad" style="padding:12px;">
-              <div style="font-weight:700; font-size:13px;">Docker for Beginners</div>
-              <div class="price-row"><span class="price-now" style="font-size:13.5px;">159 000 so'm</span></div>
-            </div>
-          </div>
-          <div class="card mkt-strip-card">
-            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#0F766E,#14B8A6); font-size:20px;"><i class="bi bi-database-fill"></i></div>
-            <div class="card-pad" style="padding:12px;">
-              <div style="font-weight:700; font-size:13px;">Django REST Masterclass</div>
-              <div class="price-row"><span class="price-now" style="font-size:13.5px;">219 000 so'm</span></div>
-            </div>
-          </div>
-          <div class="card mkt-strip-card">
-            <div class="mkt-cover" style="height:80px; background:#1F2937; font-size:20px;"><i class="bi bi-box-seam"></i></div>
-            <div class="card-pad" style="padding:12px;">
-              <div style="font-weight:700; font-size:13px;">PostgreSQL Complete Guide</div>
-              <div class="price-row"><span class="price-now" style="font-size:13.5px;">179 000 so'm</span></div>
-            </div>
-          </div>
-          <div class="card mkt-strip-card">
-            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#6366F1,#818CF8); font-size:20px;"><i class="bi bi-code-slash"></i></div>
-            <div class="card-pad" style="padding:12px;">
-              <div style="font-weight:700; font-size:13px;">Advanced API Design</div>
-              <div class="price-row"><span class="price-now" style="font-size:13.5px;">229 000 so'm</span></div>
-            </div>
-          </div>
-        </div>
+        <div class="mkt-strip" data-mkt-recommended></div>
 
         <div class="section-head">
-          <h3 style="font-size:17px;">Yaqinda ko'rilgan</h3>
+          <h3 style="font-size:17px;">Ko'p ko'rilgan</h3>
         </div>
-        <div class="mkt-strip">
-          <div class="card mkt-strip-card">
-            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#8E44EC,#3B82F6); font-size:20px;"><i class="bi bi-palette-fill"></i></div>
-            <div class="card-pad" style="padding:12px;">
-              <div style="font-weight:700; font-size:13px;">UI/UX Design Fundamentals</div>
-              <div class="price-row"><span class="price-now" style="font-size:13.5px;">189 000 so'm</span></div>
-            </div>
-          </div>
-          <div class="card mkt-strip-card">
-            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#306998,#FFD43B); font-size:20px;"><i class="bi bi-filetype-py"></i></div>
-            <div class="card-pad" style="padding:12px;">
-              <div style="font-weight:700; font-size:13px;">Python Backend Development</div>
-              <div class="price-row"><span class="price-now" style="font-size:13.5px;">249 000 so'm</span></div>
-            </div>
-          </div>
-          <div class="card mkt-strip-card">
-            <div class="mkt-cover" style="height:80px; background:linear-gradient(135deg,#DB2777,#F472B6); font-size:20px;"><i class="bi bi-megaphone-fill"></i></div>
-            <div class="card-pad" style="padding:12px;">
-              <div style="font-weight:700; font-size:13px;">Digital Marketing 101</div>
-              <div class="price-row"><span class="price-now" style="font-size:13.5px;">129 000 so'm</span></div>
-            </div>
-          </div>
-        </div>
+        <div class="mkt-strip" data-mkt-most-viewed></div>
+      </div>
+
+      <!-- Natijalar sarlavhasi — faqat qidiruv paytida; matn va son
+           js/filterable.js tomonidan to'ldiriladi. -->
+      <div class="mkt-search-head" data-filter-only-on-search hidden>
+        <h3 class="mkt-search-title">&laquo;<span data-filter-query></span>&raquo; bo'yicha natijalar</h3>
+        <span class="mkt-search-count"><span data-filter-count>0</span> ta kurs topildi</span>
       </div>
 
       <div class="mkt-toolbar">
@@ -137,8 +103,12 @@
         <div class="empty-icon"><i class="bi bi-search"></i></div>
         <div class="empty-title">Kurslar topilmadi</div>
         <div class="empty-sub">Boshqa kategoriya yoki qidiruv so'zini sinab ko'ring.</div>
+        <button type="button" class="btn btn-outline btn-sm mkt-empty-clear" data-filter-clear hidden>Qidiruvni tozalash</button>
       </div>
 
+      <!-- Qidiruvga aloqasi yo'q pastki bloklar (to'plamlar, kupon, tarix) —
+           qidiruv paytida ular ham natijadan chetda qoladi. -->
+      <div data-filter-hide-on-search>
       <div class="section-head">
         <h3 style="font-size:17px;">To'plamlar (Bundles)</h3>
       </div>
@@ -172,6 +142,7 @@
         <a href="orders.html" style="font-size:13px; color:var(--violet-600); font-weight:600;">Barchasini ko'rish</a>
       </div>
       <div class="card" data-mkt-recent-orders></div>
+      </div><!-- /data-filter-hide-on-search -->
     </main>
   </div>
 </div>

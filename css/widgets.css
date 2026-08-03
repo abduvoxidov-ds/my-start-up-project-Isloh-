@@ -334,6 +334,10 @@
 .settings-subtitle { font-size:14px; margin:20px 0 4px; }
 /* Forma tugmalari qatori (Saqlash / Parolni yangilash) */
 .settings-form-actions { margin-top:8px; }
+/* "Hisob" sahifasi (account.html) — mustaqil, sozlamalar tarkibiga kirmaydi.
+   Forma bitta ustunda, o'qish qulay bo'lishi uchun kengligi cheklangan. */
+.account-layout { max-width:720px; margin-top:20px; }
+.account-actions { display:flex; align-items:center; gap:10px; }
 .settings-item { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 0; border-bottom:1px solid var(--border-soft); }
 .settings-item:last-child { border-bottom:none; }
 .settings-item-info { min-width:0; }
@@ -888,6 +892,13 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .module-progress-mini { width:84px; flex-shrink:0; }
 .module-body { padding:0 18px 18px 46px; border-top:1px solid var(--border-soft); margin-top:2px; }
 .module-body.collapsed { display:none; }
+/* Kurs sahifasidagi dastur moduli: kartochka ichida turgani uchun o'z
+   ramkasi va soyasi bo'lmaydi (ilgari inline style bilan yozilgan edi) */
+.landing-module { border:none; box-shadow:none; }
+.landing-module-header { padding:10px 0; }
+/* Sotib olingan kurs dasturidagi dars qatori havolasi va modul nishoni */
+.lesson-link { text-decoration:none; color:inherit; cursor:pointer; }
+.module-title-badge { margin-left:6px; }
 .module-preview-list { display:flex; flex-direction:column; gap:6px; padding-top:14px; }
 .module-preview-item { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--ink-700); padding:6px 0; }
 .module-preview-item .bi { color:var(--ink-300); font-size:14px; }
@@ -1039,13 +1050,11 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .fav-toggle:hover { color:var(--warning); }
 .fav-toggle.active { color:var(--warning); }
 
-/* --- Kurs kartochkasi muqovasidagi tezkor amallar qatori: bir nechta
-   .fav-toggle (saqlash + xohishlar ro'yxati) yonma-yon joylashadi.
-   Ota-element position:relative bo'lishi kerak (masalan .mkt-cover). --- */
+/* --- Kurs kartochkasi muqovasidagi tezkor amallar qatori (.fav-toggle —
+   xohishlar ro'yxati tugmasi). Ota-element position:relative bo'lishi
+   kerak (masalan .mkt-cover). --- */
 .card-fav-actions { position:absolute; top:8px; right:8px; display:flex; gap:6px; z-index:1; }
 .card-fav-actions .fav-toggle { background:rgba(255,255,255,0.85); }
-/* Saqlash tugmasi violet, xohishlar (yurak) esa --warning rangda qoladi */
-.fav-toggle.fav-save:hover, .fav-toggle.fav-save.active { color:var(--violet-600); }
 
 @media (max-width:700px) {
   .upload-progress { flex-wrap:wrap; }
@@ -1255,7 +1264,6 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .landing-hero { display:grid; grid-template-columns:1.5fr 1fr; gap:24px; align-items:start; }
 @media (max-width:1000px) { .landing-hero { grid-template-columns:1fr; } }
 .landing-cover { aspect-ratio:16/9; border-radius:var(--r-lg); display:flex; align-items:center; justify-content:center; color:#fff; font-size:40px; }
-.success-check-circle { width:72px; height:72px; border-radius:50%; background:var(--teach-green-100); color:var(--teach-green); display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 14px; }
 
 /* ==========================================================================
    SPRINT 8A — AI Integration (Instructor + Student)
@@ -1528,9 +1536,6 @@ a.note-source:hover { color:var(--violet-600); }
 .cart-item-actions .link-btn { border:none; background:none; font-size:12.5px; color:var(--ink-500); cursor:pointer; padding:0; }
 .cart-item-actions .link-btn:hover { color:var(--violet-600); }
 .cart-item-actions .link-btn.danger:hover { color:var(--danger); }
-.qty-stepper { display:inline-flex; align-items:center; border:1px solid var(--border-soft); border-radius:var(--r-sm); }
-.qty-stepper button { border:none; background:none; width:26px; height:26px; cursor:pointer; color:var(--ink-700); }
-.qty-stepper span { width:22px; text-align:center; font-size:13px; font-weight:600; }
 
 /* --- Checkout summary sidebar --- */
 .checkout-summary .cs-row { display:flex; justify-content:space-between; font-size:13.5px; color:var(--ink-700); padding:7px 0; }
@@ -1562,6 +1567,32 @@ a.note-source:hover { color:var(--violet-600); }
 .order-card-row { display:flex; align-items:center; gap:12px; padding:8px 0; }
 .order-card-row .oc-cover { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; flex-shrink:0; }
 .order-card-foot { display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:14px; border-top:1px solid var(--border-soft); }
+/* Buyurtma qatori va pastki qismi — ilgari har bir kartada inline style
+   bilan takrorlangan edi, endi ro'yxat JS'dan chizilgani uchun klasslarda */
+/* Tasdiqlash oynalaridagi xulosa qatori. Ilgari faqat
+   pages/instructor/course-create.html ichidagi <style> blokida ta'riflangan
+   edi, shuning uchun boshqa sahifalardagi modallarda stilsiz chiqardi. */
+.review-summary-row { display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid var(--border-soft); font-size:13.5px; }
+.review-summary-row:last-child { border-bottom:none; }
+.review-summary-row .lbl { color:var(--ink-500); }
+.review-summary-row .val { font-weight:600; text-align:right; }
+/* Modal ichidagi izoh matni */
+.modal-note { margin-top:12px; color:var(--ink-500); }
+
+/* Buyurtmalar sahifasi: qidiruv va saralash bir qatorda */
+.orders-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.orders-search { width:280px; max-width:100%; }
+.orders-sort { border-radius:var(--r-md); }
+.orders-list { margin-top:16px; }
+.order-item-title { flex:1; min-width:0; font-weight:600; font-size:13.5px; }
+/* Kurs nomi havola: buyurtmadan kurs sahifasiga o'tish */
+.order-item-link { color:inherit; text-decoration:none; }
+.order-item-link:hover { color:var(--violet-600); }
+.order-item-price { font-weight:700; font-size:13.5px; }
+.order-item-price.is-refund { color:var(--danger); }
+.order-card-total { font-weight:800; font-size:14px; }
+.order-card-note { font-size:12px; color:var(--ink-500); }
+.order-card-actions { display:flex; gap:8px; }
 
 /* --- Course comparison table (Marketplace) --- */
 .compare-table-wrap { overflow-x:auto; }
@@ -1573,8 +1604,51 @@ a.note-source:hover { color:var(--violet-600); }
 .compare-remove:hover { color:var(--danger); }
 
 /* --- Recently viewed / recommended strip (Marketplace) --- */
+/* --- Marketplace kurs kartochkasi: muqova va sarlavha havola ---
+   Kartochka bosilganda kurs sahifasi ochiladi; yurak tugmasi havolaning
+   ichida emas, ustida turadi (.card-fav-actions z-index bilan). */
+.mkt-card { transition:transform var(--t-base) var(--ease-standard), box-shadow var(--t-base) var(--ease-standard); }
+.mkt-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.mkt-cover-link { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:inherit; text-decoration:none; }
+.mkt-card-title { display:block; font-weight:700; font-size:14px; color:inherit; text-decoration:none; }
+.mkt-card-title:hover { color:var(--violet-600); }
+.mkt-card-meta { font-size:12px; color:var(--ink-500); margin-top:4px; }
+
 .mkt-strip { display:flex; gap:14px; overflow-x:auto; padding-bottom:4px; }
-.mkt-strip-card { min-width:190px; flex-shrink:0; }
+/* Kartochka endi <a> — bosilganda kurs sahifasiga o'tadi */
+.mkt-strip-card {
+  min-width:190px; flex-shrink:0; overflow:hidden;
+  color:inherit; text-decoration:none; display:block;
+  transition:transform var(--t-base) var(--ease-standard), box-shadow var(--t-base) var(--ease-standard);
+}
+.mkt-strip-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.mkt-strip .mkt-cover { height:80px; font-size:20px; }
+.mkt-strip-body { padding:12px; }
+.mkt-strip-title { font-weight:700; font-size:13px; }
+.mkt-strip-meta { font-size:12px; color:var(--ink-500); margin-top:4px; display:flex; align-items:center; gap:5px; }
+.mkt-strip-price { font-size:13.5px; }
+.mkt-strip-empty { font-size:13px; color:var(--ink-500); padding:8px 0; }
+
+/* --- Marketplace "Xaridlar tarixi" qatori (orders do'konidan) --- */
+.mkt-order-row { display:flex; align-items:center; gap:14px; padding:14px 20px; border-bottom:1px solid var(--border-soft); }
+.mkt-order-row.is-last { border-bottom:none; }
+/* Ikki klass birga: marketplace.html sahifasidagi .mkt-cover o'lchamini
+   bekor qilish uchun aniqroq selektor kerak */
+.mkt-cover.mkt-order-cover { width:44px; height:44px; border-radius:10px; font-size:14px; }
+.mkt-order-info { flex:1; min-width:0; }
+.mkt-order-title { font-weight:600; font-size:13.5px; }
+.mkt-order-meta { font-size:12px; color:var(--ink-500); }
+.mkt-order-total { font-weight:700; font-size:13.5px; }
+.mkt-orders-empty { font-size:13px; color:var(--ink-500); padding:16px 20px; }
+
+/* --- Marketplace qidiruv natijalari sarlavhasi ---
+   Faqat qidiruv paytida ko'rinadi (js/filterable.js), shuning uchun
+   sahifaning yuqorisidagi bo'sh joyni band qilmaydi. */
+.mkt-search-head { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; margin:4px 0 14px; }
+.mkt-search-title { font-size:17px; }
+.mkt-search-count { font-size:13px; color:var(--ink-500); }
+/* Natija topilmaganda chiqadigan "Qidiruvni tozalash" tugmasi */
+.mkt-empty-clear { margin-top:14px; }
 
 /* --- Approval / moderation card (Admin Course Management) --- */
 .approval-card { display:flex; align-items:center; gap:14px; padding:14px 18px; border-bottom:1px solid var(--border-soft); }

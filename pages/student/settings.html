@@ -23,9 +23,9 @@
       <div class="settings-layout">
         <!-- SETTINGS NAV -->
         <nav class="settings-nav" aria-label="Sozlamalar bo'limlari">
-          <!-- "Hisob" bo'limi ataylab menyuda yo'q: unga profil sahifasidagi
-               "Profilni tahrirlash" tugmasi (settings.html#account) orqali
-               kelinadi. Panelning o'zi quyida turibdi. -->
+          <!-- "Hisob" bu yerda yo'q — u mustaqil sahifa (account.html) bo'lib,
+               unga profil sahifasidagi "Profilni tahrirlash" tugmasi orqali
+               kelinadi. Sozlamalar bilan hech qanday bog'liqligi yo'q. -->
           <div class="settings-nav-item active" data-settings-target="notifications" role="button" tabindex="0"><i class="bi bi-bell"></i> Bildirishnomalar</div>
           <div class="settings-nav-item" data-settings-target="appearance" role="button" tabindex="0"><i class="bi bi-palette"></i> Ko'rinish</div>
           <div class="settings-nav-item" data-settings-target="language" role="button" tabindex="0"><i class="bi bi-translate"></i> Til va hudud</div>
@@ -38,19 +38,6 @@
 
         <!-- SETTINGS PANELS -->
         <div>
-          <!-- ACCOUNT -->
-          <div class="card card-pad settings-section" data-settings-panel="account" hidden>
-            <div class="settings-section-title">Hisob</div>
-            <div class="settings-section-sub">Shaxsiy ma'lumotlaringiz va profil.</div>
-            <!-- Maydonlar js/profile.js orqali isloh_user'dan yuklanadi va o'sha yerga saqlanadi -->
-            <div class="field"><label for="acc-name">To'liq ism</label><input id="acc-name" data-user-field="name"></div>
-            <div class="field"><label for="acc-email">Email</label><input id="acc-email" type="email" data-user-field="email"></div>
-            <div class="field"><label for="acc-headline">Qisqa sarlavha</label><input id="acc-headline" data-user-field="headline"></div>
-            <div class="field"><label for="acc-location">Joylashuv</label><input id="acc-location" data-user-field="location"></div>
-            <div class="field"><label for="acc-bio">Bio</label><textarea id="acc-bio" data-user-field="bio"></textarea></div>
-            <div class="settings-form-actions"><button class="btn btn-primary btn-sm" data-user-save>O'zgarishlarni saqlash</button></div>
-          </div>
-
           <!-- NOTIFICATIONS -->
           <div class="card card-pad settings-section" data-settings-panel="notifications">
             <div class="settings-section-title">Bildirishnomalar</div>

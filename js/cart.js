@@ -2,14 +2,17 @@
    ISLOH — Cart module
    Powers pages/student/cart.html by rendering directly from ISLOH_CART_KEY
    (js/marketplace.js), so it reflects whatever was added from Marketplace
-   or Wishlist. Quantity and "Keyinga saqlash" stay session-only (DOM
-   state) — the cart item list itself is the persisted source of truth.
+   or Wishlist. "Keyinga saqlash" stays session-only (DOM state) — the cart
+   item list itself is the persisted source of truth.
+
+   Miqdor (qty) yo'q: kurs — jismoniy tovar emas, bir kursni faqat bir marta
+   sotib olish mumkin. isloh_addToCart() ham bir xil kursni ikkinchi marta
+   qo'shmaydi, shuning uchun savatdagi har bir qator = 1 dona.
 
    Markup contract:
      [data-cart-list]                     → container, rendered from
                                             isloh_getCartItems()
        [data-cart-item][data-course-id][data-price="0"]
-         [data-qty-value] / [data-qty-inc] / [data-qty-dec]
          [data-cart-remove]               → removes the row + storage entry
          [data-cart-save]                 → moves row to "saved for later"
                                             (removed from storage meanwhile)
@@ -32,7 +35,6 @@ function isloh_cartRowHtml(item) {
       <div class="cart-item-title">${item.title}</div>
       ${meta ? `<div class="cart-item-meta">${meta}</div>` : ''}
     </div>
-    <div class="qty-stepper"><button type="button" data-qty-dec aria-label="Kamaytirish"><i class="bi bi-dash"></i></button><span data-qty-value>1</span><button type="button" data-qty-inc aria-label="Ko'paytirish"><i class="bi bi-plus"></i></button></div>
     <div class="cart-item-price"><div style="font-weight:800; font-size:14px;">${isloh_formatSom(item.price)} so'm</div></div>
     <div class="cart-item-actions">
       <button type="button" class="link-btn" data-cart-save>Keyinga saqlash</button>
@@ -59,11 +61,8 @@ function isloh_removeFromCartStorage(id) {
 
 function isloh_recalcCart() {
   const items = isloh_cartItems();
-  const subtotal = items.reduce((sum, item) => {
-    const price = parseFloat(item.dataset.price) || 0;
-    const qty = parseInt(item.querySelector('[data-qty-value]')?.textContent, 10) || 1;
-    return sum + price * qty;
-  }, 0);
+  // Har bir qator bitta kurs — miqdorga ko'paytirish yo'q
+  const subtotal = items.reduce((sum, item) => sum + (parseFloat(item.dataset.price) || 0), 0);
   const discount = isloh_couponApplied ? subtotal * (ISLOH_COUPON.percent / 100) : 0;
   const total = subtotal - discount;
 
@@ -99,20 +98,9 @@ function isloh_initCart() {
   isloh_renderCartRows();
 
   document.body.addEventListener('click', (e) => {
-    const incBtn = e.target.closest('[data-qty-inc]');
-    const decBtn = e.target.closest('[data-qty-dec]');
     const removeBtn = e.target.closest('[data-cart-remove]');
     const saveBtn = e.target.closest('[data-cart-save]');
     const restoreBtn = e.target.closest('[data-cart-restore]');
-
-    if (incBtn || decBtn) {
-      const row = (incBtn || decBtn).closest('[data-cart-item]');
-      const span = row.querySelector('[data-qty-value]');
-      let val = parseInt(span.textContent, 10) || 1;
-      val = incBtn ? val + 1 : Math.max(1, val - 1);
-      span.textContent = val;
-      isloh_recalcCart();
-    }
 
     if (removeBtn) {
       const row = removeBtn.closest('[data-cart-item]');

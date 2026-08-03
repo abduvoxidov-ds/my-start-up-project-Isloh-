@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hisob — Isloh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar'da "Profil" yonib turadi: bu sahifa profilning davomi, alohida
+       menyu bandi emas (Sozlamalar bilan hech qanday bog'liqligi yo'q). -->
+  <aside class="sidebar" data-role="student" data-active="profile">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <main class="content">
+      <div class="page-header">
+        <div><h1>Hisob</h1><p>Shaxsiy ma'lumotlaringiz va profil.</p></div>
+        <a href="profile.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Profilga qaytish</a>
+      </div>
+
+      <div class="account-layout">
+        <!-- Maydonlar js/profile.js orqali isloh_user'dan yuklanadi va o'sha
+             yerga saqlanadi — profil sahifasi bilan yagona manba. -->
+        <div class="card card-pad">
+          <div class="field"><label for="acc-name">To'liq ism</label><input id="acc-name" data-user-field="name"></div>
+          <div class="field"><label for="acc-email">Email</label><input id="acc-email" type="email" data-user-field="email"></div>
+          <div class="field"><label for="acc-headline">Qisqa sarlavha</label><input id="acc-headline" data-user-field="headline"></div>
+          <div class="field"><label for="acc-location">Joylashuv</label><input id="acc-location" data-user-field="location"></div>
+          <div class="field"><label for="acc-bio">Bio</label><textarea id="acc-bio" data-user-field="bio"></textarea></div>
+          <div class="settings-form-actions account-actions">
+            <button class="btn btn-primary btn-sm" data-user-save>O'zgarishlarni saqlash</button>
+            <a href="profile.html" class="btn btn-outline btn-sm">Bekor qilish</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/profile.js"></script>
+</body>
+</html>

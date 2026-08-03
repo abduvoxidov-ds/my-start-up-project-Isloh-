@@ -106,6 +106,20 @@
   font-size: 14px;
   color: var(--ink-900);
 }
+/* Qidiruvni tozalash "×" — faqat so'rov yozilganda ko'rinadi (js/filterable.js) */
+.search-clear {
+  border: none;
+  background: transparent;
+  color: var(--ink-300);
+  cursor: pointer;
+  padding: 0;
+  font-size: 15px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  transition: color var(--t-base) var(--ease-standard);
+}
+.search-clear:hover { color: var(--ink-700); }
 .topbar-actions { display: flex; align-items: center; gap: 16px; }
 
 .content { padding: 28px; flex: 1; }

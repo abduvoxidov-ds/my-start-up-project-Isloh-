@@ -19,93 +19,58 @@
     <div class="sidebar-footer" id="sidebar-footer-nav"></div>
   </aside>
 
+  <!-- Topbar ataylab yo'q: kontent to'g'ridan-to'g'ri "Orqaga" havolasidan
+       boshlanadi. Mobil menyu tugmasini js/sidebar.js o'zi qo'yadi. -->
   <div class="main-col">
-    <header class="topbar">
-      <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Qidirish..." aria-label="Qidirish"></div>
-      <div class="topbar-actions">
-        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar">SM</div>
-      </div>
-    </header>
-
     <main class="content">
       <a href="marketplace.html" class="back-link"><i class="bi bi-arrow-left"></i> Orqaga</a>
 
+      <!-- Sarlavha, narx va meta ma'lumot ?id= bo'yicha katalogdan
+           to'ldiriladi (js/course-landing.js). Quyidagi matnlar — id
+           berilmagan holat uchun zaxira. -->
       <div class="landing-hero">
         <div>
-          <span class="badge badge-neutral">DevOps · Boshlang'ich</span>
-          <h1 style="font-size:26px; margin-top:10px;">Docker for Beginners</h1>
-          <p style="color:var(--ink-500); font-size:14px; margin-top:6px;">Konteynerlashtirish asoslarini noldan o'rganing — Docker, Dockerfile va Docker Compose yordamida zamonaviy ilovalarni joylashtiring.</p>
+          <span class="badge badge-neutral" data-landing-badge>DevOps · Boshlang'ich</span>
+          <h1 style="font-size:26px; margin-top:10px;" data-landing-title>Docker for Beginners</h1>
+          <p style="color:var(--ink-500); font-size:14px; margin-top:6px;" data-landing-summary>Konteynerlashtirish asoslarini noldan o'rganing — Docker, Dockerfile va Docker Compose yordamida zamonaviy ilovalarni joylashtiring.</p>
           <div style="display:flex; gap:16px; align-items:center; margin-top:14px; font-size:13px; color:var(--ink-500); flex-wrap:wrap;">
-            <span><i class="bi bi-star-fill" style="color:var(--warning);"></i> 4.7 (312)</span>
-            <span><i class="bi bi-people"></i> 890 talaba</span>
-            <span><i class="bi bi-camera-reels"></i> 24 dars</span>
-            <span><i class="bi bi-clock"></i> 18 soat</span>
+            <span><i class="bi bi-star-fill" style="color:var(--warning);"></i> <span data-landing-rating>4.7</span></span>
+            <span><i class="bi bi-people"></i> <span data-landing-students>890</span> talaba</span>
+            <span><i class="bi bi-camera-reels"></i> <span data-landing-lessons>24</span> dars</span>
+            <span><i class="bi bi-clock"></i> <span data-landing-duration>18 soat</span></span>
             <span><i class="bi bi-translate"></i> O'zbek</span>
           </div>
-          <div style="margin-top:10px; font-size:13px; color:var(--ink-500);">O'qituvchi: <b style="color:var(--ink-900);">Akmal Yuldashev</b></div>
+          <div style="margin-top:10px; font-size:13px; color:var(--ink-500);">O'qituvchi: <b style="color:var(--ink-900);" data-landing-instructor>Akmal Yuldashev</b></div>
 
+          <!-- Natijalar, talablar va kurs dasturi ham ?id= bo'yicha
+               to'ldiriladi (js/course-landing.js) -->
           <div class="card card-pad" style="margin-top:22px;">
             <h3 style="font-size:15px;">Bu kursda o'rganasiz</h3>
-            <div class="outcome-row" style="border:none;"><i class="bi bi-check2"></i> Docker konteynerlarini yaratish va boshqarish</div>
-            <div class="outcome-row" style="border:none;"><i class="bi bi-check2"></i> Dockerfile yozish va image quratish</div>
-            <div class="outcome-row"><i class="bi bi-check2"></i> Docker Compose bilan ko'p konteynerli ilovalar</div>
+            <div data-landing-outcomes></div>
           </div>
 
           <div class="card card-pad" style="margin-top:18px;">
             <h3 style="font-size:15px;">Talab qilinadigan bilimlar</h3>
-            <div class="requirement-row" style="border:none;"><i class="bi bi-dot"></i> Linux terminali bilan asosiy tanishlik</div>
-            <div class="requirement-row"><i class="bi bi-dot"></i> Har qanday matn muharriri (VS Code tavsiya etiladi)</div>
-            <div class="requirement-row"><i class="bi bi-dot"></i> Internetga ulangan kompyuter</div>
+            <div data-landing-requirements></div>
           </div>
 
           <div class="card card-pad" style="margin-top:18px;">
-            <div class="section-header"><h3>Kurs dasturi</h3><span class="badge badge-neutral">4 modul · 24 dars</span></div>
-            <div class="module-card" style="border:none; box-shadow:none;">
-              <div class="module-header" style="padding:10px 0;">
-                <button class="module-toggle" data-cps-module-toggle aria-label="Yig'ish/Yoyish"><i class="bi bi-chevron-down"></i></button>
-                <div class="module-info">
-                  <div class="module-title-row"><span class="module-title">1-modul: Kirish va sozlash</span></div>
-                  <div class="module-desc">Docker, Git va muhitni sozlash</div>
-                </div>
-                <div class="module-meta"><span><i class="bi bi-journal-text"></i> 6 dars</span><span><i class="bi bi-clock"></i> 2s 10d</span></div>
-              </div>
-              <div class="module-body">
-                <div class="module-preview-list">
-                  <div class="module-preview-item"><i class="bi bi-play-circle-fill"></i> Kursga kirish (Video · 8 daq)</div>
-                  <div class="module-preview-item"><i class="bi bi-file-text-fill"></i> Muhitni sozlash (Maqola · 12 daq)</div>
-                  <div class="module-preview-item"><i class="bi bi-lock-fill"></i> Terminal buyruqlari (Video · 10 daq)</div>
-                </div>
-              </div>
-            </div>
-            <div class="module-card" style="border:none; box-shadow:none;">
-              <div class="module-header" style="padding:10px 0;">
-                <button class="module-toggle collapsed" data-cps-module-toggle aria-label="Yig'ish/Yoyish"><i class="bi bi-chevron-down"></i></button>
-                <div class="module-info">
-                  <div class="module-title-row"><span class="module-title">2-modul: Docker asoslari</span></div>
-                  <div class="module-desc">Image, konteyner va registry tushunchalari</div>
-                </div>
-                <div class="module-meta"><span><i class="bi bi-journal-text"></i> 7 dars</span><span><i class="bi bi-clock"></i> 3s 40d</span></div>
-              </div>
-              <div class="module-body collapsed">
-                <div class="module-preview-list">
-                  <div class="module-preview-item"><i class="bi bi-lock-fill"></i> Docker image nima? (Video · 9 daq)</div>
-                  <div class="module-preview-item"><i class="bi bi-lock-fill"></i> Konteynerlarni boshqarish (Video · 14 daq)</div>
-                </div>
-              </div>
-            </div>
+            <div class="section-header"><h3>Kurs dasturi</h3><span class="badge badge-neutral" data-landing-syllabus-meta></span></div>
+            <div data-landing-modules></div>
           </div>
         </div>
 
         <!-- RIGHT: ENROLL -->
         <div class="wk-col sticky-enroll">
-          <div class="card" data-enroll-cta>
-            <div class="landing-cover" style="background:linear-gradient(135deg,#0EA5E9,#1E3A8A); border-radius:var(--r-lg) var(--r-lg) 0 0;"><i class="bi bi-box-seam"></i></div>
+          <div class="card">
+            <div class="landing-cover" style="background:linear-gradient(135deg,#F97316,#EA580C); border-radius:var(--r-lg) var(--r-lg) 0 0;" data-landing-cover><i class="bi bi-boxes" data-landing-icon></i></div>
             <div class="card-pad">
               <div class="enroll-price-box" style="padding:0;">
-                <span class="enroll-price">249 000 so'm</span><span class="enroll-price-old">420 000</span>
+                <span class="enroll-price" data-landing-price>159 000 so'm</span><span class="enroll-price-old" data-landing-price-old hidden></span>
               </div>
-              <button class="btn btn-teach btn-block" style="margin-top:14px;" onclick="isloh_openModal('enroll-confirm-modal')"><i class="bi bi-cart-plus"></i> Kursga yozilish</button>
+              <!-- Bosilganda to'g'ridan-to'g'ri xarid oynasiga o'tadi
+                   (js/enrollment.js) — oraliq tasdiqlash oynasi yo'q -->
+              <button type="button" class="btn btn-teach btn-block" style="margin-top:14px;" data-enroll-buy><i class="bi bi-cart-plus"></i> Kursga yozilish</button>
               <button class="btn btn-outline btn-block" style="margin-top:8px;" data-wishlist-toggle><i class="bi bi-heart"></i> Istaklar ro'yxatiga saqlash</button>
               <div style="margin-top:16px; display:flex; flex-direction:column; gap:8px; font-size:13px; color:var(--ink-700);">
                 <span><i class="bi bi-infinity"></i> Umrbod kirish</span>
@@ -116,18 +81,8 @@
             </div>
           </div>
 
-          <!-- SUCCESS STATE (hidden until enrollment confirmed) -->
-          <div class="card card-pad" data-enroll-success hidden>
-            <div class="success-check-circle"><i class="bi bi-check-lg"></i></div>
-            <div style="text-align:center;">
-              <div style="font-weight:700; font-size:15px;">Tabriklaymiz!</div>
-              <p style="font-size:13px; color:var(--ink-500); margin-top:4px;">Siz "Docker for Beginners" kursiga muvaffaqiyatli yozildingiz.</p>
-              <a href="course-player.html" class="btn btn-teach btn-block" style="margin-top:14px;"><i class="bi bi-play-fill"></i> O'rganishni boshlash</a>
-            </div>
-          </div>
-
-          <!-- ALREADY ENROLLED (example state — shown instead of the CTA when applicable) -->
-          <div class="enroll-state-badge" style="display:none;" data-enroll-already-example>
+          <!-- Kurs allaqachon sotib olingan bo'lsa ko'rinadi (js/enrollment.js) -->
+          <div class="enroll-state-badge" data-enroll-owned hidden>
             <i class="bi bi-check-circle-fill"></i> Siz allaqachon ushbu kursga yozilgansiz
           </div>
         </div>
@@ -136,28 +91,16 @@
   </div>
 </div>
 
-<!-- ENROLL CONFIRMATION MODAL -->
-<div class="modal-overlay" id="enroll-confirm-modal" hidden>
-  <div class="modal">
-    <div class="modal-head"><h3 style="font-size:15px;">Yozilishni tasdiqlang</h3><button class="icon-btn" onclick="isloh_closeModal('enroll-confirm-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
-    <div class="modal-body">
-      <div class="review-summary-row"><span class="lbl">Kurs</span><span class="val">Docker for Beginners</span></div>
-      <div class="review-summary-row"><span class="lbl">Narx</span><span class="val">249 000 so'm</span></div>
-      <div class="review-summary-row"><span class="lbl">Kirish</span><span class="val">Umrbod</span></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('enroll-confirm-modal')">Bekor qilish</button>
-      <button class="btn btn-teach btn-sm" data-enroll-confirm><i class="bi bi-check2-circle"></i> Yozilishni tasdiqlash</button>
-    </div>
-  </div>
-</div>
-
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
-<script src="../../js/modal.js"></script>
 <script src="../../js/lesson-viewer.js"></script>
 <script src="../../js/enrollment.js"></script>
+<!-- marketplace.js — kurslar katalogi (ma'lumot manbai), keyin sahifani
+     `?id=` bo'yicha to'ldiruvchi modul -->
+<script src="../../js/marketplace.js"></script>
+<script src="../../js/course-content.js"></script>
+<script src="../../js/course-landing.js"></script>
 </body>
 </html>

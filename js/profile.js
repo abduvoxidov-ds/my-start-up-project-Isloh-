@@ -9,7 +9,7 @@
    Uchta vazifa:
      1) Do'kon      — isloh_getUserProfile() / isloh_updateUserProfile()
      2) DOM sinxron — topbar avatari, profil sahifasi, shaxsiy ma'lumotlar
-     3) Formalar    — settings.html "Hisob" paneli + avatar yuklash
+     3) Formalar    — account.html "Hisob" sahifasi + avatar yuklash
 
    fetch() ishlatilmaydi (CLAUDE.md §3 — file:// protokoli), hamma narsa
    localStorage va DOM orqali.
@@ -260,7 +260,7 @@ function isloh_initAvatarUpload() {
   });
 }
 
-/* --- 4) "Hisob" formasi (settings.html) -----------------------------------
+/* --- 4) "Hisob" formasi (account.html) ------------------------------------
    Markup shartnomasi:
      [data-user-field="name|email|bio|headline|location"] -> input/textarea
      [data-user-save]                                     -> saqlash tugmasi */
@@ -292,29 +292,17 @@ function isloh_initAccountForm() {
   });
 }
 
-/* settings.html'ga `#bo'lim` bilan kelinganda o'sha panel ochiladi (profil
-   sahifasidagi "Profilni tahrirlash" tugmasi shu yo'l bilan ishlaydi).
+/* settings.html'ga `#bo'lim` bilan kelinganda o'sha bo'lim ochiladi.
    js/settings.js'ga tegilmaydi — shunchaki mos nav elementi bosiladi, ya'ni
-   mavjud tab almashish mantiqi o'zgarishsiz qoladi. */
+   mavjud tab almashish mantiqi o'zgarishsiz qoladi.
+   Eslatma: "Hisob" bu ro'yxatga kirmaydi — u mustaqil sahifa
+   (pages/student/account.html), sozlamalar paneli emas. */
 function isloh_openSettingsSectionFromHash() {
   const id = (location.hash || '').replace('#', '');
   if (!id || !/^[a-z][a-z0-9-]*$/i.test(id)) return;
 
-  // Bo'lim chap menyuda bo'lsa — oddiygina bosamiz
   const item = document.querySelector('.settings-nav-item[data-settings-target="' + id + '"]');
-  if (item) { item.click(); return; }
-
-  /* Menyuda ko'rsatilmagan bo'lim ("Hisob" — unga faqat profil sahifasidagi
-     "Profilni tahrirlash" tugmasi orqali kelinadi): panelni to'g'ridan-to'g'ri
-     ochamiz. js/settings.js ga tegilmaydi — foydalanuvchi keyin boshqa
-     bo'limni bosganda u o'z ishini odatdagidek bajaradi. */
-  const target = document.querySelector('.settings-section[data-settings-panel="' + id + '"]');
-  if (!target) return;
-
-  document.querySelectorAll('.settings-section[data-settings-panel]').forEach((panel) => {
-    panel.hidden = panel !== target;
-  });
-  document.querySelectorAll('.settings-nav-item').forEach((nav) => nav.classList.remove('active'));
+  if (item) item.click();
 }
 
 function isloh_initProfileModule() {
