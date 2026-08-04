@@ -19,7 +19,7 @@
       { id: 1,  read: false, icon: 'bi-play-circle-fill',      color: '#7C6FD8', title: 'Yangi dars qo\'shildi',          body: '"Python Backend" kursiga 3 ta yangi video qo\'shildi.',   href: 'courses.html',      time: '5 daqiqa oldin' },
       { id: 2,  read: false, icon: 'bi-patch-check-fill',      color: '#2ECC71', title: 'Sertifikat tayyor!',             body: '"UI/UX Asoslari" kursini muvaffaqiyatli tamomladingiz.', href: 'certificates.html', time: '1 soat oldin' },
       { id: 3,  read: false, icon: 'bi-calendar-event-fill',   color: '#F59E0B', title: 'Bugun jonli seans bor',          body: 'Saat 18:00 da "React Native" onlayn darsi boshlanadi.', href: 'calendar.html',     time: '2 soat oldin' },
-      { id: 4,  read: true,  icon: 'bi-check2-circle',         color: '#6366F1', title: 'Topshiriq baholandi',            body: '"JS Loyihasi" topshirig\'ingiz 92/100 ball oldi.',       href: 'tasks.html',        time: 'Kecha' },
+      { id: 4,  read: true,  icon: 'bi-check2-circle',         color: '#6366F1', title: 'Topshiriq baholandi',            body: '"JS Loyihasi" topshirig\'ingiz 92/100 ball oldi.',       href: 'calendar.html',     time: 'Kecha' },
       { id: 5,  read: true,  icon: 'bi-stars',                 color: '#A78BFA', title: 'AI maslahat tayyor',             body: 'AI yordamchi yangi o\'rganish rejangizni tayyorladi.',   href: 'ai-assistant.html', time: '2 kun oldin' },
     ],
     instructor: [

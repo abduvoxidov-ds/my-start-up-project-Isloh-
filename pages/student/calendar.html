@@ -6,27 +6,8 @@
 <title>Kalendar — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  /* Page-local: two-column calendar layout (main grid + right rail), plus
-     Vazifalar (Tasks) widgets merged directly below the calendar grid. All
-     widgets (.cal-*, .mini-cal-*, .upcoming-row, .cat-legend, .task-card,
-     .priority-badge, .kanban, .filter-chip, .empty-state) come from
-     css/widgets.css. */
-  .cal-layout { display:grid; grid-template-columns: 1fr 300px; gap:18px; align-items:start; }
-  .cal-layout .wk-col { position:sticky; top:88px; max-height:calc(100vh - 108px); overflow-y:auto; }
-  @media (max-width:1100px){
-    .cal-layout{ grid-template-columns:1fr; }
-    .cal-layout .wk-col{ position:static; max-height:none; overflow:visible; }
-  }
-  .task-group { margin-top:22px; }
-  .task-group-head { display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:14px; font-weight:700; }
-  .task-group-head .grp-count { font-size:11px; font-weight:600; background:var(--bg-app); color:var(--ink-500); padding:2px 8px; border-radius:var(--r-pill); border:1px solid var(--border-soft); }
-  .quick-add-bar { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
-  .quick-add-bar input[type="text"] { flex:1; padding:12px 14px; border-radius:var(--r-md); border:1.5px solid var(--border-soft); background:var(--bg-app); font-size:14px; outline:none; }
-  .quick-add-bar input[type="text"]:focus { border-color:var(--violet-500); background:#fff; }
-  .quick-add-bar input[type="date"] { flex:0 0 150px; padding:12px 14px; border-radius:var(--r-md); border:1.5px solid var(--border-soft); background:var(--bg-app); font-size:13.5px; outline:none; }
-  .quick-add-bar select { flex:0 0 120px; padding:12px 14px; border-radius:var(--r-md); border:1.5px solid var(--border-soft); background:var(--bg-app); font-size:13.5px; outline:none; }
-</style>
+<!-- Sahifa stillari yo'q: .cal-layout, .task-group*, .task-form* va boshqa
+     barcha vidjetlar css/widgets.css da (CLAUDE.md §2) -->
 </head>
 <body>
 <div class="app-shell">
@@ -38,16 +19,16 @@
 
   <div class="main-col">
     <main class="content">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <div class="page-header">
         <div>
-          <h1 style="font-size:24px;">Kalendar</h1>
-          <p style="color:var(--ink-500); margin-top:4px;">Darslar, muddatlar va imtihonlaringiz bir joyda.</p>
+          <h1>Kalendar</h1>
+          <p>Darslar, muddatlar va imtihonlaringiz bir joyda.</p>
         </div>
         <button class="btn btn-primary" data-quick-add-event><i class="bi bi-plus-lg"></i> Tadbir qo'shish</button>
       </div>
 
-      <div class="cal-layout" style="margin-top:20px;">
-        <!-- MAIN COLUMN: Calendar grid + Vazifalar (merged from tasks.html) -->
+      <div class="cal-layout mt-20">
+        <!-- ASOSIY USTUN: kalendar gridi + Vazifalar bo'limi -->
         <div>
         <!-- MAIN CALENDAR -->
         <div class="card card-pad">
@@ -58,10 +39,12 @@
               <button class="icon-btn" data-cal-next aria-label="Keyingi oy"><i class="bi bi-chevron-right"></i></button>
               <button class="btn btn-outline btn-sm" data-cal-today>Bugun</button>
             </div>
-            <div class="view-switch" role="tablist" aria-label="Ko'rinishni tanlash">
-              <button data-view="month" class="active">Oy</button>
-              <button data-view="week">Hafta</button>
-              <button data-view="day">Kun</button>
+            <!-- Hafta/Kun hali yo'q: bosiladigan, lekin bo'sh panel ochadigan
+                 tugma o'rniga ochiq-oydin o'chirilgan holat -->
+            <div class="view-switch" aria-label="Ko'rinishni tanlash">
+              <button data-view="month" class="active" aria-pressed="true">Oy</button>
+              <button data-view="week" disabled title="Tez orada">Hafta</button>
+              <button data-view="day" disabled title="Tez orada">Kun</button>
             </div>
           </div>
 
@@ -70,36 +53,20 @@
             <div class="cal-weekdays" id="cal-weekdays"></div>
             <div class="cal-grid" id="cal-grid"></div>
           </div>
-
-          <!-- Week / Day view (placeholder panels — full grids land in 3B) -->
-          <div data-cal-view-panel="week" hidden>
-            <div class="empty-state">
-              <div class="empty-icon"><i class="bi bi-calendar-week"></i></div>
-              <div class="empty-title">Haftalik ko'rinish tayyorlanmoqda</div>
-              <div class="empty-sub">Hozircha oylik ko'rinishdan foydalaning. Haftalik va kunlik ko'rinishlar keyingi bosqichda qo'shiladi.</div>
-            </div>
-          </div>
-          <div data-cal-view-panel="day" hidden>
-            <div class="empty-state">
-              <div class="empty-icon"><i class="bi bi-calendar-day"></i></div>
-              <div class="empty-title">Kunlik ko'rinish tayyorlanmoqda</div>
-              <div class="empty-sub">Bugungi tadbirlarni o'ng paneldagi "Bugungi jadval"da ko'rishingiz mumkin.</div>
-            </div>
-          </div>
         </div>
 
-        <!-- VAZIFALAR (merged from tasks.html) -->
-        <div style="margin-top:20px;">
-          <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
+        <!-- VAZIFALAR -->
+        <div class="mt-20">
+          <div class="section-header">
             <h3>Vazifalar</h3>
-            <div class="view-switch" role="tablist" aria-label="Ko'rinish">
-              <button data-view="list" class="active"><i class="bi bi-list-ul"></i> Ro'yxat</button>
-              <button data-view="kanban"><i class="bi bi-kanban"></i> Kanban</button>
+            <div class="view-switch" aria-label="Ko'rinish">
+              <button data-view="list" class="active" aria-pressed="true"><i class="bi bi-list-ul"></i> Ro'yxat</button>
+              <button data-view="kanban" aria-pressed="false"><i class="bi bi-kanban"></i> Kanban</button>
             </div>
           </div>
 
           <!-- STAT CARDS -->
-          <div class="wk-grid-4" style="margin-top:16px;">
+          <div class="wk-grid-4 mt-16">
             <div class="card card-pad stat-card">
               <div class="stat-icon tint-violet"><i class="bi bi-list-check"></i></div>
               <div class="stat-value" id="task-count-total">0</div>
@@ -123,16 +90,17 @@
           </div>
 
           <!-- PROGRESS -->
-          <div class="card card-pad" style="margin-top:18px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-              <h3 style="font-size:15px;">Umumiy jarayon</h3>
-              <span style="font-size:14px; font-weight:700; color:var(--violet-600);" id="task-progress-label">0%</span>
+          <div class="card card-pad mt-16">
+            <div class="task-progress-head">
+              <h3>Umumiy jarayon</h3>
+              <span class="task-progress-value" id="task-progress-label">0%</span>
             </div>
-            <div class="progress-track"><div class="progress-fill" id="task-progress-fill" style="width:0;"></div></div>
+            <!-- Kenglikni js/tasks.js belgilaydi (foizga qarab) -->
+            <div class="progress-track"><div class="progress-fill" id="task-progress-fill"></div></div>
           </div>
 
           <!-- FILTER: muhimlik bo'yicha -->
-          <div class="filter-bar" style="margin-top:20px;">
+          <div class="filter-bar mt-20">
             <button class="filter-chip active" data-priority-filter="all">Barcha muhimlik</button>
             <button class="filter-chip" data-priority-filter="high"><span class="priority-dot high"></span>&nbsp; Yuqori</button>
             <button class="filter-chip" data-priority-filter="medium"><span class="priority-dot medium"></span>&nbsp; O'rta</button>
@@ -140,10 +108,10 @@
           </div>
 
           <!-- AI suggested -->
-          <div class="card card-pad" data-ai-suggestion style="margin-top:16px; border:1px dashed var(--violet-500); background:var(--violet-100);">
-            <div style="display:flex; align-items:center; gap:8px;"><i class="bi bi-stars" style="color:var(--violet-600);"></i><h3 style="font-size:14px;">AI tavsiya qilgan vazifa</h3></div>
-            <p style="font-size:13px; color:var(--ink-700); margin-top:8px;">Django kursida 3 kun tanaffus qildingiz. "REST API asoslari"ni takrorlashni tavsiya qilamiz.</p>
-            <div style="display:flex; gap:8px; margin-top:12px;">
+          <div class="card card-pad ai-suggest-card mt-16" data-ai-suggestion>
+            <div class="ai-suggest-head"><i class="bi bi-stars"></i><h3>AI tavsiya qilgan vazifa</h3></div>
+            <p class="ai-suggest-text" data-ai-suggestion-text></p>
+            <div class="ai-suggest-actions">
               <button class="btn btn-primary btn-sm" data-ai-suggestion-add><i class="bi bi-plus-lg"></i> Qo'shish</button>
               <button class="btn btn-outline btn-sm" data-ai-suggestion-reject>Rad etish</button>
             </div>
@@ -152,7 +120,7 @@
           <!-- LIST VIEW -->
           <div data-task-view-panel="list">
             <div data-task-list></div>
-            <div class="empty-state card" data-tasks-empty style="display:none; margin-top:16px;">
+            <div class="empty-state card mt-16" data-tasks-empty hidden>
               <div class="empty-icon"><i class="bi bi-list-check"></i></div>
               <div class="empty-title">Hozircha vazifalar yo'q</div>
               <div class="empty-sub">Yuqoridagi maydon orqali yangi vazifa qo'shing yoki filtrni o'zgartiring.</div>
@@ -160,50 +128,30 @@
           </div>
 
           <!-- KANBAN VIEW (synced with the same isloh_tasks state as List view) -->
-          <div data-task-view-panel="kanban" hidden style="margin-top:22px;">
+          <div class="mt-20" data-task-view-panel="kanban" hidden>
             <div class="kanban" data-kanban-board></div>
           </div>
         </div>
         </div>
 
-        <!-- RIGHT RAIL -->
+        <!-- O'NG PANEL. Mini-kalendar olib tashlandi: yuqorida allaqachon
+             to'liq kalendar turibdi, ikkinchisi bir xil ma'lumotni
+             takrorlardi. "Yaqinlashayotgan" va "Turkumlar" ham olib
+             tashlandi — birinchisi ro'yxatdagi "Kelgusi" guruhi bilan,
+             ikkinchisi vazifa kartochkasidagi turkum yorlig'i bilan
+             bir xil ma'lumotni ko'rsatardi. -->
         <div class="wk-col">
-          <!-- Mini calendar -->
-          <div class="card card-pad">
-            <div class="mini-cal-head">
-              <div class="mini-cal-month" id="mini-cal-month">—</div>
-            </div>
-            <div class="mini-cal-grid" id="mini-cal-grid"></div>
-          </div>
-
-          <!-- Today's timeline (rendered from isloh_tasks — dueDate === bugun) -->
+          <!-- Bugungi jadval (isloh_tasks dan — dueDate === bugun) -->
           <div class="card card-pad">
             <div class="section-header"><h3>Bugungi jadval</h3></div>
             <div class="timeline" data-today-timeline></div>
           </div>
 
-          <!-- Upcoming (rendered from isloh_tasks — dueDate > bugun) -->
-          <div class="card card-pad">
-            <div class="section-header"><h3>Yaqinlashayotgan</h3></div>
-            <div data-upcoming-rail></div>
-          </div>
-
-          <!-- Category legend -->
-          <div class="card card-pad">
-            <div class="section-header"><h3>Turkumlar</h3></div>
-            <div class="cat-legend">
-              <div class="cat-row"><span class="cat-swatch" style="background:var(--violet-600);"></span> Darslar</div>
-              <div class="cat-row"><span class="cat-swatch" style="background:var(--danger);"></span> Muddatlar</div>
-              <div class="cat-row"><span class="cat-swatch" style="background:var(--warning);"></span> Imtihonlar</div>
-              <div class="cat-row"><span class="cat-swatch" style="background:var(--teach-green);"></span> Shaxsiy</div>
-            </div>
-          </div>
-
           <!-- AI scheduling teaser (prepares future AI support) -->
-          <div class="card card-pad" style="background:linear-gradient(135deg, var(--indigo-900), var(--indigo-950)); color:#fff; border:none;">
-            <div style="display:flex; align-items:center; gap:8px;"><i class="bi bi-stars"></i><h3 style="font-size:14px; color:#fff;">AI jadval tuzuvchi</h3></div>
-            <p style="font-size:12.5px; color:#C9C6E8; margin-top:8px;">AI dam olish vaqtlaringizni hisobga olib, optimal o'quv jadvalini taklif qilishi mumkin.</p>
-            <button class="btn btn-sm" style="margin-top:10px; background:rgba(255,255,255,.14); color:#fff;">Tez orada</button>
+          <div class="card card-pad ai-teaser-card">
+            <div class="ai-teaser-head"><i class="bi bi-stars"></i><h3>AI jadval tuzuvchi</h3></div>
+            <p class="ai-teaser-text">AI dam olish vaqtlaringizni hisobga olib, optimal o'quv jadvalini taklif qilishi mumkin.</p>
+            <button class="btn btn-sm ai-teaser-btn" disabled>Tez orada</button>
           </div>
         </div>
       </div>
@@ -211,26 +159,81 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="add-task-modal" hidden>
-  <div class="modal">
+<!-- Qo'shish VA tahrirlash uchun bitta shakl (js/tasks.js rejimni almashtiradi).
+     Ilgari tahrirlash window.prompt() orqali bo'lib, faqat sarlavhani
+     o'zgartira olardi. -->
+<div class="modal-overlay" id="task-form-modal" hidden>
+  <div class="modal modal-confirm" role="dialog" aria-modal="true" aria-labelledby="task-form-title">
     <div class="modal-head">
-      <h3 style="font-size:15px;">Yangi vazifa qo'shish</h3>
-      <button class="icon-btn" data-modal-close aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
+      <h3 class="modal-title" id="task-form-title">Yangi vazifa qo'shish</h3>
+      <button class="icon-btn" data-task-form-cancel aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="modal-body">
-      <div class="quick-add-bar" style="margin-top:0;">
-        <input type="text" id="quick-add-input" placeholder="Vazifa nomini kiriting..." aria-label="Yangi vazifa">
-        <input type="date" id="quick-add-date" aria-label="Muddat">
-        <select id="quick-add-priority" aria-label="Muhimlik">
-          <option value="high">Yuqori</option>
-          <option value="medium" selected>O'rta</option>
-          <option value="low">Past</option>
-        </select>
+      <div class="task-form">
+        <label class="task-form-field">
+          <span>Vazifa nomi</span>
+          <input type="text" id="task-form-title-input" placeholder="Vazifa nomini kiriting...">
+        </label>
+        <!-- Kurs/dars bog'lanishi — js/course-data.js dan to'ldiriladi.
+             Shu tanlov tufayli vazifa kartochkasidan to'g'ridan-to'g'ri
+             darsga o'tish mumkin bo'ladi. -->
+        <div class="task-form-row">
+          <label class="task-form-field">
+            <span>Kurs</span>
+            <select id="task-form-course"></select>
+          </label>
+          <label class="task-form-field">
+            <span>Dars</span>
+            <select id="task-form-lesson"></select>
+          </label>
+        </div>
+        <div class="task-form-row">
+          <label class="task-form-field">
+            <span>Muddat</span>
+            <input type="date" id="task-form-date">
+          </label>
+          <label class="task-form-field">
+            <span>Muhimlik</span>
+            <select id="task-form-priority">
+              <option value="high">Yuqori</option>
+              <option value="medium" selected>O'rta</option>
+              <option value="low">Past</option>
+            </select>
+          </label>
+          <label class="task-form-field">
+            <span>Turkum</span>
+            <select id="task-form-type">
+              <option value="lesson">Darslar</option>
+              <option value="deadline">Muddatlar</option>
+              <option value="exam">Imtihonlar</option>
+              <option value="personal" selected>Shaxsiy</option>
+            </select>
+          </label>
+        </div>
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline" data-modal-close>Bekor qilish</button>
-      <button class="btn btn-primary" data-quick-add><i class="bi bi-plus-lg"></i> Qo'shish</button>
+      <button class="btn btn-outline" data-task-form-cancel>Bekor qilish</button>
+      <button class="btn btn-primary" data-task-form-save><i class="bi bi-check-lg"></i> Saqlash</button>
+    </div>
+  </div>
+</div>
+
+<!-- O'chirishni tasdiqlash: bitta tasodifiy bosish vazifani yo'qotmasin
+     (loyihadagi boshqa o'chirish oqimlari bilan bir xil .modal naqshi) -->
+<div class="modal-overlay" id="delete-task-modal" hidden>
+  <div class="modal modal-confirm modal-danger" role="dialog" aria-modal="true" aria-labelledby="delete-task-title">
+    <div class="modal-head">
+      <h3 class="modal-title" id="delete-task-title">Vazifani o'chirish</h3>
+      <button class="icon-btn" data-delete-task-cancel aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <p>Quyidagi vazifa butunlay o'chiriladi:</p>
+      <p class="modal-confirm-word" data-delete-task-title></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-delete-task-cancel>Bekor qilish</button>
+      <button class="btn btn-danger" data-delete-task-confirm><i class="bi bi-trash"></i> O'chirish</button>
     </div>
   </div>
 </div>
@@ -240,6 +243,8 @@
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>
+<!-- Kurs/dars ro'yxati vazifa shakli uchun (bog'lanish tanlovi) -->
+<script src="../../js/course-data.js"></script>
 <script src="../../js/calendar.js"></script>
 <script src="../../js/tasks.js"></script>
 </body>

@@ -274,6 +274,8 @@
 .modal-demo .modal-foot, .modal .modal-foot { display:flex; justify-content:flex-end; gap:8px; padding:14px 18px; border-top:1px solid var(--border-soft); }
 .modal-overlay { position: fixed; inset: 0; background: rgba(23,18,59,0.45); display:flex; align-items:center; justify-content:center; z-index: var(--z-overlay); }
 .modal-overlay[hidden] { display: none; }
+/* Modal ochiq turganda orqa sahifa skroll qilinmaydi (js/modal.js qo'yadi) */
+body.modal-open { overflow: hidden; }
 /* Sarlavha va yopish tugmasi — avval pages/shared/components.html demosida
    inline style bilan yozilgan edi */
 .modal-title { font-weight:700; font-size:14.5px; }

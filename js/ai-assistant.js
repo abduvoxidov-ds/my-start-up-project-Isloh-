@@ -63,22 +63,25 @@ const ISLOH_AI_CONTEXTS = {
         response:"<p><b>Baholash mezonlari:</b></p><ul><li>To'g'ri ishlaydigan Compose fayli — 50%</li><li>Kod tozaligi va izohlar — 20%</li><li>Muddatga rioya qilish — 30%</li></ul>" }
     ]
   },
+  /* {lesson} va {course} — js/ai-chat.js javobni chizishdan oldin joriy
+     dars/kurs nomiga almashtiradi. Ilgari javoblar qaysi dars ochilganidan
+     qat'i nazar bir xil matnni qaytarardi. */
   'course-player': {
     role: 'student',
     label: "Kurs darsi",
     templates: [
       { key:'explain',    icon:'bi-lightbulb',   title:"Mavzuni tushuntirib ber",     sub:"Joriy darsni sodda tilda qayta tushuntiradi",
-        response:"<p>Docker konteyneri — bu ilovangizni barcha kerakli fayllar bilan birga \"qadoqlab\", istalgan kompyuterda bir xil ishlashini ta'minlaydigan yengil, izolyatsiyalangan muhit.</p>" },
+        response:"<p><b>{lesson}</b> — sodda tushuntirish:</p><p>Docker konteyneri — bu ilovangizni barcha kerakli fayllar bilan birga \"qadoqlab\", istalgan kompyuterda bir xil ishlashini ta'minlaydigan yengil, izolyatsiyalangan muhit.</p>" },
       { key:'summarize',  icon:'bi-card-text',   title:"Darsni qisqacha yozib ber",   sub:"Joriy darsning asosiy fikrlarini qisqartiradi",
-        response:"<p><b>Qisqacha xulosa:</b></p><ul><li>Docker konteynerlashtirish vositasi</li><li>Image — konteyner uchun andoza</li><li>Dockerfile orqali image yaratiladi</li></ul>" },
+        response:"<p><b>{lesson}</b> darsining qisqacha xulosasi ({course}):</p><ul><li>Docker konteynerlashtirish vositasi</li><li>Image — konteyner uchun andoza</li><li>Dockerfile orqali image yaratiladi</li></ul>" },
       { key:'notes',      icon:'bi-journal-text',title:"Izoh yozib ber",              sub:"Darsdan avtomatik konspekt tuzadi",
-        response:"<p><b>Avtomatik konspekt:</b></p><ul><li>Docker = konteynerlashtirish platformasi</li><li>Konteyner vs virtual mashina — resurslarni tejash</li><li>Keyingi darsda: Dockerfile yozish</li></ul>" },
+        response:"<p><b>{lesson}</b> bo'yicha avtomatik konspekt:</p><ul><li>Docker = konteynerlashtirish platformasi</li><li>Konteyner vs virtual mashina — resurslarni tejash</li><li>Keyingi darsda: Dockerfile yozish</li></ul>" },
       { key:'keypoints',  icon:'bi-stars',       title:"Asosiy fikrlarni ajrat",      sub:"Eng muhim 3-5 nuqtani ro'yxat qilib beradi",
-        response:"<p><b>Asosiy fikrlar:</b></p><ol><li>Konteyner — izolyatsiyalangan muhit</li><li>Image — o'zgarmas andoza</li><li>Docker Hub — image'lar ombori</li></ol>" },
+        response:"<p><b>{lesson}</b> darsidagi asosiy fikrlar:</p><ol><li>Konteyner — izolyatsiyalangan muhit</li><li>Image — o'zgarmas andoza</li><li>Docker Hub — image'lar ombori</li></ol>" },
       { key:'practice',   icon:'bi-clipboard-check', title:"Amaliyot savollarini yarat", sub:"Darsga oid 3 ta amaliy savol tuzadi",
-        response:"<p><b>Amaliyot savollari:</b></p><ol><li>Konteynerni to'xtatish uchun qaysi buyruq ishlatiladi?</li><li>Image va konteyner farqini tushuntiring.</li><li>Docker Hub'dan image qanday yuklab olinadi?</li></ol>" },
+        response:"<p><b>{lesson}</b> bo'yicha amaliyot savollari:</p><ol><li>Konteynerni to'xtatish uchun qaysi buyruq ishlatiladi?</li><li>Image va konteyner farqini tushuntiring.</li><li>Docker Hub'dan image qanday yuklab olinadi?</li></ol>" },
       { key:'quizme',     icon:'bi-patch-question-fill', title:"Meni sinab ko'r (Quiz Me)", sub:"Darsdan bitta savol berib, javobingizni tekshiradi",
-        response:"<p><b>Savol:</b> Docker image nima?</p><p style=\"margin-top:6px; color:var(--ink-500); font-size:12.5px;\">Javobingizni pastdagi maydonga yozing, men tekshirib beraman (demo rejimi).</p>" },
+        response:"<p><b>{lesson}</b> bo'yicha savol: Docker image nima?</p><p class=\"ai-hint\">Javobingizni pastdagi maydonga yozing (demo rejimi — javob hozircha tekshirilmaydi).</p>" },
       { key:'flashcards', icon:'bi-layers',      title:"Fleshkartalar yarat",         sub:"Darsdan atama-ta'rif fleshkartalarini tuzadi",
         response:"__FLASHCARDS__" }
     ]

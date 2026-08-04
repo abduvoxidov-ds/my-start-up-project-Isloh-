@@ -26,12 +26,6 @@ function isloh_aiRenderPromptCard(t) {
   </button>`;
 }
 
-function isloh_aiRenderHistoryRow(t, favored) {
-  return `<div class="ai-history-row"><i class="bi bi-clock-history"></i> ${t.title}
-    <button class="fav-toggle${favored ? ' active' : ''}" data-ai-fav aria-label="Sevimlilarga qo'shish"><i class="bi bi-star${favored ? '-fill' : ''}"></i></button>
-  </div>`;
-}
-
 function isloh_aiRenderDrawer(mount) {
   const contextEl = document.querySelector('[data-ai-context]');
   const contextKey = contextEl ? contextEl.dataset.aiContext : null;
@@ -41,23 +35,32 @@ function isloh_aiRenderDrawer(mount) {
   const isInstructor = ctx.role === 'instructor';
   const suggestions = ctx.templates.slice(0, 3).map(isloh_aiRenderSuggestCard).join('');
   const promptCards = ctx.templates.map(isloh_aiRenderPromptCard).join('');
-  const historyRows = ctx.templates.slice(0, 4).map((t, i) => isloh_aiRenderHistoryRow(t, i === 0)).join('');
 
+  /* "Qadab qo'yish" tugmasi olib tashlangan (1-navbat): panel modal overlay
+     bo'lgani uchun "qadalgan" holatda ham sahifa bilan ishlab bo'lmasdi.
+     "Tarix" tabi esa 2-navbatda qaytdi — endi u haqiqiy saqlangan
+     suhbatlarni ko'rsatadi (js/ai-store.js), shablonlar ro'yxatini emas. */
   mount.innerHTML = `
 <div class="modal-overlay ai-drawer-overlay" id="ai-drawer-overlay" hidden>
-  <div class="ai-drawer-panel${isInstructor ? ' theme-teach' : ''}" id="ai-drawer-panel" data-ai-context-key="${contextKey}">
+  <div class="ai-drawer-panel${isInstructor ? ' theme-teach' : ''}" id="ai-drawer-panel"
+       role="dialog" aria-modal="true" aria-labelledby="ai-drawer-title"
+       data-ai-context-key="${contextKey}">
     <div class="ai-drawer-head">
-      <div class="ai-drawer-title"><i class="bi bi-stars"></i> AI Yordamchi</div>
+      <div class="ai-drawer-title" id="ai-drawer-title"><i class="bi bi-stars"></i> AI Yordamchi</div>
       <div class="ai-drawer-head-actions">
-        <button class="icon-btn" data-ai-pin aria-label="Qadab qo'yish"><i class="bi bi-pin-angle"></i></button>
-        <button class="icon-btn" data-ai-minimize aria-label="Kichraytirish"><i class="bi bi-dash-lg"></i></button>
+        <button class="icon-btn" data-ai-minimize aria-label="Kichraytirish" aria-expanded="true"><i class="bi bi-dash-lg"></i></button>
         <button class="icon-btn" data-ai-clear aria-label="Suhbatni tozalash"><i class="bi bi-trash3"></i></button>
         <button class="icon-btn" data-ai-drawer-close aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
       </div>
     </div>
-    <div class="ai-drawer-context"><i class="bi bi-bookmark-star-fill"></i> Kontekst: ${ctx.label}</div>
+    <!-- Kontekst qatori jonli: dars almashganda js/ai-chat.js unga joriy
+         dars nomini yozadi (ilgari faqat statik "Kurs darsi" turardi) -->
+    <div class="ai-drawer-context">
+      <i class="bi bi-bookmark-star-fill"></i>
+      <span data-ai-context-label>Kontekst: ${ctx.label}</span>
+    </div>
 
-    <div data-tabs style="display:contents;">
+    <div class="ai-drawer-tabs-scope" data-tabs>
       <div class="ai-drawer-tabs tab-strip" role="tablist">
         <div class="tab-item active" data-tab-target="ai-tab-chat">Suhbat</div>
         <div class="tab-item" data-tab-target="ai-tab-templates">Shablonlar</div>
@@ -68,19 +71,26 @@ function isloh_aiRenderDrawer(mount) {
         <div data-tab-panel="ai-tab-chat">
           <div class="ai-drawer-empty" data-ai-empty>
             <i class="bi bi-stars"></i>
-            <div style="font-weight:700; font-size:14px; margin-top:8px;">Nima bilan yordam beray?</div>
-            <p style="font-size:12.5px; color:var(--ink-500); margin-top:4px;">${ctx.label} bo'yicha savol bering yoki quyidagi takliflardan birini tanlang.</p>
+            <div class="ai-empty-title">Nima bilan yordam beray?</div>
+            <p class="ai-empty-sub">${ctx.label} bo'yicha savol bering yoki quyidagi takliflardan birini tanlang.</p>
           </div>
-          <div class="suggest-row" data-ai-suggestions style="margin-top:16px;">${suggestions}</div>
-          <div data-ai-messages style="margin-top:18px;"></div>
+          <div class="suggest-row" data-ai-suggestions>${suggestions}</div>
+          <!-- aria-live: skrin-rider AI javobi kelganini eshitadi -->
+          <div class="ai-msg-list" data-ai-messages aria-live="polite"></div>
         </div>
 
         <div data-tab-panel="ai-tab-templates" hidden>
           <div class="ai-prompt-grid">${promptCards}</div>
         </div>
 
+        <!-- Ro'yxat do'kondan chiziladi (js/ai-chat.js), markupda emas -->
         <div data-tab-panel="ai-tab-history" hidden>
-          <div data-ai-history-list>${historyRows}</div>
+          <div data-ai-history-list></div>
+          <div class="ai-history-empty" data-ai-history-empty hidden>
+            <i class="bi bi-clock-history"></i>
+            <div class="ai-empty-title">Saqlangan suhbat yo'q</div>
+            <p class="ai-empty-sub">Savol berganingizdan keyin suhbat shu yerda saqlanadi.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -88,7 +98,7 @@ function isloh_aiRenderDrawer(mount) {
     <div class="ai-drawer-foot">
       <div class="ai-input-box">
         <input placeholder="Xabar yozing..." aria-label="Xabar yozing" data-ai-input>
-        <button class="send-btn btn btn-primary" style="width:38px;height:38px;padding:0;border-radius:50%;" data-ai-send aria-label="Yuborish" type="button"><i class="bi bi-send-fill"></i></button>
+        <button class="send-btn btn btn-primary" data-ai-send aria-label="Yuborish" type="button"><i class="bi bi-send-fill"></i></button>
       </div>
       <div class="ai-disclaimer">AI yordamchi xato qilishi mumkin. Muhim ma'lumotlarni tekshiring.</div>
     </div>

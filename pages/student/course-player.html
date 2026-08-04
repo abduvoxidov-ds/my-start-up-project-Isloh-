@@ -16,16 +16,11 @@
   </aside>
 
   <div class="main-col">
-    <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a href="courses.html">Kurslar</a><span class="sep">/</span><span class="current">Docker for Beginners</span></nav>
-      <div class="topbar-actions">
-        <button class="btn btn-outline btn-sm" data-ai-drawer-trigger><i class="bi bi-stars"></i> AI Yordamchi</button>
-        <!-- "Jarayonim" tugmasi olib tashlandi: chapdagi sidebar'da ham,
-             yon paneldagi havolada ham aynan shu sahifa bor edi -->
-        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" data-user-avatar></div>
-      </div>
-    </header>
+    <!-- Topbar olib tashlandi: bu sahifa darsga to'liq e'tibor talab qiladi,
+         shuning uchun breadcrumb, bildirishnoma qo'ng'irog'i va avatar
+         chiqarildi. Mobil menyu tugmasi js/sidebar.js tomonidan avtomatik
+         `.mobile-nav-bar` satriga joylashadi (faqat ≤900px da ko'rinadi),
+         "AI Yordamchi" esa dars sarlavhasi yoniga ko'chirildi. -->
 
     <main class="content" data-ai-context="course-player" data-course-id="docker-for-beginners">
       <!-- COMPLETION BANNER (hidden until 100%; toggled by js/lesson-viewer.js) -->
@@ -49,6 +44,8 @@
         <section class="lesson-viewer">
           <div class="lesson-header">
             <div>
+              <!-- Topbar breadcrumb'i o'rniga: kurslar ro'yxatiga qaytish -->
+              <a href="courses.html" class="lesson-back"><i class="bi bi-arrow-left"></i> Mening kurslarim</a>
               <!-- Sarlavha va meta faol dars qatoridan js/lesson-viewer.js orqali
                    to'ldiriladi. tabindex="-1" — dars almashganda fokus shu yerga
                    ko'chiriladi (skrin-rider va klaviatura foydalanuvchilari uchun). -->
@@ -59,6 +56,7 @@
               </div>
             </div>
             <div class="lesson-header-actions">
+              <button class="btn btn-outline btn-sm" data-ai-drawer-trigger><i class="bi bi-stars"></i> AI Yordamchi</button>
               <button class="icon-btn" data-lesson-bookmark aria-label="Xatcho'p"><i class="bi bi-bookmark"></i></button>
               <a href="lesson-player.html" class="icon-btn" aria-label="Chalg'itmaydigan rejim"><i class="bi bi-arrows-fullscreen"></i></a>
             </div>
@@ -214,8 +212,6 @@
         <!-- Transkript videoning o'z .vtt subtitr faylidan chiziladi
              (js/lesson-transcript.js) — alohida ma'lumot manbai yo'q -->
         <div data-tab-panel="tab-transcript" class="mt-16">
-          <input class="input tr-search" type="search" data-transcript-search
-                 placeholder="Transkriptdan qidirish..." aria-label="Transkriptdan qidirish" hidden>
           <div class="tr-list" data-transcript-list></div>
           <div class="empty-state" data-transcript-empty hidden>
             <div class="empty-icon"><i class="bi bi-card-text"></i></div>
@@ -316,6 +312,7 @@
 <script defer src="../../js/comments.js"></script>
 <script defer src="../../js/ai-assistant.js"></script>
 <script defer src="../../js/ai-panel.js"></script>
+<script defer src="../../js/ai-store.js"></script>
 <script defer src="../../js/ai-chat.js"></script>
 </body>
 </html>

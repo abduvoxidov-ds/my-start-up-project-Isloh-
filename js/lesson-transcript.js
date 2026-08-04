@@ -13,14 +13,12 @@
    Markup shartnomasi:
      [data-transcript-list]   → qatorlar shu yerga chiziladi
      [data-transcript-empty]  → video bo'lmagan/subtitri yo'q darsda ko'rinadi
-     [data-transcript-search] → ixtiyoriy qidiruv maydoni
    ========================================================================== */
 
 function isloh_transcriptEls() {
   return {
     list: document.querySelector('[data-transcript-list]'),
-    empty: document.querySelector('[data-transcript-empty]'),
-    search: document.querySelector('[data-transcript-search]')
+    empty: document.querySelector('[data-transcript-empty]')
   };
 }
 
@@ -33,7 +31,7 @@ function isloh_transcriptCues() {
 }
 
 function isloh_renderTranscript() {
-  const { list, empty, search } = isloh_transcriptEls();
+  const { list, empty } = isloh_transcriptEls();
   if (!list) return;
 
   const stage = document.querySelector('[data-video-stage]');
@@ -42,7 +40,6 @@ function isloh_renderTranscript() {
 
   list.textContent = '';
   if (empty) empty.hidden = cues.length > 0;
-  if (search) search.hidden = cues.length === 0;
   if (!cues.length) return;
 
   cues.forEach((cue) => {
@@ -83,7 +80,7 @@ let isloh_transcriptUserScrolling = false;
 let isloh_transcriptScrollTimer = null;
 
 function isloh_initTranscript() {
-  const { list, search } = isloh_transcriptEls();
+  const { list } = isloh_transcriptEls();
   if (!list) return;
 
   // Qatorni bosish -> videoni o'sha joyga olib borish
@@ -100,15 +97,6 @@ function isloh_initTranscript() {
     clearTimeout(isloh_transcriptScrollTimer);
     isloh_transcriptScrollTimer = setTimeout(() => { isloh_transcriptUserScrolling = false; }, 4000);
   }, { passive: true });
-
-  // Dars ichidagi qidiruv — transkriptning ikkinchi foydasi
-  search?.addEventListener('input', () => {
-    const q = search.value.trim().toLowerCase();
-    list.querySelectorAll('.tr-line').forEach((row) => {
-      const text = row.querySelector('.tr-text').textContent.toLowerCase();
-      row.hidden = q.length > 0 && !text.includes(q);
-    });
-  });
 
   const video = document.querySelector('[data-lesson-video]');
   if (video) {

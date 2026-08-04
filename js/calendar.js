@@ -1,30 +1,26 @@
 /* ==========================================================================
    ISLOH — Calendar module
-   Renders the month grid, mini-calendar, "Bugungi jadval" and "Yaqinlashayotgan"
-   sidebar widgets — all derived from the same isloh_tasks state that
-   js/tasks.js owns (via isloh_getTasks/isloh_taskStatus/isloh_todayISO), so
-   the Calendar and Vazifalar halves of this page share one source of truth.
-   isloh_renderCalendarAll() is exposed globally so js/tasks.js can call it
-   after any add/edit/delete/toggle to keep the calendar in sync.
+   Renders the month grid and the "Bugungi jadval" rail — ikkalasi ham
+   js/tasks.js egalik qiladigan bir xil isloh_tasks holatidan
+   (isloh_getTasks/isloh_taskStatus/isloh_todayISO orqali), ya'ni kalendar
+   va Vazifalar bo'limi bitta manbadan chiziladi.
+   isloh_renderCalendarAll() global — js/tasks.js har qo'shish/tahrirlash/
+   o'chirish/belgilashdan keyin uni chaqirib kalendarni sinxron ushlaydi.
+
+   Mini-kalendar, "Yaqinlashayotgan" va "Turkumlar" vidjetlari olib
+   tashlangan: uchalasi ham sahifadagi boshqa bloklar (asosiy kalendar,
+   "Kelgusi" guruhi, kartochkadagi turkum yorlig'i) bilan bir xil
+   ma'lumotni takrorlardi.
 
    Expected markup on the page:
      data-cal-month-label, #cal-grid, #cal-weekdays  (full calendar)
-     #mini-cal-grid, #mini-cal-month                  (mini calendar, optional)
      [data-today-timeline]                            (today's schedule, optional)
-     [data-upcoming-rail]                              (upcoming list, optional)
      .view-switch button[data-view]                   (Month/Week/Day switch, optional)
      [data-cal-prev] / [data-cal-next] / [data-cal-today]
    ========================================================================== */
 
 const ISLOH_WEEKDAYS = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'];
 const ISLOH_MONTHS = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
-
-const ISLOH_UPCOMING_ICON = {
-  lesson:   { bg: 'var(--violet-100)', color: 'var(--violet-600)', icon: 'bi-journal-bookmark-fill' },
-  deadline: { bg: '#FDEBEC',           color: 'var(--danger)',     icon: 'bi-flag-fill' },
-  exam:     { bg: '#FEF3E2',           color: 'var(--warning)',    icon: 'bi-mortarboard-fill' },
-  personal: { bg: 'var(--teach-green-100)', color: 'var(--teach-green)', icon: 'bi-person-fill' }
-};
 
 let isloh_calViewDate = new Date();
 
@@ -44,7 +40,7 @@ function isloh_buildCalEventsFromTasks() {
   isloh_getTasks().forEach((t) => {
     if (!t.dueDate) return;
     const title = (t.dueTime ? t.dueTime + ' ' : '') + t.title;
-    (events[t.dueDate] = events[t.dueDate] || []).push({ title, type: t.type || 'personal' });
+    (events[t.dueDate] = events[t.dueDate] || []).push({ title, type: t.type || 'personal', taskId: t.id });
   });
   return events;
 }
@@ -69,51 +65,73 @@ function isloh_renderMonth(viewDate) {
   const daysInMonth = new Date(y, m + 1, 0).getDate();
   const daysInPrev = new Date(y, m, 0).getDate();
 
-  let cells = '';
+  grid.textContent = '';
+
+  const addMutedDay = (num) => {
+    const cell = document.createElement('div');
+    cell.className = 'cal-day muted';
+    cell.innerHTML = `<div class="cal-daynum">${num}</div>`;
+    grid.appendChild(cell);
+  };
+
+  /* Kun raqami — tugma: bosilsa o'sha sana bilan vazifa qo'shish oynasi
+     ochiladi. Ilgari katakcha ham, tadbir ham, "+N ko'proq" ham hech
+     narsa qilmasdi — kalendar faqat ko'rinish edi. */
+  const dayNumBtn = (dateISO, num) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cal-daynum';
+    btn.dataset.calAddDate = dateISO;
+    btn.textContent = num;
+    btn.setAttribute('aria-label', `${num}-kunga vazifa qo'shish`);
+    return btn;
+  };
+
   // leading days from previous month
-  for (let i = firstIdx; i > 0; i--) {
-    cells += `<div class="cal-day muted"><div class="cal-daynum">${daysInPrev - i + 1}</div></div>`;
-  }
+  for (let i = firstIdx; i > 0; i--) addMutedDay(daysInPrev - i + 1);
+
   // current month
   for (let d = 1; d <= daysInMonth; d++) {
     const key = isloh_isoDate(y, m, d);
     const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
     const dayEvents = events[key] || [];
-    let evHtml = dayEvents.slice(0, 2).map((e) => `<div class="cal-event ev-${e.type}" title="${e.title}">${e.title}</div>`).join('');
-    if (dayEvents.length > 2) evHtml += `<div class="cal-more">+${dayEvents.length - 2} ko'proq</div>`;
-    cells += `<div class="cal-day${isToday ? ' today' : ''}"><div class="cal-daynum">${d}</div>${evHtml}</div>`;
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-day' + (isToday ? ' today' : '');
+    cell.dataset.calDate = key;
+    cell.appendChild(dayNumBtn(key, d));
+
+    /* Tadbir nomi vazifa sarlavhasidan keladi — textContent va `.title`
+       xossasi orqali qo'yiladi, innerHTML orqali emas (js/tasks.js dagi
+       bir xil xavf: nom ichidagi HTML element sifatida chizilardi).
+       Endi har biri tugma: bosilsa ro'yxatdagi vazifasiga olib boradi. */
+    dayEvents.forEach((e, i) => {
+      const ev = document.createElement('button');
+      ev.type = 'button';
+      ev.className = 'cal-event ev-' + e.type + (i >= 2 ? ' is-extra' : '');
+      ev.dataset.calTaskId = e.taskId;
+      ev.title = e.title;
+      ev.textContent = e.title;
+      cell.appendChild(ev);
+    });
+
+    // "+N ko'proq" — yashirilgan tadbirlarni shu katakchada ochadi
+    if (dayEvents.length > 2) {
+      const more = document.createElement('button');
+      more.type = 'button';
+      more.className = 'cal-more';
+      more.dataset.calMore = '';
+      more.textContent = `+${dayEvents.length - 2} ko'proq`;
+      more.setAttribute('aria-expanded', 'false');
+      cell.appendChild(more);
+    }
+    grid.appendChild(cell);
   }
+
   // trailing days to fill the last row
   const total = firstIdx + daysInMonth;
   const trailing = (7 - (total % 7)) % 7;
-  for (let d = 1; d <= trailing; d++) {
-    cells += `<div class="cal-day muted"><div class="cal-daynum">${d}</div></div>`;
-  }
-  grid.innerHTML = cells;
-}
-
-function isloh_renderMiniCal(viewDate) {
-  const grid = document.getElementById('mini-cal-grid');
-  const monthEl = document.getElementById('mini-cal-month');
-  if (!grid) return;
-
-  const events = isloh_buildCalEventsFromTasks();
-  const y = viewDate.getFullYear(), m = viewDate.getMonth();
-  if (monthEl) monthEl.textContent = `${ISLOH_MONTHS[m]} ${y}`;
-
-  const today = new Date();
-  const firstIdx = isloh_startOffset(new Date(y, m, 1).getDay());
-  const daysInMonth = new Date(y, m + 1, 0).getDate();
-
-  let html = ISLOH_WEEKDAYS.map((d) => `<div class="mc-wd">${d[0]}</div>`).join('');
-  for (let i = 0; i < firstIdx; i++) html += `<div class="mc-day muted"></div>`;
-  for (let d = 1; d <= daysInMonth; d++) {
-    const key = isloh_isoDate(y, m, d);
-    const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
-    const hasEvent = (events[key] || []).length > 0;
-    html += `<div class="mc-day${isToday ? ' today' : ''}${hasEvent ? ' has-event' : ''}">${d}</div>`;
-  }
-  grid.innerHTML = html;
+  for (let d = 1; d <= trailing; d++) addMutedDay(d);
 }
 
 // --- Right rail: "Bugungi jadval" — today's tasks, sorted by time ---
@@ -128,61 +146,75 @@ function isloh_renderTodayTimeline() {
     .sort((a, b) => (a.dueTime || '99:99').localeCompare(b.dueTime || '99:99'));
 
   if (!items.length) {
-    wrap.innerHTML = `<div style="font-size:12.5px; color:var(--ink-500); text-align:center; padding:12px 0;">Bugun uchun rejalashtirilgan tadbir yo'q.</div>`;
+    wrap.innerHTML = `<div class="rail-empty">Bugun uchun rejalashtirilgan tadbir yo'q.</div>`;
     return;
   }
-  wrap.innerHTML = items.map((t) => {
+  wrap.textContent = '';
+  items.forEach((t) => {
     const cls = t.isCompleted ? 'tl-green' : (t.priority === 'high' ? 'tl-warning' : '');
-    return `<div class="timeline-item ${cls}">
-      <div class="timeline-time">${t.dueTime || 'Kun davomida'}</div>
-      <div class="timeline-title">${t.title}</div>
-    </div>`;
-  }).join('');
-}
-
-// --- Right rail: "Yaqinlashayotgan" — next incomplete tasks after today ---
-function isloh_renderUpcomingRail() {
-  const wrap = document.querySelector('[data-upcoming-rail]');
-  if (!wrap) return;
-  if (typeof isloh_getTasks !== 'function') { wrap.innerHTML = ''; return; }
-
-  const today = isloh_todayISO();
-  const items = isloh_getTasks()
-    .filter((t) => !t.isCompleted && t.dueDate && t.dueDate > today)
-    .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
-    .slice(0, 4);
-
-  if (!items.length) {
-    wrap.innerHTML = `<div style="font-size:12.5px; color:var(--ink-500); text-align:center; padding:12px 0;">Yaqin kunlarda rejalashtirilgan narsa yo'q.</div>`;
-    return;
-  }
-  wrap.innerHTML = items.map((t) => {
-    const cfg = ISLOH_UPCOMING_ICON[t.type || 'personal'];
-    return `<div class="upcoming-row">
-      <div class="upcoming-icon" style="background:${cfg.bg}; color:${cfg.color};"><i class="bi ${cfg.icon}"></i></div>
-      <div class="upcoming-body">
-        <div class="upcoming-title">${t.title}</div>
-        <div class="upcoming-sub">${isloh_upcomingDaysLabel(t)}</div>
-      </div>
-    </div>`;
-  }).join('');
+    const item = document.createElement('div');
+    item.className = 'timeline-item ' + cls;
+    item.innerHTML = `<div class="timeline-time"></div><div class="timeline-title"></div>`;
+    item.querySelector('.timeline-time').textContent = t.dueTime || 'Kun davomida';
+    item.querySelector('.timeline-title').textContent = t.title;
+    wrap.appendChild(item);
+  });
 }
 
 function isloh_renderCalendarAll() {
   isloh_renderMonth(isloh_calViewDate);
-  isloh_renderMiniCal(isloh_calViewDate);
   isloh_renderTodayTimeline();
-  isloh_renderUpcomingRail();
+}
+
+/* Kalendar interaktivligi. Delegatsiya ishlatiladi, chunki katakchalar har
+   oy almashganda qaytadan chiziladi. Vazifa oynasini js/tasks.js ochadi —
+   kalendar modul vazifa mantiqini takrorlamaydi. */
+function isloh_initCalendarInteractions() {
+  document.addEventListener('click', (e) => {
+    const addBtn = e.target.closest('[data-cal-add-date]');
+    if (addBtn) {
+      if (typeof isloh_openTaskForm === 'function') isloh_openTaskForm('add', { dueDate: addBtn.dataset.calAddDate });
+      return;
+    }
+
+    const evBtn = e.target.closest('[data-cal-task-id]');
+    if (evBtn) {
+      if (typeof isloh_focusTaskInList === 'function') isloh_focusTaskInList(evBtn.dataset.calTaskId);
+      return;
+    }
+
+    const moreBtn = e.target.closest('[data-cal-more]');
+    if (moreBtn) {
+      const cell = moreBtn.closest('.cal-day');
+      const open = cell.classList.toggle('expanded');
+      moreBtn.setAttribute('aria-expanded', String(open));
+      moreBtn.textContent = open
+        ? 'Kamroq'
+        : `+${cell.querySelectorAll('.cal-event.is-extra').length} ko'proq`;
+    }
+  });
+
+  /* Katakchaning bo'sh joyini bosish ham qo'shish oynasini ochadi —
+     kun raqami tugmasi bilan bir xil amal (klaviatura uchun o'sha tugma). */
+  const grid = document.getElementById('cal-grid');
+  if (grid) {
+    grid.addEventListener('click', (e) => {
+      if (e.target.closest('button')) return;
+      const cell = e.target.closest('.cal-day[data-cal-date]');
+      if (cell && typeof isloh_openTaskForm === 'function') {
+        isloh_openTaskForm('add', { dueDate: cell.dataset.calDate });
+      }
+    });
+  }
 }
 
 function isloh_initCalendar() {
   const hasFull = document.getElementById('cal-grid');
-  const hasMini = document.getElementById('mini-cal-grid');
   const hasTimeline = document.querySelector('[data-today-timeline]');
-  const hasUpcoming = document.querySelector('[data-upcoming-rail]');
-  if (!hasFull && !hasMini && !hasTimeline && !hasUpcoming) return;
+  if (!hasFull && !hasTimeline) return;
 
   isloh_renderCalendarAll();
+  isloh_initCalendarInteractions();
 
   document.querySelectorAll('[data-cal-prev]').forEach((b) =>
     b.addEventListener('click', () => { isloh_calViewDate.setMonth(isloh_calViewDate.getMonth() - 1); isloh_renderCalendarAll(); }));
