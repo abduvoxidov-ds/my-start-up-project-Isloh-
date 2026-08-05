@@ -21,10 +21,10 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="course-builder.html" style="color:inherit;">Kurs tarkibi</a><span class="sep">/</span><a href="assignment-builder.html" style="color:inherit;">Topshiriq loyihalari</a><span class="sep">/</span><span class="current">Tahrirlash</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="course-builder.html">Kurs tarkibi</a><span class="sep">/</span><a class="text-inherit" href="assignment-builder.html">Topshiriq loyihalari</a><span class="sep">/</span><span class="current">Tahrirlash</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
@@ -85,7 +85,7 @@
           <div class="card card-pad editor-block">
             <div class="editor-block-label"><i class="bi bi-code-slash"></i> Kod bloki (namuna)</div>
             <div class="field" style="max-width:200px;"><label for="assignment-code-lang">Til</label>
-              <select id="assignment-code-lang" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option>Python</option><option>JavaScript</option><option>Bash</option><option>SQL</option></select>
+              <select id="assignment-code-lang" class="btn btn-outline select-block"><option>Python</option><option>JavaScript</option><option>Bash</option><option>SQL</option></select>
             </div>
             <textarea class="editor-textarea" style="font-family:'SFMono-Regular',Consolas,monospace; background:#191830; color:#E4E2F5; border:none;" rows="4">class Course(models.Model):
     title = models.CharField(max_length=200)</textarea>
@@ -95,7 +95,7 @@
             <div class="editor-block-label"><i class="bi bi-link-45deg"></i> Tashqi havolalar</div>
             <div data-row-list="as-link-row-template">
               <div class="link-row">
-                <i class="bi bi-box-arrow-up-right" style="color:var(--ink-500);"></i>
+                <i class="bi bi-box-arrow-up-right text-muted"></i>
                 <input value="https://docs.djangoproject.com/en/stable/topics/db/models/" readonly>
                 <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
               </div>
@@ -107,7 +107,7 @@
             <div class="editor-block-label"><i class="bi bi-download"></i> Yuklab olish fayllari (boshlang'ich kod)</div>
             <div data-row-list="as-download-row-template">
               <div class="download-row">
-                <i class="bi bi-file-earmark-zip-fill" style="color:var(--ink-500);"></i>
+                <i class="bi bi-file-earmark-zip-fill text-muted"></i>
                 <input value="starter-models.zip" readonly>
                 <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
               </div>
@@ -182,17 +182,17 @@
                 <div class="question-option-row">
                   <input type="text" value="Modellar to'g'ri belgilangan (ForeignKey, fields)" style="flex:2;">
                   <input type="number" value="40" min="0" style="width:80px;">
-                  <button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+                  <button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
                 </div>
                 <div class="question-option-row">
                   <input type="text" value="Migratsiyalar xatosiz ishlaydi" style="flex:2;">
                   <input type="number" value="30" min="0" style="width:80px;">
-                  <button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+                  <button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
                 </div>
                 <div class="question-option-row">
                   <input type="text" value="Kod uslubi va izohlar" style="flex:2;">
                   <input type="number" value="30" min="0" style="width:80px;">
-                  <button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+                  <button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
                 </div>
               </div>
               <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="rubric-row-template"><i class="bi bi-plus-lg"></i> Mezon qo'shish</button>
@@ -241,8 +241,8 @@
               <div class="settings-section-sub">Topshiriqning asosiy ma'lumotlari.</div>
               <div class="field"><label for="as-desc">Qisqa tavsif</label><input id="as-desc" value="Django ORM yordamida kurs katalogi modellarini loyihalash"></div>
               <div style="display:flex; gap:12px;">
-                <div class="field" style="flex:1;"><label for="as-max-score">Maksimal ball</label><input id="as-max-score" type="number" value="100" min="0"></div>
-                <div class="field" style="flex:1;"><label for="as-est-time">Taxminiy vaqt (daqiqa)</label><input id="as-est-time" type="number" value="90" min="0"></div>
+                <div class="field flex-1"><label for="as-max-score">Maksimal ball</label><input id="as-max-score" type="number" value="100" min="0"></div>
+                <div class="field flex-1"><label for="as-est-time">Taxminiy vaqt (daqiqa)</label><input id="as-est-time" type="number" value="90" min="0"></div>
               </div>
             </div>
 
@@ -250,8 +250,8 @@
               <div class="settings-section-title">Muddat</div>
               <div class="settings-section-sub">Topshirish uchun sana va vaqtni belgilang.</div>
               <div style="display:flex; gap:12px;">
-                <div class="field" style="flex:1;"><label for="as-due-date">Sana</label><input id="as-due-date" type="date" value="2026-07-28"></div>
-                <div class="field" style="flex:1;"><label for="as-due-time">Vaqt</label><input id="as-due-time" type="time" value="23:59"></div>
+                <div class="field flex-1"><label for="as-due-date">Sana</label><input id="as-due-date" type="date" value="2026-07-28"></div>
+                <div class="field flex-1"><label for="as-due-time">Vaqt</label><input id="as-due-time" type="time" value="23:59"></div>
               </div>
             </div>
 
@@ -308,7 +308,7 @@
 
 <template id="as-link-row-template">
   <div class="link-row">
-    <i class="bi bi-box-arrow-up-right" style="color:var(--ink-500);"></i>
+    <i class="bi bi-box-arrow-up-right text-muted"></i>
     <input placeholder="https://...">
     <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
   </div>
@@ -316,7 +316,7 @@
 
 <template id="as-download-row-template">
   <div class="download-row">
-    <i class="bi bi-file-earmark-arrow-down-fill" style="color:var(--ink-500);"></i>
+    <i class="bi bi-file-earmark-arrow-down-fill text-muted"></i>
     <input placeholder="fayl-nomi.zip">
     <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
   </div>
@@ -335,17 +335,20 @@
   <div class="question-option-row">
     <input type="text" placeholder="Yangi mezon" style="flex:2;">
     <input type="number" value="10" min="0" style="width:80px;">
-    <button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+    <button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
   </div>
 </template>
 
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/sortable.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/toast.js"></script>
+<script src="../../js/draft-store.js"></script>
 <script src="../../js/unsaved-guard.js"></script>
 <script src="../../js/tabs.js"></script>
 <script src="../../js/course-wizard.js"></script>

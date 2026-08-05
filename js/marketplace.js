@@ -115,10 +115,40 @@ function isloh_categorySlug(name) {
   return name === 'Barchasi' ? 'all' : name.toLowerCase();
 }
 
+/* Katalogning yagona kirish nuqtasi: yuqoridagi demo kurslar + o'qituvchi
+   nashr etgan kurslar (js/course-store.js). Ilgari sahifalar to'g'ridan-
+   to'g'ri `ISLOH_MARKETPLACE_DATA.featured_courses` ni o'qirdi, shuning
+   uchun provider nashr etgan kurs talabaga umuman ko'rinmasdi.
+
+   Bir xil ID uchrasa o'qituvchi tahriri ustun turadi, lekin faqat u
+   egalik qiladigan maydonlar bo'yicha (isloh_courseCatalogPatch) —
+   chegirma va ko'rishlar soni kabi demo maydonlar joyida qoladi.
+   course-store.js ulanmagan sahifalarda shunchaki demo ro'yxat qaytadi. */
+function isloh_getCatalog() {
+  const base = ISLOH_MARKETPLACE_DATA.featured_courses;
+  if (typeof isloh_getPublishedCourses !== 'function') return base;
+
+  const merged = base.map((entry) => Object.assign({}, entry));
+  const byId = {};
+  merged.forEach((entry) => { byId[entry.id] = entry; });
+
+  isloh_getPublishedCourses().forEach((course) => {
+    if (byId[course.id]) {
+      Object.assign(byId[course.id], isloh_courseCatalogPatch(course));
+      return;
+    }
+    const entry = isloh_courseToCatalogEntry(course);
+    byId[entry.id] = entry;
+    merged.push(entry);
+  });
+
+  return merged;
+}
+
 // Kurs ma'lumotini ID bo'yicha yagona manbadan oladi — savat/xohishlar
 // ro'yxati faqat ID saqlagani uchun kartochka shu yerdan to'ldiriladi.
 function isloh_findCourseById(id) {
-  return ISLOH_MARKETPLACE_DATA.featured_courses.find((c) => c.id === id) || null;
+  return isloh_getCatalog().find((c) => c.id === id) || null;
 }
 
 // Raqamni mahalliy formatda ("18 420") ko'rsatadi — narx ham, ko'rishlar ham
@@ -286,6 +316,18 @@ function isloh_finalizeCartCheckout() {
   isloh_updateCartBadge();
 }
 
+/* Chip ro'yxati: qo'lda yozilgan kategoriyalar + katalogda haqiqatan
+   uchraydiganlari. O'qituvchi yangi kategoriyada kurs nashr etsa, uning
+   chipi ham o'zi paydo bo'ladi — aks holda kurs faqat "Barchasi" da
+   ko'rinib, filtrlab bo'lmasdi. */
+function isloh_catalogCategories() {
+  const list = ISLOH_MARKETPLACE_DATA.categories.slice();
+  isloh_getCatalog().forEach((course) => {
+    if (course.category && list.indexOf(course.category) === -1) list.push(course.category);
+  });
+  return list;
+}
+
 // --- Rendering: kategoriya chiplar va kurs katakchalari ---
 function isloh_renderMarketplaceCategories(categories) {
   const bar = document.querySelector('[data-filter-group="category"]');
@@ -349,11 +391,11 @@ function isloh_renderMarketplaceCourses(courses) {
 
   grid.querySelectorAll('[data-mkt-add-cart]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const course = ISLOH_MARKETPLACE_DATA.featured_courses.find((c) => c.id === btn.dataset.courseId);
+      const course = isloh_getCatalog().find((c) => c.id === btn.dataset.courseId);
       if (!course) return;
       isloh_addToCart(course);
       isloh_updateCartBadge();
-      isloh_renderMarketplaceCourses(ISLOH_MARKETPLACE_DATA.featured_courses);
+      isloh_renderMarketplaceCourses(isloh_getCatalog());
       isloh_renderMarketplaceStrips(); // savat o'zgardi — tavsiyalar ham yangilanadi
       if (typeof isloh_showToast === 'function') isloh_showToast(`"${course.title}" savatga qo'shildi`, 'success');
     });
@@ -393,7 +435,7 @@ function isloh_getInterestCategories() {
    qiziqish yo'nalishiga mos kurslar oldinga, keyin reyting bo'yicha. */
 function isloh_getRecommendedCourses(limit) {
   const interests = isloh_getInterestCategories();
-  return ISLOH_MARKETPLACE_DATA.featured_courses
+  return isloh_getCatalog()
     .filter((c) => !isloh_isPurchased(c.id) && !isloh_isInCart(c.id))
     .sort((a, b) => {
       const match = (interests.indexOf(b.category) > -1) - (interests.indexOf(a.category) > -1);
@@ -404,7 +446,7 @@ function isloh_getRecommendedCourses(limit) {
 
 // Ko'p ko'rilgan: butun katalog bo'yicha ko'rishlar soni (umumiy reyting)
 function isloh_getMostViewedCourses(limit) {
-  return [...ISLOH_MARKETPLACE_DATA.featured_courses]
+  return [...isloh_getCatalog()]
     .sort((a, b) => b.views - a.views)
     .slice(0, limit || ISLOH_STRIP_LIMIT);
 }
@@ -457,7 +499,7 @@ function isloh_initMarketplaceSort() {
   if (!select) return;
   select.addEventListener('change', () => {
     // Filtr/qidiruv holatini render funksiyasining o'zi tiklaydi
-    isloh_renderMarketplaceCourses(isloh_sortCourses(ISLOH_MARKETPLACE_DATA.featured_courses, select.value));
+    isloh_renderMarketplaceCourses(isloh_sortCourses(isloh_getCatalog(), select.value));
   });
 }
 
@@ -542,8 +584,8 @@ function isloh_renderRecentOrders(selector, limit) {
 }
 
 function isloh_initMarketplace() {
-  isloh_renderMarketplaceCategories(ISLOH_MARKETPLACE_DATA.categories);
-  isloh_renderMarketplaceCourses(ISLOH_MARKETPLACE_DATA.featured_courses);
+  isloh_renderMarketplaceCategories(isloh_catalogCategories());
+  isloh_renderMarketplaceCourses(isloh_getCatalog());
   isloh_renderMarketplaceStrips();
   isloh_updateCartBadge();
   isloh_renderRecentOrders('[data-mkt-recent-orders]', 2);

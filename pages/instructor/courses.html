@@ -20,7 +20,7 @@
       <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><span class="current">Kurslarim</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
@@ -30,25 +30,24 @@
         <a href="course-create.html" class="btn btn-teach"><i class="bi bi-plus-lg"></i> Yangi kurs</a>
       </div>
 
-      <!-- STATS -->
+      <!-- STATS — raqamlar ro'yxatdan hisoblanadi (js/instructor-courses.js) -->
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-journal-check"></i></div><div class="stat-value">6</div><div class="stat-label">Nashr etilgan</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon badge-warning" style="width:40px;height:40px;border-radius:var(--r-md);"><i class="bi bi-pencil-square"></i></div><div class="stat-value">2</div><div class="stat-label">Qoralama</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-archive"></i></div><div class="stat-value">1</div><div class="stat-label">Arxivlangan</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-people-fill"></i></div><div class="stat-value">438</div><div class="stat-label">Jami talabalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-journal-check"></i></div><div class="stat-value" data-course-stat="published">0</div><div class="stat-label">Nashr etilgan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-pencil-square"></i></div><div class="stat-value" data-course-stat="draft">0</div><div class="stat-label">Qoralama</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-archive"></i></div><div class="stat-value" data-course-stat="archived">0</div><div class="stat-label">Arxivlangan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div><div class="stat-value" data-course-stat="students">0</div><div class="stat-label">Jami talabalar</div></div>
       </div>
 
-      <!-- TABS + SEARCH + SORT + VIEW TOGGLE -->
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:22px;">
+      <!-- TABS + SEARCH + VIEW TOGGLE -->
+      <div class="list-toolbar">
         <div class="filter-bar" data-filter-group="status">
           <button class="filter-chip active" data-filter-value="all">Barchasi</button>
           <button class="filter-chip" data-filter-value="published">Nashr etilgan</button>
           <button class="filter-chip" data-filter-value="draft">Qoralama</button>
           <button class="filter-chip" data-filter-value="archived">Arxiv</button>
         </div>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-          <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Kurs qidirish..." aria-label="Kurs qidirish"></div>
-          <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Saralash"><option>Eng yangi</option><option>Daromad bo'yicha</option><option>Talabalar bo'yicha</option><option>Reyting bo'yicha</option></select>
+        <div class="list-toolbar-end">
+          <div class="topbar-search list-toolbar-search"><i class="bi bi-search"></i><input data-filter-search placeholder="Kurs qidirish..." aria-label="Kurs qidirish"></div>
           <div class="view-switch" data-view-switch role="tablist" aria-label="Ko'rinishni tanlash">
             <button class="active" data-view="table" aria-label="Jadval ko'rinishi"><i class="bi bi-table"></i></button>
             <button data-view="grid" aria-label="Katakcha ko'rinishi"><i class="bi bi-grid-3x3-gap-fill"></i></button>
@@ -60,160 +59,33 @@
       <div class="bulk-bar" data-bulk-bar hidden>
         <span><span class="bulk-count" data-bulk-count>0</span> ta kurs tanlandi</span>
         <div class="bulk-spacer"></div>
-        <button class="btn btn-teach btn-sm"><i class="bi bi-journal-check"></i> Nashr etish</button>
-        <button class="btn btn-outline btn-sm"><i class="bi bi-archive"></i> Arxivlash</button>
-        <button class="btn btn-outline btn-sm" style="color:#FF9B9E; border-color:rgba(255,255,255,.25);"><i class="bi bi-trash"></i> O'chirish</button>
+        <button class="btn btn-teach btn-sm" data-bulk-publish><i class="bi bi-journal-check"></i> Nashr etish</button>
+        <button class="btn btn-outline btn-sm" data-bulk-archive><i class="bi bi-archive"></i> Arxivlash</button>
+        <button class="btn btn-outline btn-sm bulk-danger" data-bulk-delete><i class="bi bi-trash"></i> O'chirish</button>
         <button class="btn btn-outline btn-sm" data-bulk-cancel>Bekor qilish</button>
       </div>
 
       <!-- LOADING SKELETON (shown briefly on page load) -->
       <div class="card" style="margin-top:16px;" data-list-skeleton>
         <div class="skeleton-table" style="padding:8px 22px;">
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-100"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-100"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
         </div>
       </div>
 
+      <!-- Jadval qatorlari ham, katakchalar ham `isloh_courses` do'konidan
+           chiziladi (js/instructor-courses.js) — markup takrorlanmaydi. -->
       <div data-list-content hidden data-bulk-scope>
-        <!-- TABLE VIEW -->
-        <div class="card" style="margin-top:16px; overflow:hidden;" data-course-table>
+        <div class="card list-card" data-course-table>
           <div class="itable-wrap">
             <table class="itable">
               <thead><tr>
                 <th style="width:36px;"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th>
                 <th>Kurs</th><th>Holat</th><th>Kategoriya</th><th>Talabalar</th><th>Reyting</th><th>Yakunlash</th><th>Daromad</th><th>Yangilangan</th><th>Amallar</th>
               </tr></thead>
-              <tbody>
-                <tr data-filter-item data-status="published" data-filter-text="Python Backend Development">
-                  <td><input type="checkbox" data-select-item aria-label="Python Backend Development tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div><div><div class="cell-title filter-title">Python Backend Development</div><div class="cell-sub">48 dars</div></div></div></td>
-                  <td><span class="badge badge-green">Nashr etilgan</span></td>
-                  <td>Dasturlash</td>
-                  <td>248</td><td>4.9 ★</td>
-                  <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:78%;"></div></div></div></td>
-                  <td style="font-weight:700; color:var(--teach-green);">$1,480</td>
-                  <td class="cell-sub">2 kun oldin</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <a href="course-details.html" class="dropdown-item"><i class="bi bi-eye"></i> Ko'rish</a>
-                        <a href="course-edit.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
-                        <a href="course-builder.html" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
-                        <a href="course-settings.html" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>
-                        <div class="dropdown-item" style="color:var(--danger);"><i class="bi bi-archive"></i> Arxivlash</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr data-filter-item data-status="published" data-filter-text="Django REST Masterclass">
-                  <td><input type="checkbox" data-select-item aria-label="Django REST Masterclass tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb" style="background:linear-gradient(135deg,#0F766E,#14B8A6);"><i class="bi bi-database-fill"></i></div><div><div class="cell-title filter-title">Django REST Masterclass</div><div class="cell-sub">36 dars</div></div></div></td>
-                  <td><span class="badge badge-green">Nashr etilgan</span></td>
-                  <td>Backend</td>
-                  <td>130</td><td>4.8 ★</td>
-                  <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:71%;"></div></div></div></td>
-                  <td style="font-weight:700; color:var(--teach-green);">$920</td>
-                  <td class="cell-sub">1 hafta oldin</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <a href="course-details.html" class="dropdown-item"><i class="bi bi-eye"></i> Ko'rish</a>
-                        <a href="course-edit.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
-                        <a href="course-builder.html" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
-                        <a href="course-settings.html" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>
-                        <div class="dropdown-item" style="color:var(--danger);"><i class="bi bi-archive"></i> Arxivlash</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr data-filter-item data-status="published" data-filter-text="PostgreSQL Complete Guide">
-                  <td><input type="checkbox" data-select-item aria-label="PostgreSQL Complete Guide tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);"><i class="bi bi-box-fill"></i></div><div><div class="cell-title filter-title">PostgreSQL Complete Guide</div><div class="cell-sub">28 dars</div></div></div></td>
-                  <td><span class="badge badge-green">Nashr etilgan</span></td>
-                  <td>Ma'lumotlar bazasi</td>
-                  <td>60</td><td>4.7 ★</td>
-                  <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:64%;"></div></div></div></td>
-                  <td style="font-weight:700; color:var(--teach-green);">$540</td>
-                  <td class="cell-sub">3 hafta oldin</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <a href="course-details.html" class="dropdown-item"><i class="bi bi-eye"></i> Ko'rish</a>
-                        <a href="course-edit.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
-                        <a href="course-builder.html" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
-                        <a href="course-settings.html" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>
-                        <div class="dropdown-item" style="color:var(--danger);"><i class="bi bi-archive"></i> Arxivlash</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr data-filter-item data-status="draft" data-filter-text="Docker for Beginners">
-                  <td><input type="checkbox" data-select-item aria-label="Docker for Beginners tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-box"></i></div><div><div class="cell-title filter-title">Docker for Beginners</div><div class="cell-sub">18 dars · 85% tayyor</div></div></div></td>
-                  <td><span class="badge badge-warning">Qoralama</span></td>
-                  <td>DevOps</td>
-                  <td>—</td><td>—</td>
-                  <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:85%; background:var(--warning);"></div></div></div></td>
-                  <td>—</td>
-                  <td class="cell-sub">Bugun</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <a href="course-edit.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlashni davom ettirish</a>
-                        <a href="course-builder.html" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
-                        <a href="course-settings.html" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>
-                        <div class="dropdown-item" style="color:var(--danger);"><i class="bi bi-trash"></i> O'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr data-filter-item data-status="draft" data-filter-text="Advanced API Design">
-                  <td><input type="checkbox" data-select-item aria-label="Advanced API Design tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-diagram-3"></i></div><div><div class="cell-title filter-title">Advanced API Design</div><div class="cell-sub">10 dars · 40% tayyor</div></div></div></td>
-                  <td><span class="badge badge-warning">Qoralama</span></td>
-                  <td>Backend</td>
-                  <td>—</td><td>—</td>
-                  <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:40%; background:var(--warning);"></div></div></div></td>
-                  <td>—</td>
-                  <td class="cell-sub">3 kun oldin</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <a href="course-edit.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlashni davom ettirish</a>
-                        <a href="course-builder.html" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
-                        <a href="course-settings.html" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>
-                        <div class="dropdown-item" style="color:var(--danger);"><i class="bi bi-trash"></i> O'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr data-filter-item data-status="archived" data-filter-text="jQuery Asoslari">
-                  <td><input type="checkbox" data-select-item aria-label="jQuery Asoslari tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb" style="background:var(--ink-300); color:#fff;"><i class="bi bi-archive-fill"></i></div><div><div class="cell-title filter-title">jQuery Asoslari</div><div class="cell-sub">Arxivlangan · 2025</div></div></div></td>
-                  <td><span class="badge badge-neutral">Arxiv</span></td>
-                  <td>Dasturlash</td>
-                  <td>92</td><td>4.5 ★</td>
-                  <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:100%; background:var(--ink-300);"></div></div></div></td>
-                  <td style="color:var(--ink-500);">$310</td>
-                  <td class="cell-sub">2025</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <a href="course-details.html" class="dropdown-item"><i class="bi bi-eye"></i> Ko'rish</a>
-                        <div class="dropdown-item"><i class="bi bi-arrow-counterclockwise"></i> Tiklash</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody data-course-rows></tbody>
             </table>
           </div>
           <div class="empty-state" data-filter-empty style="display:none;">
@@ -221,164 +93,40 @@
           </div>
         </div>
 
-        <!-- GRID VIEW -->
-        <div class="course-grid-instr" style="margin-top:16px;" data-course-grid hidden>
-          <div class="card course-card-instr" data-filter-item data-status="published" data-filter-text="Python Backend Development">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="Python Backend Development tanlash">
-            <div class="cci-cover" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div>
-            <span class="badge badge-green cci-status">Nashr etilgan</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">Python Backend Development</div>
-              <div class="cci-tags"><span class="cci-tag">Dasturlash</span><span class="cci-tag">O'rta daraja</span></div>
-              <div class="cci-stats"><span><i class="bi bi-people-fill"></i> 248</span><span><i class="bi bi-star-fill" style="color:var(--warning);"></i> 4.9</span><span style="font-weight:700; color:var(--teach-green);">$1,480</span></div>
-              <div class="cci-progress-row"><div class="progress-track"><div class="progress-fill" style="width:78%;"></div></div><span>78%</span></div>
-              <div class="cci-foot">
-                <span class="cci-meta">Yangilangan: 2 kun oldin</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="course-details.html" class="dropdown-item"><i class="bi bi-eye"></i> Ko'rish</a>
-                    <a href="course-edit.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
-                    <a href="course-builder.html" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
-                        <a href="course-settings.html" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card course-card-instr" data-filter-item data-status="published" data-filter-text="Django REST Masterclass">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="Django REST Masterclass tanlash">
-            <div class="cci-cover" style="background:linear-gradient(135deg,#0F766E,#14B8A6);"><i class="bi bi-database-fill"></i></div>
-            <span class="badge badge-green cci-status">Nashr etilgan</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">Django REST Masterclass</div>
-              <div class="cci-tags"><span class="cci-tag">Backend</span><span class="cci-tag">Ilg'or</span></div>
-              <div class="cci-stats"><span><i class="bi bi-people-fill"></i> 130</span><span><i class="bi bi-star-fill" style="color:var(--warning);"></i> 4.8</span><span style="font-weight:700; color:var(--teach-green);">$920</span></div>
-              <div class="cci-progress-row"><div class="progress-track"><div class="progress-fill" style="width:71%;"></div></div><span>71%</span></div>
-              <div class="cci-foot">
-                <span class="cci-meta">Yangilangan: 1 hafta oldin</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="course-details.html" class="dropdown-item"><i class="bi bi-eye"></i> Ko'rish</a>
-                    <a href="course-edit.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
-                    <a href="course-builder.html" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
-                        <a href="course-settings.html" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card course-card-instr" data-filter-item data-status="published" data-filter-text="PostgreSQL Complete Guide">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="PostgreSQL Complete Guide tanlash">
-            <div class="cci-cover" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);"><i class="bi bi-box-fill"></i></div>
-            <span class="badge badge-green cci-status">Nashr etilgan</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">PostgreSQL Complete Guide</div>
-              <div class="cci-tags"><span class="cci-tag">Ma'lumotlar bazasi</span><span class="cci-tag">O'rta daraja</span></div>
-              <div class="cci-stats"><span><i class="bi bi-people-fill"></i> 60</span><span><i class="bi bi-star-fill" style="color:var(--warning);"></i> 4.7</span><span style="font-weight:700; color:var(--teach-green);">$540</span></div>
-              <div class="cci-progress-row"><div class="progress-track"><div class="progress-fill" style="width:64%;"></div></div><span>64%</span></div>
-              <div class="cci-foot">
-                <span class="cci-meta">Yangilangan: 3 hafta oldin</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="course-details.html" class="dropdown-item"><i class="bi bi-eye"></i> Ko'rish</a>
-                    <a href="course-edit.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
-                    <a href="course-builder.html" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
-                        <a href="course-settings.html" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card course-card-instr" data-filter-item data-status="draft" data-filter-text="Docker for Beginners">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="Docker for Beginners tanlash">
-            <div class="cci-cover" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-box"></i></div>
-            <span class="badge badge-warning cci-status">Qoralama</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">Docker for Beginners</div>
-              <div class="cci-tags"><span class="cci-tag">DevOps</span><span class="cci-tag">Boshlang'ich</span></div>
-              <div class="cci-stats"><span><i class="bi bi-people-fill"></i> —</span><span><i class="bi bi-star"></i> —</span><span>—</span></div>
-              <div class="cci-progress-row"><div class="progress-track"><div class="progress-fill" style="width:85%; background:var(--warning);"></div></div><span>85% tayyor</span></div>
-              <div class="cci-foot">
-                <span class="cci-meta">Yangilangan: Bugun</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="course-edit.html" class="dropdown-item"><i class="bi bi-pencil"></i> Davom ettirish</a>
-                    <a href="course-builder.html" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
-                        <a href="course-settings.html" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card course-card-instr" data-filter-item data-status="draft" data-filter-text="Advanced API Design">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="Advanced API Design tanlash">
-            <div class="cci-cover" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-diagram-3"></i></div>
-            <span class="badge badge-warning cci-status">Qoralama</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">Advanced API Design</div>
-              <div class="cci-tags"><span class="cci-tag">Backend</span><span class="cci-tag">Ilg'or</span></div>
-              <div class="cci-stats"><span><i class="bi bi-people-fill"></i> —</span><span><i class="bi bi-star"></i> —</span><span>—</span></div>
-              <div class="cci-progress-row"><div class="progress-track"><div class="progress-fill" style="width:40%; background:var(--warning);"></div></div><span>40% tayyor</span></div>
-              <div class="cci-foot">
-                <span class="cci-meta">Yangilangan: 3 kun oldin</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="course-edit.html" class="dropdown-item"><i class="bi bi-pencil"></i> Davom ettirish</a>
-                    <a href="course-builder.html" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
-                        <a href="course-settings.html" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card course-card-instr" data-filter-item data-status="archived" data-filter-text="jQuery Asoslari">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="jQuery Asoslari tanlash">
-            <div class="cci-cover" style="background:var(--ink-300);"><i class="bi bi-archive-fill"></i></div>
-            <span class="badge badge-neutral cci-status">Arxiv</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">jQuery Asoslari</div>
-              <div class="cci-tags"><span class="cci-tag">Dasturlash</span></div>
-              <div class="cci-stats"><span><i class="bi bi-people-fill"></i> 92</span><span><i class="bi bi-star-fill" style="color:var(--warning);"></i> 4.5</span><span style="color:var(--ink-500);">$310</span></div>
-              <div class="cci-progress-row"><div class="progress-track"><div class="progress-fill" style="width:100%; background:var(--ink-300);"></div></div><span>100%</span></div>
-              <div class="cci-foot">
-                <span class="cci-meta">Arxivlangan: 2025</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="course-details.html" class="dropdown-item"><i class="bi bi-eye"></i> Ko'rish</a>
-                    <div class="dropdown-item"><i class="bi bi-arrow-counterclockwise"></i> Tiklash</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PAGINATION -->
-      <div class="pager">
-        <button aria-label="Oldingi"><i class="bi bi-chevron-left"></i></button>
-        <button class="active">1</button><button>2</button>
-        <button aria-label="Keyingi"><i class="bi bi-chevron-right"></i></button>
+        <div class="course-grid-instr" style="margin-top:16px;" data-course-grid hidden></div>
       </div>
     </main>
   </div>
 </div>
+
+<!-- O'CHIRISHNI TASDIQLASH -->
+<div class="modal-overlay" id="delete-course-modal" role="dialog" aria-modal="true" aria-labelledby="delete-course-title" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <b id="delete-course-title" class="text-danger">Kursni o'chirishni tasdiqlang</b>
+      <button type="button" class="icon-btn icon-btn-sm" data-modal-close="delete-course-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13.5px; color:var(--ink-700);"><b data-delete-course-name></b> butunlay o'chiriladi. Bu amalni qaytarib bo'lmaydi.</p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-outline btn-sm" data-modal-close="delete-course-modal">Bekor qilish</button>
+      <button type="button" class="btn btn-sm btn-danger" data-course-delete-confirm>Ha, o'chirish</button>
+    </div>
+  </div>
+</div>
+
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/dropdown.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/course-store.js"></script>
+<script src="../../js/instructor-courses.js"></script>
 <script src="../../js/courses.js"></script>
 </body>
 </html>

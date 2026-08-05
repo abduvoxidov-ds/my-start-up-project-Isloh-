@@ -31,10 +31,10 @@
       </div>
 
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-people-fill"></i></div><div class="stat-value">3,412</div><div class="stat-label">Jami foydalanuvchilar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-person-check-fill"></i></div><div class="stat-value">3,398</div><div class="stat-label">Faol</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-person-dash-fill"></i></div><div class="stat-value">14</div><div class="stat-label">Bloklangan</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-person-plus-fill"></i></div><div class="stat-value">86</div><div class="stat-label">Bu hafta yangi</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div><div class="stat-value">3,412</div><div class="stat-label">Jami foydalanuvchilar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-person-check-fill"></i></div><div class="stat-value">3,398</div><div class="stat-label">Faol</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-person-dash-fill"></i></div><div class="stat-value">14</div><div class="stat-label">Bloklangan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-person-plus-fill"></i></div><div class="stat-value">86</div><div class="stat-label">Bu hafta yangi</div></div>
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:22px;">
@@ -83,7 +83,7 @@
               </tr>
               <tr data-user-row data-user-name="Aziz Yusupov" data-filter-item data-role="instructor" data-status="active" data-filter-text="Aziz Yusupov">
                 <td><input type="checkbox" data-select-item aria-label="Aziz Yusupov tanlash"></td>
-                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div><div><div class="cell-title filter-title">Aziz Yusupov</div><div class="cell-sub">aziz@example.com</div></div></div></td>
+                <td><div class="cell-main"><div class="avatar avatar-sm avatar-teach">AY</div><div><div class="cell-title filter-title">Aziz Yusupov</div><div class="cell-sub">aziz@example.com</div></div></div></td>
                 <td>O'qituvchi</td>
                 <td><span class="badge badge-green" data-user-status-badge>Faol</span></td>
                 <td>2-mart, 2025</td>
@@ -153,10 +153,10 @@
 
 <div class="modal-overlay" id="user-action-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3 style="font-size:15px;">Amalni tasdiqlang</h3><button class="icon-btn" onclick="isloh_closeModal('user-action-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><h3 style="font-size:15px;">Amalni tasdiqlang</h3><button class="icon-btn" data-modal-close="user-action-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body" data-user-action-modal-title>Amalni bajarishni xohlaysizmi?</div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="isloh_closeModal('user-action-modal')">Bekor qilish</button>
+      <button class="btn btn-outline" data-modal-close="user-action-modal">Bekor qilish</button>
       <button class="btn btn-primary" data-user-action-confirm>Tasdiqlash</button>
     </div>
   </div>
@@ -164,6 +164,9 @@
 
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>

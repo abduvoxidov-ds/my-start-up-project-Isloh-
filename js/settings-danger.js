@@ -23,7 +23,8 @@
    Markup shartnomasi:
      [data-danger-deactivate]      -> to'xtatish tugmasi
      [data-danger-delete]          -> o'chirish tugmasi
-     [data-modal-close="<id>"]     -> dialogni yopadigan tugmalar
+     [data-modal-close="<id>"]     -> dialogni yopadigan tugmalar (js/modal.js
+                                      o'zi ushlaydi, bu yerda ulanmaydi)
      [data-modal-autofocus]        -> dialog ochilganda fokus oladigan element
      [data-deactivate-confirm]     -> to'xtatishni yakuniy tasdiqlash
      [data-delete-confirm-input]   -> tasdiq so'zi yoziladigan maydon
@@ -64,15 +65,15 @@ function isloh_wipeAllData() {
     .forEach((key) => localStorage.removeItem(key));
 }
 
-/* --- Dialog boshqaruvi ---------------------------------------------------- */
+/* --- Dialog boshqaruvi ----------------------------------------------------
+   Ochish/yopish, fokus tuzog'i va fokusni ochgan tugmaga qaytarish —
+   hammasi js/modal.js zimmasida. Bu yerda faqat shu ikki dialogga xos
+   narsa qoladi: ochilganda tasdiq maydoniga fokus berish.               */
 
-let isloh_dangerLastTrigger = null;
-
-function isloh_openDangerModal(modalId, trigger) {
+function isloh_openDangerModal(modalId) {
   const overlay = document.getElementById(modalId);
   if (!overlay) return;
 
-  isloh_dangerLastTrigger = trigger || null;
   if (typeof isloh_openModal === 'function') isloh_openModal(modalId);
   else overlay.hidden = false;
 
@@ -86,12 +87,6 @@ function isloh_closeDangerModal(modalId) {
 
   if (typeof isloh_closeModal === 'function') isloh_closeModal(modalId);
   else overlay.hidden = true;
-
-  // Fokusni dialogni ochgan tugmaga qaytaramiz
-  if (isloh_dangerLastTrigger) {
-    isloh_dangerLastTrigger.focus();
-    isloh_dangerLastTrigger = null;
-  }
 }
 
 /* Xabarni ko'rsatib, so'ng kirish sahifasiga o'tamiz.
@@ -131,7 +126,7 @@ function isloh_initDeactivateFlow() {
   const confirmBtn = document.querySelector('[data-deactivate-confirm]');
   if (!openBtn || !confirmBtn) return;
 
-  openBtn.addEventListener('click', () => isloh_openDangerModal('modal-deactivate', openBtn));
+  openBtn.addEventListener('click', () => isloh_openDangerModal('modal-deactivate'));
 
   confirmBtn.addEventListener('click', () => {
     isloh_clearSessionData();
@@ -159,7 +154,7 @@ function isloh_initDeleteFlow() {
 
   openBtn.addEventListener('click', () => {
     resetDeleteModal();
-    isloh_openDangerModal('modal-delete', openBtn);
+    isloh_openDangerModal('modal-delete');
   });
 
   input.addEventListener('input', syncConfirmState);
@@ -179,15 +174,7 @@ function isloh_initDeleteFlow() {
   syncConfirmState();
 }
 
-/* Dialogdagi "Bekor qilish" / "×" tugmalari */
-function isloh_initDangerModalClosers() {
-  document.querySelectorAll('[data-modal-close]').forEach((btn) => {
-    btn.addEventListener('click', () => isloh_closeDangerModal(btn.dataset.modalClose));
-  });
-}
-
 function isloh_initSettingsDanger() {
-  isloh_initDangerModalClosers();
   isloh_initDeactivateFlow();
   isloh_initDeleteFlow();
 }

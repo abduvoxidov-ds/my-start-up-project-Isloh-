@@ -73,7 +73,7 @@ function isloh_generateVerificationId(certId, issuedAt) {
 
 function isloh_lookupCourseCatalog(courseId) {
   if (typeof ISLOH_MARKETPLACE_DATA === 'undefined') return null;
-  return ISLOH_MARKETPLACE_DATA.featured_courses.find((c) => c.id === courseId) || null;
+  return isloh_getCatalog().find((c) => c.id === courseId) || null;
 }
 
 /* --- Instructor organization affiliation ---------------------------------
@@ -297,7 +297,7 @@ function isloh_computeCertificateBoard() {
   if (typeof ISLOH_MARKETPLACE_DATA === 'undefined') return board;
   const user = isloh_certCurrentUser();
 
-  ISLOH_MARKETPLACE_DATA.featured_courses.forEach((course) => {
+  isloh_getCatalog().forEach((course) => {
     const certs = isloh_getCertificates();
     const existingCert = isloh_findCertificateByCourseAndStudent(certs, course.id, user.id);
     if (existingCert) { board.earned.push({ course, certificate: existingCert }); return; }

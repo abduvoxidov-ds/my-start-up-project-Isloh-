@@ -49,6 +49,8 @@
       <div class="topbar-actions">
         <a href="wishlist.html" class="icon-btn" aria-label="Xohishlar ro'yxati"><i class="bi bi-heart-fill"></i><span class="count-badge" data-wishlist-count>2</span></a>
         <a href="cart.html" class="icon-btn" aria-label="Savat"><i class="bi bi-cart-fill"></i><span class="count-badge badge-empty" data-cart-count>0</span></a>
+        <!-- Profil menyusi shu avatardan ochiladi (js/user-menu.js) -->
+        <div class="avatar">SM</div>
       </div>
     </header>
 
@@ -59,7 +61,7 @@
         <div>
           <div class="badge" style="background:rgba(255,255,255,0.15); color:#fff;">Yozgi chegirma</div>
           <h2 style="color:#fff; font-size:22px; margin-top:10px;">Barcha Backend kurslariga -40%</h2>
-          <p style="color:#D9D6F5; font-size:13.5px; margin-top:6px;">Faqat 25-iyulgacha amal qiladi</p>
+          <p style="color:var(--on-indigo-muted); font-size:13.5px; margin-top:6px;">Faqat 25-iyulgacha amal qiladi</p>
         </div>
         <div class="price-tag">-40%</div>
       </div>
@@ -118,7 +120,7 @@
           <div class="mini" style="background:linear-gradient(135deg,#0c4a6e,#0EA5E9); z-index:2;"><i class="bi bi-database-fill"></i></div>
           <div class="mini" style="background:#1F2937; z-index:1;"><i class="bi bi-box-seam"></i></div>
         </div>
-        <div style="flex:1;">
+        <div class="flex-1">
           <div style="font-weight:700; font-size:15px;">Backend Mutaxassis to'plami</div>
           <div style="font-size:13px; color:var(--ink-500); margin-top:2px;">Python + PostgreSQL + Docker — 3 ta kurs birgalikda</div>
         </div>
@@ -148,9 +150,13 @@
 </div>
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/wishlist.js"></script>
+<script src="../../js/course-store.js"></script>
 <script src="../../js/marketplace.js"></script>
 <script src="../../js/filterable.js"></script>
 </body>

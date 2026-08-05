@@ -40,6 +40,8 @@
   position: relative;
   font-size: 16px;
 }
+/* Modal sarlavhasidagi "×" — ilgari `style="width:28px;height:28px"` bilan */
+.icon-btn-sm { width: 28px; height: 28px; font-size: 14px; }
 .icon-btn .dot {
   position: absolute; top: 8px; right: 9px;
   width: 7px; height: 7px; border-radius: 50%;
@@ -95,6 +97,21 @@
 .btn-ghost { background: transparent; color: var(--violet-600); padding: 10px 14px; }
 .btn-sm { padding: 7px 14px; font-size: 13px; }
 .btn-disabled { opacity: .5; pointer-events: none; cursor: not-allowed; box-shadow: none; }
+/* `disabled` atributli tugma — pointer-events o'chirilmaydi, aks holda
+   nega o'chiq ekanini tushuntiruvchi tooltip ham ko'rinmasdi. */
+.btn:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+/* Backend hali ulanmagan amal yonidagi izoh (js/backend-pending.js).
+   Rang `currentColor` dan olinadi: izoh oq matnli gradient bannerga ham,
+   oddiy oq kartochkaga ham tushishi mumkin — ikkalasida ham o'qiladi. */
+.pending-note {
+  margin-top: 12px;
+  font-size: 12px;
+  color: currentColor;
+  opacity: .75;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
 /* --- Form field --- */
 .field { margin-bottom: 16px; }
@@ -123,6 +140,29 @@
 /* Ko'p qatorli maydon (bio va shunga o'xshashlar) */
 .field textarea { font-family: inherit; line-height: 1.55; min-height: 92px; resize: vertical; }
 .field select { font-family: inherit; cursor: pointer; }
+/* `.btn.btn-outline` ko'rinishidagi to'liq kenglikdagi select — ilgari har
+   safar `style="width:100%; text-align:left; border-radius:var(--r-md)"`
+   deb yozilardi (17 ta joyda). */
+.select-block { width: 100%; text-align: left; border-radius: var(--r-md); }
+
+/* Ixcham forma qatori — `.field` dan farqi shundaki, yorliq ustida turadi
+   va maydon to'liq kenglikda. Checkout va admin sozlamalari sahifalari
+   buni o'z <style> bloklarida bir xil qilib takrorlardi. */
+.form-row { margin-bottom: 14px; }
+.form-row label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink-700); margin-bottom: 6px; }
+.form-row input,
+.form-row select {
+  width: 100%;
+  border: var(--border-w-thick) solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 11px 14px;
+  font-size: 14px;
+  outline: none;
+}
+.form-row input:focus,
+.form-row select:focus { border-color: var(--violet-500); }
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 700px) { .form-grid-2 { grid-template-columns: 1fr; } }
 .field-hint { font-size: 12px; color: var(--ink-500); margin-top: 5px; }
 /* Validatsiya holati — maydon ostidagi xato matni va qizil hoshiya */
 .field input.is-invalid,
@@ -164,6 +204,11 @@
   border-radius: var(--r-pill);
   background: linear-gradient(90deg, var(--violet-500), var(--violet-600));
 }
+/* Holatga bog'liq variantlar — ilgari har bir joyda
+   `style="background:var(--warning)"` deb yozilardi. */
+.progress-fill.fill-warning { background: linear-gradient(90deg, #FFD98A, var(--warning)); }
+.progress-fill.fill-muted   { background: var(--ink-300); }
+.progress-fill.fill-teach   { background: linear-gradient(90deg, var(--teach-green-400), var(--teach-green)); }
 
 /* --- Statistic card --- */
 .stat-card { display: flex; flex-direction: column; gap: 6px; }
@@ -188,6 +233,10 @@
 .tint-green   { background: var(--teach-green-100); color: var(--teach-green); }
 .tint-warning { background: var(--warning-100);     color: var(--warning); }
 .tint-danger  { background: var(--danger-100);      color: var(--danger); }
+/* Neytral/arxiv holati uchun — masalan "Arxivlangan" statistikasi */
+.tint-muted   { background: var(--bg-app);          color: var(--ink-500); }
+/* Video/ma'lumot uchun ko'k variant — ilgari #E7F3FE / #0369A1 qattiq yozilardi */
+.tint-info    { background: var(--info-100);        color: var(--info); }
 
 /* --- Role select card (onboarding) --- */
 .role-card {
@@ -245,8 +294,18 @@
 .dropdown { position:relative; display:inline-block; }
 .dropdown-menu { position:absolute; top:calc(100% + 6px); left:0; background:var(--bg-card); border:1px solid var(--border-soft); border-radius:var(--r-md); box-shadow:var(--shadow-md); min-width:170px; padding:6px; display:none; z-index:var(--z-dropdown); }
 .dropdown.open .dropdown-menu { display:block; }
-.dropdown-item { padding:9px 12px; border-radius:var(--r-sm); font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:8px; }
+.dropdown-item { padding:9px 12px; border-radius:var(--r-sm); font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:8px; color:var(--ink-900); }
 .dropdown-item:hover { background:var(--bg-app); }
+.dropdown-item:focus-visible { outline:2px solid var(--violet-500); outline-offset:-2px; }
+.dropdown-item.is-danger { color:var(--danger); }
+/* O'ng chekkadagi trigger uchun (masalan topbar avatari): standart `left:0`
+   bo'lsa menyu oyna chetidan chiqib ketardi. */
+.dropdown-menu-right { left:auto; right:0; }
+.dropdown-sep { height:1px; background:var(--border-soft); margin:6px 4px; }
+
+/* Davr tanlagich (analitika / daromad) — ilgari har sahifada
+   `style="border-radius:var(--r-md)"` deb yozilardi */
+.period-select { border-radius: var(--r-md); }
 
 /* Tooltip */
 .tooltip-wrap { position:relative; display:inline-block; }

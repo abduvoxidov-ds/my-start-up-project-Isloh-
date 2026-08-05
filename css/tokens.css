@@ -15,6 +15,9 @@
   --violet-600: #6C5DD3;
   --violet-500: #7C6FF0;
   --violet-100: #EEEBFC;
+  /* To'q binafsha fon ustidagi ikkilamchi matn (auth paneli, banner).
+     Ilgari #C9C6E8 / #D9D6F5 ko'rinishida 9 joyda qattiq yozilgan edi. */
+  --on-indigo-muted: #C9C6E8;
   --teach-green: #1FAE5E;
   --teach-green-100: #E4F8ED;
   --teach-green-400: #4ED88A;
@@ -35,6 +38,10 @@
   /* Yumshoq fon variantlari (badge/stat-icon tint'lari uchun) */
   --warning-100: #FEF3E2;
   --danger-100: #FDEBEC;
+  --info: #0369A1;
+  --info-100: #E7F3FE;
+  /* Quyuq fon ustidagi "xavfli" matn uchun ochiq variant (masalan .bulk-bar) */
+  --danger-300: #FF9B9E;
 
   /* --- Typography --- */
   --font-display: 'Manrope', sans-serif;
@@ -108,6 +115,7 @@ body.is-dark-theme {
   --teach-green-100: #143224;
   --warning-100: #352B18;
   --danger-100: #3A2027;
+  --info-100: #16293A;
 
   /* Quyuq fonda oq soya ko'rinmaydi — kuchliroq qora soya kerak */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);

@@ -4,6 +4,17 @@
    (stillar css/components.css da). Sahifalar bu yerdagi ikki funksiyani
    chaqiradi — overlay mantiqini har joyda qayta yozmaslik uchun.
 
+   Markup shartnomasi (js/dropdown.js dagi kabi, document darajasida
+   delegatsiya — ya'ni JS bilan keyin qo'shilgan tugmalar ham ishlaydi):
+     [data-modal-open="<id>"]   → shu id li modalni ochadi
+     [data-modal-close="<id>"]  → shu id li modalni yopadi
+     [data-modal-close]         → o'zi joylashgan modalni yopadi
+
+   Ilgari sahifalarda buning o'rniga inline `onclick="isloh_openModal(...)"`
+   yozilardi (67 ta joyda) — CLAUDE.md §2 bunday inline hodisa-atributlarni
+   taqiqlaydi. Funksiyalar public bo'lib qoladi: ularni boshqa modullar
+   (js/ai-panel.js, js/ai-chat.js, js/course-publish.js) chaqiradi.
+
    A11y (WAI-ARIA Dialog naqshi). Ilgari `isloh_openModal` faqat `hidden`ni
    olib tashlardi, natijada:
      - fokus modal ortidagi sahifada qolardi, Tab foydalanuvchini ko'rinmas
@@ -79,11 +90,29 @@ function isloh_closeModal(modalId) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  /* Fon (backdrop) bosilganda yopish. Tinglovchi document darajasida —
-     shunda JS bilan keyin qo'shilgan modallar ham ishlaydi. */
+  /* Ochish/yopish tugmalari va fon (backdrop) bosilishi — hammasi bitta
+     document darajasidagi tinglovchida, shunda JS bilan keyin qo'shilgan
+     modallar ham qo'shimcha init'siz ishlaydi. */
   document.addEventListener('click', (e) => {
-    if (e.target.classList && e.target.classList.contains('modal-overlay')) {
-      isloh_closeOverlay(e.target);
+    const el = e.target;
+    if (!el || typeof el.closest !== 'function') return;
+
+    const opener = el.closest('[data-modal-open]');
+    if (opener) {
+      isloh_openModal(opener.getAttribute('data-modal-open'));
+      return;
+    }
+
+    /* Qiymatsiz `data-modal-close` — o'zi turgan overlay yopiladi. */
+    const closer = el.closest('[data-modal-close]');
+    if (closer) {
+      const id = closer.getAttribute('data-modal-close');
+      isloh_closeOverlay(id ? document.getElementById(id) : closer.closest('.modal-overlay'));
+      return;
+    }
+
+    if (el.classList && el.classList.contains('modal-overlay')) {
+      isloh_closeOverlay(el);
     }
   });
 

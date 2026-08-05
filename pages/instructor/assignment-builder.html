@@ -17,10 +17,10 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="courses.html" style="color:inherit;">Kurslarim</a><span class="sep">/</span><a href="course-builder.html" style="color:inherit;">Kurs tarkibi</a><span class="sep">/</span><span class="current">Topshiriq loyihalari</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><a class="text-inherit" href="course-builder.html">Kurs tarkibi</a><span class="sep">/</span><span class="current">Topshiriq loyihalari</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
@@ -37,17 +37,17 @@
           <a href="course-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kurs tarkibiga qaytish</a>
           <a href="resource-manager.html" class="btn btn-outline btn-sm"><i class="bi bi-folder2-open"></i> Resurslar</a>
           <a href="discussions.html" class="btn btn-outline btn-sm"><i class="bi bi-chat-square-text"></i> Talaba savollari</a>
-          <button class="btn btn-outline btn-sm" data-ai-drawer-trigger onclick="isloh_openModal('ai-drawer-overlay')"><i class="bi bi-stars"></i> AI Yordamchi</button>
+          <button class="btn btn-outline btn-sm" data-ai-drawer-trigger><i class="bi bi-stars"></i> AI Yordamchi</button>
           <button class="btn btn-teach" data-modal-open="add-assignment-modal" data-marks-dirty><i class="bi bi-plus-lg"></i> Topshiriq yaratish</button>
         </div>
       </div>
 
       <!-- STATS -->
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-file-earmark-text-fill"></i></div><div class="stat-value">4</div><div class="stat-label">Jami topshiriqlar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-check2-circle"></i></div><div class="stat-value">2</div><div class="stat-label">Nashr etilgan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-file-earmark-text-fill"></i></div><div class="stat-value">4</div><div class="stat-label">Jami topshiriqlar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-check2-circle"></i></div><div class="stat-value">2</div><div class="stat-label">Nashr etilgan</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon badge-warning" style="width:40px;height:40px;border-radius:var(--r-md);"><i class="bi bi-pencil-square"></i></div><div class="stat-value">2</div><div class="stat-label">Qoralama</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-clock-history"></i></div><div class="stat-value">1</div><div class="stat-label">Muddati yaqin</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-clock-history"></i></div><div class="stat-value">1</div><div class="stat-label">Muddati yaqin</div></div>
       </div>
 
       <!-- TOOLBAR -->
@@ -79,8 +79,8 @@
 
       <!-- LOADING SKELETON -->
       <div style="margin-top:16px;" data-list-skeleton>
-        <div class="card skeleton-card" style="margin-bottom:12px;"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
-        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
+        <div class="card skeleton-card" style="margin-bottom:12px;"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
+        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
       </div>
 
       <div data-list-content hidden data-bulk-scope>
@@ -111,7 +111,7 @@
                     <a href="assignment-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
                     <div class="dropdown-item" data-action="preview-assignment"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
                     <div class="dropdown-item" data-action="duplicate-assignment"><i class="bi bi-copy"></i> Nusxalash</div>
-                    <div class="dropdown-item" style="color:var(--danger);" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
+                    <div class="dropdown-item text-danger" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
                   </div>
                 </div>
               </div>
@@ -141,7 +141,7 @@
                     <a href="assignment-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
                     <div class="dropdown-item" data-action="preview-assignment"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
                     <div class="dropdown-item" data-action="duplicate-assignment"><i class="bi bi-copy"></i> Nusxalash</div>
-                    <div class="dropdown-item" style="color:var(--danger);" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
+                    <div class="dropdown-item text-danger" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
                   </div>
                 </div>
               </div>
@@ -150,7 +150,7 @@
 
           <div class="card course-card-instr assignment-card" data-filter-item data-status="draft" data-filter-text="SQL query optimizatsiyasi">
             <input type="checkbox" class="cci-select" data-select-item aria-label="SQL query optimizatsiyasi tanlash">
-            <div class="cci-cover" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-file-earmark-text"></i></div>
+            <div class="cci-cover tint-muted"><i class="bi bi-file-earmark-text"></i></div>
             <span class="badge badge-warning cci-status">Qoralama</span>
             <div class="cci-body">
               <div class="cci-title filter-title">SQL query optimizatsiyasi</div>
@@ -171,7 +171,7 @@
                     <a href="assignment-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Davom ettirish</a>
                     <div class="dropdown-item" data-action="preview-assignment"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
                     <div class="dropdown-item" data-action="duplicate-assignment"><i class="bi bi-copy"></i> Nusxalash</div>
-                    <div class="dropdown-item" style="color:var(--danger);" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
+                    <div class="dropdown-item text-danger" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
                   </div>
                 </div>
               </div>
@@ -180,7 +180,7 @@
 
           <div class="card course-card-instr assignment-card" data-filter-item data-status="draft" data-filter-text="Yakuniy loyiha — kichik REST servis">
             <input type="checkbox" class="cci-select" data-select-item aria-label="Yakuniy loyiha tanlash">
-            <div class="cci-cover" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-file-earmark-zip"></i></div>
+            <div class="cci-cover tint-muted"><i class="bi bi-file-earmark-zip"></i></div>
             <span class="badge badge-warning cci-status">Qoralama</span>
             <div class="cci-body">
               <div class="cci-title filter-title">Yakuniy loyiha — kichik REST servis</div>
@@ -201,7 +201,7 @@
                     <a href="assignment-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Davom ettirish</a>
                     <div class="dropdown-item" data-action="preview-assignment"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
                     <div class="dropdown-item" data-action="duplicate-assignment"><i class="bi bi-copy"></i> Nusxalash</div>
-                    <div class="dropdown-item" style="color:var(--danger);" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
+                    <div class="dropdown-item text-danger" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
                   </div>
                 </div>
               </div>
@@ -230,14 +230,14 @@
                       <div class="dropdown-menu">
                         <a href="assignment-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
                         <div class="dropdown-item" data-action="duplicate-assignment"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
+                        <div class="dropdown-item text-danger" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
                       </div>
                     </div>
                   </td>
                 </tr>
                 <tr data-filter-item data-status="draft" data-filter-text="Yakuniy loyiha — kichik REST servis">
                   <td><input type="checkbox" data-select-item aria-label="Yakuniy loyiha tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-file-earmark-zip"></i></div><div class="cell-title filter-title">Yakuniy loyiha — kichik REST servis</div></div></td>
+                  <td><div class="cell-main"><div class="cell-thumb tint-muted"><i class="bi bi-file-earmark-zip"></i></div><div class="cell-title filter-title">Yakuniy loyiha — kichik REST servis</div></div></td>
                   <td><span class="badge badge-warning">Qoralama</span></td>
                   <td>Yashirin</td><td>20-avgust, 23:59</td><td>Fayl yuklash</td><td>150</td>
                   <td>
@@ -246,7 +246,7 @@
                       <div class="dropdown-menu">
                         <a href="assignment-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Davom ettirish</a>
                         <div class="dropdown-item" data-action="duplicate-assignment"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
+                        <div class="dropdown-item text-danger" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
                       </div>
                     </div>
                   </td>
@@ -261,12 +261,6 @@
         </div>
       </div>
 
-      <!-- PAGINATION -->
-      <div class="pager">
-        <button aria-label="Oldingi"><i class="bi bi-chevron-left"></i></button>
-        <button class="active">1</button>
-        <button aria-label="Keyingi"><i class="bi bi-chevron-right"></i></button>
-      </div>
     </main>
   </div>
 </div>
@@ -275,7 +269,7 @@
 <template id="assignment-card-template">
   <div class="card course-card-instr assignment-card" data-filter-item data-status="draft">
     <input type="checkbox" class="cci-select" data-select-item aria-label="Topshiriqni tanlash">
-    <div class="cci-cover" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-file-earmark-text"></i></div>
+    <div class="cci-cover tint-muted"><i class="bi bi-file-earmark-text"></i></div>
     <span class="badge badge-warning cci-status">Qoralama</span>
     <div class="cci-body">
       <div class="cci-title filter-title">Yangi topshiriq</div>
@@ -293,7 +287,7 @@
             <a href="assignment-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tafsilotlarni tahrirlash</a>
             <div class="dropdown-item" data-action="preview-assignment"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
             <div class="dropdown-item" data-action="duplicate-assignment"><i class="bi bi-copy"></i> Nusxalash</div>
-            <div class="dropdown-item" style="color:var(--danger);" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
+            <div class="dropdown-item text-danger" data-action="delete-assignment"><i class="bi bi-trash"></i> O'chirish</div>
           </div>
         </div>
       </div>
@@ -305,13 +299,13 @@
 <div class="modal-overlay" id="add-assignment-modal" hidden>
   <div class="modal" style="max-width:420px;">
     <form data-add-assignment-form>
-      <div class="modal-head"><b>Yangi topshiriq yaratish</b><button type="button" class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('add-assignment-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+      <div class="modal-head"><b>Yangi topshiriq yaratish</b><button type="button" class="icon-btn icon-btn-sm" data-modal-close="add-assignment-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
       <div class="modal-body">
         <div class="field"><label for="as-title">Topshiriq nomi</label><input id="as-title" name="title" placeholder="Masalan: 5-topshiriq: Testlash" required></div>
         <div class="field" style="margin-bottom:0;"><label for="as-due">Topshirish muddati</label><input id="as-due" name="due" type="date"></div>
       </div>
       <div class="modal-foot">
-        <button type="button" class="btn btn-outline btn-sm" onclick="isloh_closeModal('add-assignment-modal')">Bekor qilish</button>
+        <button type="button" class="btn btn-outline btn-sm" data-modal-close="add-assignment-modal">Bekor qilish</button>
         <button type="submit" class="btn btn-teach btn-sm" data-marks-dirty><i class="bi bi-plus-lg"></i> Yaratish</button>
       </div>
     </form>
@@ -321,13 +315,13 @@
 <!-- PREVIEW ASSIGNMENT MODAL -->
 <div class="modal-overlay" id="preview-assignment-modal" hidden>
   <div class="modal" style="max-width:460px;">
-    <div class="modal-head"><b data-preview-assignment-title>Topshiriq</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('preview-assignment-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><b data-preview-assignment-title>Topshiriq</b><button class="icon-btn icon-btn-sm" data-modal-close="preview-assignment-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
       <p style="color:var(--ink-500); margin-bottom:10px;" data-preview-assignment-meta>—</p>
       <p style="font-size:12.5px; color:var(--ink-300);"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan topshiriq sahifasining taxminiy ko'rinishi.</p>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('preview-assignment-modal')">Yopish</button>
+      <button class="btn btn-outline btn-sm" data-modal-close="preview-assignment-modal">Yopish</button>
     </div>
   </div>
 </div>
@@ -335,10 +329,10 @@
 <!-- DELETE ASSIGNMENT CONFIRM MODAL -->
 <div class="modal-overlay" id="delete-assignment-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><b style="color:var(--danger);">Topshiriqni o'chirishni tasdiqlang</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('delete-assignment-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><b class="text-danger">Topshiriqni o'chirishni tasdiqlang</b><button class="icon-btn icon-btn-sm" data-modal-close="delete-assignment-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">Bu topshiriq va unga bog'liq talaba topshirishlari o'chiriladi. Bu amalni qaytarib bo'lmaydi.</div>
     <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('delete-assignment-modal')">Bekor qilish</button>
+      <button class="btn btn-outline btn-sm" data-modal-close="delete-assignment-modal">Bekor qilish</button>
       <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-assignment data-marks-dirty>Ha, o'chirish</button>
     </div>
   </div>
@@ -349,12 +343,15 @@
 
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/tabs.js"></script>
+<script src="../../js/draft-store.js"></script>
 <script src="../../js/unsaved-guard.js"></script>
 <script src="../../js/courses.js"></script>
 <script src="../../js/assignment-builder.js"></script>

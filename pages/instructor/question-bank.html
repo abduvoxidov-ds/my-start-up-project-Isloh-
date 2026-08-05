@@ -17,10 +17,10 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="courses.html" style="color:inherit;">Kurslarim</a><span class="sep">/</span><a href="quiz-builder.html" style="color:inherit;">Testlar</a><span class="sep">/</span><span class="current">Savollar banki</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><a class="text-inherit" href="quiz-builder.html">Testlar</a><span class="sep">/</span><span class="current">Savollar banki</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
@@ -36,10 +36,10 @@
 
       <!-- STATS -->
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-journal-text"></i></div><div class="stat-value">142</div><div class="stat-label">Jami savollar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-collection-fill"></i></div><div class="stat-value">6</div><div class="stat-label">Kategoriyalar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-tags-fill"></i></div><div class="stat-value">28</div><div class="stat-label">Teglar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-archive"></i></div><div class="stat-value">9</div><div class="stat-label">Arxivlangan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-journal-text"></i></div><div class="stat-value">142</div><div class="stat-label">Jami savollar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-collection-fill"></i></div><div class="stat-value">6</div><div class="stat-label">Kategoriyalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-tags-fill"></i></div><div class="stat-value">28</div><div class="stat-label">Teglar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-archive"></i></div><div class="stat-value">9</div><div class="stat-label">Arxivlangan</div></div>
       </div>
 
       <!-- TOOLBAR -->
@@ -91,9 +91,9 @@
       <!-- LOADING SKELETON -->
       <div class="card" style="margin-top:16px;" data-list-skeleton>
         <div class="skeleton-table" style="padding:8px 22px;">
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div style="flex:1;"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
         </div>
       </div>
 
@@ -121,7 +121,7 @@
                         <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
                         <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
                         <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
-                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
+                        <div class="dropdown-item text-danger" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
                       </div>
                     </div>
                   </td>
@@ -141,7 +141,7 @@
                         <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
                         <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
                         <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
-                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
+                        <div class="dropdown-item text-danger" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
                       </div>
                     </div>
                   </td>
@@ -161,7 +161,7 @@
                         <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
                         <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
                         <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
-                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
+                        <div class="dropdown-item text-danger" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
                       </div>
                     </div>
                   </td>
@@ -181,7 +181,7 @@
                         <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
                         <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
                         <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
-                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
+                        <div class="dropdown-item text-danger" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
                       </div>
                     </div>
                   </td>
@@ -201,7 +201,7 @@
                         <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
                         <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
                         <div class="dropdown-item" data-action="restore-bank-question"><i class="bi bi-arrow-counterclockwise"></i> Tiklash</div>
-                        <div class="dropdown-item" style="color:var(--danger);" data-action="delete-bank-question"><i class="bi bi-trash"></i> Butunlay o'chirish</div>
+                        <div class="dropdown-item text-danger" data-action="delete-bank-question"><i class="bi bi-trash"></i> Butunlay o'chirish</div>
                       </div>
                     </div>
                   </td>
@@ -215,12 +215,6 @@
         </div>
       </div>
 
-      <!-- PAGINATION -->
-      <div class="pager">
-        <button aria-label="Oldingi"><i class="bi bi-chevron-left"></i></button>
-        <button class="active">1</button><button>2</button><button>3</button>
-        <button aria-label="Keyingi"><i class="bi bi-chevron-right"></i></button>
-      </div>
     </main>
   </div>
 </div>
@@ -228,13 +222,13 @@
 <!-- IMPORT MODAL (UI only — no backend) -->
 <div class="modal-overlay" id="import-questions-modal" hidden>
   <div class="modal" style="max-width:440px;">
-    <div class="modal-head"><b>Savollarni import qilish</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('import-questions-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><b>Savollarni import qilish</b><button class="icon-btn icon-btn-sm" data-modal-close="import-questions-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
       <div class="upload-dropzone"><i class="bi bi-file-earmark-arrow-up"></i><div class="dz-title">CSV yoki JSON faylni shu yerga tashlang</div><div class="dz-sub">yoki tanlash uchun bosing</div></div>
       <p style="font-size:12px; color:var(--ink-500); margin-top:10px;"><i class="bi bi-info-circle"></i> Namuna shablonni <a href="#" style="color:var(--violet-600);">yuklab olish</a> mumkin.</p>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('import-questions-modal')">Bekor qilish</button>
+      <button class="btn btn-outline btn-sm" data-modal-close="import-questions-modal">Bekor qilish</button>
       <button class="btn btn-teach btn-sm"><i class="bi bi-upload"></i> Import qilish</button>
     </div>
   </div>
@@ -243,16 +237,16 @@
 <!-- EXPORT MODAL (UI only — no backend) -->
 <div class="modal-overlay" id="export-questions-modal" hidden>
   <div class="modal" style="max-width:400px;">
-    <div class="modal-head"><b>Savollarni eksport qilish</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('export-questions-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><b>Savollarni eksport qilish</b><button class="icon-btn icon-btn-sm" data-modal-close="export-questions-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
       <div class="field"><label>Format</label>
-        <select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option>CSV</option><option>JSON</option><option>PDF</option></select>
+        <select class="btn btn-outline select-block"><option>CSV</option><option>JSON</option><option>PDF</option></select>
       </div>
       <div class="opt-row" style="margin-bottom:8px;"><input type="radio" name="export-scope" checked> Faqat tanlangan savollar</div>
       <div class="opt-row"><input type="radio" name="export-scope"> Filtrlangan barcha savollar</div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('export-questions-modal')">Bekor qilish</button>
+      <button class="btn btn-outline btn-sm" data-modal-close="export-questions-modal">Bekor qilish</button>
       <button class="btn btn-teach btn-sm"><i class="bi bi-download"></i> Eksport qilish</button>
     </div>
   </div>
@@ -261,10 +255,10 @@
 <!-- DELETE QUESTION CONFIRM MODAL -->
 <div class="modal-overlay" id="delete-bank-question-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><b style="color:var(--danger);">Savolni o'chirishni tasdiqlang</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('delete-bank-question-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><b class="text-danger">Savolni o'chirishni tasdiqlang</b><button class="icon-btn icon-btn-sm" data-modal-close="delete-bank-question-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">Bu savol savollar bankidan butunlay o'chiriladi. Undan foydalangan testlarga ta'sir qilishi mumkin. Bu amalni qaytarib bo'lmaydi.</div>
     <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('delete-bank-question-modal')">Bekor qilish</button>
+      <button class="btn btn-outline btn-sm" data-modal-close="delete-bank-question-modal">Bekor qilish</button>
       <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-bank-question>Ha, o'chirish</button>
     </div>
   </div>
@@ -277,7 +271,7 @@
      ========================================================================== -->
 <div class="modal-overlay" id="question-editor-modal" hidden>
   <div class="modal modal-lg">
-    <div class="modal-head"><b>Yangi savol qo'shish</b><button type="button" class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('question-editor-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><b>Yangi savol qo'shish</b><button type="button" class="icon-btn icon-btn-sm" data-modal-close="question-editor-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
       <div class="qe-columns">
         <div>
@@ -288,8 +282,8 @@
           </div>
 
           <div style="display:flex; gap:12px;">
-            <div class="field" style="flex:1;"><label for="qe-type">Savol turi</label>
-              <select id="qe-type" data-question-type-select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);">
+            <div class="field flex-1"><label for="qe-type">Savol turi</label>
+              <select id="qe-type" data-question-type-select class="btn btn-outline select-block">
                 <option value="single">Bitta tanlov</option>
                 <option value="multi">Ko'p tanlov</option>
                 <option value="boolean">To'g'ri / Noto'g'ri</option>
@@ -302,7 +296,7 @@
             </div>
             <div class="field" style="width:110px;"><label for="qe-points">Ball</label><input id="qe-points" type="number" value="5" min="0"></div>
             <div class="field" style="width:150px;"><label for="qe-difficulty">Qiyinlik</label>
-              <select id="qe-difficulty" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);">
+              <select id="qe-difficulty" class="btn btn-outline select-block">
                 <option value="easy">Oson</option>
                 <option value="medium" selected>O'rta</option>
                 <option value="hard">Qiyin</option>
@@ -311,7 +305,7 @@
           </div>
 
           <div class="field"><label for="qe-category">Kategoriya</label>
-            <select id="qe-category" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);">
+            <select id="qe-category" class="btn btn-outline select-block">
               <option>Python</option><option>Django</option><option>DevOps</option><option>Ma'lumotlar bazasi</option>
             </select>
           </div>
@@ -320,8 +314,8 @@
           <div data-qtype-panel="single">
             <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Variantlar (to'g'ri javobni belgilang)</label>
             <div data-row-list="qopt-single-template">
-              <div class="question-option-row is-correct"><input type="radio" name="qopt-single" class="qo-mark" checked><input type="text" value="Variant A"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
-              <div class="question-option-row"><input type="radio" name="qopt-single" class="qo-mark"><input type="text" value="Variant B"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+              <div class="question-option-row is-correct"><input type="radio" name="qopt-single" class="qo-mark" checked><input type="text" value="Variant A"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+              <div class="question-option-row"><input type="radio" name="qopt-single" class="qo-mark"><input type="text" value="Variant B"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
             </div>
             <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-single-template"><i class="bi bi-plus-lg"></i> Variant qo'shish</button>
           </div>
@@ -330,8 +324,8 @@
           <div data-qtype-panel="multi" hidden>
             <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Variantlar (barcha to'g'ri javoblarni belgilang)</label>
             <div data-row-list="qopt-multi-template">
-              <div class="question-option-row is-correct"><input type="checkbox" class="qo-mark" checked><input type="text" value="Variant A"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
-              <div class="question-option-row"><input type="checkbox" class="qo-mark"><input type="text" value="Variant B"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+              <div class="question-option-row is-correct"><input type="checkbox" class="qo-mark" checked><input type="text" value="Variant A"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+              <div class="question-option-row"><input type="checkbox" class="qo-mark"><input type="text" value="Variant B"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
             </div>
             <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-multi-template"><i class="bi bi-plus-lg"></i> Variant qo'shish</button>
           </div>
@@ -339,8 +333,8 @@
           <!-- TRUE / FALSE -->
           <div data-qtype-panel="boolean" hidden>
             <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">To'g'ri javobni belgilang</label>
-            <div class="question-option-row is-correct"><input type="radio" name="qopt-bool" class="qo-mark" checked><span style="flex:1;">To'g'ri</span></div>
-            <div class="question-option-row"><input type="radio" name="qopt-bool" class="qo-mark"><span style="flex:1;">Noto'g'ri</span></div>
+            <div class="question-option-row is-correct"><input type="radio" name="qopt-bool" class="qo-mark" checked><span class="flex-1">To'g'ri</span></div>
+            <div class="question-option-row"><input type="radio" name="qopt-bool" class="qo-mark"><span class="flex-1">Noto'g'ri</span></div>
           </div>
 
           <!-- SHORT ANSWER -->
@@ -357,7 +351,7 @@
           <div data-qtype-panel="match" hidden>
             <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Juftliklarni kiriting</label>
             <div data-row-list="qopt-match-template">
-              <div class="question-option-row match-row"><input type="text" placeholder="Element"><span class="qo-sep"><i class="bi bi-arrow-right"></i></span><input type="text" placeholder="Mos javob"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+              <div class="question-option-row match-row"><input type="text" placeholder="Element"><span class="qo-sep"><i class="bi bi-arrow-right"></i></span><input type="text" placeholder="Mos javob"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
             </div>
             <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-match-template"><i class="bi bi-plus-lg"></i> Juftlik qo'shish</button>
           </div>
@@ -366,7 +360,7 @@
           <div data-qtype-panel="order" hidden>
             <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Elementlarni to'g'ri tartibda joylashtiring</label>
             <div data-row-list="qopt-order-template" data-sortable-list>
-              <div class="question-option-row" data-sortable-item draggable="true"><i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Tashish"></i><input type="text" placeholder="1-element"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
+              <div class="question-option-row" data-sortable-item draggable="true"><i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Tashish"></i><input type="text" placeholder="1-element"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
             </div>
             <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-order-template"><i class="bi bi-plus-lg"></i> Element qo'shish</button>
           </div>
@@ -412,19 +406,21 @@
       </div>
     </div>
     <div class="modal-foot">
-      <button type="button" class="btn btn-outline btn-sm" onclick="isloh_closeModal('question-editor-modal')">Bekor qilish</button>
+      <button type="button" class="btn btn-outline btn-sm" data-modal-close="question-editor-modal">Bekor qilish</button>
       <button type="button" class="btn btn-teach btn-sm" data-save-question><i class="bi bi-save"></i> Savolni saqlash</button>
     </div>
   </div>
 </div>
 
-<template id="qopt-single-template"><div class="question-option-row"><input type="radio" name="qopt-single" class="qo-mark"><input type="text" placeholder="Yangi variant"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
-<template id="qopt-multi-template"><div class="question-option-row"><input type="checkbox" class="qo-mark"><input type="text" placeholder="Yangi variant"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
-<template id="qopt-match-template"><div class="question-option-row match-row"><input type="text" placeholder="Element"><span class="qo-sep"><i class="bi bi-arrow-right"></i></span><input type="text" placeholder="Mos javob"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
-<template id="qopt-order-template"><div class="question-option-row" data-sortable-item draggable="true"><i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Tashish"></i><input type="text" placeholder="Yangi element"><button class="icon-btn" style="width:28px;height:28px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
+<template id="qopt-single-template"><div class="question-option-row"><input type="radio" name="qopt-single" class="qo-mark"><input type="text" placeholder="Yangi variant"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
+<template id="qopt-multi-template"><div class="question-option-row"><input type="checkbox" class="qo-mark"><input type="text" placeholder="Yangi variant"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
+<template id="qopt-match-template"><div class="question-option-row match-row"><input type="text" placeholder="Element"><span class="qo-sep"><i class="bi bi-arrow-right"></i></span><input type="text" placeholder="Mos javob"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
+<template id="qopt-order-template"><div class="question-option-row" data-sortable-item draggable="true"><i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Tashish"></i><input type="text" placeholder="Yangi element"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
 
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/dropdown.js"></script>
@@ -435,6 +431,7 @@
 <script src="../../js/lesson-editor.js"></script>
 <script src="../../js/courses.js"></script>
 <script src="../../js/question-bank.js"></script>
+<script src="../../js/question-store.js"></script>
 <script src="../../js/question-editor.js"></script>
 </body>
 </html>

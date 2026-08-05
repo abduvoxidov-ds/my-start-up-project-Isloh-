@@ -3,14 +3,17 @@
    Generic drag-to-reorder engine for any list, driven entirely by data
    attributes so Module Builder, Lesson Builder and the Lesson Editor
    Resource Panel all share one implementation instead of three ad-hoc
-   drag handlers. Frontend-only: reordering is visual/in-DOM, nothing is
-   persisted (per Sprint 5B scope — "No backend. No persistence.").
+   drag handlers.
 
    Markup contract:
      [data-sortable-list]   → the container whose children get reordered
        [data-sortable-item] draggable="true"  → one per reorderable row
          [data-drag-handle]                    → the only element allowed
                                                   to start the drag
+
+   Tartib o'zgargach ro'yxatda `isloh:sorted` hodisasi uchadi
+   (detail: { ids }) — kim saqlashi kerak bo'lsa, o'sha eshitadi. Modulning
+   o'zi hech narsa saqlamaydi: u faqat DOM tartibini biladi.
    Works on dynamically-added items automatically (listeners are bound to
    the list container, not to individual items).
    ========================================================================== */
@@ -35,6 +38,9 @@ function isloh_initSortable() {
       dragEl?.classList.remove('dragging');
       dragEl = null;
       list.querySelectorAll('.drag-over').forEach((n) => n.classList.remove('drag-over'));
+
+      const ids = [...list.querySelectorAll('[data-sortable-item]')].map((el) => el.dataset.id || '');
+      list.dispatchEvent(new CustomEvent('isloh:sorted', { bubbles: true, detail: { ids: ids } }));
     });
 
     list.addEventListener('dragover', (e) => {

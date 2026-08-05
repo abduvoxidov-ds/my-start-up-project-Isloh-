@@ -138,10 +138,10 @@
 
 <div class="modal-overlay" id="archive-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3 style="font-size:15px;">Kursni arxivlash</h3><button class="icon-btn" onclick="isloh_closeModal('archive-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><h3 style="font-size:15px;">Kursni arxivlash</h3><button class="icon-btn" data-modal-close="archive-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">Ushbu kursni arxivlamoqchimisiz? Arxivlangan kurslar Marketplace'da ko'rinmaydi, lekin sotib olgan talabalar uchun ochiq qoladi.</div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="isloh_closeModal('archive-modal')">Bekor qilish</button>
+      <button class="btn btn-outline" data-modal-close="archive-modal">Bekor qilish</button>
       <button class="btn btn-primary" data-archive-confirm>Arxivlash</button>
     </div>
   </div>
@@ -149,6 +149,9 @@
 
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>

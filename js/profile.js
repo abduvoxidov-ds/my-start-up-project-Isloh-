@@ -174,9 +174,13 @@ function isloh_syncUserUI(options) {
   /* Topbar avatari hali `data-user-avatar` qo'yilmagan sahifalarda ham
      avtomatik yangilanadi — lekin faqat sahifa roli joriy foydalanuvchi
      roliga mos kelganda, aks holda talaba ismi instruktor sahifasida
-     chiqib qolardi. */
+     chiqib qolardi.
+
+     Selektor `.topbar` emas, `.topbar-actions` bo'yicha: ba'zi sahifalarda
+     (masalan student dashboard) avatar alohida topbar ichida emas, sahifa
+     sarlavhasi yonidagi `.topbar-actions` blokida turadi. */
   if (isloh_getPageRole() === user.role) {
-    document.querySelectorAll('.topbar .avatar:not([data-user-avatar])')
+    document.querySelectorAll('.topbar-actions .avatar:not([data-user-avatar])')
       .forEach((el) => isloh_renderUserAvatar(el, user));
   }
 

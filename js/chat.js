@@ -299,9 +299,8 @@ function isloh_initChat() {
       document.getElementById('new-chat-email')?.focus();
     });
   });
-  document.querySelectorAll('#new-chat-modal [data-modal-close]').forEach((btn) => {
-    btn.addEventListener('click', () => { if (typeof isloh_closeModal === 'function') isloh_closeModal('new-chat-modal'); });
-  });
+  /* "Bekor qilish" / "×" tugmalari alohida ulanmaydi — ular [data-modal-close]
+     atributiga ega va uni js/modal.js o'zi ushlaydi. */
   const submitBtn = document.querySelector('[data-new-chat-submit]');
   if (submitBtn) submitBtn.addEventListener('click', () => isloh_startChatByEmail(document.getElementById('new-chat-email').value));
   const emailInput = document.getElementById('new-chat-email');

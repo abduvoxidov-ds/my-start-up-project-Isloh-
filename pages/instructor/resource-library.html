@@ -17,10 +17,10 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="courses.html" style="color:inherit;">Kurslarim</a><span class="sep">/</span><span class="current">Resurslar kutubxonasi</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><span class="current">Resurslar kutubxonasi</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
@@ -32,10 +32,10 @@
 
       <!-- STATS -->
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-collection-fill"></i></div><div class="stat-value">86</div><div class="stat-label">Jami resurslar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-folder-fill"></i></div><div class="stat-value">5</div><div class="stat-label">Kolleksiyalar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-star-fill"></i></div><div class="stat-value">12</div><div class="stat-label">Sevimlilar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-clock-history"></i></div><div class="stat-value">7</div><div class="stat-label">Oxirgi ishlatilgan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-collection-fill"></i></div><div class="stat-value">86</div><div class="stat-label">Jami resurslar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-folder-fill"></i></div><div class="stat-value">5</div><div class="stat-label">Kolleksiyalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-star-fill"></i></div><div class="stat-value">12</div><div class="stat-label">Sevimlilar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-clock-history"></i></div><div class="stat-value">7</div><div class="stat-label">Oxirgi ishlatilgan</div></div>
       </div>
 
       <!-- SCOPE TABS -->
@@ -163,12 +163,6 @@
             <div class="empty-icon"><i class="bi bi-collection"></i></div><div class="empty-title">Resurs topilmadi</div><div class="empty-sub">Bu filtr yoki qidiruv bo'yicha resurs yo'q.</div>
           </div>
 
-          <!-- PAGINATION -->
-          <div class="pager">
-            <button aria-label="Oldingi"><i class="bi bi-chevron-left"></i></button>
-            <button class="active">1</button><button>2</button><button>3</button>
-            <button aria-label="Keyingi"><i class="bi bi-chevron-right"></i></button>
-          </div>
         </div>
 
         <div data-tab-panel="course" hidden style="margin-top:20px;">
@@ -190,6 +184,9 @@
 
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/tabs.js"></script>

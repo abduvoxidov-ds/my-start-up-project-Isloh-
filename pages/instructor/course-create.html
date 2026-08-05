@@ -6,22 +6,6 @@
 <title>Yangi kurs yaratish — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  /* Page-local layout only. Wizard widgets live in css/widgets.css. */
-  .wizard-shell { max-width: 760px; margin: 0 auto; }
-  .tag-row { display:flex; flex-wrap:wrap; gap:8px; padding:10px; border:var(--border-w-thick) solid var(--border-soft); border-radius:var(--r-md); background:var(--bg-app); }
-  .tag-row input { border:none; background:transparent; outline:none; font-size:13.5px; flex:1; min-width:120px; padding:4px; }
-  .tag-pill { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:var(--r-pill); background:var(--violet-100); color:var(--violet-600); font-size:12.5px; font-weight:600; }
-  .tag-pill button { border:none; background:transparent; color:inherit; cursor:pointer; display:flex; }
-  .field-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  @media (max-width:700px){ .field-row-2{ grid-template-columns:1fr; } }
-  .review-summary-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border-soft); font-size:13.5px; }
-  .review-summary-row:last-child { border-bottom:none; }
-  .review-summary-row .lbl { color:var(--ink-500); }
-  .review-summary-row .val { font-weight:600; text-align:right; }
-  .check-row { display:flex; align-items:center; gap:10px; padding:8px 0; font-size:13.5px; color:var(--ink-700); }
-  .check-row i { color:var(--teach-green); font-size:16px; }
-</style>
 </head>
 <body>
 <div class="app-shell">
@@ -33,10 +17,10 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="courses.html" style="color:inherit;">Kurslarim</a><span class="sep">/</span><span class="current">Yangi kurs</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="courses.html">Kurslarim</a><span class="sep">/</span><span class="current">Yangi kurs</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
@@ -46,7 +30,9 @@
         <a href="courses.html" class="btn btn-outline btn-sm"><i class="bi bi-x-lg"></i> Bekor qilish</a>
       </div>
 
-      <div class="wizard-shell" style="margin-top:22px;" data-wizard>
+      <!-- Maydonlar `data-course-field` shartnomasi orqali js/course-form.js
+           ga ulanadi — tahrirlash sahifasi bilan bir xil. -->
+      <div class="wizard-shell" style="margin-top:22px;" data-wizard data-course-form>
         <div class="card card-pad">
           <!-- STEPPER -->
           <div class="wizard-stepper">
@@ -64,46 +50,43 @@
 
               <div class="field">
                 <label for="c-title">Kurs nomi</label>
-                <input id="c-title" placeholder="Masalan: Python Backend Development" data-char-counter="80" maxlength="80">
+                <input id="c-title" data-course-field="title" placeholder="Masalan: Python Backend Development" data-char-counter="80" maxlength="80">
                 <div class="field-hint" data-char-counter-for="c-title">0 / 80</div>
               </div>
               <div class="field">
                 <label for="c-subtitle">Qisqa tavsif (subtitle)</label>
-                <input id="c-subtitle" placeholder="Django, DRF va PostgreSQL asoslarini o'rganing" data-char-counter="120" maxlength="120">
+                <input id="c-subtitle" data-course-field="subtitle" placeholder="Django, DRF va PostgreSQL asoslarini o'rganing" data-char-counter="120" maxlength="120">
                 <div class="field-hint" data-char-counter-for="c-subtitle">0 / 120</div>
               </div>
               <div class="field">
                 <label for="c-desc">To'liq tavsif</label>
-                <textarea id="c-desc" rows="5" placeholder="Kurs davomida talaba nimalarni o'rganishini batafsil yozing..." style="width:100%; padding:12px 14px; border-radius:var(--r-md); border:var(--border-w-thick) solid var(--border-soft); background:var(--bg-app); font-size:14px; font-family:inherit; resize:vertical; outline:none;" data-char-counter="600" maxlength="600"></textarea>
+                <textarea id="c-desc" data-course-field="description" rows="5" placeholder="Kurs davomida talaba nimalarni o'rganishini batafsil yozing..." data-char-counter="600" maxlength="600"></textarea>
                 <div class="field-hint" data-char-counter-for="c-desc">0 / 600</div>
               </div>
 
               <div class="field-row-2">
                 <div class="field"><label for="c-cat">Kategoriya</label>
-                  <select id="c-cat" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);">
-                    <option>Dasturlash</option><option>Dizayn</option><option>Biznes</option><option>Marketing</option><option>AI</option><option>Til</option>
+                  <select id="c-cat" data-course-field="category">
+                    <option>Dasturlash</option><option>Backend</option><option>Frontend</option><option>DevOps</option><option>Ma'lumotlar bazasi</option><option>Dizayn</option><option>Biznes</option><option>Marketing</option><option>AI</option><option>Til</option>
                   </select>
                 </div>
                 <div class="field"><label for="c-level">Daraja</label>
-                  <select id="c-level" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);">
+                  <select id="c-level" data-course-field="level">
                     <option>Boshlang'ich</option><option>O'rta daraja</option><option>Ilg'or</option>
                   </select>
                 </div>
               </div>
               <div class="field">
                 <label for="c-lang">Til</label>
-                <select id="c-lang" class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);">
+                <select id="c-lang" data-course-field="language">
                   <option>O'zbek</option><option>Ingliz</option><option>Rus</option>
                 </select>
               </div>
 
               <div class="field">
                 <label for="c-tags">Teglar</label>
-                <div class="tag-row">
-                  <span class="tag-pill">Python <button aria-label="Tegni o'chirish"><i class="bi bi-x"></i></button></span>
-                  <span class="tag-pill">Django <button aria-label="Tegni o'chirish"><i class="bi bi-x"></i></button></span>
-                  <span class="tag-pill">Backend <button aria-label="Tegni o'chirish"><i class="bi bi-x"></i></button></span>
-                  <input id="c-tags" placeholder="Teg qo'shish va Enter bosing...">
+                <div class="tag-row" data-course-tags>
+                  <input id="c-tags" data-course-tag-input placeholder="Teg qo'shish va Enter bosing...">
                 </div>
               </div>
 
@@ -124,35 +107,35 @@
 
               <div class="field">
                 <label>Ko'rinish</label>
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                  <label class="opt-row"><input type="radio" name="visibility" checked> Ochiq — barcha talabalar qidiruvda topa oladi</label>
-                  <label class="opt-row"><input type="radio" name="visibility"> Yashirin — faqat to'g'ridan-to'g'ri havola orqali</label>
-                  <label class="opt-row"><input type="radio" name="visibility"> Qoralama — hech kimga ko'rinmaydi</label>
+                <div class="opt-stack">
+                  <label class="opt-row"><input type="radio" name="visibility" data-course-radio="visibility" value="public" checked> Ochiq — barcha talabalar qidiruvda topa oladi</label>
+                  <label class="opt-row"><input type="radio" name="visibility" data-course-radio="visibility" value="unlisted"> Yashirin — faqat to'g'ridan-to'g'ri havola orqali</label>
+                  <label class="opt-row"><input type="radio" name="visibility" data-course-radio="visibility" value="private"> Qoralama — hech kimga ko'rinmaydi</label>
                 </div>
               </div>
 
               <div class="field">
                 <label>Narxlash</label>
-                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
-                  <label class="opt-row"><input type="radio" name="pricing"> Bepul</label>
-                  <label class="opt-row"><input type="radio" name="pricing" checked> Pullik</label>
+                <div class="opt-stack" style="margin-bottom:10px;">
+                  <label class="opt-row"><input type="radio" name="pricing" data-course-radio="pricing" value="free"> Bepul</label>
+                  <label class="opt-row"><input type="radio" name="pricing" data-course-radio="pricing" value="paid" checked> Pullik</label>
                 </div>
-                <input placeholder="Narxni kiriting (USD)" value="49.00">
+                <input data-course-field="price" type="number" min="0" step="0.01" placeholder="Narxni kiriting (USD)" value="49.00" aria-label="Narx (USD)">
               </div>
 
               <div class="settings-item">
                 <div class="settings-item-info"><div class="settings-item-label">Sertifikat berish</div><div class="settings-item-desc">Kursni yakunlagan talabalarga sertifikat beriladi</div></div>
-                <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
+                <label class="switch settings-item-control"><input type="checkbox" data-course-check="certificate" checked><span class="slider"></span></label>
               </div>
 
               <div class="field-row-2" style="margin-top:16px;">
-                <div class="field"><label for="c-duration">Kurs davomiyligi</label><input id="c-duration" placeholder="Masalan: 8 hafta" value="8 hafta"></div>
-                <div class="field"><label for="c-estimate">Taxminiy vaqt (soat)</label><input id="c-estimate" placeholder="Masalan: 42 soat" value="42 soat"></div>
+                <div class="field"><label for="c-duration">Kurs davomiyligi</label><input id="c-duration" data-course-field="duration" placeholder="Masalan: 8 hafta" value="8 hafta"></div>
+                <div class="field"><label for="c-estimate">Taxminiy vaqt (soat)</label><input id="c-estimate" data-course-field="estimate" placeholder="Masalan: 42 soat" value="42 soat"></div>
               </div>
 
               <div class="field">
                 <label for="c-prereq">Talab qilinadigan bilimlar (prerequisites)</label>
-                <input id="c-prereq" placeholder="Masalan: Python asoslari, HTML/CSS" value="Python asoslari">
+                <input id="c-prereq" data-course-field="prerequisites" placeholder="Masalan: Python asoslari, HTML/CSS">
               </div>
             </section>
 
@@ -163,55 +146,55 @@
 
               <div class="field">
                 <label for="c-meta-title">Meta sarlavha</label>
-                <input id="c-meta-title" placeholder="Python Backend Development — Isloh" data-char-counter="60" maxlength="60">
+                <input id="c-meta-title" data-course-field="metaTitle" placeholder="Python Backend Development — Isloh" data-char-counter="60" maxlength="60">
                 <div class="field-hint" data-char-counter-for="c-meta-title">0 / 60</div>
               </div>
               <div class="field">
                 <label for="c-meta-desc">Meta tavsif</label>
-                <textarea id="c-meta-desc" rows="3" placeholder="Django, DRF va PostgreSQL yordamida real loyihalar orqali backend dasturlashni o'rganing." style="width:100%; padding:12px 14px; border-radius:var(--r-md); border:var(--border-w-thick) solid var(--border-soft); background:var(--bg-app); font-size:14px; font-family:inherit; resize:vertical; outline:none;" data-char-counter="160" maxlength="160"></textarea>
+                <textarea id="c-meta-desc" data-course-field="metaDescription" rows="3" placeholder="Django, DRF va PostgreSQL yordamida real loyihalar orqali backend dasturlashni o'rganing." data-char-counter="160" maxlength="160"></textarea>
                 <div class="field-hint" data-char-counter-for="c-meta-desc">0 / 160</div>
               </div>
               <div class="field">
                 <label for="c-slug">Slug</label>
-                <input id="c-slug" value="python-backend-development">
-                <div class="field-hint">Sahifa manzilida ishlatiladigan noyob nom</div>
+                <input id="c-slug" data-course-field="slug" placeholder="kurs-nomi">
+                <div class="field-hint">Sahifa manzilida ishlatiladigan noyob nom — kurs nomidan avtomat to'ldiriladi</div>
               </div>
               <div class="field">
                 <label>Ko'rib chiqish havolasi</label>
-                <div style="display:flex; align-items:center; gap:8px; padding:12px 14px; border-radius:var(--r-md); background:var(--bg-app); border:var(--border-w-thick) solid var(--border-soft); font-size:13px; color:var(--ink-500);">
-                  <i class="bi bi-link-45deg"></i> isloh.uz/courses/<span style="color:var(--teach-green); font-weight:600;">python-backend-development</span>
+                <div class="slug-preview">
+                  <i class="bi bi-link-45deg"></i> isloh.uz/courses/<b data-review="slug">—</b>
                 </div>
               </div>
             </section>
 
-            <!-- STEP 4: REVIEW -->
+            <!-- STEP 4: REVIEW — qiymatlar formadan jonli olinadi -->
             <section data-wizard-step hidden>
               <div class="settings-section-title">Ko'rib chiqish</div>
-              <div class="settings-section-sub">Nashr etishdan oldin ma'lumotlarni tekshiring.</div>
+              <div class="settings-section-sub">Saqlashdan oldin ma'lumotlarni tekshiring.</div>
 
-              <div class="card card-pad" style="background:var(--bg-app); border:none;">
-                <div class="review-summary-row"><span class="lbl">Kurs nomi</span><span class="val">Python Backend Development</span></div>
-                <div class="review-summary-row"><span class="lbl">Kategoriya / Daraja</span><span class="val">Dasturlash · O'rta daraja</span></div>
-                <div class="review-summary-row"><span class="lbl">Til</span><span class="val">O'zbek</span></div>
-                <div class="review-summary-row"><span class="lbl">Narx</span><span class="val">$49.00</span></div>
-                <div class="review-summary-row"><span class="lbl">Davomiyligi</span><span class="val">8 hafta · 42 soat</span></div>
-                <div class="review-summary-row"><span class="lbl">Sertifikat</span><span class="val">Ha</span></div>
-                <div class="review-summary-row"><span class="lbl">Slug</span><span class="val">python-backend-development</span></div>
+              <div class="card card-pad review-card">
+                <div class="review-summary-row"><span class="lbl">Kurs nomi</span><span class="val" data-review="title">—</span></div>
+                <div class="review-summary-row"><span class="lbl">Kategoriya / Daraja</span><span class="val" data-review="categoryLevel">—</span></div>
+                <div class="review-summary-row"><span class="lbl">Til</span><span class="val" data-review="language">—</span></div>
+                <div class="review-summary-row"><span class="lbl">Teglar</span><span class="val" data-review="tags">—</span></div>
+                <div class="review-summary-row"><span class="lbl">Narx</span><span class="val" data-review="price">—</span></div>
+                <div class="review-summary-row"><span class="lbl">Davomiyligi</span><span class="val" data-review="duration">—</span></div>
+                <div class="review-summary-row"><span class="lbl">Sertifikat</span><span class="val" data-review="certificate">—</span></div>
+                <div class="review-summary-row"><span class="lbl">Slug</span><span class="val" data-review="slug">—</span></div>
               </div>
 
               <div style="margin-top:18px;">
-                <div class="check-row"><i class="bi bi-check-circle-fill"></i> Asosiy ma'lumotlar to'ldirilgan</div>
-                <div class="check-row"><i class="bi bi-check-circle-fill"></i> Narxlash va sertifikat sozlandi</div>
-                <div class="check-row"><i class="bi bi-check-circle-fill"></i> SEO ma'lumotlari to'ldirilgan</div>
-                <div class="check-row"><i class="bi bi-exclamation-triangle-fill" style="color:var(--warning);"></i> Thumbnail rasm hali yuklanmagan (ixtiyoriy)</div>
+                <div class="check-row"><i class="bi bi-check-circle-fill"></i> Kurs qoralama sifatida saqlanadi</div>
+                <div class="check-row"><i class="bi bi-check-circle-fill"></i> Keyin "Kurs tarkibi" bo'limida modul va darslar qo'shasiz</div>
+                <div class="check-row is-warning"><i class="bi bi-exclamation-triangle-fill"></i> Talabalarga ko'rinishi uchun kursni alohida nashr etish kerak</div>
               </div>
             </section>
           </div>
 
           <!-- FOOTER NAV -->
           <div class="wizard-foot">
-            <button class="btn btn-outline" data-wizard-back disabled><i class="bi bi-arrow-left"></i> Orqaga</button>
-            <button class="btn btn-teach" data-wizard-next>Keyingisi <i class="bi bi-arrow-right"></i></button>
+            <button class="btn btn-outline" data-wizard-back disabled type="button"><i class="bi bi-arrow-left"></i> Orqaga</button>
+            <button class="btn btn-teach" data-wizard-next type="button">Keyingisi <i class="bi bi-arrow-right"></i></button>
           </div>
         </div>
       </div>
@@ -220,8 +203,13 @@
 </div>
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
+<script src="../../js/course-store.js"></script>
 <script src="../../js/course-wizard.js"></script>
+<script src="../../js/course-form.js"></script>
 </body>
 </html>

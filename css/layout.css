@@ -18,7 +18,7 @@
   width: 232px;
   flex-shrink: 0;
   background: linear-gradient(180deg, var(--indigo-900) 0%, var(--indigo-950) 100%);
-  color: #C9C6E8;
+  color: var(--on-indigo-muted);
   display: flex;
   flex-direction: column;
   padding: 20px 14px;
@@ -45,7 +45,7 @@
   border-radius: var(--r-md);
   font-size: 14px;
   font-weight: 500;
-  color: #C9C6E8;
+  color: var(--on-indigo-muted);
   cursor: pointer;
   transition: background var(--t-base) var(--ease-standard), color var(--t-base) var(--ease-standard);
 }
@@ -157,6 +157,52 @@
   padding: 40px;
 }
 .auth-form-inner { width: 100%; max-width: 380px; }
+
+/* Auth sahifasining ichki elementlari. Ilgari pages/auth/login.html ning
+   o'z <style> blokida turardi (45 qator) — CLAUDE.md §2 inline <style>
+   dan qochishni talab qiladi, shuning uchun shu qatlamga ko'chirildi. */
+.auth-tagline {
+  font-family: 'Manrope', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+.auth-sub {
+  color: var(--on-indigo-muted);
+  font-size: 14px;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink-500);
+  font-size: 13px;
+  margin: 20px 0;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-soft);
+}
+.social-row { display: flex; gap: 10px; }
+.remember-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+.remember-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-700);
+  cursor: pointer;
+}
 
 /* --- Mobil navigatsiya (off-canvas drawer) -------------------------------
    900px dan pastda sidebar oqimdan chiqib, chapdan suriladigan panelga

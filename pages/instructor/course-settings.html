@@ -17,17 +17,17 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="courses.html" style="color:inherit;">Kurslarim</a><span class="sep">/</span><span class="current">Sozlamalar</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><span class="current">Sozlamalar</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
     <main class="content" data-course-id="py-101">
       <div class="page-header">
-        <div><h1>Python Backend Development — sozlamalar</h1><p>Kursning ko'rinishi, narxi va boshqa parametrlarini boshqaring.</p></div>
-        <a href="course-details.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kursga qaytish</a>
+        <div><h1 data-course-heading>Kurs sozlamalari</h1><p>Kursning ko'rinishi, narxi va boshqa parametrlarini boshqaring.</p></div>
+        <a href="course-details.html" class="btn btn-outline btn-sm" data-course-link="course-details.html"><i class="bi bi-arrow-left"></i> Kursga qaytish</a>
       </div>
 
       <div class="settings-layout">
@@ -41,7 +41,7 @@
           <div class="settings-nav-item" data-settings-target="notifications" role="button" tabindex="0"><i class="bi bi-bell"></i> Bildirishnomalar</div>
           <div class="settings-nav-item" data-settings-target="seo" role="button" tabindex="0"><i class="bi bi-search"></i> SEO</div>
           <div class="settings-nav-label">Xavfli hudud</div>
-          <div class="settings-nav-item" data-settings-target="danger" role="button" tabindex="0" style="color:var(--danger);"><i class="bi bi-exclamation-octagon"></i> Kursni o'chirish</div>
+          <div class="settings-nav-item text-danger" data-settings-target="danger" role="button" tabindex="0"><i class="bi bi-exclamation-octagon"></i> Kursni o'chirish</div>
         </nav>
 
         <!-- SETTINGS PANELS -->
@@ -50,14 +50,14 @@
           <div class="card card-pad settings-section" data-settings-panel="general">
             <div class="settings-section-title">Umumiy</div>
             <div class="settings-section-sub">Kursning asosiy ma'lumotlari.</div>
-            <div class="field"><label>Kurs nomi</label><input value="Python Backend Development"></div>
-            <div class="field"><label>Kategoriya</label>
-              <select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option selected>Dasturlash</option><option>Dizayn</option><option>Biznes</option></select>
+            <div class="field"><label for="cs-title">Kurs nomi</label><input id="cs-title" data-course-field="title"></div>
+            <div class="field"><label for="cs-cat">Kategoriya</label>
+              <select id="cs-cat" data-course-field="category"><option>Dasturlash</option><option>Backend</option><option>Frontend</option><option>DevOps</option><option>Ma'lumotlar bazasi</option><option>Dizayn</option><option>Biznes</option><option>Marketing</option><option>AI</option><option>Til</option></select>
             </div>
-            <div class="field"><label>Daraja</label>
-              <select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option>Boshlang'ich</option><option selected>O'rta daraja</option><option>Ilg'or</option></select>
+            <div class="field"><label for="cs-level">Daraja</label>
+              <select id="cs-level" data-course-field="level"><option>Boshlang'ich</option><option>O'rta daraja</option><option>Ilg'or</option></select>
             </div>
-            <div style="margin-top:8px;"><button class="btn btn-teach btn-sm">O'zgarishlarni saqlash</button></div>
+            <div style="margin-top:8px;"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
           </div>
 
           <!-- VISIBILITY -->
@@ -66,30 +66,29 @@
             <div class="settings-section-sub">Kursni kim va qanday ko'ra olishini belgilang.</div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Kurs holati</div><div class="settings-item-desc">Nashr etilgan kurslar qidiruvda ko'rinadi</div></div>
-              <span class="badge badge-green settings-item-control">Nashr etilgan</span>
+              <span class="badge settings-item-control" data-course-status-badge>—</span>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Qidiruvda ko'rsatish</div><div class="settings-item-desc">Marketplace va qidiruv natijalarida ko'rinishi</div></div>
-              <label class="switch settings-item-control"><input type="checkbox" checked><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-course-visibility-search><span class="slider"></span></label>
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label">Faqat havola orqali kirish</div><div class="settings-item-desc">Kurs faqat to'g'ridan-to'g'ri havola orqali ochiladi</div></div>
-              <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+              <label class="switch settings-item-control"><input type="checkbox" data-course-visibility-unlisted><span class="slider"></span></label>
             </div>
+            <div style="margin-top:8px;"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
           </div>
 
           <!-- PRICING -->
           <div class="card card-pad settings-section" data-settings-panel="pricing" hidden>
             <div class="settings-section-title">Narxlash</div>
             <div class="settings-section-sub">Kurs narxi va chegirmalarni boshqaring.</div>
-            <div class="field"><label>Narx (USD)</label><input value="49.00"></div>
+            <div class="field"><label for="cs-price">Narx (USD)</label><input id="cs-price" data-course-field="price" type="number" min="0" step="0.01"></div>
             <div class="settings-item">
-              <div class="settings-item-info"><div class="settings-item-label">Chegirma faol</div><div class="settings-item-desc">Vaqtinchalik aksiya narxini ko'rsatish</div></div>
-              <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
+              <div class="settings-item-info"><div class="settings-item-label">Sertifikat berish</div><div class="settings-item-desc">Kursni yakunlagan talabalarga sertifikat beriladi</div></div>
+              <label class="switch settings-item-control"><input type="checkbox" data-course-check="certificate"><span class="slider"></span></label>
             </div>
-            <div class="field" style="margin-top:16px;"><label>To'lov turi</label>
-              <select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option selected>Bir martalik to'lov</option><option>Oylik obuna</option></select>
-            </div>
+            <div style="margin-top:8px;"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
           </div>
 
           <!-- ENROLLMENT -->
@@ -105,7 +104,7 @@
               <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
             </div>
             <div class="field" style="margin-top:16px;"><label>Kirish muddati</label>
-              <select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option selected>Cheksiz</option><option>6 oy</option><option>1 yil</option></select>
+              <select class="btn btn-outline select-block"><option selected>Cheksiz</option><option>6 oy</option><option>1 yil</option></select>
             </div>
           </div>
 
@@ -155,13 +154,14 @@
           <div class="card card-pad settings-section" data-settings-panel="seo" hidden>
             <div class="settings-section-title">SEO</div>
             <div class="settings-section-sub">Qidiruv tizimlari uchun meta ma'lumotlar.</div>
-            <div class="field"><label>Meta sarlavha</label><input value="Python Backend Development — Isloh"></div>
-            <div class="field"><label>Meta tavsif</label><input value="Django, DRF va PostgreSQL yordamida backend dasturlashni o'rganing."></div>
-            <div class="field"><label>Slug</label><input value="python-backend-development"></div>
+            <div class="field"><label for="cs-meta-title">Meta sarlavha</label><input id="cs-meta-title" data-course-field="metaTitle"></div>
+            <div class="field"><label for="cs-meta-desc">Meta tavsif</label><input id="cs-meta-desc" data-course-field="metaDescription"></div>
+            <div class="field"><label for="cs-slug">Slug</label><input id="cs-slug" data-course-field="slug"></div>
+            <div style="margin-top:8px;"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
           </div>
 
           <!-- DANGER ZONE -->
-          <div class="card card-pad settings-section danger-zone" data-settings-panel="danger" hidden style="border:1.5px solid var(--danger);">
+          <div class="card card-pad settings-section danger-zone" data-settings-panel="danger" hidden>
             <div class="settings-section-title">Xavfli hudud</div>
             <div class="settings-section-sub">Bu amallar qaytarilmaydi. Ehtiyot bo'ling.</div>
             <div class="settings-item">
@@ -169,7 +169,7 @@
               <button class="btn btn-outline btn-sm settings-item-control" data-modal-open="archive-confirm-modal">Arxivlash</button>
             </div>
             <div class="settings-item">
-              <div class="settings-item-info"><div class="settings-item-label" style="color:var(--danger);">Kursni butunlay o'chirish</div><div class="settings-item-desc">Barcha darslar, talabalar ma'lumoti va sharhlar o'chiriladi</div></div>
+              <div class="settings-item-info"><div class="settings-item-label text-danger">Kursni butunlay o'chirish</div><div class="settings-item-desc">Barcha darslar, talabalar ma'lumoti va sharhlar o'chiriladi</div></div>
               <button class="btn btn-sm settings-item-control" style="background:var(--danger); color:#fff;" data-modal-open="delete-confirm-modal">O'chirish</button>
             </div>
           </div>
@@ -182,38 +182,38 @@
 <!-- CONFIRMATION MODALS (reuse .modal / .modal-overlay + js/modal.js) -->
 <div class="modal-overlay" id="archive-confirm-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><b>Kursni arxivlashni tasdiqlang</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('archive-confirm-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><b>Kursni arxivlashni tasdiqlang</b><button class="icon-btn icon-btn-sm" data-modal-close="archive-confirm-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">Kurs "Kurslarim" ro'yxatida arxiv sifatida belgilanadi va talabalar uchun yopiladi. Buni istalgan vaqt bekor qilishingiz mumkin.</div>
     <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('archive-confirm-modal')">Bekor qilish</button>
-      <button class="btn btn-teach btn-sm" onclick="isloh_closeModal('archive-confirm-modal')">Arxivlash</button>
+      <button class="btn btn-outline btn-sm" data-modal-close="archive-confirm-modal">Bekor qilish</button>
+      <button class="btn btn-teach btn-sm" data-course-archive-confirm>Arxivlash</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="delete-confirm-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><b style="color:var(--danger);">Kursni o'chirishni tasdiqlang</b><button class="icon-btn" style="width:28px;height:28px;" onclick="isloh_closeModal('delete-confirm-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
-    <div class="modal-body">Bu amal qaytarilmaydi. 248 talaba, barcha sharhlar va daromad tarixi butunlay o'chiriladi. Davom etishni xohlaysizmi?</div>
+    <div class="modal-head"><b class="text-danger">Kursni o'chirishni tasdiqlang</b><button class="icon-btn icon-btn-sm" data-modal-close="delete-confirm-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-body">Bu amal qaytarilmaydi. <b data-course-delete-students>0</b> ta talaba, barcha sharhlar va daromad tarixi butunlay o'chiriladi. Davom etishni xohlaysizmi?</div>
     <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('delete-confirm-modal')">Bekor qilish</button>
-      <button class="btn btn-sm" style="background:var(--danger); color:#fff;" onclick="isloh_closeModal('delete-confirm-modal')">Ha, o'chirish</button>
+      <button class="btn btn-outline btn-sm" data-modal-close="delete-confirm-modal">Bekor qilish</button>
+      <button class="btn btn-sm btn-danger" data-course-delete-confirm>Ha, o'chirish</button>
     </div>
   </div>
 </div>
 
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/settings.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/profile.js"></script>
+<script src="../../js/course-store.js"></script>
+<script src="../../js/course-form.js"></script>
+<script src="../../js/course-settings.js"></script>
 <script src="../../js/certificate-engine.js"></script>
-<script>
-  document.querySelectorAll('[data-modal-open]').forEach((btn) => {
-    btn.addEventListener('click', () => isloh_openModal(btn.dataset.modalOpen));
-  });
-</script>
 </body>
 </html>

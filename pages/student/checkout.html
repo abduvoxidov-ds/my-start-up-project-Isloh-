@@ -9,11 +9,6 @@
 <style>
   .co-layout { display:grid; grid-template-columns:1.7fr 1fr; gap:20px; align-items:start; margin-top:6px; }
   @media (max-width:900px){ .co-layout{ grid-template-columns:1fr; } }
-  .form-row { margin-bottom:14px; }
-  .form-row label { display:block; font-size:12.5px; font-weight:600; color:var(--ink-700); margin-bottom:6px; }
-  .form-row input, .form-row select { width:100%; border:1.5px solid var(--border-soft); border-radius:var(--r-md); padding:11px 14px; font-size:14px; outline:none; }
-  .form-row input:focus, .form-row select:focus { border-color:var(--violet-500); }
-  .form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
   .receipt-preview { border:1.5px dashed var(--border-soft); border-radius:var(--r-md); padding:18px; background:var(--bg-app); }
 </style>
 </head>
@@ -89,7 +84,7 @@
             </div>
             <div style="display:flex; gap:10px; margin-top:16px;">
               <button class="btn btn-outline" data-checkout-back><i class="bi bi-arrow-left"></i> Orqaga</button>
-              <button class="btn btn-primary" style="flex:1;" data-checkout-next>Davom etish <i class="bi bi-arrow-right"></i></button>
+              <button class="btn btn-primary flex-1" data-checkout-next>Davom etish <i class="bi bi-arrow-right"></i></button>
             </div>
           </div>
 
@@ -104,7 +99,7 @@
             <div class="receipt-preview" data-checkout-review></div>
             <div style="display:flex; gap:10px; margin-top:16px;">
               <button class="btn btn-outline" data-checkout-back><i class="bi bi-arrow-left"></i> Orqaga</button>
-              <button class="btn btn-primary" style="flex:1;" data-checkout-submit><i class="bi bi-check2-circle"></i> Buyurtmani tasdiqlash</button>
+              <button class="btn btn-primary flex-1" data-checkout-submit><i class="bi bi-check2-circle"></i> Buyurtmani tasdiqlash</button>
             </div>
           </div>
 
@@ -140,9 +135,13 @@
 </div>
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>
+<script src="../../js/course-store.js"></script>
 <script src="../../js/marketplace.js"></script>
 <script src="../../js/checkout.js"></script>
 </body>

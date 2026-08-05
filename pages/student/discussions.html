@@ -17,7 +17,7 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a href="course-detail.html" style="color:inherit;">Docker for Beginners</a><span class="sep">/</span><span class="current">Muhokamalar</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><a class="text-inherit" href="course-detail.html">Docker for Beginners</a><span class="sep">/</span><span class="current">Muhokamalar</span></nav>
       <div class="topbar-actions">
         <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
         <div class="avatar">SM</div>
@@ -30,7 +30,7 @@
           <h1>Muhokamalar</h1>
           <p>Docker for Beginners · Savol bering, boshqa talabalar va o'qituvchi bilan muloqot qiling.</p>
         </div>
-        <button class="btn btn-teach btn-sm" onclick="isloh_openModal('new-thread-modal')"><i class="bi bi-plus-lg"></i> Yangi mavzu</button>
+        <button class="btn btn-teach btn-sm" data-modal-open="new-thread-modal"><i class="bi bi-plus-lg"></i> Yangi mavzu</button>
       </div>
 
       <div class="tab-strip" style="margin-top:18px;">
@@ -61,7 +61,7 @@
             <!-- Thread 1: pinned -->
             <div class="card discussion-thread dt-pinned" data-thread data-comment-thread data-filter-item data-mtype="pinned" data-filter-text="Modul 1 uchun eslatma" data-sort-date="5" data-sort-likes="18" data-sort-replies="6">
               <div class="dt-head">
-                <div class="avatar-sm" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+                <div class="avatar-sm avatar-teach">AY</div>
                 <div class="dt-head-main">
                   <div class="dt-title-row">
                     <i class="bi bi-pin-angle-fill pin-thread-ic" title="Qadalgan mavzu"></i>
@@ -96,7 +96,7 @@
                       </div>
                     </div>
                     <div class="comment-card">
-                      <div class="avatar-sm" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+                      <div class="avatar-sm avatar-teach">AY</div>
                       <div class="comment-body">
                         <div class="comment-head"><span class="comment-name">Akmal Yuldashev</span><span class="role-badge instructor">O'qituvchi</span><span class="comment-time">20 soat oldin</span></div>
                         <div class="comment-text" data-comment-text>Arzimaydi! Savollaringiz bo'lsa shu yerga yozavering.</div>
@@ -146,7 +146,7 @@
                   </form>
                   <div class="reply-list" data-reply-list data-comment-list hidden>
                     <div class="comment-card">
-                      <div class="avatar-sm" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+                      <div class="avatar-sm avatar-teach">AY</div>
                       <div class="comment-body">
                         <div class="comment-head"><span class="comment-name">Akmal Yuldashev</span><span class="role-badge instructor">O'qituvchi</span><span class="comment-time">20 soat oldin</span></div>
                         <div class="comment-text" data-comment-text>5432 portini boshqa PostgreSQL jarayoni band qilib turgan bo'lishi mumkin — <code>docker ps</code> orqali tekshiring.</div>
@@ -234,7 +234,7 @@
                   </div>
                   <div class="reply-list" data-reply-list data-comment-list hidden>
                     <div class="comment-card">
-                      <div class="avatar-sm" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+                      <div class="avatar-sm avatar-teach">AY</div>
                       <div class="comment-body">
                         <div class="comment-head"><span class="comment-name">Akmal Yuldashev</span><span class="role-badge instructor">O'qituvchi</span><span class="comment-time">22 soat oldin</span><span class="comment-resolved-tag"><i class="bi bi-check-circle-fill"></i> Qabul qilingan</span></div>
                         <div class="comment-text" data-comment-text>Yangi Compose versiyalarida <code>version</code> maydoni ixtiyoriy — uni olib tashlashingiz mumkin.</div>
@@ -282,20 +282,23 @@
 <!-- NEW THREAD MODAL -->
 <div class="modal-overlay" id="new-thread-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3 style="font-size:15px;">Yangi mavzu</h3><button class="icon-btn" onclick="isloh_closeModal('new-thread-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><h3 style="font-size:15px;">Yangi mavzu</h3><button class="icon-btn" data-modal-close="new-thread-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
       <div class="field"><label for="new-thread-title">Sarlavha</label><input id="new-thread-title" placeholder="Savolingiz yoki mavzu sarlavhasi"></div>
       <div class="field" style="margin-bottom:0;"><label for="new-thread-body">Tavsif</label><textarea id="new-thread-body" class="editor-textarea" style="min-height:100px;" placeholder="Batafsil yozing..."></textarea></div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" onclick="isloh_closeModal('new-thread-modal')">Bekor qilish</button>
-      <button class="btn btn-teach btn-sm" onclick="isloh_closeModal('new-thread-modal')"><i class="bi bi-send"></i> Joylash</button>
+      <button class="btn btn-outline btn-sm" data-modal-close="new-thread-modal">Bekor qilish</button>
+      <button class="btn btn-teach btn-sm" data-modal-close="new-thread-modal"><i class="bi bi-send"></i> Joylash</button>
     </div>
   </div>
 </div>
 
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>

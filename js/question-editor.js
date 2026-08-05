@@ -100,15 +100,44 @@ function isloh_initQuestionPreviewSync() {
   });
 }
 
+/* Modaldagi maydonlardan savol obyektini yig'adi. */
+function isloh_readQuestionForm() {
+  const value = (id, fallback) => {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : fallback;
+  };
+  return {
+    id: 'q-' + Date.now(),
+    title: value('qe-title', ''),
+    type: value('qe-type', 'single'),
+    points: parseInt(value('qe-points', '5'), 10) || 0,
+    difficulty: value('qe-difficulty', 'easy'),
+    category: value('qe-category', 'Umumiy')
+  };
+}
+
 function isloh_initQuestionSave() {
   document.querySelector('[data-save-question]')?.addEventListener('click', () => {
     const titleInput = document.getElementById('qe-title');
     if (!titleInput.value.trim()) {
-      titleInput.style.borderColor = 'var(--danger)';
+      titleInput.classList.add('is-invalid');
       if (typeof isloh_showToast === 'function') isloh_showToast("Savol matnini kiriting", 'error');
       return;
     }
-    titleInput.style.borderColor = '';
+    titleInput.classList.remove('is-invalid');
+
+    /* Savol endi haqiqatan saqlanadi va ro'yxatga qo'shiladi
+       (js/question-store.js). Ilgari bu yerda faqat modal yopilib,
+       "Savol saqlandi" degan yolg'on toast chiqarilardi. */
+    if (typeof isloh_addQuestion === 'function') {
+      const question = isloh_readQuestionForm();
+      if (!isloh_addQuestion(question)) {
+        if (typeof isloh_showToast === 'function') isloh_showToast("Saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
+        return;
+      }
+      isloh_appendQuestionToList(question);
+    }
+
     isloh_closeModal('question-editor-modal');
     if (typeof isloh_showToast === 'function') isloh_showToast("Savol saqlandi", 'success');
   });

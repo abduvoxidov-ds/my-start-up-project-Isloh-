@@ -6,11 +6,6 @@
 <title>Python Backend Development — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  /* Page-local layout only. All widgets come from css/widgets.css. */
-  .cd-2col { display:grid; grid-template-columns: 1.5fr 1fr; gap:18px; align-items:start; }
-  @media (max-width:1100px){ .cd-2col{ grid-template-columns:1fr; } }
-</style>
 </head>
 <body>
 <div class="app-shell">
@@ -22,10 +17,10 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a href="courses.html" style="color:inherit;">Kurslarim</a><span class="sep">/</span><span class="current">Python Backend Development</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><span class="current">Python Backend Development</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
@@ -50,13 +45,13 @@
 
       <!-- STATS -->
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-cash-stack"></i></div><div class="stat-value">$1,480</div><div class="stat-label">Jami daromad</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-people-fill"></i></div><div class="stat-value">248</div><div class="stat-label">Talabalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-cash-stack"></i></div><div class="stat-value">$1,480</div><div class="stat-label">Jami daromad</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div><div class="stat-value">248</div><div class="stat-label">Talabalar</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon badge-warning" style="width:40px;height:40px;border-radius:var(--r-md);"><i class="bi bi-star-fill"></i></div><div class="stat-value">4.9</div><div class="stat-label">O'rtacha reyting</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--bg-app); color:var(--ink-500);"><i class="bi bi-check2-circle"></i></div><div class="stat-value">78%</div><div class="stat-label">Yakunlash darajasi</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-check2-circle"></i></div><div class="stat-value">78%</div><div class="stat-label">Yakunlash darajasi</div></div>
       </div>
 
-      <div class="cd-2col" style="margin-top:18px;">
+      <div class="split-main" style="margin-top:18px;">
         <!-- LEFT COLUMN -->
         <div class="wk-col">
           <!-- General info -->
@@ -159,11 +154,11 @@
             <div class="section-header"><h3>Tezkor havolalar</h3></div>
             <div class="quick-actions" style="grid-template-columns:1fr;">
               <a href="course-builder.html" class="quick-action">
-                <div class="qa-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-diagram-3"></i></div>
+                <div class="qa-icon tint-violet"><i class="bi bi-diagram-3"></i></div>
                 <div class="qa-title">Kurs tarkibi</div><div class="qa-sub">Modul va darslarni boshqarish</div>
               </a>
               <a href="course-edit.html" class="quick-action">
-                <div class="qa-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-pencil-fill"></i></div>
+                <div class="qa-icon tint-green"><i class="bi bi-pencil-fill"></i></div>
                 <div class="qa-title">Kursni tahrirlash</div><div class="qa-sub">Ma'lumot, narx, SEO</div>
               </a>
               <a href="course-settings.html" class="quick-action">
@@ -171,7 +166,7 @@
                 <div class="qa-title">Sozlamalar</div><div class="qa-sub">Ko'rinish, bildirishnoma</div>
               </a>
               <a href="students.html" class="quick-action">
-                <div class="qa-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-people-fill"></i></div>
+                <div class="qa-icon tint-warning"><i class="bi bi-people-fill"></i></div>
                 <div class="qa-title">Talabalar</div><div class="qa-sub">248 ta faol</div>
               </a>
             </div>
@@ -194,6 +189,9 @@
 </div>
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 </body>
 </html>

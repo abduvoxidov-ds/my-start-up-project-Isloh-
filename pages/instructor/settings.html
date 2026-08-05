@@ -20,7 +20,7 @@
       <div class="topbar-search"><i class="bi bi-search"></i><input placeholder="Sozlamalarni qidirish..." aria-label="Sozlamalarni qidirish"></div>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
@@ -40,7 +40,7 @@
           <div class="settings-nav-item" data-settings-target="security" role="button" tabindex="0"><i class="bi bi-key"></i> Xavfsizlik</div>
           <div class="settings-nav-item" data-settings-target="accessibility" role="button" tabindex="0"><i class="bi bi-universal-access"></i> Qulaylik</div>
           <div class="settings-nav-label">Xavfli hudud</div>
-          <div class="settings-nav-item" data-settings-target="danger" role="button" tabindex="0" style="color:var(--danger);"><i class="bi bi-exclamation-octagon"></i> Hisobni o'chirish</div>
+          <div class="settings-nav-item text-danger" data-settings-target="danger" role="button" tabindex="0"><i class="bi bi-exclamation-octagon"></i> Hisobni o'chirish</div>
         </nav>
 
         <!-- SETTINGS PANELS -->
@@ -91,12 +91,12 @@
             <div class="settings-section-sub">Daromadingizni yechib olish usullarini boshqaring.</div>
             <div class="payout-method-row">
               <div class="payout-method-ic"><i class="bi bi-credit-card-2-front-fill"></i></div>
-              <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">Visa •••• 4821</div><div style="font-size:12px; color:var(--ink-500);">Asosiy usul</div></div>
+              <div class="flex-1"><div style="font-size:13.5px; font-weight:600;">Visa •••• 4821</div><div style="font-size:12px; color:var(--ink-500);">Asosiy usul</div></div>
               <span class="badge badge-green">Tasdiqlangan</span>
             </div>
             <div class="payout-method-row">
               <div class="payout-method-ic"><i class="bi bi-bank"></i></div>
-              <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">Xalq banki hisobi</div><div style="font-size:12px; color:var(--ink-500);">Zaxira usul</div></div>
+              <div class="flex-1"><div style="font-size:13.5px; font-weight:600;">Xalq banki hisobi</div><div style="font-size:12px; color:var(--ink-500);">Zaxira usul</div></div>
               <button class="btn btn-outline btn-sm">Boshqarish</button>
             </div>
             <div style="margin:14px 0 20px;"><button class="btn btn-outline btn-sm"><i class="bi bi-plus-lg"></i> Yangi usul qo'shish</button></div>
@@ -134,10 +134,10 @@
             <div class="settings-section-title">Til va hudud</div>
             <div class="settings-section-sub">Interfeys tili va vaqt mintaqasi.</div>
             <div class="field"><label>Interfeys tili</label>
-              <select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option>O'zbek</option><option>Ingliz</option><option>Rus</option></select>
+              <select class="btn btn-outline select-block"><option>O'zbek</option><option>Ingliz</option><option>Rus</option></select>
             </div>
             <div class="field"><label>Vaqt mintaqasi</label>
-              <select class="btn btn-outline" style="width:100%; text-align:left; border-radius:var(--r-md);"><option>(GMT+5) Toshkent</option><option>(GMT+3) Moskva</option></select>
+              <select class="btn btn-outline select-block"><option>(GMT+5) Toshkent</option><option>(GMT+3) Moskva</option></select>
             </div>
           </div>
 
@@ -175,12 +175,12 @@
             <h4 style="font-size:14px; margin-top:20px;">Faol seanslar</h4>
             <div class="device-row">
               <div class="device-icon"><i class="bi bi-laptop"></i></div>
-              <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">MacBook Pro · Chrome</div><div style="font-size:12px; color:var(--ink-500);">Toshkent · Hozir faol</div></div>
+              <div class="flex-1"><div style="font-size:13.5px; font-weight:600;">MacBook Pro · Chrome</div><div style="font-size:12px; color:var(--ink-500);">Toshkent · Hozir faol</div></div>
               <span class="badge badge-green">Joriy</span>
             </div>
             <div class="device-row">
               <div class="device-icon"><i class="bi bi-phone"></i></div>
-              <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">iPhone · Isloh App</div><div style="font-size:12px; color:var(--ink-500);">Toshkent · 3 soat oldin</div></div>
+              <div class="flex-1"><div style="font-size:13.5px; font-weight:600;">iPhone · Isloh App</div><div style="font-size:12px; color:var(--ink-500);">Toshkent · 3 soat oldin</div></div>
               <button class="btn btn-outline btn-sm">Chiqarish</button>
             </div>
           </div>
@@ -204,7 +204,7 @@
           </div>
 
           <!-- DANGER ZONE -->
-          <div class="card card-pad settings-section danger-zone" data-settings-panel="danger" hidden style="border:1.5px solid var(--danger);">
+          <div class="card card-pad settings-section danger-zone" data-settings-panel="danger" hidden>
             <div class="settings-section-title">Xavfli hudud</div>
             <div class="settings-section-sub">Bu amallar qaytarilmaydi. Ehtiyot bo'ling.</div>
             <div class="settings-item">
@@ -212,7 +212,7 @@
               <button class="btn btn-outline btn-sm settings-item-control">To'xtatish</button>
             </div>
             <div class="settings-item">
-              <div class="settings-item-info"><div class="settings-item-label" style="color:var(--danger);">Hisobni butunlay o'chirish</div><div class="settings-item-desc">Barcha kurslar va ma'lumotlar o'chiriladi</div></div>
+              <div class="settings-item-info"><div class="settings-item-label text-danger">Hisobni butunlay o'chirish</div><div class="settings-item-desc">Barcha kurslar va ma'lumotlar o'chiriladi</div></div>
               <button class="btn btn-sm settings-item-control" style="background:var(--danger); color:#fff;">O'chirish</button>
             </div>
           </div>
@@ -223,6 +223,9 @@
 </div>
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/settings.js"></script>
 </body>

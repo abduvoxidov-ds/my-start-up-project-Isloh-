@@ -58,14 +58,14 @@
 
 <div class="modal-overlay" id="refund-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3 style="font-size:15px;">Qaytarishni so'rash</h3><button class="icon-btn" onclick="isloh_closeModal('refund-modal')" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><h3 style="font-size:15px;">Qaytarishni so'rash</h3><button class="icon-btn" data-modal-close="refund-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
       <div class="review-summary-row"><span class="lbl">Buyurtma</span><span class="val" data-refund-order></span></div>
       <div class="review-summary-row"><span class="lbl">Qaytariladigan summa</span><span class="val" data-refund-total></span></div>
       <p class="modal-note">Qaytarish so'rovini yubormoqchimisiz? Ko'rib chiqish odatda 3–5 ish kuni davom etadi. Buyurtma holati "Qaytarish so'ralgan"ga o'tadi.</p>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="isloh_closeModal('refund-modal')">Bekor qilish</button>
+      <button class="btn btn-outline" data-modal-close="refund-modal">Bekor qilish</button>
       <button class="btn btn-primary" data-refund-confirm>So'rovni yuborish</button>
     </div>
   </div>
@@ -78,6 +78,7 @@
 <script src="../../js/modal.js"></script>
 <script src="../../js/filterable.js"></script>
 <!-- marketplace.js — buyurtmalar do'koni (yagona manba), keyin sahifa moduli -->
+<script src="../../js/course-store.js"></script>
 <script src="../../js/marketplace.js"></script>
 <script src="../../js/orders.js"></script>
 </body>

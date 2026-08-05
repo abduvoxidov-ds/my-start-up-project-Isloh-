@@ -6,11 +6,6 @@
 <title>Sharhlar — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  /* Page-local layout only. Review widgets live in css/widgets.css. */
-  .rev-grid { display:grid; grid-template-columns: 1fr 1.6fr; gap:18px; align-items:start; }
-  @media (max-width:1100px){ .rev-grid{ grid-template-columns:1fr; } }
-</style>
 </head>
 <body>
 <div class="app-shell">
@@ -25,7 +20,7 @@
       <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><span class="current">Sharhlar</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
@@ -36,10 +31,10 @@
 
       <!-- STATS -->
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-star-fill"></i></div><div class="stat-value">4.8</div><div class="stat-label">O'rtacha reyting</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-chat-square-text-fill"></i></div><div class="stat-value">128</div><div class="stat-label">Jami sharhlar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-reply-fill"></i></div><div class="stat-value">92%</div><div class="stat-label">Javob berish darajasi</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-hourglass-split"></i></div><div class="stat-value">6</div><div class="stat-label">Javobsiz qolgan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-star-fill"></i></div><div class="stat-value">4.8</div><div class="stat-label">O'rtacha reyting</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-chat-square-text-fill"></i></div><div class="stat-value">128</div><div class="stat-label">Jami sharhlar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-reply-fill"></i></div><div class="stat-value" data-review-rate>0%</div><div class="stat-label">Javob berish darajasi</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-hourglass-split"></i></div><div class="stat-value">6</div><div class="stat-label">Javobsiz qolgan</div></div>
       </div>
 
       <!-- RATING SUMMARY -->
@@ -60,7 +55,7 @@
         </div>
       </div>
 
-      <div class="rev-grid" style="margin-top:18px;">
+      <div class="split-aside" style="margin-top:18px;">
         <!-- FILTER RAIL -->
         <div class="card card-pad">
           <div class="section-header"><h3>Filtr</h3></div>
@@ -80,7 +75,7 @@
 
         <!-- REVIEWS LIST -->
         <div class="card card-pad">
-          <div class="review-card" data-filter-item data-rating="5" data-reply="pending" data-filter-text="Ajoyib kurs, hammasi tushunarli">
+          <div class="review-card" data-review-id="rev-1" data-filter-item data-rating="5" data-reply="pending" data-filter-text="Ajoyib kurs, hammasi tushunarli">
             <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">BO</div>
             <div style="flex:1; min-width:0;">
               <div class="review-head">
@@ -91,12 +86,12 @@
               </div>
               <div class="review-text">Ajoyib kurs, hammasi tushunarli tushuntirilgan! Ayniqsa amaliy loyihalar juda foydali bo'ldi.</div>
               <div class="review-actions">
-                <button class="btn btn-teach btn-sm"><i class="bi bi-reply-fill"></i> Javob berish</button>
+                <button class="btn btn-teach btn-sm" data-review-reply><i class="bi bi-reply-fill"></i> Javob berish</button>
               </div>
             </div>
           </div>
 
-          <div class="review-card" data-filter-item data-rating="5" data-reply="replied" data-filter-text="Ustoz juda sabrli va aniq javob beradi">
+          <div class="review-card" data-review-id="rev-2" data-filter-item data-rating="5" data-reply="replied" data-filter-text="Ustoz juda sabrli va aniq javob beradi">
             <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#DB2777,#F472B6);">NY</div>
             <div style="flex:1; min-width:0;">
               <div class="review-head">
@@ -113,7 +108,7 @@
             </div>
           </div>
 
-          <div class="review-card" data-filter-item data-rating="4" data-reply="pending" data-filter-text="Yaxshi kurs lekin ba'zi darslar uzun">
+          <div class="review-card" data-review-id="rev-3" data-filter-item data-rating="4" data-reply="pending" data-filter-text="Yaxshi kurs lekin ba'zi darslar uzun">
             <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#059669,#10B981);">SA</div>
             <div style="flex:1; min-width:0;">
               <div class="review-head">
@@ -124,12 +119,12 @@
               </div>
               <div class="review-text">Yaxshi kurs, lekin ba'zi darslar biroz uzun. Qisqaroq video kesimlari bo'lsa yanada qulay bo'lardi.</div>
               <div class="review-actions">
-                <button class="btn btn-teach btn-sm"><i class="bi bi-reply-fill"></i> Javob berish</button>
+                <button class="btn btn-teach btn-sm" data-review-reply><i class="bi bi-reply-fill"></i> Javob berish</button>
               </div>
             </div>
           </div>
 
-          <div class="review-card" data-filter-item data-rating="3" data-reply="replied" data-filter-text="O'rtacha, ba'zi bo'limlar eskirgan">
+          <div class="review-card" data-review-id="rev-4" data-filter-item data-rating="3" data-reply="replied" data-filter-text="O'rtacha, ba'zi bo'limlar eskirgan">
             <div class="avatar avatar-sm">SI</div>
             <div style="flex:1; min-width:0;">
               <div class="review-head">
@@ -146,7 +141,7 @@
             </div>
           </div>
 
-          <div class="review-card" data-filter-item data-rating="5" data-reply="pending" data-filter-text="Sertifikat uchun rahmat, juda foydali bo'ldi">
+          <div class="review-card" data-review-id="rev-5" data-filter-item data-rating="5" data-reply="pending" data-filter-text="Sertifikat uchun rahmat, juda foydali bo'ldi">
             <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">AK</div>
             <div style="flex:1; min-width:0;">
               <div class="review-head">
@@ -157,7 +152,7 @@
               </div>
               <div class="review-text">Sertifikat uchun rahmat, kurs juda foydali bo'ldi! Ishda darhol qo'llay boshladim.</div>
               <div class="review-actions">
-                <button class="btn btn-teach btn-sm"><i class="bi bi-reply-fill"></i> Javob berish</button>
+                <button class="btn btn-teach btn-sm" data-review-reply><i class="bi bi-reply-fill"></i> Javob berish</button>
               </div>
             </div>
           </div>
@@ -168,17 +163,40 @@
         </div>
       </div>
 
-      <div class="pager">
-        <button aria-label="Oldingi"><i class="bi bi-chevron-left"></i></button>
-        <button class="active">1</button><button>2</button><button>3</button>
-        <button aria-label="Keyingi"><i class="bi bi-chevron-right"></i></button>
-      </div>
     </main>
   </div>
 </div>
+
+<!-- SHARHGA JAVOB — javob isloh_review_replies do'koniga saqlanadi -->
+<div class="modal-overlay" id="review-reply-modal" role="dialog" aria-modal="true" aria-labelledby="review-reply-title" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <b id="review-reply-title">Sharhga javob berish</b>
+      <button type="button" class="icon-btn icon-btn-sm" data-modal-close="review-reply-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="review-quote" data-review-quote></div>
+      <div class="field" style="margin-top:14px; margin-bottom:0;">
+        <label for="review-reply-input">Sizning javobingiz</label>
+        <textarea id="review-reply-input" data-review-reply-input rows="4" placeholder="Talabaga javob yozing..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-outline btn-sm" data-modal-close="review-reply-modal">Bekor qilish</button>
+      <button type="button" class="btn btn-teach btn-sm" data-review-reply-submit><i class="bi bi-send"></i> Javobni yuborish</button>
+    </div>
+  </div>
+</div>
+
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/filterable.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/instructor-reviews.js"></script>
 </body>
 </html>

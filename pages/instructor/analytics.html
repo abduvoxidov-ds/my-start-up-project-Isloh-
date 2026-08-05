@@ -21,33 +21,33 @@
       <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><span class="current">Analitika</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
     <main class="content">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
         <div><h1 style="font-size:24px;">Analitika</h1><p style="color:var(--ink-500); margin-top:4px;">Umumiy ko'rsatkichlar sharhi.</p></div>
-        <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Davr"><option>Oxirgi 30 kun</option><option>Oxirgi 7 kun</option><option>Bu yil</option></select>
+        <select class="btn btn-outline period-select" data-period-select aria-label="Davr"><option value="30">Oxirgi 30 kun</option><option value="7">Oxirgi 7 kun</option><option value="365">Bu yil</option></select>
       </div>
 
       <!-- OVERVIEW CARDS -->
       <div class="wk-grid-4" style="margin-top:20px;">
         <div class="card card-pad stat-card">
           <div class="stat-top"><div class="stat-label">Jami daromad</div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 12%</span></div>
-          <div class="stat-value">$3,245</div>
+          <div class="stat-value" data-period-value='{"30":"$3,245","7":"$812","365":"$28,940"}'>$3,245</div>
         </div>
         <div class="card card-pad stat-card">
           <div class="stat-top"><div class="stat-label">Talabalar o'sishi</div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 8%</span></div>
-          <div class="stat-value">+42</div>
+          <div class="stat-value" data-period-value='{"30":"+42","7":"+11","365":"+438"}'>+42</div>
         </div>
         <div class="card card-pad stat-card">
           <div class="stat-top"><div class="stat-label">Yakunlash darajasi</div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 3%</span></div>
-          <div class="stat-value">78%</div>
+          <div class="stat-value" data-period-value='{"30":"78%","7":"81%","365":"74%"}'>78%</div>
         </div>
         <div class="card card-pad stat-card">
           <div class="stat-top"><div class="stat-label">Faollik</div><span class="trend-pill trend-down"><i class="bi bi-arrow-down-short"></i> 2%</span></div>
-          <div class="stat-value">64%</div>
+          <div class="stat-value" data-period-value='{"30":"64%","7":"69%","365":"61%"}'>64%</div>
         </div>
       </div>
 
@@ -147,7 +147,7 @@
       <!-- FULL ANALYTICS LINK -->
       <div class="card card-pad" style="margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
         <div style="display:flex; align-items:center; gap:12px;">
-          <div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-graph-up-arrow"></i></div>
+          <div class="stat-icon tint-green"><i class="bi bi-graph-up-arrow"></i></div>
           <div><div style="font-weight:700; font-size:14px;">To'liq analitika</div><div style="font-size:12.5px; color:var(--ink-500);">Batafsil hisobotlar va segmentatsiya keyingi bosqichda qo'shiladi.</div></div>
         </div>
         <span class="badge badge-neutral">Tez orada</span>
@@ -157,6 +157,10 @@
 </div>
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
+<script src="../../js/period-stats.js"></script>
 </body>
 </html>

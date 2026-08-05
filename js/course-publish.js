@@ -12,7 +12,50 @@
      input[name="pub-visibility"][value="scheduled"] + [data-schedule-field]
      [data-publish-confirm]   → confirm button inside the modal
      [data-publish-status]    → status card updated after publishing
+     [data-publish-title]     → nashr etilayotgan kurs nomi
+     [data-publish-meta]      → uning holati / yangilangan sanasi
+
+   Sprint "provider persistence": nashr etish endi haqiqatan ham holatni
+   o'zgartiradi — js/course-store.js dagi kurs `status: 'published'` bo'ladi
+   va shu zahoti talaba katalogiga tushadi (js/marketplace.js →
+   isloh_getCatalog). Ilgari bu tugma faqat kartochka matnini almashtirib,
+   "Kurs muvaffaqiyatli nashr etildi" deb yolg'on toast chiqarardi.
+
+   Qaysi kurs nashr etilayotgani URL orqali: course-publish.html?id=<kurs-id>.
    ========================================================================== */
+
+/* Nashr oynasidagi "Ko'rinish" tanlovi do'kondagi `visibility` qiymatiga
+   moslanadi. "Rejalashtirilgan" hozircha ochiq nashr sifatida saqlanadi —
+   rejalashtirilgan vaqtni tekshiradigan backend hali yo'q (CLAUDE.md §4). */
+const ISLOH_PUBLISH_VISIBILITY = {
+  draft: 'private',
+  private: 'unlisted',
+  scheduled: 'public',
+  public: 'public'
+};
+
+function isloh_publishCourseId() {
+  return new URLSearchParams(window.location.search).get('id') || '';
+}
+
+/* Sahifa sarlavhasi va ko'rinish tanlovi joriy kursdan to'ldiriladi. */
+function isloh_initPublishCourse() {
+  const course = isloh_getCourse(isloh_publishCourseId());
+  if (!course) return null;
+
+  const title = document.querySelector('[data-publish-title]');
+  if (title) title.textContent = course.title;
+
+  const meta = document.querySelector('[data-publish-meta]');
+  if (meta) {
+    const status = ISLOH_COURSE_STATUSES[course.status] || ISLOH_COURSE_STATUSES.draft;
+    meta.textContent = `${course.title} · ${status.label} · ${course.completion}% tayyor`;
+  }
+
+  isloh_applyCourseLinks(course.id);
+  if (course.status === 'published') isloh_markPublishStatusCard();
+  return course;
+}
 
 function isloh_initValidationSummary() {
   const list = document.querySelector('[data-publish-checklist]');
@@ -48,24 +91,48 @@ function isloh_initScheduleToggle() {
   sync();
 }
 
-function isloh_initPublishConfirm() {
+function isloh_markPublishStatusCard() {
+  const status = document.querySelector('[data-publish-status]');
+  if (!status) return;
+  status.classList.add('is-published');
+  status.querySelector('.publish-status-ic').innerHTML = '<i class="bi bi-check-lg"></i>';
+  status.querySelector('.publish-status-title').textContent = 'Kurs nashr etildi';
+  status.querySelector('.publish-status-sub').textContent = "Talabalar endi kursni Marketplace'da ko'rishlari mumkin.";
+}
+
+function isloh_initPublishConfirm(course) {
   const confirmBtn = document.querySelector('[data-publish-confirm]');
   if (!confirmBtn) return;
+
   confirmBtn.addEventListener('click', () => {
     isloh_closeModal('publish-confirm-modal');
-    const status = document.querySelector('[data-publish-status]');
-    if (status) {
-      status.querySelector('.publish-status-ic').innerHTML = '<i class="bi bi-check-lg"></i>';
-      status.querySelector('.publish-status-ic').style.background = 'var(--teach-green)';
-      status.querySelector('.publish-status-title').textContent = 'Kurs nashr etildi';
-      status.querySelector('.publish-status-sub').textContent = "Talabalar endi kursni ko'rishlari mumkin.";
+
+    if (!course) {
+      if (typeof isloh_showToast === 'function') isloh_showToast('Nashr etiladigan kurs tanlanmagan', 'error');
+      return;
     }
-    if (typeof isloh_showToast === 'function') isloh_showToast('Kurs muvaffaqiyatli nashr etildi', 'success');
+
+    const picked = document.querySelector('input[name="pub-visibility"]:checked');
+    const visibility = ISLOH_PUBLISH_VISIBILITY[picked ? picked.value : 'public'] || 'public';
+    const saved = isloh_saveCourse({ id: course.id, status: 'published', visibility: visibility });
+
+    if (!saved) {
+      if (typeof isloh_showToast === 'function') isloh_showToast("Saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
+      return;
+    }
+
+    isloh_markPublishStatusCard();
+    if (typeof isloh_showToast === 'function') {
+      isloh_showToast(visibility === 'public'
+        ? 'Kurs nashr etildi va Marketplace\'ga qo\'shildi'
+        : 'Kurs nashr etildi (havola orqali kirish mumkin)', 'success');
+    }
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const course = isloh_initPublishCourse();
   isloh_initValidationSummary();
   isloh_initScheduleToggle();
-  isloh_initPublishConfirm();
+  isloh_initPublishConfirm(course);
 });

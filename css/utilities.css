@@ -39,6 +39,11 @@
 .text-bold { font-weight: 700; }
 /* Bajarilgan/ijobiy holat rangi — ilgari inline style bilan yozilardi */
 .text-green { color: var(--teach-green); }
+/* Ogohlantiruvchi/qaytarib bo'lmaydigan amal sarlavhalari uchun */
+.text-danger { color: var(--danger); }
+/* Ota elementdan rang meros qilib olish — breadcrumb havolalari kabi
+   joylarda inline `style="color:inherit"` o'rniga */
+.text-inherit { color: inherit; }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* --- Faqat skrin-riderlar uchun matn (ko'rinmaydigan yorliqlar) --- */

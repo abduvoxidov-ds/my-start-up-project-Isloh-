@@ -12,6 +12,13 @@
        [data-wizard-back]         → returns to the previous step
      [data-char-counter="<max>"]  → input/textarea with a live counter
        [data-char-counter-for="<inputId>"] → element that displays it
+
+   Oxirgi bosqichdagi "Yakunlash" bosilganda `isloh:wizard-complete` hodisasi
+   yuboriladi. Ilgari shu joyda to'g'ridan-to'g'ri "Kurs muvaffaqiyatli
+   saqlandi" toast'i chiqarilardi — hech narsa saqlanmasa ham. Endi saqlash
+   js/course-form.js zimmasida (u shu hodisani tinglaydi), bu modul esa
+   faqat bosqichlar bilan shug'ullanadi; nashr sahifasi (course-publish)
+   xuddi shu bosqich mexanizmini ishlatadi, lekin saqlamaydi.
    ========================================================================== */
 
 function isloh_initWizard() {
@@ -42,9 +49,9 @@ function isloh_initWizard() {
     btn.addEventListener('click', () => {
       if (current < steps.length - 1) {
         show(current + 1);
-      } else if (typeof isloh_showToast === 'function') {
-        isloh_showToast("Kurs muvaffaqiyatli saqlandi", 'success');
+        return;
       }
+      wizard.dispatchEvent(new CustomEvent('isloh:wizard-complete', { bubbles: true }));
     });
   });
   wizard.querySelectorAll('[data-wizard-back]').forEach((btn) => {

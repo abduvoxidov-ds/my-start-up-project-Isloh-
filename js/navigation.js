@@ -24,7 +24,8 @@ const NAV_CONFIG = {
     { key: 'chat',           label: 'Chat',               icon: 'bi-chat-dots-fill',         href: 'chat.html' },
     { key: 'ai-assistant',   label: 'AI Yordamchi',      icon: 'bi-stars',                  href: 'ai-assistant.html' },
     { key: 'certificates',   label: 'Sertifikatlar',     icon: 'bi-patch-check-fill',       href: 'certificates.html' },
-    { key: 'profile',        label: 'Profil',            icon: 'bi-person-circle',          href: 'profile.html' },
+    /* "Profil" ataylab yon menyuda yo'q — u topbar'dagi avatar menyusiga
+       ko'chirilgan (USER_MENU_CONFIG + js/user-menu.js). */
     { key: 'settings',       label: 'Sozlamalar',        icon: 'bi-gear-fill',              href: 'settings.html' },
     { key: 'components',     label: 'Komponentlar',      icon: 'bi-grid-3x3-gap-fill',      href: '../shared/components.html' }
   ],
@@ -45,7 +46,7 @@ const NAV_CONFIG = {
     { key: 'reviews',       label: 'Sharhlar',     icon: 'bi-star-fill',             href: '../instructor/reviews.html' },
     { key: 'revenue',       label: 'Daromad',      icon: 'bi-cash-stack',            href: '../instructor/revenue.html' },
     { key: 'ai-assistant',  label: 'AI Yordamchi', icon: 'bi-stars',                 href: '../instructor/ai-assistant.html' },
-    { key: 'profile',       label: 'Profil',       icon: 'bi-person-circle',         href: '../instructor/profile.html' },
+    /* Talaba menyusidagi kabi — "Profil" avatar menyusida (USER_MENU_CONFIG). */
     { key: 'settings',      label: 'Sozlamalar',   icon: 'bi-gear-fill',             href: '../instructor/settings.html' }
   ],
 
@@ -63,5 +64,34 @@ const NAV_CONFIG = {
   /* Rendered under every sidebar regardless of role. */
   footer: [
     { key: 'logout', label: 'Chiqish', icon: 'bi-box-arrow-right', href: '../auth/login.html' }
+  ]
+};
+
+/* ==========================================================================
+   Topbar avatar menyusi (js/user-menu.js buni o'qiydi)
+   Yon menyudan olib tashlangan shaxsiy havolalar shu yerda yashaydi —
+   ya'ni menyu elementi baribir YAGONA joyda ta'riflanadi (CLAUDE.md §2).
+
+   Havolalar ataylab `../<rol>/` prefiksi bilan yozilgan: shu ko'rinish
+   ham pages/<rol>/ ichidan, ham pages/shared/ ichidan to'g'ri ishlaydi
+   (shared sahifalar ham student sidebar'ini ko'rsatadi).
+
+   "Chiqish" bu yerda takrorlanmaydi — u NAV_CONFIG.footer dan olinadi.
+   ========================================================================== */
+const USER_MENU_CONFIG = {
+  student: [
+    { label: 'Profil',     icon: 'bi-person-circle', href: '../student/profile.html' },
+    { label: 'Hisob',      icon: 'bi-person-gear',   href: '../student/account.html' },
+    { label: 'Sozlamalar', icon: 'bi-gear-fill',     href: '../student/settings.html' }
+  ],
+
+  instructor: [
+    { label: 'Profil',     icon: 'bi-person-circle', href: '../instructor/profile.html' },
+    { label: 'Sozlamalar', icon: 'bi-gear-fill',     href: '../instructor/settings.html' }
+  ],
+
+  /* Admin rolida alohida profil sahifasi yo'q — faqat platforma sozlamalari. */
+  admin: [
+    { label: 'Sozlamalar', icon: 'bi-gear-fill',     href: '../admin/admin-settings.html' }
   ]
 };

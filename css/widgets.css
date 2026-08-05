@@ -15,6 +15,27 @@
 .wk-grid-2-even { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
 .wk-col    { display:flex; flex-direction:column; gap:18px; }
 
+/* Asosiy ustun + yon ustun. Ilgari har bir sahifa buni o'z <style> blokida
+   boshqa nom bilan qayta yozardi: .dash-2col (dashboard), .rv-2col
+   (daromad), .cd-2col (kurs tafsilotlari), .rev-grid (sharhlar) — qoidalar
+   esa bir xil edi. Endi bitta oila (CLAUDE.md §2). */
+.split-main  { display:grid; grid-template-columns:1.5fr 1fr; gap:18px; align-items:start; }
+.split-even  { display:grid; grid-template-columns:1fr 1fr;   gap:18px; align-items:start; }
+.split-aside { display:grid; grid-template-columns:1fr 1.6fr; gap:18px; align-items:start; }
+@media (max-width:1100px) {
+  .split-main, .split-even, .split-aside { grid-template-columns:1fr; }
+}
+
+/* Sahifa boshidagi "orqaga" havolasi (kurs sahifalari, sertifikat) */
+.back-link { display:flex; align-items:center; gap:6px; color:var(--ink-500); font-size:13px; font-weight:600; margin-bottom:14px; }
+
+/* Ro'yxatdan o'tish bosqichlari indikatori (auth sahifalari) */
+.steps { display:flex; gap:6px; margin:22px 0 4px; }
+.steps span { height:4px; flex:1; border-radius:4px; background:rgba(255,255,255,0.15); }
+.steps span.done { background:var(--violet-500); }
+.checkbox-row { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--ink-700); margin:4px 0 20px; }
+.checkbox-row input { margin-top:3px; accent-color:var(--violet-600); }
+
 /* --- Section header (title + optional action) --- */
 .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
 .section-header h3 { font-size:16px; }
@@ -709,6 +730,8 @@ body[data-role="instructor"] .pager button.active { background:var(--teach-green
 .cell-title { font-size:13.5px; font-weight:600; }
 .cell-sub { font-size:12px; color:var(--ink-500); }
 .cell-progress { min-width:110px; }
+/* Daromad ustuni — ilgari har bir qatorda inline style bilan yozilardi */
+.cell-revenue { font-weight:700; color:var(--teach-green); }
 .row-actions { display:flex; gap:6px; }
 .row-action { width:32px; height:32px; border-radius:8px; border:1px solid var(--border-soft); background:var(--bg-card); color:var(--ink-700); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:14px; }
 .row-action:hover { background:var(--bg-app); color:var(--violet-600); }
@@ -859,6 +882,10 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .review-reply .lbl { font-size:11.5px; font-weight:700; color:var(--teach-green); margin-bottom:3px; }
 .review-reply .txt { font-size:13px; color:var(--ink-700); }
 .review-actions { display:flex; gap:8px; margin-top:10px; }
+/* Jonli sessiyalar ro'yxati — ilgari inline flex-column bilan yozilardi */
+.ls-list { display:flex; flex-direction:column; gap:14px; margin-top:16px; }
+/* Javob oynasidagi asl sharh matni (js/instructor-reviews.js) */
+.review-quote { font-size:13px; color:var(--ink-700); padding:12px 14px; border-radius:var(--r-md); background:var(--bg-app); border-left:3px solid var(--border-soft); }
 
 @media (max-width:700px) { .rating-summary { flex-direction:column; align-items:flex-start; } .review-time { margin-left:0; } }
 
@@ -902,6 +929,29 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .wizard-foot { display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:20px; border-top:1px solid var(--border-soft); }
 @media (max-width:700px) { .wizard-step-label { display:none; } }
 
+/* Sehrgar sahifalarining o'ram va yordamchi bloklari. Ilgari bu qoidalar
+   course-create.html va course-edit.html ichida SO'ZMA-SO'Z bir xil
+   `<style>` bloklari sifatida takrorlangan edi (CLAUDE.md §2). */
+.wizard-shell { max-width:760px; margin:0 auto; }
+.tag-row { display:flex; flex-wrap:wrap; gap:8px; padding:10px; border:var(--border-w-thick) solid var(--border-soft); border-radius:var(--r-md); background:var(--bg-app); }
+.tag-row input { border:none; background:transparent; outline:none; font-size:13.5px; flex:1; min-width:120px; padding:4px; }
+.tag-pill { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:var(--r-pill); background:var(--violet-100); color:var(--violet-600); font-size:12.5px; font-weight:600; }
+.tag-pill button { border:none; background:transparent; color:inherit; cursor:pointer; display:flex; }
+.field-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media (max-width:700px) { .field-row-2 { grid-template-columns:1fr; } }
+.review-card { background:var(--bg-app); border:none; }
+.review-summary-row { display:flex; justify-content:space-between; gap:16px; padding:10px 0; border-bottom:1px solid var(--border-soft); font-size:13.5px; }
+.review-summary-row:last-child { border-bottom:none; }
+.review-summary-row .lbl { color:var(--ink-500); }
+.review-summary-row .val { font-weight:600; text-align:right; }
+.check-row { display:flex; align-items:center; gap:10px; padding:8px 0; font-size:13.5px; color:var(--ink-700); }
+.check-row i { color:var(--teach-green); font-size:16px; }
+.check-row.is-warning i { color:var(--warning); }
+/* Slug ko'rinishi ("isloh.uz/courses/...") */
+.slug-preview { display:flex; align-items:center; gap:8px; padding:12px 14px; border-radius:var(--r-md); background:var(--bg-app); border:var(--border-w-thick) solid var(--border-soft); font-size:13px; color:var(--ink-500); }
+.slug-preview b { color:var(--teach-green); font-weight:600; }
+.opt-stack { display:flex; flex-direction:column; gap:8px; }
+
 /* --- Upload placeholder (thumbnail / cover image UI, no real upload) --- */
 .upload-dropzone { border:1.5px dashed var(--border-soft); border-radius:var(--r-md); padding:28px; text-align:center; cursor:pointer; color:var(--ink-500); transition:border-color var(--t-base) var(--ease-standard), color var(--t-base) var(--ease-standard); }
 .upload-dropzone:hover { border-color:var(--teach-green); color:var(--teach-green); }
@@ -915,6 +965,17 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .bulk-bar .bulk-spacer { flex:1; }
 .bulk-bar .btn-outline { background:transparent; color:#fff; border-color:rgba(255,255,255,.25); }
 .bulk-bar .btn-outline:hover { background:rgba(255,255,255,.08); }
+/* Qora fondagi "O'chirish" — oddiy --danger bu yerda o'qilmaydi */
+.bulk-bar .bulk-danger { color:var(--danger-300); }
+
+/* Ro'yxat sahifalarining ustki paneli (filtr chiplari + qidiruv + ko'rinish).
+   Ilgari har bir sahifada `style="display:flex; justify-content:..."` deb
+   takrorlanardi. */
+.list-toolbar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:22px; }
+.list-toolbar-end { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.list-toolbar-search { width:220px; }
+/* Jadval kartochkasi — burchaklar ichidagi jadvalni kesib turadi */
+.list-card { margin-top:16px; overflow:hidden; }
 
 /* --- Instructor course card (grid view) — richer than the Student
        .course-cover card: adds status, tags, stats row, progress, meta,
@@ -930,6 +991,7 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .course-card-instr .cci-tags { display:flex; gap:6px; flex-wrap:wrap; }
 .course-card-instr .cci-tag { font-size:11px; font-weight:600; padding:3px 9px; border-radius:var(--r-pill); background:var(--bg-app); color:var(--ink-500); }
 .course-card-instr .cci-stats { display:flex; justify-content:space-between; font-size:12px; color:var(--ink-500); }
+.course-card-instr .cci-star { color:var(--warning); }
 .course-card-instr .cci-progress-row { display:flex; align-items:center; gap:8px; font-size:11px; color:var(--ink-500); }
 .course-card-instr .cci-progress-row .progress-track { flex:1; }
 .course-card-instr .cci-meta { font-size:11px; color:var(--ink-300); }
@@ -983,6 +1045,8 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 /* --- Lesson toolbar + list (Module Builder preview / Lesson Builder) --- */
 .lesson-toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:space-between; padding:14px 0; }
 .lesson-list { display:flex; flex-direction:column; gap:8px; }
+/* Modullar ro'yxati — ilgari inline flex-column bilan yozilardi */
+.module-list { display:flex; flex-direction:column; gap:12px; margin-top:16px; }
 .lesson-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--border-soft); border-radius:var(--r-md); background:var(--bg-card); transition:box-shadow var(--t-base) var(--ease-standard); }
 .lesson-item:hover { box-shadow:var(--shadow-sm); }
 .lesson-type-ic { width:34px; height:34px; border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; font-size:15px; color:#fff; flex-shrink:0; }
@@ -1374,7 +1438,11 @@ body.no-animations .lv-spinner { animation:none; }
 .publish-check-item .pci-note { font-size:12px; color:var(--ink-500); }
 
 .publish-status-card { display:flex; align-items:center; gap:16px; padding:20px 22px; border-radius:var(--r-lg); background:var(--bg-app); border:1px solid var(--border-soft); }
-.publish-status-ic { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; flex-shrink:0; }
+.publish-status-ic { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; flex-shrink:0; background:var(--warning); }
+/* Nashr etilgandan keyingi holat (js/course-publish.js) — ilgari rang
+   JS ichidan `style.background` bilan yozilardi. */
+.publish-status-card.is-published { border-color:var(--teach-green); }
+.publish-status-card.is-published .publish-status-ic { background:var(--teach-green); }
 .publish-status-title { font-weight:700; font-size:14.5px; }
 .publish-status-sub { font-size:12.5px; color:var(--ink-500); margin-top:2px; }
 
@@ -1893,6 +1961,28 @@ a.note-source:hover { color:var(--violet-600); }
    hooks (Invoices, Refunds, Email/Security/Storage settings) --- */
 .placeholder-note { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-500); background:var(--bg-app); border:1px dashed var(--border-soft); border-radius:var(--r-sm); padding:9px 12px; }
 .placeholder-note .bi { color:var(--violet-500); }
+
+/* ==========================================================================
+   Topbar profil menyusi (js/user-menu.js)
+   Faqat o'ram va sarlavha qismi shu yerda — ochish/yopish, ramka, soya va
+   elementlar css/components.css dagi `.dropdown` atomlaridan olinadi.
+   ========================================================================== */
+.user-menu { display:inline-flex; }
+
+/* Avatar endi tugma ichida — tugmaning o'z ko'rinishi butunlay olib
+   tashlanadi, ya'ni foydalanuvchi baribir faqat avatarni ko'radi. */
+.user-menu-trigger {
+  border:none; background:none; padding:0; margin:0;
+  border-radius:50%; cursor:pointer; display:block; line-height:0;
+}
+.user-menu-trigger:focus-visible { outline:2px solid var(--violet-500); outline-offset:2px; }
+.user-menu-trigger .avatar { transition:transform var(--t-base) var(--ease-standard); }
+.user-menu-trigger:hover .avatar { transform:scale(1.05); }
+
+.user-menu-panel { min-width:220px; }
+.user-menu-head { padding:10px 12px 12px; border-bottom:1px solid var(--border-soft); margin-bottom:6px; }
+.user-menu-name { font-size:13.5px; font-weight:700; color:var(--ink-900); }
+.user-menu-email { font-size:12px; color:var(--ink-500); margin-top:2px; word-break:break-all; }
 
 /* ==========================================================================
    Certificate — print / PDF export (pages/student/certificate-preview.html)

@@ -6,11 +6,6 @@
 <title>Daromad — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  /* Page-local layout only. All widgets come from css/widgets.css. */
-  .rv-2col { display:grid; grid-template-columns: 1.5fr 1fr; gap:18px; align-items:start; }
-  @media (max-width:1100px){ .rv-2col{ grid-template-columns:1fr; } }
-</style>
 </head>
 <body>
 <div class="app-shell">
@@ -25,14 +20,14 @@
       <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><span class="current">Daromad</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#4ED88A,#1FAE5E);">AY</div>
+        <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
     <main class="content">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
         <div><h1 style="font-size:24px;">Daromad</h1><p style="color:var(--ink-500); margin-top:4px;">Daromadingizni kuzating va pul yechib oling.</p></div>
-        <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Davr"><option>Oxirgi 30 kun</option><option>Oxirgi 7 kun</option><option>Bu yil</option></select>
+        <select class="btn btn-outline period-select" data-period-select aria-label="Davr"><option value="30">Oxirgi 30 kun</option><option value="7">Oxirgi 7 kun</option><option value="365">Bu yil</option></select>
       </div>
 
       <!-- PAYOUT BALANCE -->
@@ -41,31 +36,31 @@
           <div class="payout-label">Yechib olish mumkin bo'lgan mablag'</div>
           <div class="payout-value">$2,140.00</div>
         </div>
-        <button class="btn btn-teach"><i class="bi bi-wallet2"></i> Pulni yechish</button>
+        <button class="btn btn-teach" data-backend-pending="Pulni yechish"><i class="bi bi-wallet2"></i> Pulni yechish</button>
       </div>
 
       <!-- STATS -->
       <div class="wk-grid-4" style="margin-top:18px;">
         <div class="card card-pad stat-card">
-          <div class="stat-top"><div class="stat-icon" style="background:var(--teach-green-100); color:var(--teach-green);"><i class="bi bi-cash-stack"></i></div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 12%</span></div>
-          <div class="stat-value">$3,245</div><div class="stat-label">Bu oylik daromad</div>
+          <div class="stat-top"><div class="stat-icon tint-green"><i class="bi bi-cash-stack"></i></div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 12%</span></div>
+          <div class="stat-value" data-period-value='{"30":"$3,245","7":"$812","365":"$28,940"}'>$3,245</div><div class="stat-label" data-period-value='{"30":"Oxirgi 30 kunlik daromad","7":"Oxirgi 7 kunlik daromad","365":"Bu yilgi daromad"}'>Oxirgi 30 kunlik daromad</div>
         </div>
         <div class="card card-pad stat-card">
-          <div class="stat-top"><div class="stat-icon" style="background:var(--violet-100); color:var(--violet-600);"><i class="bi bi-graph-up"></i></div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 8%</span></div>
-          <div class="stat-value">$28,940</div><div class="stat-label">Jami daromad</div>
+          <div class="stat-top"><div class="stat-icon tint-violet"><i class="bi bi-graph-up"></i></div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 8%</span></div>
+          <div class="stat-value" data-period-value='{"30":"$28,940","7":"$28,940","365":"$28,940"}'>$28,940</div><div class="stat-label">Jami daromad</div>
         </div>
         <div class="card card-pad stat-card">
-          <div class="stat-icon" style="background:#FEF3E2; color:var(--warning);"><i class="bi bi-hourglass-split"></i></div>
-          <div class="stat-value">$180</div><div class="stat-label">Kutilayotgan to'lov</div>
+          <div class="stat-icon tint-warning"><i class="bi bi-hourglass-split"></i></div>
+          <div class="stat-value" data-period-value='{"30":"$180","7":"$45","365":"$1,960"}'>$180</div><div class="stat-label">Kutilayotgan to'lov</div>
         </div>
         <div class="card card-pad stat-card">
-          <div class="stat-icon" style="background:#FDEBEC; color:var(--danger);"><i class="bi bi-receipt"></i></div>
-          <div class="stat-value">$38.6</div><div class="stat-label">O'rtacha buyurtma</div>
+          <div class="stat-icon tint-danger"><i class="bi bi-receipt"></i></div>
+          <div class="stat-value" data-period-value='{"30":"$38.6","7":"$40.6","365":"$36.2"}'>$38.6</div><div class="stat-label">O'rtacha buyurtma</div>
         </div>
       </div>
 
       <!-- CHARTS -->
-      <div class="rv-2col" style="margin-top:18px;">
+      <div class="split-main" style="margin-top:18px;">
         <div class="card card-pad chart-container">
           <div class="chart-head">
             <h3 style="font-size:16px;">Daromad dinamikasi</h3>
@@ -88,15 +83,15 @@
           <div class="section-header"><h3>To'lov usuli</h3></div>
           <div class="payout-method-row">
             <div class="payout-method-ic"><i class="bi bi-credit-card-2-front-fill"></i></div>
-            <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">Visa •••• 4821</div><div style="font-size:12px; color:var(--ink-500);">Asosiy usul</div></div>
+            <div class="flex-1"><div style="font-size:13.5px; font-weight:600;">Visa •••• 4821</div><div style="font-size:12px; color:var(--ink-500);">Asosiy usul</div></div>
             <span class="badge badge-green">Tasdiqlangan</span>
           </div>
           <div class="payout-method-row">
             <div class="payout-method-ic"><i class="bi bi-bank"></i></div>
-            <div style="flex:1;"><div style="font-size:13.5px; font-weight:600;">Xalq banki hisobi</div><div style="font-size:12px; color:var(--ink-500);">Zaxira usul</div></div>
-            <button class="btn btn-outline btn-sm">Boshqarish</button>
+            <div class="flex-1"><div style="font-size:13.5px; font-weight:600;">Xalq banki hisobi</div><div style="font-size:12px; color:var(--ink-500);">Zaxira usul</div></div>
+            <button class="btn btn-outline btn-sm" data-backend-pending="To'lov usulini boshqarish">Boshqarish</button>
           </div>
-          <div style="margin-top:14px;"><button class="btn btn-outline btn-block btn-sm"><i class="bi bi-plus-lg"></i> Yangi usul qo'shish</button></div>
+          <div style="margin-top:14px;"><button class="btn btn-outline btn-block btn-sm" data-backend-pending="Yangi to'lov usuli qo'shish"><i class="bi bi-plus-lg"></i> Yangi usul qo'shish</button></div>
         </div>
       </div>
 
@@ -181,6 +176,12 @@
 </div>
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
 <script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/period-stats.js"></script>
+<script src="../../js/backend-pending.js"></script>
 </body>
 </html>
