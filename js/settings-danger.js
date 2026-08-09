@@ -32,7 +32,10 @@
    ========================================================================== */
 
 const ISLOH_STORE_PREFIX = 'isloh_';
-const ISLOH_SESSION_KEYS = ['isloh_user', 'isloh_settings'];
+/* `isloh_profiles` — rol bo'yicha profil do'koni (js/profile.js), `isloh_user`
+   esa uning aktiv rol nusxasi: ikkalasi birga o'chiriladi, aks holda profil
+   nusxadan yoki do'kondan qayta tiklanib qolardi. */
+const ISLOH_SESSION_KEYS = ['isloh_profiles', 'isloh_user', 'isloh_settings'];
 const ISLOH_DELETE_CONFIRM_WORD = "O'CHIRISH";
 const ISLOH_DANGER_REDIRECT = '../auth/login.html';
 const ISLOH_DANGER_REDIRECT_DELAY = 1400;

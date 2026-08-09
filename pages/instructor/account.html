@@ -9,11 +9,10 @@
 </head>
 <body>
 <div class="app-shell">
-  <!-- "Profil" yon menyuda emas, topbar'dagi avatar menyusida (NAV_CONFIG
-       izohiga qarang) — shuning uchun bu sahifada yonadigan menyu bandi yo'q.
-       `data-active` shu sababli ataylab bo'sh: bu sahifa profilning davomi,
-       Sozlamalar bilan bog'liq emas. -->
-  <aside class="sidebar" data-role="student" data-active="">
+  <!-- "Profil" yon menyuda yo'q, shuning uchun bu sahifada yonadigan menyu
+       bandi ham yo'q: `data-active` ataylab bo'sh. Hisob — profilning davomi,
+       Sozlamalar bilan bog'liq emas (talabadagi account.html bilan bir xil). -->
+  <aside class="sidebar" data-role="instructor" data-active="">
     <div class="brand"><div class="brand-mark">I</div> Isloh</div>
     <nav class="nav-group" id="sidebar-nav"></nav>
     <div class="sidebar-footer" id="sidebar-footer-nav"></div>
@@ -31,8 +30,9 @@
       </div>
 
       <div class="account-layout">
-        <!-- Maydonlar js/profile.js orqali isloh_profiles do'konidan yuklanadi
-             va o'sha yerga saqlanadi — profil sahifasi bilan yagona manba. -->
+        <!-- Maydonlar js/profile.js orqali isloh_profiles do'konining
+             `instructor` yozuvidan yuklanadi va o'sha yerga saqlanadi —
+             profil sahifasi bilan yagona manba. -->
         <div class="card card-pad">
           <div class="field"><label for="acc-name">To'liq ism</label><input id="acc-name" data-user-field="name"></div>
           <div class="field"><label for="acc-email">Email</label><input id="acc-email" type="email" data-user-field="email"></div>
@@ -41,7 +41,7 @@
           <div class="field"><label for="acc-languages">Til</label><input id="acc-languages" data-user-field="languages"></div>
           <div class="field"><label for="acc-bio">Bio</label><textarea id="acc-bio" data-user-field="bio"></textarea></div>
           <div class="settings-form-actions account-actions">
-            <button class="btn btn-primary btn-sm" data-user-save>O'zgarishlarni saqlash</button>
+            <button class="btn btn-teach btn-sm" data-user-save>O'zgarishlarni saqlash</button>
             <a href="profile.html" class="btn btn-outline btn-sm">Bekor qilish</a>
           </div>
         </div>

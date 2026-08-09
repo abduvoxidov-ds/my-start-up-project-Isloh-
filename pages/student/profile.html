@@ -9,15 +9,25 @@
 </head>
 <body>
 <div class="app-shell">
-  <aside class="sidebar" data-role="student" data-active="profile">
+  <!-- "Profil" yon menyuda emas, topbar avatar menyusida (js/navigation.js) —
+       shuning uchun yonadigan menyu bandi yo'q, `data-active` bo'sh. -->
+  <aside class="sidebar" data-role="student" data-active="">
     <div class="brand"><div class="brand-mark">I</div> Isloh</div>
     <nav class="nav-group" id="sidebar-nav"></nav>
     <div class="sidebar-footer" id="sidebar-footer-nav"></div>
   </aside>
 
   <div class="main-col">
-    <main class="content">
-      <!-- HEADER CARD — matn va avatar js/profile.js tomonidan isloh_user'dan to'ldiriladi -->
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Talaba</span><span class="sep">/</span><span class="current">Profil</span></nav>
+    </header>
+
+    <main class="content" aria-label="Profil">
+      <div class="page-header">
+        <div><h1>Profil</h1><p>Ommaviy profilingiz, yutuqlaringiz va o'quv faoliyatingiz.</p></div>
+      </div>
+
+      <!-- HEADER CARD — matn va avatar js/profile.js tomonidan isloh_profiles'dan to'ldiriladi -->
       <div class="card profile-header-card">
         <!-- Banner toza qoladi: unga faqat avatar chiqadi, matn emas -->
         <div class="profile-cover"></div>
@@ -33,98 +43,63 @@
             <div class="profile-headline">
               <h2 class="profile-name" data-user-name></h2>
               <div class="profile-role" data-user-headline></div>
-              <div class="profile-location"><i class="bi bi-geo-alt"></i><span data-user-location></span></div>
+              <div class="profile-location" data-user-hide-empty><i class="bi bi-geo-alt"></i><span data-user-location></span></div>
             </div>
             <div class="profile-actions">
               <button class="btn btn-outline btn-sm" data-avatar-reset hidden><i class="bi bi-arrow-counterclockwise"></i> Rasmni tiklash</button>
               <a href="account.html" class="btn btn-primary btn-sm"><i class="bi bi-pencil"></i> Profilni tahrirlash</a>
             </div>
           </div>
-          <p class="profile-bio" data-user-bio></p>
+          <p class="profile-bio" data-user-bio data-user-hide-empty></p>
         </div>
       </div>
 
-      <!-- STAT ROW -->
+      <!-- STAT ROW — raqamlar js/profile-stats.js tomonidan haqiqiy
+           do'konlardan hisoblanadi; "—" faqat JS ishlamasa qoladi -->
       <div class="wk-grid-4 profile-stat-row">
-        <div class="card card-pad stat-card">
+        <a href="courses.html" class="card card-pad stat-card">
           <div class="stat-icon tint-violet"><i class="bi bi-journal-check"></i></div>
-          <div class="stat-value">8</div><div class="stat-label">Yakunlangan kurslar</div>
-        </div>
-        <div class="card card-pad stat-card">
+          <div class="stat-value" data-stat="completedCourses">—</div><div class="stat-label">Yakunlangan kurslar</div>
+        </a>
+        <a href="certificates.html" class="card card-pad stat-card">
           <div class="stat-icon tint-green"><i class="bi bi-patch-check-fill"></i></div>
-          <div class="stat-value">3</div><div class="stat-label">Sertifikatlar</div>
-        </div>
-        <div class="card card-pad stat-card">
+          <div class="stat-value" data-stat="certificates">—</div><div class="stat-label">Sertifikatlar</div>
+        </a>
+        <a href="learning-progress.html" class="card card-pad stat-card">
           <div class="stat-icon tint-warning"><i class="bi bi-clock-history"></i></div>
-          <div class="stat-value">142<span class="stat-unit">s</span></div><div class="stat-label">O'quv soati</div>
-        </div>
-        <div class="card card-pad stat-card">
+          <div class="stat-value"><span data-stat="studyHours">—</span><span class="stat-unit">s</span></div><div class="stat-label">O'quv soati</div>
+        </a>
+        <a href="learning-progress.html" class="card card-pad stat-card">
           <div class="stat-icon tint-danger"><i class="bi bi-fire"></i></div>
-          <div class="stat-value">12</div><div class="stat-label">Kunlik seriya</div>
-        </div>
+          <div class="stat-value" data-stat="streak">—</div><div class="stat-label">Kunlik seriya</div>
+        </a>
       </div>
 
       <div class="profile-grid">
         <!-- LEFT COLUMN -->
         <div class="wk-col">
-          <!-- Skills -->
+          <!-- Ro'yxatlar js/profile-sections.js tomonidan profil do'koni va
+               kurs/sertifikat/analitika do'konlaridan chiziladi -->
           <div class="card card-pad">
-            <div class="section-header"><h3>Ko'nikmalar</h3></div>
-            <div class="skill-row">
-              <span class="skill-tag">Python <span class="lvl">Ilg'or</span></span>
-              <span class="skill-tag">Django <span class="lvl">O'rta</span></span>
-              <span class="skill-tag">JavaScript <span class="lvl">O'rta</span></span>
-              <span class="skill-tag">SQL <span class="lvl">O'rta</span></span>
-              <span class="skill-tag">Git <span class="lvl">Ilg'or</span></span>
-              <span class="skill-tag">HTML/CSS <span class="lvl">Ilg'or</span></span>
-            </div>
+            <div class="section-header"><h3>Ko'nikmalar</h3>
+              <button type="button" class="section-action" data-profile-edit="skills">Tahrirlash</button></div>
+            <div class="skill-row" data-profile-section="skills"></div>
           </div>
 
-          <!-- Learning goals -->
           <div class="card card-pad">
-            <div class="section-header"><h3>O'quv maqsadlari</h3></div>
-            <div class="goal-item done">
-              <div class="goal-check done"><i class="bi bi-check-lg"></i></div>
-              <div class="goal-text">Python asoslarini yakunlash</div>
-            </div>
-            <div class="goal-item">
-              <div class="goal-check pending"></div>
-              <div class="goal-text">Django REST Framework loyihasini qurish</div>
-              <span class="badge badge-violet">63%</span>
-            </div>
-            <div class="goal-item">
-              <div class="goal-check pending"></div>
-              <div class="goal-text">To'liq stack portfolio loyihasi</div>
-              <span class="badge badge-neutral">Rejada</span>
-            </div>
+            <div class="section-header"><h3>O'quv maqsadlari</h3>
+              <button type="button" class="section-action" data-profile-edit="goals">Tahrirlash</button></div>
+            <div data-profile-section="goals"></div>
           </div>
 
-          <!-- Achievements -->
           <div class="card card-pad">
             <div class="section-header"><h3>Yutuqlar va nishonlar</h3></div>
-            <div class="achievements-grid">
-              <div class="achievement"><div class="achievement-badge"><i class="bi bi-fire"></i></div><div class="achievement-name">12 kun seriya</div></div>
-              <div class="achievement"><div class="achievement-badge"><i class="bi bi-trophy-fill"></i></div><div class="achievement-name">Birinchi kurs</div></div>
-              <div class="achievement"><div class="achievement-badge"><i class="bi bi-lightning-fill"></i></div><div class="achievement-name">Tez o'rganuvchi</div></div>
-              <div class="achievement"><div class="achievement-badge"><i class="bi bi-stars"></i></div><div class="achievement-name">AI do'sti</div></div>
-              <div class="achievement locked"><div class="achievement-badge locked"><i class="bi bi-lock-fill"></i></div><div class="achievement-name">30 kun seriya</div></div>
-              <div class="achievement locked"><div class="achievement-badge locked"><i class="bi bi-lock-fill"></i></div><div class="achievement-name">10 sertifikat</div></div>
-            </div>
+            <div class="achievements-grid" data-profile-section="achievements"></div>
           </div>
 
-          <!-- Recent courses -->
           <div class="card card-pad">
             <div class="section-header"><h3>So'nggi kurslar</h3><a href="courses.html" class="section-action">Barchasi</a></div>
-            <div class="upcoming-row">
-              <div class="upcoming-icon cover-python"><i class="bi bi-filetype-py"></i></div>
-              <div class="upcoming-body"><div class="upcoming-title">Python Backend Development</div><div class="upcoming-sub">63% · Davom etmoqda</div></div>
-              <a href="course-detail.html" class="btn btn-outline btn-sm">Ochish</a>
-            </div>
-            <div class="upcoming-row">
-              <div class="upcoming-icon cover-design"><i class="bi bi-palette-fill"></i></div>
-              <div class="upcoming-body"><div class="upcoming-title">UI/UX Design Fundamentals</div><div class="upcoming-sub">100% · Yakunlangan</div></div>
-              <a href="course-detail.html" class="btn btn-outline btn-sm">Ochish</a>
-            </div>
+            <div data-profile-section="courses"></div>
           </div>
         </div>
 
@@ -134,33 +109,22 @@
           <div class="card card-pad">
             <div class="section-header"><h3>Shaxsiy ma'lumot</h3></div>
             <div class="info-list">
-              <div><div class="info-label">Email</div><div class="info-value" data-user-email></div></div>
-              <div><div class="info-label">Joylashuv</div><div class="info-value" data-user-location></div></div>
-              <div><div class="info-label">Qo'shilgan sana</div><div class="info-value" data-user-joined></div></div>
-              <div><div class="info-label">Til</div><div class="info-value" data-user-languages></div></div>
+              <div data-user-hide-empty><div class="info-label">Email</div><div class="info-value" data-user-email></div></div>
+              <div data-user-hide-empty><div class="info-label">Joylashuv</div><div class="info-value" data-user-location></div></div>
+              <div data-user-hide-empty><div class="info-label">Qo'shilgan sana</div><div class="info-value" data-user-joined></div></div>
+              <div data-user-hide-empty><div class="info-label">Til</div><div class="info-value" data-user-languages></div></div>
             </div>
           </div>
 
-          <!-- Favorite categories -->
           <div class="card card-pad">
-            <div class="section-header"><h3>Sevimli yo'nalishlar</h3></div>
-            <div class="chip-row">
-              <span class="filter-chip">Backend</span>
-              <span class="filter-chip">Web dasturlash</span>
-              <span class="filter-chip">Ma'lumotlar bazasi</span>
-              <span class="filter-chip">DevOps</span>
-            </div>
+            <div class="section-header"><h3>Sevimli yo'nalishlar</h3>
+              <button type="button" class="section-action" data-profile-edit="categories">Tahrirlash</button></div>
+            <div class="chip-row" data-profile-section="categories"></div>
           </div>
 
-          <!-- Activity timeline -->
           <div class="card card-pad">
             <div class="section-header"><h3>Faoliyat tarixi</h3></div>
-            <div class="timeline">
-              <div class="timeline-item tl-green"><div class="timeline-time">Bugun</div><div class="timeline-title">"Django ORM" darsi yakunlandi</div></div>
-              <div class="timeline-item"><div class="timeline-time">Kecha</div><div class="timeline-title">Yangi sertifikat qo'lga kiritildi</div></div>
-              <div class="timeline-item tl-warning"><div class="timeline-time">2 kun oldin</div><div class="timeline-title">JavaScript testi topshirildi</div></div>
-              <div class="timeline-item"><div class="timeline-time">5 kun oldin</div><div class="timeline-title">"UI/UX Fundamentals" kursi boshlandi</div></div>
-            </div>
+            <div class="timeline" data-profile-section="timeline"></div>
           </div>
         </div>
       </div>
@@ -171,6 +135,16 @@
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
+<!-- Statistika manbalari — certificates.html bilan bir xil to'plam va tartib -->
+<script src="../../js/course-store.js"></script>
+<script src="../../js/marketplace.js"></script>
+<script src="../../js/lesson-viewer.js"></script>
+<script src="../../js/progress-metrics.js"></script>
 <script src="../../js/profile.js"></script>
+<script src="../../js/certificate-engine.js"></script>
+<script src="../../js/profile-stats.js"></script>
+<script src="../../js/profile-sections.js"></script>
+<script src="../../js/modal.js"></script>
+<script src="../../js/profile-editor.js"></script>
 </body>
 </html>

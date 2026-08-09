@@ -40,6 +40,9 @@
 .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
 .section-header h3 { font-size:16px; }
 .section-header .section-action { font-size:13px; color:var(--violet-600); font-weight:600; cursor:pointer; }
+/* Amal tugma bo'lganda (masalan "Tahrirlash") — brauzer standart tugma
+   ko'rinishini havola uslubiga tenglashtiramiz */
+.section-header button.section-action { background:none; border:0; padding:0; font-family:inherit; }
 .section-title-icon { display:flex; align-items:center; gap:8px; }
 .section-title-icon .bi { color:var(--violet-600); }
 
@@ -78,7 +81,9 @@
 .timeline-item::before { content:''; position:absolute; left:-19px; top:4px; width:10px; height:10px; border-radius:50%; background:var(--violet-600); border:2px solid var(--bg-card); }
 .timeline-item.tl-green::before { background:var(--teach-green); }
 .timeline-item.tl-warning::before { background:var(--warning); }
-.timeline-time { font-size:11.5px; color:var(--ink-500); }
+/* <time> elementi inline — sarlavha ustidagi alohida qator bo'lib turishi
+   uchun blok qilinadi (js/profile-sections.js `datetime` bilan chizadi) */
+.timeline-time { display:block; font-size:11.5px; color:var(--ink-500); }
 .timeline-title { font-size:13.5px; font-weight:600; margin-top:2px; }
 
 /* --- Priority badge --- */
@@ -291,6 +296,13 @@
 .profile-grid { display:grid; grid-template-columns:1fr 320px; gap:18px; align-items:start; margin-top:18px; }
 .profile-stat-row { margin-top:18px; }
 
+/* Stat kartochkasi havola bo'lganda (profil -> kurslar/sertifikatlar/…):
+   havolaning ko'k rangi va tagchizig'i olib tashlanadi, o'rniga kartochka
+   ko'tariladi. Klaviatura uchun fokus halqasi majburiy. */
+a.stat-card { color:inherit; text-decoration:none; transition:transform var(--t-base) var(--ease-standard), box-shadow var(--t-base) var(--ease-standard); }
+a.stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+a.stat-card:focus-visible { outline:2px solid var(--violet-500); outline-offset:2px; }
+
 /* --- Profil sarlavha kartochkasi ------------------------------------------
    Tuzilishi:
      .profile-header-card
@@ -359,11 +371,30 @@
   transition:background var(--t-base) var(--ease-standard), color var(--t-base) var(--ease-standard);
 }
 .avatar-upload-btn:hover { background:var(--violet-100); }
+/* Instruktor profilida aksent yashil — avatar bilan bir xil rang oilasi */
+.profile-avatar-lg.avatar-teach ~ .avatar-upload-btn { color:var(--teach-green); }
 .avatar-upload-input:focus-visible + .avatar-upload-btn { outline:2px solid var(--violet-500); outline-offset:2px; }
 
 /* --- Teg / chip qatorlari (ko'nikmalar, yo'nalishlar) --- */
 .skill-row { display:flex; flex-wrap:wrap; gap:10px; }
 .chip-row  { display:flex; flex-wrap:wrap; gap:8px; }
+
+/* Bo'lim bo'sh bo'lganda (js/profile-sections.js) — kartochkani ochiq
+   qoldirmasdan sababini aytadigan bir qatorlik matn. To'liq `.empty-state`
+   bloki bu yerda og'irlik qiladi: profil kartochkalari kichik. */
+.profile-empty { font-size:13px; color:var(--ink-500); padding:6px 0; }
+
+/* --- Ro'yxat muharriri dialogi (js/profile-editor.js) ---------------------
+   Dialogning o'zi `.modal` naqshini qayta ishlatadi, bu yerda faqat ichki
+   qator va qo'shish formasi. */
+/* `.modal` standart eni kontent bo'yicha (maks. 340px) — ro'yxat va forma
+   sig'ishi uchun kengaytiriladi */
+.modal-editor { width:min(92vw, 420px); max-width:420px; }
+.editor-row { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border-soft); }
+.editor-row:last-child { border-bottom:none; }
+.editor-row-text { flex:1; font-weight:600; }
+.editor-add { margin-top:16px; padding-top:16px; border-top:1px solid var(--border-soft); }
+.editor-add .field:last-of-type { margin-bottom:12px; }
 
 /* --- Yorliq + qiymat ro'yxati ("Shaxsiy ma'lumot" kartochkasi) --- */
 .info-list  { display:flex; flex-direction:column; gap:14px; font-size:13.5px; }

@@ -8,7 +8,12 @@
 
    Markup contract:
      [data-user-row]                         → one row (table or card)
+       [data-user-row-name="…"]              → name shown in the confirm dialog
        [data-user-suspend] / [data-user-activate]
+
+   The name attribute is deliberately NOT data-user-name: that one is a
+   valueless binding flag owned by js/profile.js, which fills every match
+   with the signed-in user's name — it used to overwrite this whole table.
      #user-action-modal
        [data-user-action-modal-title]        → filled with action text
        [data-user-action-confirm]            → applies the status change
@@ -45,7 +50,7 @@ function isloh_initAdminUsers() {
       isloh_pendingUserRow = (suspendBtn || activateBtn).closest('[data-user-row]');
       isloh_pendingUserAction = suspendBtn ? 'suspend' : 'active';
       const title = document.querySelector('[data-user-action-modal-title]');
-      const name = isloh_pendingUserRow?.dataset.userName || 'Foydalanuvchi';
+      const name = isloh_pendingUserRow?.dataset.userRowName || 'Foydalanuvchi';
       if (title) {
         title.textContent = suspendBtn
           ? `${name} hisobini bloklamoqchimisiz?`

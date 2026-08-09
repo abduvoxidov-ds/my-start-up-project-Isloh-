@@ -41,14 +41,16 @@ function isloh_userMenuItemHTML(item, extraClass) {
   return `<a href="${item.href}" class="${cls}" role="menuitem"><i class="bi ${item.icon}"></i> ${item.label}</a>`;
 }
 
-/* Ism/email sarlavhasi faqat sahifa roli saqlangan foydalanuvchi roliga
-   mos kelganda chiqadi — aks holda talaba ismi instruktor sahifasida
-   ko'rinib qolardi (js/profile.js dagi avatar sinxroni bilan bir xil qoida).
+/* Ism/email sarlavhasi sahifa ROLINING profilidan olinadi — do'kon rol
+   bo'yicha bo'lingani uchun (js/profile.js) talaba ismi instruktor
+   sahifasida chiqib qolmaydi. Ilgari bu yerda "rol mos kelmasa sarlavhani
+   umuman ko'rsatma" cheklovi bor edi, natijada instruktor va admin
+   menyusi doim ismsiz ochilardi.
    Matnlar `data-user-*` atributlari orqali to'ldiriladi, ya'ni profil
    o'zgarganda menyu ham o'zi yangilanadi. */
 function isloh_userMenuHeadHTML(role) {
   if (typeof isloh_getUserProfile !== 'function') return '';
-  if (isloh_getUserProfile().role !== role) return '';
+  if (!isloh_getUserProfile(role)) return '';
 
   return '<div class="user-menu-head">'
        + '<div class="user-menu-name" data-user-name></div>'
