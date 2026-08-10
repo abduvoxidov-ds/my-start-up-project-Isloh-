@@ -435,11 +435,10 @@ function isloh_activeLessonNoteMeta() {
   return { title: lessonTitle, lessonTitle, courseTitle };
 }
 
+/* Vaqt ko'rsatilgani uchun mintaqa muhim: ilgari `getHours()` brauzerning
+   mahalliy mintaqasini olardi va sozlamadagi tanlovga bo'ysunmasdi. */
 function isloh_formatNoteDate(iso) {
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return '';
-  const pad = (n) => String(n).padStart(2, '0');
-  return pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  return isloh_dtDateTime(iso);
 }
 
 function isloh_renderNoteStatus(note) {

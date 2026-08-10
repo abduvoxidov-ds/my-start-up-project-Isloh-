@@ -24,6 +24,16 @@
 
 .ml-auto { margin-left: auto; }
 
+/* --- Kenglik (foiz) ---
+   Progress chiziqlari loyihada ko'pincha `style="width:N%"` bilan yozilgan,
+   CLAUDE.md §2 esa inline stillarni taqiqlaydi. Real ma'lumotdan kelgan foiz
+   JS bilan qo'yiladi (js/lesson-viewer.js, js/course-detail.js), qat'iy
+   qiymatlar uchun esa shu klasslar. */
+.w-25 { width: 25%; }
+.w-50 { width: 50%; }
+.w-75 { width: 75%; }
+.w-100 { width: 100%; }
+
 /* --- Margin-top scale --- */
 .mt-4 { margin-top: var(--sp-1); }
 .mt-8 { margin-top: var(--sp-2); }

@@ -44,7 +44,8 @@
 
 const ISLOH_CERTIFICATES_KEY = 'isloh_certificates';
 const ISLOH_COURSE_SETTINGS_KEY = 'isloh_course_settings';
-const ISLOH_CERT_MONTH_LABELS = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];
+/* Oy nomlari jadvali js/datetime.js ga ko'chirildi (u yerda bitta nusxa,
+   til sozlamasiga bo'ysunadi). */
 
 /* --- Identity ------------------------------------------------------------
    js/profile.js owns the isloh_user store (single source of truth) and seeds
@@ -252,15 +253,16 @@ function isloh_getLinkedInShareUrl(certificate) {
   return `https://www.linkedin.com/profile/add?${params.toString()}`;
 }
 
-/* --- Formatting ------------------------------------------------------- */
+/* --- Formatting -------------------------------------------------------
+   Sana shakllari js/datetime.js ga ko'chirildi: mintaqa (lang_tz) va til
+   (lang_ui) sozlamalari faqat o'sha yerda hisobga olinadi. Ilgari oy nomlari
+   shu faylning o'z jadvalida edi va sozlamalarga bo'ysunmasdi. */
 function isloh_formatCertMonthYear(iso) {
-  const d = new Date(iso);
-  return `${d.getFullYear()}-yil ${ISLOH_CERT_MONTH_LABELS[d.getMonth()]}`;
+  return isloh_dtMonthYear(iso);
 }
 
 function isloh_formatCertFullDate(iso) {
-  const d = new Date(iso);
-  return `${d.getFullYear()}-yil ${d.getDate()}-${ISLOH_CERT_MONTH_LABELS[d.getMonth()].toLowerCase()}`;
+  return isloh_dtFullDate(iso);
 }
 
 function isloh_formatCertDuration(totalMinutes) {

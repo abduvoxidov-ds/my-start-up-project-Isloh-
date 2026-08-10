@@ -115,13 +115,9 @@ function isloh_initAnnounceForm() {
 
 /* --- 2) Jonli sessiyalar -------------------------------------------------- */
 
+/* Vaqt ko'rsatiladi, demak mintaqa muhim — formatlash js/datetime.js da */
 function isloh_formatSessionDate(iso) {
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return 'Sana belgilanmagan';
-  const months = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
-  const hh = String(d.getHours()).padStart(2, '0');
-  const mm = String(d.getMinutes()).padStart(2, '0');
-  return `${d.getDate()}-${months[d.getMonth()]}, ${hh}:${mm}`;
+  return isloh_dtDayTime(iso) || 'Sana belgilanmagan';
 }
 
 function isloh_sessionHtml(item) {

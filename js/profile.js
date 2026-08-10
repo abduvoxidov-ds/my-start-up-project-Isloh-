@@ -30,7 +30,8 @@
 const ISLOH_PROFILES_KEY = 'isloh_profiles';
 const ISLOH_USER_KEY = 'isloh_user'; // aktiv rol nusxasi (orqaga moslik)
 const ISLOH_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ISLOH_MONTH_LABELS = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];
+/* Oy nomlari jadvali js/datetime.js ga ko'chirildi (bitta nusxa, til
+   sozlamasiga bo'ysunadi). */
 const ISLOH_DEFAULT_ROLE = 'student';
 
 /* Avatar localStorage'da data URL sifatida yotadi, shuning uchun rasm
@@ -242,9 +243,7 @@ function isloh_getUserInitials(name) {
 
 function isloh_formatJoinedDate(value) {
   if (!value) return '';
-  const d = new Date(value);
-  if (isNaN(d.getTime())) return String(value);
-  return d.getFullYear() + '-yil ' + ISLOH_MONTH_LABELS[d.getMonth()];
+  return isloh_dtMonthYear(value) || String(value);
 }
 
 /* toast.js har bir sahifada ulanmagan bo'lishi mumkin — himoyalangan chaqiruv. */
@@ -447,19 +446,6 @@ function isloh_initAccountForm() {
   });
 }
 
-/* settings.html'ga `#bo'lim` bilan kelinganda o'sha bo'lim ochiladi.
-   js/settings.js'ga tegilmaydi — shunchaki mos nav elementi bosiladi, ya'ni
-   mavjud tab almashish mantiqi o'zgarishsiz qoladi.
-   Eslatma: talaba uchun "Hisob" bu ro'yxatga kirmaydi — u mustaqil sahifa
-   (pages/student/account.html), sozlamalar paneli emas. */
-function isloh_openSettingsSectionFromHash() {
-  const id = (location.hash || '').replace('#', '');
-  if (!id || !/^[a-z][a-z0-9-]*$/i.test(id)) return;
-
-  const item = document.querySelector('.settings-nav-item[data-settings-target="' + id + '"]');
-  if (item) item.click();
-}
-
 /* Sahifa ochilganda `isloh_user` nusxasi shu sahifaning roliga tenglashadi.
    Aks holda nusxa oxirgi EKILGAN roldan qolib ketardi: instruktor sahifasidan
    talaba sahifasiga o'tilganda nusxada hali instruktor turardi. */
@@ -474,7 +460,6 @@ function isloh_initProfileModule() {
   isloh_refreshActiveMirror();
   isloh_initAvatarUpload();
   isloh_initAccountForm();
-  isloh_openSettingsSectionFromHash();
 }
 
 /* Boshqa tabda profil o'zgarsa, bu sahifa ham yangilanadi — lekin do'konga

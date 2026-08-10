@@ -63,6 +63,21 @@ function isloh_openModal(modalId) {
   overlay.classList.add('anim-fade-in');
   document.body.classList.add('modal-open');
 
+  /* Fokus qaysi elementga tushadi:
+     1) [data-modal-autofocus] — sahifa aniq ko'rsatgan element. Tasdiqlash
+        dialoglarida bu odatda "Bekor qilish", ya'ni XAVFSIZ tanlov: Enter
+        tasodifan bosilsa hisob o'chib ketmasin.
+     2) aks holda birinchi fokuslanadigan element.
+
+     Ilgari bu atributni faqat js/settings-danger.js o'zi qo'lda ushlardi,
+     shu bois boshqa dialoglarda (masalan sozlamalarni qaytarish) fokus
+     yopish "×" tugmasiga tushib qolardi. Endi shartnoma umumiy. */
+  const preferred = overlay.querySelector('[data-modal-autofocus]');
+  if (preferred && typeof preferred.focus === 'function') {
+    preferred.focus();
+    return;
+  }
+
   const items = isloh_focusableIn(overlay);
   if (items.length) {
     items[0].focus();

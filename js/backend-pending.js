@@ -11,10 +11,24 @@
    ishlamayotganini ochiq aytadi.
 
    Markup shartnomasi:
-     [data-backend-pending="<amal nomi>"]  → tugma
+     [data-backend-pending="<amal nomi>"]        → tugma
+     [data-backend-pending-reason="<sabab>"]     → tugmani o'z ichiga olgan
+                                                    istalgan element; sabab
+                                                    tooltip va izohda
+                                                    ishlatiladi
    ========================================================================== */
 
-const ISLOH_BACKEND_PENDING_NOTE = "to'lov tizimi ulangandan keyin ishlaydi";
+/* Sukut bo'yicha sabab. Ilgari bu qiymat to'lovga xos edi ("to'lov tizimi")
+   va tugmaning tooltip'iga majburan qo'yilardi — natijada admin brendlash
+   bo'limidagi "Logotip yuklash" tugmasi ham to'lov tizimini bahona qilardi.
+   Endi sabab kartochkadan olinadi, bu esa faqat zaxira qiymat. */
+const ISLOH_BACKEND_PENDING_REASON = 'backend ulangandan keyin ishlaydi';
+
+/* Sabab tugmaning eng yaqin `data-backend-pending-reason` otasidan olinadi */
+function isloh_backendPendingReason(btn) {
+  const holder = btn.closest('[data-backend-pending-reason]');
+  return (holder && holder.dataset.backendPendingReason) || ISLOH_BACKEND_PENDING_REASON;
+}
 
 function isloh_initBackendPending() {
   const buttons = [...document.querySelectorAll('[data-backend-pending]')];
@@ -22,17 +36,21 @@ function isloh_initBackendPending() {
 
   buttons.forEach((btn) => {
     btn.disabled = true;
-    btn.title = btn.dataset.backendPending + ' — ' + ISLOH_BACKEND_PENDING_NOTE;
+    btn.title = btn.dataset.backendPending + ' — ' + isloh_backendPendingReason(btn);
   });
 
   /* Sababni faqat tooltip'da qoldirmaymiz: o'chiq tugmaning nega
      o'chiqligi ekranda ham ko'rinib tursin. Izoh bir marta, birinchi
-     tugmaning kartochkasiga qo'yiladi. */
+     tugmaning kartochkasiga qo'yiladi.
+
+     Kartochkada allaqachon izoh bo'lsa (`.pending-note` yoki sahifa o'zi
+     yozgan `.placeholder-note`) yangisi qo'shilmaydi — aks holda bir xil
+     gap ikki marta ko'rinardi (admin brendlash bo'limida shunday bo'lgan). */
   const card = buttons[0].closest('.card') || buttons[0].parentElement;
-  if (card && !card.querySelector('.pending-note')) {
+  if (card && !card.querySelector('.pending-note, .placeholder-note')) {
     const note = document.createElement('p');
     note.className = 'pending-note';
-    note.innerHTML = '<i class="bi bi-info-circle"></i> To\'lov amallari ' + ISLOH_BACKEND_PENDING_NOTE + '.';
+    note.innerHTML = '<i class="bi bi-info-circle"></i> Bu amallar ' + isloh_backendPendingReason(buttons[0]) + '.';
     card.appendChild(note);
   }
 }

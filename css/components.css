@@ -57,6 +57,10 @@
 .avatar-sm { width: 28px; height: 28px; font-size: 12px; }
 /* Instruktor varianti — yashil aksent (avval inline style bilan yozilardi) */
 .avatar-teach { background: linear-gradient(135deg, var(--teach-green-400), var(--teach-green)); }
+/* Admin varianti — to'q siyoh gradienti. Admin sahifalarida bu ham inline
+   style bilan, tokenlarga kirmagan qattiq kodlangan rang (#2B2266) bilan
+   yozilardi; endi token ishlatiladi. */
+.avatar-admin { background: linear-gradient(135deg, var(--indigo-900), var(--violet-600)); }
 /* js/profile.js avatar ichiga rasm qo'yganda ishlatiladi. Rasm yuklanmasa
    umuman qo'shilmaydi va bosh harflar joyida qoladi — layout buzilmaydi. */
 .avatar-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -144,6 +148,20 @@
    safar `style="width:100%; text-align:left; border-radius:var(--r-md)"`
    deb yozilardi (17 ta joyda). */
 .select-block { width: 100%; text-align: left; border-radius: var(--r-md); }
+
+/* Rang tanlagich (admin brendlash bo'limi, 3-bosqich). Brauzerning o'z
+   `input[type=color]` ko'rinishi har platformada boshqacha va ichki
+   to'ldirishi bor — shu bois o'lchamni o'zimiz belgilaymiz. Ilgari bu
+   joyda umuman tanlagich yo'q, faqat `<span style="background:...">`
+   ko'rinishidagi ko'rsatgich turardi. */
+.color-input {
+  width: 40px; height: 32px; padding: 2px; cursor: pointer;
+  border: var(--border-w-thick) solid var(--border-soft);
+  border-radius: var(--r-sm); background: var(--bg-card);
+}
+.color-input::-webkit-color-swatch-wrapper { padding: 0; }
+.color-input::-webkit-color-swatch { border: none; border-radius: 5px; }
+.color-input::-moz-color-swatch { border: none; border-radius: 5px; }
 
 /* Ixcham forma qatori — `.field` dan farqi shundaki, yorliq ustida turadi
    va maydon to'liq kenglikda. Checkout va admin sozlamalari sahifalari
@@ -315,6 +333,9 @@
 /* Toast */
 .toast-demo { display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-soft); border-radius:var(--r-md); box-shadow:var(--shadow-md); padding:12px 16px; font-size:13.5px; max-width:320px; }
 .toast-container { position: fixed; top: 20px; right: 20px; z-index: var(--z-toast); display: flex; flex-direction: column; gap: 10px; }
+/* Belgi o'lchami shu yerda; RANGI js/toast.js da inline qo'yiladi, chunki u
+   xabar turiga (success/error/info) qarab o'zgaradi — ya'ni ma'lumot. */
+.toast-icon { font-size: 18px; flex-shrink: 0; }
 
 /* Chip / tag */
 .chip-demo { padding:6px 14px; border-radius:var(--r-pill); font-size:12.5px; font-weight:600; background:var(--bg-app); color:var(--ink-700); border:1px solid var(--border-soft); }
@@ -344,12 +365,17 @@ body.modal-open { overflow: hidden; }
 .modal-confirm { max-width:420px; }
 .modal-danger .modal-title { color:var(--danger); }
 /* Dialog ichidagi ogohlantirish bloki */
-.modal-warning {
+/* Ogohlantirish chizig'i. `.modal-warning` — shu naqshning dialogdagi nomi,
+   `.inline-warning` esa oddiy sahifa ichida (masalan admin sozlamalarida
+   texnik xizmat rejimi yoqilganda). Qiymatlar bir xil, takrorlanmaydi. */
+.modal-warning, .inline-warning {
   display:flex; align-items:flex-start; gap:10px;
   margin-top:14px; padding:12px 14px;
   border-radius:var(--r-md); background:var(--danger-100);
   color:var(--danger); font-size:12.5px; line-height:1.5;
 }
+/* Sariq variant: "diqqat" holati — xatolik emas, lekin e'tibor talab qiladi */
+.inline-warning-amber { background:var(--warning-100); color:var(--warning); }
 .modal-confirm-word { font-weight:700; }
 
 code.inline { background:var(--bg-app); padding:2px 6px; border-radius:5px; font-size:12px; color:var(--violet-600); }

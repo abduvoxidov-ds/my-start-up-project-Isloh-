@@ -24,7 +24,10 @@
       </div>
     </header>
 
-    <main class="content">
+    <!-- Bu sahifadagi barcha o'chiq tugmalar to'lovga tegishli, shuning uchun
+         sabab bir joyda (js/backend-pending.js uni tooltip va izohda
+         ishlatadi; sukut bo'yicha sabab neytral) -->
+    <main class="content" data-backend-pending-reason="to'lov tizimi ulangandan keyin ishlaydi">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
         <div><h1 style="font-size:24px;">Daromad</h1><p style="color:var(--ink-500); margin-top:4px;">Daromadingizni kuzating va pul yechib oling.</p></div>
         <select class="btn btn-outline period-select" data-period-select aria-label="Davr"><option value="30">Oxirgi 30 kun</option><option value="7">Oxirgi 7 kun</option><option value="365">Bu yil</option></select>
@@ -179,6 +182,8 @@
 <script src="../../js/profile.js"></script>
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/user-menu.js"></script>
+<script src="../../js/datetime.js"></script>
+<script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/period-stats.js"></script>

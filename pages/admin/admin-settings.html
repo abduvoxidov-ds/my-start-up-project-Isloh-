@@ -6,12 +6,10 @@
 <title>Platforma sozlamalari — Admin — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  .settings-layout { display:grid; grid-template-columns:220px 1fr; gap:20px; margin-top:18px; align-items:start; }
-  @media (max-width:900px){ .settings-layout{ grid-template-columns:1fr; } }
-  .settings-item { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--border-soft); }
-  .settings-item:last-child { border-bottom:none; }
-</style>
+<!-- Ilgari bu yerda inline <style> bloki turardi va `.settings-layout` bilan
+     `.settings-item`ni qaytadan e'lon qilardi — ular allaqachon
+     css/widgets.css da bor edi, hatto boshqa qiymatlar bilan (220px / 230px).
+     CLAUDE.md §2 inline stillarni taqiqlaydi, shuning uchun blok o'chirildi. -->
 </head>
 <body>
 <div class="app-shell">
@@ -23,88 +21,157 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Admin</span><span class="sep">/</span><span class="current">Sozlamalar</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span data-i18n="bc.admin">Admin</span><span class="sep">/</span><span class="current" data-i18n="set.title">Sozlamalar</span></nav>
       <div class="topbar-actions">
         <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
-        <div class="avatar" style="background:linear-gradient(135deg,#2B2266,#6C5DD3);">AD</div>
+        <!-- Gradient inline style bilan, tokenlarga kirmagan rang (#2B2266)
+             bilan yozilardi — endi .avatar-admin klassi -->
+        <div class="avatar avatar-admin">AD</div>
       </div>
     </header>
 
     <main class="content">
       <div class="page-header">
         <div><h1>Platforma sozlamalari</h1><p>Umumiy, brendlash, til va tizim sozlamalarini boshqaring.</p></div>
-        <button class="btn btn-primary"><i class="bi bi-check2"></i> O'zgarishlarni saqlash</button>
+        <div class="flex items-center gap-12">
+          <!-- Saqlanmagan o'zgarish nishoni va Saqlash tugmasi
+               js/unsaved-guard.js zimmasida; saqlash esa
+               js/platform-settings.js do'koniga boradi -->
+          <span class="badge badge-warning" data-unsaved-indicator hidden>Saqlanmagan o'zgarishlar</span>
+          <!-- Qaytarish faqat maydonlarga standart qiymat qo'yadi; do'kon
+               "Saqlash" bosilgandagina o'zgaradi, shu bois tasdiqlash
+               dialogi kerak emas — amal bekor qilinadigan -->
+          <button class="btn btn-outline" data-platform-reset><i class="bi bi-arrow-counterclockwise"></i> Standart holat</button>
+          <button class="btn btn-primary" data-save-action><i class="bi bi-check2"></i> O'zgarishlarni saqlash</button>
+        </div>
       </div>
 
       <div class="settings-layout" data-tabs>
+        <!-- Vertikal tablar: role="tablist" va aria-orientation="vertical"
+             js/tabs.js tomonidan qo'yiladi (.settings-vtabs shu sababli
+             tanilgan) -->
         <div class="card card-pad settings-vtabs">
-          <div class="tab-item active" data-tab-target="general"><i class="bi bi-sliders"></i>&nbsp; Umumiy</div>
-          <div class="tab-item" data-tab-target="branding"><i class="bi bi-palette"></i>&nbsp; Brendlash</div>
-          <div class="tab-item" data-tab-target="languages"><i class="bi bi-translate"></i>&nbsp; Tillar</div>
-          <div class="tab-item" data-tab-target="email"><i class="bi bi-envelope"></i>&nbsp; Email</div>
-          <div class="tab-item" data-tab-target="security"><i class="bi bi-shield-lock"></i>&nbsp; Xavfsizlik</div>
-          <div class="tab-item" data-tab-target="storage"><i class="bi bi-hdd"></i>&nbsp; Xotira</div>
-          <div class="tab-item" data-tab-target="maintenance"><i class="bi bi-cone-striped"></i>&nbsp; Texnik xizmat</div>
+          <div class="tab-item active" data-tab-target="general"><i class="bi bi-sliders"></i> Umumiy</div>
+          <div class="tab-item" data-tab-target="branding"><i class="bi bi-palette"></i> Brendlash</div>
+          <div class="tab-item" data-tab-target="languages"><i class="bi bi-translate"></i> Tillar</div>
+          <div class="tab-item" data-tab-target="email"><i class="bi bi-envelope"></i> Email</div>
+          <div class="tab-item" data-tab-target="security"><i class="bi bi-shield-lock"></i> Xavfsizlik</div>
+          <div class="tab-item" data-tab-target="storage"><i class="bi bi-hdd"></i> Xotira</div>
+          <div class="tab-item" data-tab-target="maintenance"><i class="bi bi-cone-striped"></i> Texnik xizmat</div>
         </div>
 
-        <div>
+        <!-- Tahrirlanadigan hudud: js/unsaved-guard.js shu doirani kuzatadi
+             va `platform` nomli do'kon bilan saqlaydi -->
+        <div data-unsaved-scope data-unsaved-store="platform">
           <!-- GENERAL -->
           <div class="card card-pad" data-tab-panel="general">
-            <h3 style="font-size:16px; margin-bottom:16px;">Umumiy sozlamalar</h3>
-            <div class="form-row"><label for="s-name">Platforma nomi</label><input id="s-name" type="text" value="Isloh LMS"></div>
-            <div class="form-row"><label for="s-url">Asosiy domen</label><input id="s-url" type="text" value="isloh.uz"></div>
-            <div class="form-row"><label for="s-tz">Vaqt zonasi</label><select id="s-tz"><option>Toshkent (UTC+5)</option><option>Moskva (UTC+3)</option><option>UTC</option></select></div>
-            <div class="form-row"><label for="s-currency">Standart valyuta</label><select id="s-currency"><option>UZS — So'm</option><option>USD — Dollar</option></select></div>
+            <div class="settings-section-title">Umumiy sozlamalar</div>
+            <div class="settings-section-sub">Platformaning asosiy ma'lumotlari.</div>
+            <div class="form-row"><label for="s-name">Platforma nomi</label><input id="s-name" type="text" value="Isloh LMS" data-platform-setting="platform_name"></div>
+            <div class="form-row"><label for="s-url">Asosiy domen</label><input id="s-url" type="text" value="isloh.uz" data-platform-setting="platform_domain"></div>
+            <!-- option'larda barqaror `value`: ko'rinadigan matn o'zgarsa ham
+                 saqlangan sozlama buzilmaydi -->
+            <div class="form-row"><label for="s-tz">Vaqt zonasi</label>
+              <select id="s-tz" data-platform-setting="platform_tz">
+                <option value="UTC+5">Toshkent (UTC+5)</option><option value="UTC+3">Moskva (UTC+3)</option><option value="UTC">UTC</option>
+              </select>
+            </div>
+            <div class="form-row"><label for="s-currency">Standart valyuta</label>
+              <select id="s-currency" data-platform-setting="platform_currency">
+                <option value="UZS">UZS — So'm</option><option value="USD">USD — Dollar</option>
+              </select>
+            </div>
           </div>
 
           <!-- BRANDING -->
-          <div class="card card-pad" data-tab-panel="branding" hidden>
-            <h3 style="font-size:16px; margin-bottom:16px;">Brendlash</h3>
-            <div class="settings-item"><div><div style="font-weight:600; font-size:13.5px;">Logotip</div><div style="font-size:12px; color:var(--ink-500);">SVG yoki PNG, kamida 512×512px</div></div><button class="btn btn-outline btn-sm"><i class="bi bi-upload"></i> Yuklash</button></div>
-            <div class="settings-item"><div><div style="font-weight:600; font-size:13.5px;">Asosiy rang</div><div style="font-size:12px; color:var(--ink-500);">Sidebar va tugmalar uchun</div></div><span style="width:28px; height:28px; border-radius:8px; background:var(--violet-600); display:inline-block;"></span></div>
-            <div class="settings-item"><div><div style="font-weight:600; font-size:13.5px;">Favicon</div><div style="font-size:12px; color:var(--ink-500);">32×32px, .ico yoki .png</div></div><button class="btn btn-outline btn-sm"><i class="bi bi-upload"></i> Yuklash</button></div>
+          <div class="card card-pad" data-tab-panel="branding" data-backend-pending-reason="fayl xotirasi ulangandan keyin ishlaydi" hidden>
+            <div class="settings-section-title">Brendlash</div>
+            <div class="settings-section-sub">Platforma ko'rinishini o'z brendingizga moslang.</div>
+            <!-- Fayl yuklash frontendda halol bajarilmaydi (yuklangan logotipni
+                 saqlaydigan joy yo'q) — js/backend-pending.js tugmalarni
+                 o'chirib, sababini ekranda yozadi. -->
+            <div class="settings-item">
+              <div class="settings-item-info"><div class="settings-item-label">Logotip</div><div class="settings-item-desc">SVG yoki PNG, kamida 512×512px</div></div>
+              <button class="btn btn-outline btn-sm settings-item-control" data-backend-pending="Logotip yuklash"><i class="bi bi-upload"></i> Yuklash</button>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-info"><label class="settings-item-label" for="s-brand">Asosiy rang</label><div class="settings-item-desc">Tugmalar va faol holatlar uchun</div></div>
+              <!-- Ilgari bu shunchaki `<span style="background:var(--violet-600)">`
+                   ko'rsatgichi edi. Endi haqiqiy tanlagich: qiymat
+                   `--violet-600` tokeniga yoziladi (js/platform-settings.js). -->
+              <input id="s-brand" class="color-input settings-item-control" type="color" value="#6C5DD3" data-platform-setting="brand_primary" aria-describedby="s-brand-hint">
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-info"><div class="settings-item-label">Favicon</div><div class="settings-item-desc">32×32px, .ico yoki .png</div></div>
+              <button class="btn btn-outline btn-sm settings-item-control" data-backend-pending="Favicon yuklash"><i class="bi bi-upload"></i> Yuklash</button>
+            </div>
+            <p class="placeholder-note mt-16" id="s-brand-hint"><i class="bi bi-info-circle"></i> Rang saqlangach barcha sahifalarga qo'llanadi. Logotip va favicon fayl xotirasi ulangandan keyin ishlaydi.</p>
           </div>
 
           <!-- LANGUAGES -->
           <div class="card card-pad" data-tab-panel="languages" hidden>
-            <h3 style="font-size:16px; margin-bottom:16px;">Tillar</h3>
-            <div class="settings-item"><div style="font-weight:600; font-size:13.5px;">O'zbekcha</div><span class="badge badge-green">Standart</span></div>
-            <div class="settings-item"><div style="font-weight:600; font-size:13.5px;">Ruscha</div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
-            <div class="settings-item"><div style="font-weight:600; font-size:13.5px;">Inglizcha</div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="settings-section-title">Tillar</div>
+            <div class="settings-section-sub">Foydalanuvchilar tanlashi mumkin bo'lgan interfeys tillari.</div>
+            <div class="settings-item">
+              <div class="settings-item-info"><div class="settings-item-label">O'zbekcha</div><div class="settings-item-desc">Standart til — o'chirib bo'lmaydi</div></div>
+              <span class="badge badge-green settings-item-control">Standart</span>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-info"><div class="settings-item-label">Ruscha</div><div class="settings-item-desc">Interfeys ruscha tilda ham mavjud bo'ladi</div></div>
+              <label class="switch settings-item-control"><input type="checkbox" data-platform-setting="lang_ru_enabled"><span class="slider"></span></label>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-info"><div class="settings-item-label">Inglizcha</div><div class="settings-item-desc">Interfeys inglizcha tilda ham mavjud bo'ladi</div></div>
+              <label class="switch settings-item-control"><input type="checkbox" data-platform-setting="lang_en_enabled"><span class="slider"></span></label>
+            </div>
+            <p class="placeholder-note mt-16"><i class="bi bi-info-circle"></i> Tarjima fayllari hali yo'q — bu ro'yxat qaysi tillar rejalashtirilganini belgilaydi.</p>
           </div>
 
           <!-- EMAIL PLACEHOLDER -->
           <div class="card card-pad" data-tab-panel="email" hidden>
-            <h3 style="font-size:16px; margin-bottom:16px;">Email sozlamalari</h3>
+            <div class="settings-section-title">Email sozlamalari</div>
             <p class="placeholder-note"><i class="bi bi-info-circle"></i> SMTP/email xizmati hali ulanmagan — bu yerda faqat interfeys ko'rinishi mavjud.</p>
-            <div class="form-row" style="margin-top:14px;"><label for="s-smtp">SMTP host</label><input id="s-smtp" type="text" placeholder="smtp.example.com" disabled></div>
+            <div class="form-row mt-16"><label for="s-smtp">SMTP host</label><input id="s-smtp" type="text" placeholder="smtp.example.com" disabled></div>
             <div class="form-row"><label for="s-sender">Jo'natuvchi email</label><input id="s-sender" type="text" placeholder="no-reply@isloh.uz" disabled></div>
           </div>
 
           <!-- SECURITY PLACEHOLDER -->
           <div class="card card-pad" data-tab-panel="security" hidden>
-            <h3 style="font-size:16px; margin-bottom:16px;">Xavfsizlik</h3>
+            <div class="settings-section-title">Xavfsizlik</div>
             <p class="placeholder-note"><i class="bi bi-info-circle"></i> Autentifikatsiya backend hali ulanmagan — quyidagilar vizual namuna.</p>
-            <div class="settings-item" style="margin-top:8px;"><div><div style="font-weight:600; font-size:13.5px;">Ikki bosqichli autentifikatsiya</div><div style="font-size:12px; color:var(--ink-500);">Barcha adminlar uchun majburiy</div></div><label class="switch"><input type="checkbox" checked disabled><span class="slider"></span></label></div>
-            <div class="settings-item"><div><div style="font-weight:600; font-size:13.5px;">Sessiya muddati</div><div style="font-size:12px; color:var(--ink-500);">Faolsizlikdan keyin chiqish</div></div><select disabled style="width:140px; border:1.5px solid var(--border-soft); border-radius:var(--r-md); padding:8px;"><option>30 daqiqa</option></select></div>
+            <div class="settings-item mt-8">
+              <div class="settings-item-info"><div class="settings-item-label">Ikki bosqichli autentifikatsiya</div><div class="settings-item-desc">Barcha adminlar uchun majburiy</div></div>
+              <label class="switch settings-item-control"><input type="checkbox" checked disabled><span class="slider"></span></label>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-info"><label class="settings-item-label" for="s-session">Sessiya muddati</label><div class="settings-item-desc">Faolsizlikdan keyin chiqish</div></div>
+              <select id="s-session" class="settings-item-control" disabled><option>30 daqiqa</option></select>
+            </div>
           </div>
 
           <!-- STORAGE PLACEHOLDER -->
           <div class="card card-pad" data-tab-panel="storage" hidden>
-            <h3 style="font-size:16px; margin-bottom:16px;">Xotira</h3>
-            <p class="placeholder-note"><i class="bi bi-info-circle"></i> Fayl xotira xizmati hali ulanmagan.</p>
-            <div class="settings-item" style="margin-top:8px;"><span>Ishlatilgan xotira</span><strong>248 GB / 500 GB</strong></div>
-            <div class="progress-track" style="margin-top:8px;"><div class="progress-fill" style="width:50%;"></div></div>
+            <div class="settings-section-title">Xotira</div>
+            <p class="placeholder-note"><i class="bi bi-info-circle"></i> Fayl xotira xizmati hali ulanmagan — ko'rsatilgan raqamlar namuna.</p>
+            <div class="settings-item mt-8"><span>Ishlatilgan xotira</span><strong>248 GB / 500 GB</strong></div>
+            <div class="progress-track mt-8" role="progressbar" aria-label="Ishlatilgan xotira" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><div class="progress-fill w-50"></div></div>
           </div>
 
-          <!-- MAINTENANCE MODE PLACEHOLDER -->
+          <!-- MAINTENANCE MODE -->
           <div class="card card-pad" data-tab-panel="maintenance" hidden>
-            <h3 style="font-size:16px; margin-bottom:16px;">Texnik xizmat rejimi</h3>
+            <div class="settings-section-title">Texnik xizmat rejimi</div>
+            <div class="settings-section-sub">Platformani vaqtincha yopish uchun.</div>
             <div class="settings-item">
-              <div><div style="font-weight:600; font-size:13.5px;">Texnik xizmat rejimini yoqish</div><div style="font-size:12px; color:var(--ink-500);">Platforma vaqtincha faqat adminlar uchun ochiq bo'ladi</div></div>
-              <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+              <div class="settings-item-info"><div class="settings-item-label">Texnik xizmat rejimini yoqish</div><div class="settings-item-desc">Platforma vaqtincha faqat adminlar uchun ochiq bo'ladi</div></div>
+              <label class="switch settings-item-control"><input type="checkbox" data-platform-setting="maintenance_mode"><span class="slider"></span></label>
             </div>
-            <p class="placeholder-note" style="margin-top:14px;"><i class="bi bi-info-circle"></i> Real vaqt monitoring/deploy tizimi ulanmaguncha bu — faqat vizual boshqaruv.</p>
+            <!-- Holat saqlanadi va shu chiziqda ko'rinadi. Lekin foydalanuvchilarni
+                 haqiqatan to'sish serverning ishi — quyidagi izoh shuni ochiq
+                 aytadi, "yoqildi" deb yolg'on tasavvur bermaslik uchun. -->
+            <div class="inline-warning inline-warning-amber" data-maintenance-note hidden>
+              <i class="bi bi-cone-striped"></i>
+              <span>Rejim yoqilgan holatda saqlanadi. Foydalanuvchilarni haqiqatan to'sish backend ulangandan keyin ishlaydi — hozir bu faqat holatni belgilaydi.</span>
+            </div>
           </div>
         </div>
       </div>
@@ -113,10 +180,18 @@
 </div>
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
-<script src="../../js/profile.js"></script>
-<script src="../../js/dropdown.js"></script>
-<script src="../../js/user-menu.js"></script>
+<script src="../../js/datetime.js"></script>
+<script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
 <script src="../../js/tabs.js"></script>
+<script src="../../js/toast.js"></script>
+<!-- unsaved-guard.js do'konni DOMContentLoaded'da qidiradi, platform-settings.js
+     esa o'zini yuklanish paytida ro'yxatdan o'tkazadi — tartib muhim emas -->
+<script src="../../js/unsaved-guard.js"></script>
+<script src="../../js/platform-settings.js"></script>
+<script src="../../js/backend-pending.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/user-menu.js"></script>
 </body>
 </html>

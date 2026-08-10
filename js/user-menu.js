@@ -36,9 +36,21 @@ function isloh_userMenuLinks(role) {
   return { items: items, footer: footer };
 }
 
+/* Tarjima kaliti havola fayl nomidan olinadi (USER_MENU_CONFIG da `key`
+   maydoni yo'q). Tarjimani js/i18n.js bajaradi; topilmasa markupdagi
+   o'zbekcha matn qoladi. Footer bandlari (Chiqish) `nav.` prefiksi bilan —
+   ular NAV_CONFIG.footer dan keladi va o'sha kalitni ishlatadi. */
+function isloh_userMenuI18nKey(item, prefix) {
+  const name = String(item.href || '').split('/').pop().replace('.html', '');
+  return name ? ' data-i18n="' + prefix + '.' + name + '"' : '';
+}
+
 function isloh_userMenuItemHTML(item, extraClass) {
   const cls = 'dropdown-item' + (extraClass ? ' ' + extraClass : '');
-  return `<a href="${item.href}" class="${cls}" role="menuitem"><i class="bi ${item.icon}"></i> ${item.label}</a>`;
+  // Footer bandi (`.is-danger`) NAV_CONFIG dan keladi -> nav.* kaliti
+  const prefix = extraClass === 'is-danger' ? 'nav' : 'menu';
+  const key = item.key ? ' data-i18n="nav.' + item.key + '"' : isloh_userMenuI18nKey(item, prefix);
+  return `<a href="${item.href}" class="${cls}" role="menuitem"${key}><i class="bi ${item.icon}"></i> ${item.label}</a>`;
 }
 
 /* Ism/email sarlavhasi sahifa ROLINING profilidan olinadi — do'kon rol

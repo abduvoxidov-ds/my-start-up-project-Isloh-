@@ -132,9 +132,9 @@ function isloh_chatRelativeTime(ts) {
   return diffDay === 1 ? 'Kecha' : `${diffDay} kun`;
 }
 
+/* Xabar vaqti — tanlangan mintaqada (js/datetime.js) */
 function isloh_chatBubbleTime(ts) {
-  const d = new Date(ts);
-  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  return isloh_dtTime(ts);
 }
 
 function isloh_chatItemHtml(thread) {

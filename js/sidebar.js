@@ -28,11 +28,20 @@
 
 const ISLOH_MOBILE_NAV_MQ = '(max-width: 900px)';
 
+/* `data-i18n` qo'yiladi, tarjimani js/i18n.js bajaradi. Kalit — bandning
+   `key` maydoni (footer bandlarida `key` yo'q, shuning uchun havoladan
+   olinadi), ya'ni tarjima uchun alohida ro'yxat yuritish kerak emas.
+   Matn markupda o'zbekcha qoladi: tarjimasi topilmasa shu matn ko'rinadi. */
+function isloh_navI18nKey(item) {
+  const key = item.key || String(item.href || '').split('/').pop().replace('.html', '');
+  return key ? ' data-i18n="nav.' + key + '"' : '';
+}
+
 function isloh_renderNavItem(item, activeKey) {
   const isActive = item.key === activeKey;
   const cls = 'nav-item' + (isActive ? ' active' : '');
   const aria = isActive ? ' aria-current="page"' : '';
-  return `<a href="${item.href}" class="${cls}"${aria}><i class="bi ${item.icon}"></i> ${item.label}</a>`;
+  return `<a href="${item.href}" class="${cls}"${aria}${isloh_navI18nKey(item)}><i class="bi ${item.icon}"></i> ${item.label}</a>`;
 }
 
 function isloh_renderSidebar() {
@@ -66,6 +75,86 @@ function isloh_renderSidebar() {
 
   // Nav elementlari joyiga qo'yilgandan keyin mobil boshqaruvni ulaymiz
   isloh_mountMobileNav(aside);
+  isloh_mountNavShortcuts(aside);
+
+  /* Menyu JS bilan yasalgani uchun js/i18n.js uni DOMContentLoaded'da
+     topa olmasligi mumkin — tayyor bo'lgani haqida xabar beramiz. */
+  document.dispatchEvent(new CustomEvent('isloh:sidebar-rendered'));
+}
+
+/* --- Klaviatura yorliqlari ------------------------------------------------
+   Sozlamalardagi "Klaviatura yorliqlari — tezkor navigatsiya uchun"
+   (a11y_shortcuts) shu paytgacha faqat saqlanadigan, lekin hech narsa
+   qilmaydigan sozlama edi. Endi u haqiqiy yorliqlarni yoqadi:
+
+     Alt+1 … Alt+9  -> yon menyudagi mos band
+
+   Nega aynan shu fayl: sidebar.js deyarli barcha sahifalarga ulangan va
+   menyuni o'zi quradi, ya'ni yorliqlar uchun alohida modul va 60+ sahifaga
+   yangi <script> qo'shish kerak emas (CLAUDE.md §2 — DRY).
+
+   Nega Alt: bitta harfli yorliqlar matn maydonlariga xalaqit beradi, Alt
+   birikmasi esa brauzerning o'z yorliqlari bilan ham to'qnashmaydi.
+
+   Yorliq borligini bilib olish uchun bandga `aria-keyshortcuts` va tooltip
+   qo'yiladi — ko'rinmas yorliq foydasiz.                                  */
+
+const ISLOH_NAV_SHORTCUT_MAX = 9;
+
+/* Sozlamani o'qish. js/settings-store.js faqat sozlamalar sahifasida
+   ulangan, shu bois do'kon bo'lmasa localStorage to'g'ridan-to'g'ri
+   o'qiladi (js/theme.js dagi bir xil naqsh). Standart holat — yoqilgan. */
+function isloh_navShortcutsEnabled() {
+  if (typeof isloh_getSettings === 'function') return isloh_getSettings().a11y_shortcuts !== false;
+  try {
+    const stored = JSON.parse(localStorage.getItem('isloh_settings'));
+    return !stored || stored.a11y_shortcuts !== false;
+  } catch (e) {
+    return true;
+  }
+}
+
+/* Maydonga yozayotgan foydalanuvchiga xalaqit bermaslik uchun */
+function isloh_isTypingTarget(el) {
+  if (!el) return false;
+  if (el.isContentEditable) return true;
+  return ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(el.tagName) !== -1;
+}
+
+/* Tooltip bandning MATNIDAN yasaladi, matn esa tarjima bilan o'zgaradi —
+   shuning uchun belgilash alohida funksiyada va til almashganda qayta
+   chaqiriladi (js/i18n.js dagi `isloh:i18n-applied` hodisasi). */
+function isloh_labelNavShortcuts(items) {
+  items.forEach((item, i) => {
+    const combo = 'Alt+' + (i + 1);
+    item.setAttribute('aria-keyshortcuts', combo);
+    item.title = item.textContent.trim() + ' (' + combo + ')';
+  });
+}
+
+function isloh_mountNavShortcuts(aside) {
+  const items = [...aside.querySelectorAll('#sidebar-nav .nav-item')].slice(0, ISLOH_NAV_SHORTCUT_MAX);
+  if (!items.length) return;
+
+  isloh_labelNavShortcuts(items);
+  document.addEventListener('isloh:i18n-applied', () => isloh_labelNavShortcuts(items));
+
+  document.addEventListener('keydown', (e) => {
+    if (!e.altKey || e.ctrlKey || e.metaKey) return;
+    if (isloh_isTypingTarget(e.target)) return;
+    if (!isloh_navShortcutsEnabled()) return;   // har bosishda o'qiymiz: sozlama boshqa tabda o'zgargan bo'lishi mumkin
+
+    /* e.key emas, e.code: Alt bilan birga `key` ba'zi klaviatura
+       joylashuvlarida raqam emas, boshqa belgi qaytaradi. */
+    const match = /^Digit([1-9])$/.exec(e.code || '');
+    if (!match) return;
+
+    const target = items[Number(match[1]) - 1];
+    if (!target) return;
+
+    e.preventDefault();
+    target.click();
+  });
 }
 
 /* --- Mobil navigatsiya ---------------------------------------------------- */

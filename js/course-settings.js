@@ -63,7 +63,11 @@ function isloh_renderCourseSettings(course) {
   if (students) students.textContent = course.students || 0;
 }
 
-function isloh_settingsToast(message, type) {
+/* Nomi ataylab sahifaga xos: ilgari `isloh_settingsToast` deb atalgan va
+   js/settings-store.js dagi bir xil nomli funksiya bilan to'qnashardi.
+   Hech bir sahifa ikkisini birga yuklamagani uchun xato ko'rinmasdi, lekin
+   yuklasa keyingi ta'rif avvalgisini bosib ketardi. */
+function isloh_courseSettingsToast(message, type) {
   if (typeof isloh_showToast === 'function') isloh_showToast(message, type || 'success');
 }
 
@@ -74,7 +78,7 @@ function isloh_initCourseSettings() {
   const id = isloh_settingsCourseId();
   const course = isloh_getCourse(id);
   if (!course) {
-    isloh_settingsToast('Bunday kurs topilmadi', 'error');
+    isloh_courseSettingsToast('Bunday kurs topilmadi', 'error');
     return;
   }
 
@@ -94,16 +98,16 @@ function isloh_initCourseSettings() {
       patch.id = course.id;
 
       if (patch.title === '') {
-        isloh_settingsToast("Kurs nomi bo'sh bo'lishi mumkin emas", 'error');
+        isloh_courseSettingsToast("Kurs nomi bo'sh bo'lishi mumkin emas", 'error');
         return;
       }
       const saved = isloh_saveCourse(patch);
       if (!saved) {
-        isloh_settingsToast("Saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
+        isloh_courseSettingsToast("Saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
         return;
       }
       isloh_renderCourseSettings(saved);
-      isloh_settingsToast("O'zgarishlar saqlandi");
+      isloh_courseSettingsToast("O'zgarishlar saqlandi");
     });
   });
 
@@ -112,7 +116,7 @@ function isloh_initCourseSettings() {
     archiveBtn.addEventListener('click', () => {
       isloh_setCourseStatus(course.id, 'archived');
       if (typeof isloh_closeModal === 'function') isloh_closeModal('archive-confirm-modal');
-      isloh_settingsToast('Kurs arxivlandi');
+      isloh_courseSettingsToast('Kurs arxivlandi');
       setTimeout(() => { window.location.href = ISLOH_SETTINGS_REDIRECT; }, 900);
     });
   }
@@ -122,7 +126,7 @@ function isloh_initCourseSettings() {
     deleteBtn.addEventListener('click', () => {
       isloh_deleteCourse(course.id);
       if (typeof isloh_closeModal === 'function') isloh_closeModal('delete-confirm-modal');
-      isloh_settingsToast("Kurs o'chirildi");
+      isloh_courseSettingsToast("Kurs o'chirildi");
       setTimeout(() => { window.location.href = ISLOH_SETTINGS_REDIRECT; }, 900);
     });
   }

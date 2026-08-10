@@ -94,11 +94,11 @@ const ISLOH_ORDER_STATUS_BADGE = {
   refunded: 'badge-danger'
 };
 
-/* Buyurtma sanasi uchun oy nomlari (kichik harf: "18-iyul, 2026").
-   js/profile.js dagi ISLOH_MONTH_LABELS boshqa format uchun (bosh harf bilan,
-   "2025-yil Sentabr"), shuning uchun bu alohida ro'yxat — nomi ham boshqa,
-   ikkala fayl bitta sahifada yuklansa to'qnashmaydi. */
-const ISLOH_ORDER_MONTHS = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
+/* Oy nomlari uchun uchta alohida jadval bor edi (bu fayl, js/profile.js va
+   js/certificate-engine.js) — ikkitasi bosh harfli, biri kichik harfli,
+   ya'ni bir xil sana ikki joyda turlicha ko'rinardi. Hammasi js/datetime.js
+   dagi bitta jadvalga birlashtirildi (o'zbek tilida oy nomi kichik harf
+   bilan yoziladi) va u til sozlamasiga bo'ysunadi. */
 
 // Savat/checkout/marketplace kuponi — bitta joyda, cart.js va checkout.js
 // shu obyektdan foydalanadi (avval ikkalasida alohida-alohida yozilgan edi).
@@ -251,11 +251,9 @@ function isloh_orderTotal(order) {
   return (order.items || []).reduce((sum, item) => sum + (item.price || 0), 0);
 }
 
-// '2026-07-18' -> '18-iyul, 2026'
+// '2026-07-18' -> '18-iyul, 2026' (til sozlamasiga qarab boshqa shaklda)
 function isloh_formatOrderDate(value) {
-  const d = new Date(value);
-  if (!value || isNaN(d.getTime())) return String(value || '');
-  return d.getDate() + '-' + ISLOH_ORDER_MONTHS[d.getMonth()] + ', ' + d.getFullYear();
+  return isloh_dtShortDate(value) || String(value || '');
 }
 
 // Keyingi buyurtma raqami — mavjudlarining eng kattasidan bittaga ko'p

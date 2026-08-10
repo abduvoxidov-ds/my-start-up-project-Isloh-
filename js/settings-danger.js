@@ -34,8 +34,11 @@
 const ISLOH_STORE_PREFIX = 'isloh_';
 /* `isloh_profiles` — rol bo'yicha profil do'koni (js/profile.js), `isloh_user`
    esa uning aktiv rol nusxasi: ikkalasi birga o'chiriladi, aks holda profil
-   nusxadan yoki do'kondan qayta tiklanib qolardi. */
-const ISLOH_SESSION_KEYS = ['isloh_profiles', 'isloh_user', 'isloh_settings'];
+   nusxadan yoki do'kondan qayta tiklanib qolardi.
+   `isloh_settings` — umumiy afzalliklar, `isloh_role_settings` — rol bo'yicha
+   sozlamalar (js/settings-store.js): ular ham juftlik, biri qolsa sozlamalar
+   yarim tozalangan holatda qolardi. */
+const ISLOH_SESSION_KEYS = ['isloh_profiles', 'isloh_user', 'isloh_settings', 'isloh_role_settings'];
 const ISLOH_DELETE_CONFIRM_WORD = "O'CHIRISH";
 const ISLOH_DANGER_REDIRECT = '../auth/login.html';
 const ISLOH_DANGER_REDIRECT_DELAY = 1400;
@@ -77,9 +80,16 @@ function isloh_openDangerModal(modalId) {
   const overlay = document.getElementById(modalId);
   if (!overlay) return;
 
-  if (typeof isloh_openModal === 'function') isloh_openModal(modalId);
-  else overlay.hidden = false;
+  if (typeof isloh_openModal === 'function') {
+    /* `[data-modal-autofocus]` ni endi js/modal.js o'zi hurmat qiladi —
+       ilgari fokus shu yerda qo'lda qo'yilardi va o'sha mantiq boshqa
+       dialoglarga tarqamagan edi. */
+    isloh_openModal(modalId);
+    return;
+  }
 
+  // modal.js ulanmagan holat uchun zaxira yo'l
+  overlay.hidden = false;
   const focusTarget = overlay.querySelector('[data-modal-autofocus]');
   if (focusTarget) focusTarget.focus();
 }

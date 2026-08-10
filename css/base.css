@@ -38,7 +38,11 @@ button:focus-visible,
 input:focus-visible,
 .nav-item:focus-visible,
 .icon-btn:focus-visible,
-.tab-item:focus-visible {
+.tab-item:focus-visible,
+/* Sozlamalar bo'limlari ro'yxati — `div[role=tab]`, shuning uchun yuqoridagi
+   `button` qoidasi ularni qamramaydi. Roving tabindex bilan klaviaturada
+   yuriladigan element bo'lgani uchun fokus halqasi shart. */
+.settings-nav-item:focus-visible {
   outline: 2px solid var(--violet-500);
   outline-offset: 2px;
   border-radius: var(--r-sm);
@@ -57,9 +61,15 @@ input:focus-visible,
    ========================================================================== */
 
 /* --- Animatsiyalarni o'chirish ---
-   0 emas, 0.001s ishlatiladi: `animationend` hodisasi baribir yuborilsin,
-   aks holda unga tayangan kod (masalan js/settings-security.js dagi seans
-   qatorini olib tashlash) elementni hech qachon o'chirmay qoladi. */
+   0 emas, 0.001s ishlatiladi: harakat sezilmas darajada qisqa bo'lsa ham
+   effekt "bor" holatida qoladi, ya'ni `forwards` bilan yozilgan oxirgi
+   kadr (masalan .anim-row-out ning opacity:0) baribir qo'llanadi.
+
+   DIQQAT: bu `animationend` hodisasini KAFOLATLAMAYDI. Ilgari shu yerda
+   shunday deb yozilgan edi, lekin tekshirilganda 0.001s animatsiyada
+   brauzer hodisani yubormasligi aniqlandi. Shu sababli unga tayangan kod
+   zaxira taymer bilan ishlashi kerak — js/settings-security.js dagi
+   `isloh_removeSessionRow()` shu naqshni ko'rsatadi. */
 body.no-animations *,
 body.no-animations *::before,
 body.no-animations *::after {

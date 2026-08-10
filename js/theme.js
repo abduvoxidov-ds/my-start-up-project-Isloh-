@@ -21,6 +21,15 @@
 const ISLOH_THEME_SETTINGS_KEY = 'isloh_settings';
 const ISLOH_DARK_MEDIA_QUERY = '(prefers-color-scheme: dark)';
 
+/* Admin tanlagan brend rangi (js/platform-settings.js). Bu foydalanuvchi
+   afzalligi emas — platforma sozlamasi, lekin qo'llanishi kerak bo'lgan joy
+   bir xil: butun hujjat. theme.js deyarli hamma sahifaga ulangani uchun
+   rang shu yerdan beriladi; platform-settings.js esa faqat admin
+   sozlamalari sahifasida yuklanadi va u yerda jonli ko'rishni boshqaradi. */
+const ISLOH_PLATFORM_KEY = 'isloh_platform_settings';
+const ISLOH_BRAND_CSS_TOKEN = '--violet-600';
+const ISLOH_BRAND_HEX = /^#[0-9a-f]{6}$/i;
+
 function isloh_applyBodyRole() {
   const aside = document.querySelector('.sidebar[data-role]');
   if (!aside) return;
@@ -42,9 +51,26 @@ function isloh_resolveTheme(preference) {
   return window.matchMedia(ISLOH_DARK_MEDIA_QUERY).matches ? 'dark' : 'light';
 }
 
+/* Saqlangan brend rangini qo'llaydi. Yozuv yo'q yoki qiymat noto'g'ri
+   bo'lsa hech narsa qilinmaydi — token css/tokens.css dagi holida qoladi
+   (tungi rejim varianti ham shu bilan ishlaydi). */
+function isloh_applyBrandToken() {
+  let stored = null;
+  try { stored = JSON.parse(localStorage.getItem(ISLOH_PLATFORM_KEY)); } catch (e) { stored = null; }
+
+  const color = stored && stored.brand_primary;
+  if (!color || !ISLOH_BRAND_HEX.test(color)) {
+    document.documentElement.style.removeProperty(ISLOH_BRAND_CSS_TOKEN);
+    return;
+  }
+  document.documentElement.style.setProperty(ISLOH_BRAND_CSS_TOKEN, color);
+}
+
 function isloh_applyPreferences() {
   const body = document.body;
   if (!body) return;
+
+  isloh_applyBrandToken();
 
   const prefs = isloh_readPreferences();
 
@@ -69,9 +95,9 @@ document.addEventListener('DOMContentLoaded', () => {
 /* Sozlamalar shu sahifada o'zgardi (js/settings-store.js hodisasi) */
 document.addEventListener('isloh:settings-updated', isloh_applyPreferences);
 
-/* Boshqa tabda o'zgardi */
+/* Boshqa tabda o'zgardi (afzalliklar yoki brend rangi) */
 window.addEventListener('storage', (e) => {
-  if (e.key === ISLOH_THEME_SETTINGS_KEY) isloh_applyPreferences();
+  if (e.key === ISLOH_THEME_SETTINGS_KEY || e.key === ISLOH_PLATFORM_KEY) isloh_applyPreferences();
 });
 
 /* "Avto" rejimda tizim mavzusi almashsa, darhol ergashamiz */

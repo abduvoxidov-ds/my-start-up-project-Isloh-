@@ -116,7 +116,12 @@ function isloh_initPasswordForm() {
     // Muvaffaqiyat: parol saqlanmaydi (yuqoridagi izohga qarang), faqat
     // maydonlar tozalanadi — ekranda parol qolib ketmasin
     inputs.forEach((input) => { input.value = ''; });
-    isloh_securityToast("Parol muvaffaqiyatli o'zgartirildi");
+
+    /* Xabar ataylab "o'zgartirildi" DEMAYDI. Parol hech qayerga yozilmagani
+       uchun u haqiqatan almashmaydi — "muvaffaqiyatli o'zgartirildi" deyish
+       foydalanuvchini chalg'itardi va u eski parolini yo'qotib qo'yishi
+       mumkin edi. Faqat tekshirilgan narsa aytiladi. */
+    isloh_securityToast("Parol formati to'g'ri — almashtirish backend ulangandan keyin saqlanadi", 'info');
   });
 }
 
@@ -145,6 +150,40 @@ function isloh_refreshSessionsEmptyState() {
   empty.hidden = remaining > 0;
 }
 
+/* Zaxira taymer: `--t-slow` (.3s) animatsiyasidan uzunroq */
+const ISLOH_SESSION_ROW_EXIT_FALLBACK = 450;
+
+/* Qatorni chiqish animatsiyasi bilan olib tashlaydi.
+
+   Ilgari faqat `animationend` kutilardi. Lekin CSS animatsiyasi element
+   KO'RINMAY qolganda umuman ishlamaydi — masalan foydalanuvchi seansni
+   yakunlab, darhol boshqa bo'limga o'tsa, panel `hidden` bo'ladi va hodisa
+   hech qachon kelmaydi. Natijada qator DOM'da qolib ketardi, "Boshqa faol
+   seanslar yo'q" xabari chiqmasdi, panelga qaytilganda esa animatsiya yana
+   boshidan o'ynardi.
+
+   (`body.no-animations` holati muammo emas — css/base.css animatsiyani
+   0 emas, 0.001s ga tushiradi, ya'ni hodisa baribir keladi.)
+
+   Endi ikki chora: ko'rinmayotgan qator kutilmasdan olib tashlanadi,
+   ko'rinadigani esa animatsiya + zaxira taymer bilan. */
+function isloh_removeSessionRow(row) {
+  let removed = false;
+  function finish() {
+    if (removed) return;   // animationend va taymer ikkalasi ham kelishi mumkin
+    removed = true;
+    row.remove();
+    isloh_refreshSessionsEmptyState();
+  }
+
+  // offsetParent === null -> element yoki uning otasi `display:none`
+  if (!row.offsetParent) { finish(); return; }
+
+  row.classList.add('anim-row-out');
+  row.addEventListener('animationend', finish, { once: true });
+  setTimeout(finish, ISLOH_SESSION_ROW_EXIT_FALLBACK);
+}
+
 function isloh_initSessionRevoke() {
   const rows = document.querySelectorAll('.device-row[data-session-id]');
   if (!rows.length) return;
@@ -171,12 +210,7 @@ function isloh_initSessionRevoke() {
         return;
       }
 
-      row.classList.add('anim-row-out');
-      row.addEventListener('animationend', () => {
-        row.remove();
-        isloh_refreshSessionsEmptyState();
-      }, { once: true });
-
+      isloh_removeSessionRow(row);
       isloh_securityToast('Seans yakunlandi');
     });
   });
