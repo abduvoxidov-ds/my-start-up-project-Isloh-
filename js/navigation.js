@@ -45,6 +45,10 @@ const NAV_CONFIG = {
     { key: 'students',      label: 'Talabalar',    icon: 'bi-people-fill',           href: '../instructor/students.html' },
     { key: 'assignments',   label: 'Topshiriqlar', icon: 'bi-file-earmark-text-fill', href: '../instructor/assignments.html' },
     { key: 'analytics',     label: 'Analitika',    icon: 'bi-bar-chart-fill',        href: '../instructor/analytics.html' },
+    /* Marketplace — Analitika o'z ko'rsatkichlaringiz haqida, bu esa
+       BOSHQALAR haqida: raqobatchi kurslar va kategoriya o'rtachalari.
+       Talaba Marketplace'idan farqi — savat/xohishlar yo'q, faqat tahlil. */
+    { key: 'market',        label: 'Marketplace',  icon: 'bi-shop',                  href: '../instructor/market.html' },
     { key: 'messages',      label: 'Xabarlar',     icon: 'bi-chat-dots-fill',        href: '../instructor/messages.html' },
     { key: 'reviews',       label: 'Sharhlar',     icon: 'bi-star-fill',             href: '../instructor/reviews.html' },
     { key: 'revenue',       label: 'Daromad',      icon: 'bi-cash-stack',            href: '../instructor/revenue.html' },

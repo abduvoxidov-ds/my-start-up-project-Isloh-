@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketplace — Isloh</title>
+<link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" data-role="instructor" data-active="market">
+    <div class="brand"><div class="brand-mark">I</div> Isloh</div>
+    <nav class="nav-group" id="sidebar-nav"></nav>
+    <div class="sidebar-footer" id="sidebar-footer-nav"></div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><span class="current">Marketplace</span></nav>
+      <div class="topbar-actions">
+        <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar avatar-teach">AY</div>
+      </div>
+    </header>
+
+    <main class="content" data-filterable>
+      <div class="page-header">
+        <div>
+          <h1>Marketplace</h1>
+          <p>Raqobatchi kurslarni o'rganing va narxingizni shu yerda tekshiring.</p>
+        </div>
+        <a href="course-create.html" class="btn btn-teach"><i class="bi bi-plus-lg"></i> Yangi kurs</a>
+      </div>
+
+      <!-- KATEGORIYA CHIPLARI — js/market-insights.js chizadi, filtrni
+           js/filterable.js bajaradi. Benchmark raqamlari ham shu tanlovga ergashadi. -->
+      <div class="filter-bar" data-filter-group="category" data-market-categories style="margin-top:20px;"></div>
+
+      <!-- 1. KATEGORIYA BENCHMARKI -->
+      <div class="wk-grid-4" style="margin-top:18px;">
+        <div class="card card-pad stat-card">
+          <div class="stat-icon tint-violet"><i class="bi bi-collection-fill"></i></div>
+          <div class="stat-value" data-market-stat="courses">0</div>
+          <div class="stat-label">Kurslar soni</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon tint-green"><i class="bi bi-tag-fill"></i></div>
+          <div class="stat-value" data-market-stat="price">0</div>
+          <div class="stat-label">O'rtacha narx (so'm)</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon tint-warning"><i class="bi bi-star-fill"></i></div>
+          <div class="stat-value" data-market-stat="rating">0</div>
+          <div class="stat-label">O'rtacha reyting</div>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon tint-info"><i class="bi bi-people-fill"></i></div>
+          <div class="stat-value" data-market-stat="students">0</div>
+          <div class="stat-label">Jami talabalar</div>
+        </div>
+      </div>
+
+      <!-- 2. SIZNING O'RNINGIZ -->
+      <div class="card card-pad" style="margin-top:18px;">
+        <div class="section-header">
+          <h3>Sizning o'rningiz</h3>
+          <span class="badge badge-neutral">O'z kategoriyasi bo'yicha</span>
+        </div>
+        <div data-market-position></div>
+      </div>
+
+      <!-- 3. RAQOBATCHILAR JADVALI -->
+      <div class="card" style="margin-top:18px; overflow:hidden;">
+        <div class="mk-table-head">
+          <div class="section-header" style="margin-bottom:0;">
+            <h3><span data-market-scope>Butun katalog</span> bo'yicha kurslar</h3>
+          </div>
+          <div class="topbar-search list-toolbar-search">
+            <i class="bi bi-search"></i>
+            <input data-filter-search placeholder="Kurs yoki o'qituvchi qidirish..." aria-label="Kurs yoki o'qituvchi qidirish">
+            <button type="button" class="search-clear" data-filter-clear aria-label="Qidiruvni tozalash" hidden><i class="bi bi-x-circle-fill"></i></button>
+          </div>
+        </div>
+        <!-- data-filter-section: mos qator qolmasa jadval sarlavhasi ham
+             yashirinadi (js/filterable.js), bo'sh "shapka" qolib ketmasin -->
+        <div class="itable-wrap" data-filter-section>
+          <table class="itable">
+            <thead><tr><th>Kurs</th><th>Kategoriya</th><th>Narx</th><th>Reyting</th><th>Talaba</th><th>Darslar</th></tr></thead>
+            <tbody data-market-rows></tbody>
+          </table>
+        </div>
+        <!-- `hidden` emas, `display:none` — filterable uni style.display orqali
+             boshqaradi, `[hidden]` esa css/base.css'da !important (ochilmay qolardi) -->
+        <div class="empty-state" data-filter-empty style="display:none;">
+          <div class="empty-icon"><i class="bi bi-search"></i></div>
+          <div class="empty-title">Kurs topilmadi</div>
+          <div class="empty-sub">Tanlangan kategoriya yoki qidiruv bo'yicha mos kurs yo'q.</div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/chat-store.js"></script>
+<script src="../../js/profile.js"></script>
+<script src="../../js/user-menu.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/datetime.js"></script>
+<script src="../../js/i18n.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/course-store.js"></script>
+<script src="../../js/marketplace.js"></script>
+<!-- market-insights.js chiplarni va qatorlarni chizadi, filterable.js esa
+     tayyor DOM ustiga filtrni bog'laydi — tartib shuning uchun shunday. -->
+<script src="../../js/market-insights.js"></script>
+<script src="../../js/filterable.js"></script>
+</body>
+</html>
