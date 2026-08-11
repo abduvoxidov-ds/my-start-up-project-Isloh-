@@ -707,8 +707,15 @@ a.stat-card:focus-visible { outline:2px solid var(--violet-500); outline-offset:
 /* --- AI insight item (instructor AI recommendations panel) --- */
 .ai-panel { background:linear-gradient(135deg, var(--indigo-900), var(--indigo-950)); color:#fff; border:none; }
 .ai-panel .section-header h3 { color:#fff; }
-.ai-insight { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,.1); }
+/* Endi <a> — AI Yordamchida mos shablonni ochadi (3-bosqich). Rang meros
+   qilib olinadi, aks holda gradient banner ustida ko'k havola chiqardi. */
+.ai-insight { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,.1);
+  color:inherit; text-decoration:none; }
 .ai-insight:last-child { border-bottom:none; }
+.ai-insight:hover .ai-insight-title { text-decoration:underline; }
+.ai-insight:hover .ai-insight-go { opacity:1; transform:none; }
+.ai-insight-go { margin-left:auto; align-self:center; font-size:14px; opacity:0; transform:translateX(-4px);
+  transition:opacity .15s ease, transform .15s ease; flex-shrink:0; }
 .ai-insight-ic { width:34px; height:34px; border-radius:var(--r-sm); background:rgba(255,255,255,.12); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
 .ai-insight-body { flex:1; min-width:0; }
 .ai-insight-title { font-size:13px; font-weight:600; }
@@ -925,16 +932,41 @@ body[data-role="instructor"] .chat-email-input:focus { border-color: var(--teach
    ========================================================================== */
 .ai-shell { display:flex; height: calc(100vh - 68px); }
 .ai-history-col { width: 260px; flex-shrink:0; background: var(--bg-app); border-right:1px solid var(--border-soft); padding: 18px 14px; display:flex; flex-direction:column; }
-.new-chat-btn { display:flex; align-items:center; gap:8px; justify-content:center; padding: 11px; border-radius:var(--r-md); background:var(--bg-card); border:1px solid var(--border-soft); font-weight:600; font-size:13.5px; cursor:pointer; margin-bottom:16px; }
-.hist-label { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-500); font-weight:700; padding: 10px 8px 6px; }
-.hist-item { padding: 9px 10px; border-radius:var(--r-sm); font-size:13px; color:var(--ink-700); cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.hist-item:hover { background:var(--bg-card); }
-.hist-item.active { background:var(--bg-card); color:var(--violet-600); font-weight:600; box-shadow:var(--shadow-sm); }
+.new-chat-btn { display:flex; align-items:center; gap:8px; justify-content:center; padding: 11px; border-radius:var(--r-md); background:var(--bg-card); border:1px solid var(--border-soft); font-weight:600; font-size:13.5px; cursor:pointer; margin-bottom:16px; width:100%; color:inherit; }
+.new-chat-btn:hover { border-color:var(--violet-500); }
+.ai-shell.theme-teach .new-chat-btn:hover { border-color:var(--teach-green); }
+/* Suhbatlar ro'yxati ustun ichida o'zi skroll bo'ladi — soni oshganda
+   "Yangi suhbat" tugmasi ekrandan chiqib ketmasin */
+.ai-history-scroll { flex:1; overflow-y:auto; min-height:0; margin: 0 -6px; padding: 0 6px; }
+.ai-history-label { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-500); font-weight:700; padding: 4px 4px 8px; }
 
-.ai-main { flex:1; display:flex; flex-direction:column; align-items:center; }
+.ai-main { flex:1; display:flex; flex-direction:column; align-items:center; min-width:0; }
 .ai-body { flex:1; width:100%; max-width:720px; overflow-y:auto; padding: 30px 20px; }
+/* Salomlashuv bloki va takliflar oralig'i — ilgari har bir sahifada inline
+   `style=` bilan takrorlanardi (CLAUDE.md §2) */
+.ai-greeting { text-align:center; margin-bottom:24px; }
+.ai-greeting h2 { font-size:18px; color:var(--violet-600); }
+.ai-greeting p { color:var(--ink-500); font-size:13.5px; margin-top:4px; }
+.ai-shell.theme-teach .ai-greeting h2 { color:var(--teach-green); }
+.ai-body .suggest-row { margin-bottom:28px; }
+
+/* "Barcha shablonlar" — to'liq sahifada drawer'dagi "Shablonlar" tabining
+   o'rnini bosadi (bu yerda tab qatori yo'q) */
+.ai-templates { text-align:center; }
+.ai-templates-toggle { border:none; background:none; cursor:pointer; font-family:inherit;
+  font-size:12.5px; font-weight:600; color:var(--ink-500); display:inline-flex; align-items:center; gap:6px;
+  padding:6px 10px; border-radius:var(--r-pill); }
+.ai-templates-toggle:hover { color:var(--violet-600); background:var(--bg-app); }
+.ai-shell.theme-teach .ai-templates-toggle:hover { color:var(--teach-green); }
+.ai-templates-panel { margin-top:14px; text-align:left; }
+.ai-template-group { font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--ink-500); font-weight:700; margin:14px 0 8px; }
+.ai-template-group:first-child { margin-top:0; }
 .suggest-row { display:flex; gap:12px; margin-top: 26px; flex-wrap:wrap; justify-content:center; }
-.suggest-card { width: 170px; padding: 16px; border-radius:var(--r-lg); border:1px solid var(--border-soft); background:var(--bg-card); cursor:pointer; text-align:left; }
+/* `color` va `font-family` — <button> ularni meros qilib olmaydi
+   (tungi rejimda matn qora fonda qora chiqardi) */
+.suggest-card { width: 170px; padding: 16px; border-radius:var(--r-lg); border:1px solid var(--border-soft);
+  background:var(--bg-card); cursor:pointer; text-align:left; color:var(--ink-900); font-family:inherit; }
 .suggest-card:hover { border-color:var(--violet-500); box-shadow:var(--shadow-md); }
 .suggest-card i { font-size:18px; color:var(--violet-600); }
 .suggest-card .txt { font-size:13px; font-weight:600; margin-top:10px; line-height:1.4; }
@@ -959,9 +991,17 @@ body[data-role="instructor"] .chat-email-input:focus { border-color: var(--teach
 .typing-dots span:nth-child(3){ animation-delay:.4s; }
 @keyframes blink { 0%,100%{opacity:.3;} 50%{opacity:1;} }
 
-.ai-input-wrap { width:100%; max-width:720px; padding: 14px 20px 24px; }
+/* Ustun tartibi: kiritish tabletkasi → "backend kerak" izohi → ogohlantirish.
+   Izohni js/backend-pending.js oxiriga qo'shadi, `order` esa uni o'z joyiga
+   qo'yadi — markupda bo'sh idish saqlashning hojati qolmaydi. */
+.ai-input-wrap { width:100%; max-width:720px; padding: 14px 20px 24px; display:flex; flex-direction:column; }
+.ai-input-wrap .ai-input-box { order:1; }
+.ai-input-wrap .pending-note { order:2; justify-content:center; margin-top:10px; font-size:11.5px; }
+.ai-input-wrap .ai-disclaimer { order:3; }
 .ai-input-box { display:flex; align-items:center; gap:10px; border:1.5px solid var(--border-soft); border-radius:var(--r-pill); padding: 8px 8px 8px 20px; background:var(--bg-card); box-shadow:var(--shadow-sm); }
 .ai-input-box input { flex:1; border:none; outline:none; font-size:14px; }
+/* Skrepka tugmasi — o'lchami ilgari inline `style` bilan berilardi */
+.ai-input-box .ai-attach-btn { width:34px; height:34px; flex-shrink:0; }
 /* Yumaloq yuborish tugmasi — ilgari har bir sahifada inline style bilan
    takrorlanardi (CLAUDE.md §2) */
 .ai-input-box .send-btn { width:38px; height:38px; padding:0; border-radius:50%;
@@ -969,7 +1009,6 @@ body[data-role="instructor"] .chat-email-input:focus { border-color: var(--teach
 .ai-disclaimer { text-align:center; font-size:11.5px; color:var(--ink-300); margin-top:10px; }
 
 /* Instructor accent variant */
-.ai-shell.theme-teach .hist-item.active { color:var(--teach-green); }
 .ai-shell.theme-teach .suggest-card:hover { border-color:var(--teach-green); }
 .ai-shell.theme-teach .suggest-card i { color:var(--teach-green); }
 .ai-shell.theme-teach .msg.ai .avatar-sm { background:linear-gradient(135deg,#4ED88A,var(--teach-green)); }
@@ -978,8 +1017,16 @@ body[data-role="instructor"] .chat-email-input:focus { border-color: var(--teach
 .ai-shell.theme-teach .typing-dots span { background:var(--teach-green); }
 .ai-shell.theme-teach .ai-input-box .send-btn { background:var(--teach-green); box-shadow:0 4px 14px rgba(31,174,94,0.3); }
 
-@media (max-width:1100px) { .ai-history-col { width:220px; } }
-@media (max-width:900px) { .ai-history-col { display:none; } }
+/* Tor ekran qoidalari css/responsive.css ga ko'chirildi (3-bosqich) —
+   ilgari ular shu yerda edi va ≤900px da ustunni butunlay yashirardi, uni
+   qaytaradigan hech qanday tugmasiz. */
+
+/* Suhbatlar ustunini ochish tugmasi — faqat tor ekranda ko'rinadi */
+.ai-main-bar { display:none; }
+.ai-history-toggle { border:1px solid var(--border-soft); background:var(--bg-card); cursor:pointer;
+  font-family:inherit; font-size:13px; font-weight:600; color:var(--ink-700);
+  display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:var(--r-pill); }
+.ai-history-backdrop { display:none; }
 
 /* ==========================================================================
    Sprint 4B — Reviews widgets (new; no equivalent existed before). Built
@@ -1712,16 +1759,23 @@ button.suggest-card { font-family:inherit; text-align:left; }
 /* --- Prompt template / suggestion cards (Instructor authoring pages) --- */
 .ai-prompt-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
 @media (max-width:480px) { .ai-prompt-grid { grid-template-columns:1fr; } }
+/* `color` shart: <button> matn rangini meros qilib olmaydi (brauzer
+   `buttontext`, ya'ni qora beradi) — tungi rejimda sarlavha qora fonda
+   qora chiqardi. `font-family:inherit` xuddi shu sababdan bor edi. */
 .ai-prompt-card {
   display:flex; align-items:flex-start; gap:10px; padding:12px 14px; border-radius:var(--r-md);
-  border:1px solid var(--border-soft); background:var(--bg-card); cursor:pointer; text-align:left; font-family:inherit;
+  border:1px solid var(--border-soft); background:var(--bg-card); cursor:pointer; text-align:left;
+  font-family:inherit; color:var(--ink-900);
 }
 .ai-prompt-card:hover { border-color:var(--violet-500); box-shadow:var(--shadow-sm); }
 .ai-prompt-card i { color:var(--violet-600); font-size:15px; flex-shrink:0; margin-top:1px; }
 .ai-prompt-card .apc-title { font-size:13px; font-weight:600; }
 .ai-prompt-card .apc-sub { font-size:11.5px; color:var(--ink-500); margin-top:2px; }
-.ai-drawer-panel.theme-teach .ai-prompt-card:hover { border-color:var(--teach-green); }
-.ai-drawer-panel.theme-teach .ai-prompt-card i { color:var(--teach-green); }
+/* Shablon kartochkalari to'liq sahifali AI Yordamchida ham ishlatiladi */
+.ai-drawer-panel.theme-teach .ai-prompt-card:hover,
+.ai-shell.theme-teach .ai-prompt-card:hover { border-color:var(--teach-green); }
+.ai-drawer-panel.theme-teach .ai-prompt-card i,
+.ai-shell.theme-teach .ai-prompt-card i { color:var(--teach-green); }
 
 /* --- Tarix qatorlari (js/ai-chat.js do'kondan chizadi) ------------------- */
 .ai-history-row { display:flex; align-items:center; gap:6px; border-bottom:1px solid var(--border-soft); }
@@ -1738,8 +1792,12 @@ button.suggest-card { font-family:inherit; text-align:left; }
 .ai-history-row .ai-history-del:hover { color:var(--danger); }
 .ai-history-empty { text-align:center; padding:24px 10px; }
 .ai-history-empty i { font-size:24px; color:var(--ink-300); }
-.ai-drawer-panel.theme-teach .ai-history-open i { color:var(--teach-green); }
-.ai-drawer-panel.theme-teach .ai-history-row.active { background:var(--teach-green-100); }
+/* Aynan shu qatorlar to'liq sahifali AI Yordamchining yon ustunida ham
+   ishlatiladi — shu bois yashil variant ikkala qobiq uchun ham yoziladi. */
+.ai-drawer-panel.theme-teach .ai-history-open i,
+.ai-shell.theme-teach .ai-history-open i { color:var(--teach-green); }
+.ai-drawer-panel.theme-teach .ai-history-row.active,
+.ai-shell.theme-teach .ai-history-row.active { background:var(--teach-green-100); }
 
 /* --- Inline AI action bar (attached above/below any editor field) --- */
 .ai-action-bar { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }

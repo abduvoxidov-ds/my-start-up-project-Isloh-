@@ -95,3 +95,46 @@
 @media (max-height: 500px) and (orientation: landscape) {
   .lesson-viewer .lv-stage-video { aspect-ratio: auto; height: 100dvh; }
 }
+
+/* ==========================================================================
+   AI QATLAMI (3-bosqich)
+   Ilgari AI ga tegishli yagona ikkita qoida css/widgets.css da edi va
+   ≤900px da suhbatlar ustunini `display:none` qilardi — uni qaytaradigan
+   tugma esa yo'q edi, ya'ni telefonda saqlangan suhbatlarga umuman kirib
+   bo'lmasdi. Endi ustun tor ekranda ustidan ochiladigan panelga aylanadi
+   (js/ai-chat.js `isloh_aiSetHistoryOpen`).
+   ========================================================================== */
+
+@media (max-width: 1100px) {
+  .ai-history-col { width: 220px; }
+  /* Shablon kartochkalari 2 ustunda tiqilib qolmasin */
+  .ai-prompt-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  .ai-main-bar { display: flex; padding: 12px 20px 0; width: 100%; max-width: 720px; }
+
+  /* Ustun endi yashirilmaydi — chetdan suriladi */
+  .ai-history-col {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: var(--z-overlay);
+    transform: translateX(-100%); transition: transform .2s ease;
+    box-shadow: var(--shadow-lg);
+  }
+  .ai-history-col.open { transform: none; }
+  .ai-history-backdrop { display: block; position: fixed; inset: 0;
+    background: rgba(23,18,59,0.25); z-index: calc(var(--z-overlay) - 1); }
+  .ai-history-backdrop[hidden] { display: none; }
+}
+
+@media (max-width: 700px) {
+  /* Takliflar kartochkasi 170px qat'iy kenglikda edi — 375px da ikkitasi
+     sig'may, uchinchisi yolg'iz qatorda qolardi */
+  .suggest-card { width: 100%; }
+  .ai-body { padding: 20px 16px; }
+  .ai-input-wrap { padding: 12px 16px 18px; }
+  .ai-main-bar { padding: 10px 16px 0; }
+  .msg-bubble { max-width: 100%; }
+}
+
+/* Animatsiyani o'chirgan foydalanuvchi uchun (body.no-animations — js/theme.js) */
+body.no-animations .ai-history-col { transition: none; }

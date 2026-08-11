@@ -16,6 +16,8 @@
                                                     istalgan element; sabab
                                                     tooltip va izohda
                                                     ishlatiladi
+     [data-backend-pending-note]                 → izoh aynan shu elementga
+                                                    yoziladi (ixtiyoriy)
    ========================================================================== */
 
 /* Sukut bo'yicha sabab. Ilgari bu qiymat to'lovga xos edi ("to'lov tizimi")
@@ -43,10 +45,17 @@ function isloh_initBackendPending() {
      o'chiqligi ekranda ham ko'rinib tursin. Izoh bir marta, birinchi
      tugmaning kartochkasiga qo'yiladi.
 
+     `data-backend-pending-note` — aniq mo'ljal. Kerak bo'lgan sabab: AI
+     panelida skrepka tugmasi yumaloq kiritish "tabletka"si (`.ai-input-box`)
+     ichida turadi; izoh uning eng yaqin otasiga tushsa, tabletka ichini
+     buzardi. Mo'ljal berilmasa avvalgidek kartochka ishlatiladi.
+
      Kartochkada allaqachon izoh bo'lsa (`.pending-note` yoki sahifa o'zi
      yozgan `.placeholder-note`) yangisi qo'shilmaydi — aks holda bir xil
      gap ikki marta ko'rinardi (admin brendlash bo'limida shunday bo'lgan). */
-  const card = buttons[0].closest('.card') || buttons[0].parentElement;
+  const card = buttons[0].closest('[data-backend-pending-note]')
+    || buttons[0].closest('.card')
+    || buttons[0].parentElement;
   if (card && !card.querySelector('.pending-note, .placeholder-note')) {
     const note = document.createElement('p');
     note.className = 'pending-note';

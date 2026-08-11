@@ -15,16 +15,10 @@
    [data-ai-context="<key>"] tells the drawer which context to render.
    ========================================================================== */
 
-function isloh_aiRenderSuggestCard(t) {
-  return `<button class="suggest-card" type="button" data-ai-run="${t.key}"><i class="bi ${t.icon}"></i><div class="txt">${t.title}</div></button>`;
-}
-
-function isloh_aiRenderPromptCard(t) {
-  return `<button class="ai-prompt-card" type="button" data-ai-run="${t.key}">
-    <i class="bi ${t.icon}"></i>
-    <div><div class="apc-title">${t.title}</div><div class="apc-sub">${t.sub}</div></div>
-  </button>`;
-}
+/* Kartochka render funksiyalari (`isloh_aiRenderSuggestCard`,
+   `isloh_aiRenderPromptCard`, `isloh_aiRenderPromptGroups`) js/ai-assistant.js
+   ga ko'chirildi — ular registrga tegishli va to'liq sahifali AI Yordamchi
+   ham aynan shularni ishlatadi. */
 
 function isloh_aiRenderDrawer(mount) {
   const contextEl = document.querySelector('[data-ai-context]');
@@ -34,7 +28,7 @@ function isloh_aiRenderDrawer(mount) {
 
   const isInstructor = ctx.role === 'instructor';
   const suggestions = ctx.templates.slice(0, 3).map(isloh_aiRenderSuggestCard).join('');
-  const promptCards = ctx.templates.map(isloh_aiRenderPromptCard).join('');
+  const promptCards = isloh_aiRenderPromptGroups(ctx);
 
   /* "Qadab qo'yish" tugmasi olib tashlangan (1-navbat): panel modal overlay
      bo'lgani uchun "qadalgan" holatda ham sahifa bilan ishlab bo'lmasdi.
@@ -79,9 +73,8 @@ function isloh_aiRenderDrawer(mount) {
           <div class="ai-msg-list" data-ai-messages aria-live="polite"></div>
         </div>
 
-        <div data-tab-panel="ai-tab-templates" hidden>
-          <div class="ai-prompt-grid">${promptCards}</div>
-        </div>
+        <!-- promptCards allaqachon guruh sarlavhalari bilan chizilgan -->
+        <div data-tab-panel="ai-tab-templates" hidden>${promptCards}</div>
 
         <!-- Ro'yxat do'kondan chiziladi (js/ai-chat.js), markupda emas -->
         <div data-tab-panel="ai-tab-history" hidden>

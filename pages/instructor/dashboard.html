@@ -277,26 +277,34 @@
       <!-- AI RECOMMENDATIONS -->
       <div class="card card-pad ai-panel" style="margin-top:18px;">
         <div class="section-header"><div class="section-title-icon"><i class="bi bi-stars"></i><h3>AI o'qituvchi tahlili</h3></div></div>
+        <!-- Har bir xulosa AI Yordamchida mos shablonni ochadi
+             (`?run=` — js/ai-chat.js `isloh_aiRunFromQuery`). Ilgari bular
+             shunchaki matn edi: o'qituvchi xulosani ko'rardi-yu, uni
+             ochib ko'ra olmasdi. -->
         <div class="split-even">
           <div>
-            <div class="ai-insight">
+            <a class="ai-insight" href="../instructor/ai-assistant.html?run=at-risk">
               <div class="ai-insight-ic"><i class="bi bi-exclamation-triangle"></i></div>
               <div class="ai-insight-body"><div class="ai-insight-title">Xavf ostidagi talabalar</div><div class="ai-insight-desc">5 talaba 7 kundan beri faol emas. Ularga eslatma yuboring.</div></div>
-            </div>
-            <div class="ai-insight">
+              <i class="bi bi-chevron-right ai-insight-go" aria-hidden="true"></i>
+            </a>
+            <a class="ai-insight" href="../instructor/ai-assistant.html?run=improve-course">
               <div class="ai-insight-ic"><i class="bi bi-graph-up-arrow"></i></div>
               <div class="ai-insight-body"><div class="ai-insight-title">Kurs yaxshilash taklifi</div><div class="ai-insight-desc">"Django REST" kursida 4-bo'limda tark etish yuqori — videoni qisqartiring.</div></div>
-            </div>
+              <i class="bi bi-chevron-right ai-insight-go" aria-hidden="true"></i>
+            </a>
           </div>
           <div>
-            <div class="ai-insight">
+            <a class="ai-insight" href="../instructor/ai-assistant.html?run=lesson-ideas">
               <div class="ai-insight-ic"><i class="bi bi-lightbulb"></i></div>
               <div class="ai-insight-body"><div class="ai-insight-title">Kontent tavsiyasi</div><div class="ai-insight-desc">Talabalar "amaliy loyihalar" so'rashmoqda. Yangi modul qo'shishni ko'rib chiqing.</div></div>
-            </div>
-            <div class="ai-insight">
+              <i class="bi bi-chevron-right ai-insight-go" aria-hidden="true"></i>
+            </a>
+            <a class="ai-insight" href="../instructor/ai-assistant.html?run=weekly-report">
               <div class="ai-insight-ic"><i class="bi bi-calendar-check"></i></div>
               <div class="ai-insight-body"><div class="ai-insight-title">Haftalik xulosa</div><div class="ai-insight-desc">Bu hafta daromad 12% o'sdi va 42 yangi talaba qo'shildi.</div></div>
-            </div>
+              <i class="bi bi-chevron-right ai-insight-go" aria-hidden="true"></i>
+            </a>
           </div>
         </div>
       </div>

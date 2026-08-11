@@ -11,7 +11,6 @@
      [data-ai-quick] = "<context>:<templateKey>"         → inline action chip
        (e.g. next to an editor-toolbar) that opens the drawer AND immediately
        runs that one template, without the person retyping the prompt
-     [data-ai-widget-toggle] → expands/collapses a sibling [data-ai-widget-more]
    ========================================================================== */
 
 const ISLOH_AI_CONTEXTS = {
@@ -98,31 +97,96 @@ const ISLOH_AI_CONTEXTS = {
         response:"<p><b>Tavsiya:</b> \"Docker image nima?\" darsidan davom eting — taxminan 9 daqiqa vaqt talab qiladi.</p>" }
     ]
   },
+  /* To'liq sahifali AI Yordamchi kontekstlari (student-chat / instructor-chat).
+     Drawer kontekstlaridan farqi — ular bitta ekranga bog'lanmagan, shuning
+     uchun shablonlar ro'yxati kengroq va `group` bo'yicha bo'lingan.
+
+     `match` — erkin matnni shablonga yo'naltirish uchun kalit so'zlar
+     (js/ai-chat.js `isloh_aiMatchTemplate`). Sarlavhadan avtomatik chiqarish
+     ham bor, lekin o'zbek tilida qo'shimchalar ko'p ("kursimni", "rejaga"),
+     shu bois o'zak so'zlar shu yerda ochiq yoziladi. */
   'student-chat': {
     role: 'student',
     label: "AI Yordamchi",
     templates: [
-      { key:'today-plan', icon:'bi-lightbulb-fill', title:"Bugun nima o'rganay?", sub:"O'quv rejangiz asosida bugungi darslarni taklif qiladi",
+      { key:'today-plan', icon:'bi-lightbulb-fill', group:"Kundalik", title:"Bugun nima o'rganay?", sub:"O'quv rejangiz asosida bugungi darslarni taklif qiladi",
+        match:['bugun','nima o\'rgan','reja','boshla'],
         response:"<p>Ajoyib reja! Bugungi darslar asosida quyidagilarni tavsiya qilaman:</p><ul><li>DRF Views va Serializers</li><li>Permissions bo'limi</li><li>Taxminiy vaqt: 1 soat 20 daqiqa</li></ul>" },
-      { key:'focus-check', icon:'bi-clipboard-check', title:"E'tiborimni qanday tekshiray?", sub:"So'nggi sessiyalar asosida diqqat darajangizni tahlil qiladi",
+      { key:'focus-check', icon:'bi-clipboard-check', group:"Kundalik", title:"E'tiborimni qanday tekshiray?", sub:"So'nggi sessiyalar asosida diqqat darajangizni tahlil qiladi",
+        match:['e\'tibor','diqqat','fokus','charcha'],
         response:"<p>Mana DRF'da ValidationError ushlashning odatiy usuli — shu kabi amaliy mashqlar diqqatni sinash uchun yaxshi:</p><div class=\"code-block\"><div class=\"head\"><span>python</span><span><i class=\"bi bi-clipboard\"></i></span></div>def validate_email(self, value):\n    if User.objects.filter(email=value).exists():\n        raise serializers.ValidationError(\n            \"Bu email allaqachon ro'yxatdan o'tgan.\"\n        )\n    return value</div>" },
-      { key:'motivation', icon:'bi-graph-up-arrow', title:"Motivatsiyani tahlil qil", sub:"So'nggi faollik va progressga qarab motivatsiya darajasini baholaydi",
-        response:"<p><b>Motivatsiya tahlili:</b></p><ul><li>So'nggi 7 kunda faollik: yuqori</li><li>O'rtacha kunlik davomiylik: 42 daqiqa</li><li>Tavsiya: joriy sur'atni saqlang, kichik tanaffuslar bilan</li></ul>" }
+      { key:'motivation', icon:'bi-graph-up-arrow', group:"Kundalik", title:"Motivatsiyani tahlil qil", sub:"So'nggi faollik va progressga qarab motivatsiya darajasini baholaydi",
+        match:['motivatsiya','ruhiy','tashla','davom eta'],
+        response:"<p><b>Motivatsiya tahlili:</b></p><ul><li>So'nggi 7 kunda faollik: yuqori</li><li>O'rtacha kunlik davomiylik: 42 daqiqa</li><li>Tavsiya: joriy sur'atni saqlang, kichik tanaffuslar bilan</li></ul>" },
+
+      { key:'explain-topic', icon:'bi-lightbulb', group:"O'rganish", title:"Mavzuni sodda tilda tushuntir", sub:"Tushunmagan tushunchani boshqacha misollar bilan qayta tushuntiradi",
+        match:['tushuntir','tushunmadim','sodda','nima degani','ma\'nosi'],
+        response:"<p><b>Sodda tushuntirish:</b></p><p>Serializer — bu tarjimon. Django obyekti (Python) bilan JSON (brauzer tushunadigan matn) o'rtasida ikki tomonlama tarjima qiladi: chiqishda obyektni JSON'ga, kirishda JSON'ni tekshirib obyektga aylantiradi.</p><p>Shuning uchun validatsiya ham aynan serializer ichida yoziladi — u \"chegaradagi nazorat punkti\".</p>" },
+      { key:'practice-me', icon:'bi-patch-question', group:"O'rganish", title:"Mashq savollari ber", sub:"So'nggi o'rganilgan mavzu bo'yicha 3 ta savol tuzadi",
+        match:['mashq','savol','sinab','test qil','tekshir'],
+        response:"<p><b>Mashq savollari:</b></p><ol><li>ModelSerializer va Serializer o'rtasidagi asosiy farq nima?</li><li><code>validate_&lt;field&gt;</code> metodi qachon chaqiriladi?</li><li>Nested serializer'da <code>many=True</code> nimani anglatadi?</li></ol><p class=\"ai-hint\">Javoblaringizni yozing — demo rejimda tekshirilmaydi, lekin o'zingizni sinash uchun foydali.</p>" },
+      { key:'exam-plan', icon:'bi-calendar2-check', group:"O'rganish", title:"Imtihonga tayyorgarlik rejasi", sub:"Qolgan vaqtga qarab takrorlash jadvalini tuzadi",
+        match:['imtihon','tayyorgarlik','takrorla','jadval'],
+        response:"<p><b>2 haftalik takrorlash rejasi:</b></p><ul><li>1-hafta: nazariya + qisqa konspektlar (kuniga 40 daqiqa)</li><li>2-hafta: faqat amaliyot va eski testlar (kuniga 1 soat)</li><li>Oxirgi 2 kun: yangi mavzu yo'q, faqat zaif joylarni takrorlash</li></ul>" },
+
+      { key:'week-summary', icon:'bi-card-text', group:"Xulosa", title:"Shu haftani xulosala", sub:"Hafta davomida o'rganilganlarni qisqa xulosaga jamlaydi",
+        match:['hafta','xulosa','qisqacha','umumiy'],
+        response:"<p><b>Haftalik xulosa:</b></p><ul><li>Yakunlangan darslar: 7 ta</li><li>Umumiy vaqt: 4 soat 55 daqiqa</li><li>Eng ko'p vaqt ketgan mavzu: Permissions</li><li>Yakunlanmagan: 1 ta topshiriq</li></ul>" },
+      { key:'next-course', icon:'bi-signpost-split', group:"Xulosa", title:"Keyin qaysi kursni olay?", sub:"Tugatgan kurslaringizga mos keyingi qadamni taklif qiladi",
+        match:['keyin','qaysi kurs','tavsiya qil','nima olay'],
+        response:"<p><b>Keyingi qadam uchun tavsiya:</b></p><ul><li>\"Django REST: Advanced\" — joriy bilimingizning tabiiy davomi</li><li>\"PostgreSQL optimallashtirish\" — backend yo'nalishini mustahkamlaydi</li><li>\"Docker for Beginners\" — loyihani joylashtirish uchun</li></ul>" }
     ]
   },
   'instructor-chat': {
     role: 'instructor',
     label: "AI Yordamchi",
     templates: [
-      { key:'at-risk', icon:'bi-exclamation-triangle', title:"Xavf ostidagi talabalarni topib ber", sub:"Faolligi pasaygan talabalarni tahlil qilib topadi",
+      { key:'at-risk', icon:'bi-exclamation-triangle', group:"Talabalar", title:"Xavf ostidagi talabalarni topib ber", sub:"Faolligi pasaygan talabalarni tahlil qilib topadi",
+        match:['xavf','faol emas','tashlab','tark et','yo\'qolgan'],
         response:"<p><b>Xavf ostidagi talabalar tahlili:</b></p><ul><li>4-bo'lim (Permissions & Auth): tark etish 34%</li><li>5 ta talaba 7 kundan beri faol emas</li><li>Umumiy yakunlash darajasi: 85%</li></ul>" },
-      { key:'rubric-chat', icon:'bi-clipboard-check', title:"Topshiriq uchun rubrika tuz", sub:"Amaliy topshiriq uchun baholash mezonlarini shakllantiradi",
+      { key:'nudge-message', icon:'bi-send', group:"Talabalar", title:"Faol bo'lmagan talabaga xabar yoz", sub:"Bosim o'tkazmaydigan, qisqa eslatma matnini tayyorlaydi",
+        match:['xabar yoz','eslatma','murojaat','yozib ber'],
+        response:"<p><b>Taklif etilgan xabar:</b></p><p>Assalomu alaykum! Kursda bir muddat ko'rinmadingiz — hammasi joyidami? 4-bo'lim biroz og'irroq, shuning uchun u yerda to'xtab qolish odatiy hol. Savolingiz bo'lsa yozing, birga ko'rib chiqamiz.</p>" },
+      { key:'review-reply', icon:'bi-star', group:"Talabalar", title:"Sharhga javob yozib ber", sub:"Tanqidiy sharhga xotirjam va foydali javob tuzadi",
+        match:['sharh','izoh','javob yoz','reyting','baho berdi'],
+        response:"<p><b>Taklif etilgan javob:</b></p><p>Fikringiz uchun rahmat — 4-bo'lim haqiqatan uzunroq chiqqan. Uni ikkiga bo'lib, amaliy misollar qo'shmoqdaman. Yangilanish tayyor bo'lgach, sizga xabar beraman.</p>" },
+
+      { key:'rubric-chat', icon:'bi-clipboard-check', group:"Kurs ustida ish", title:"Topshiriq uchun rubrika tuz", sub:"Amaliy topshiriq uchun baholash mezonlarini shakllantiradi",
+        match:['rubrika','mezon','baholash','ball'],
         response:"<p><b>Baholash mezonlari:</b></p><ul><li>To'g'ri ishlaydigan yechim — 50%</li><li>Kod tozaligi va izohlar — 20%</li><li>Muddatga rioya qilish — 30%</li></ul>" },
-      { key:'improve-course', icon:'bi-graph-up-arrow', title:"Kursimni qanday yaxshilay?", sub:"Kurs statistikasiga asoslangan yaxshilash takliflari beradi",
-        response:"<p><b>Tavsiyalar:</b></p><ul><li>4-bo'lim video darsini 2 qismga bo'ling (hozirgi 22 daqiqa juda uzun)</li><li>2-bo'limdagi test savollarini yangilang — o'tish darajasi past</li><li>Amaliy topshiriqlar sonini oshiring</li></ul>" }
+      { key:'improve-course', icon:'bi-graph-up-arrow', group:"Kurs ustida ish", title:"Kursimni qanday yaxshilay?", sub:"Kurs statistikasiga asoslangan yaxshilash takliflari beradi",
+        match:['yaxshila','kurs','takomil','nima qilay'],
+        response:"<p><b>Tavsiyalar:</b></p><ul><li>4-bo'lim video darsini 2 qismga bo'ling (hozirgi 22 daqiqa juda uzun)</li><li>2-bo'limdagi test savollarini yangilang — o'tish darajasi past</li><li>Amaliy topshiriqlar sonini oshiring</li></ul>" },
+      { key:'lesson-ideas', icon:'bi-lightbulb', group:"Kurs ustida ish", title:"Yangi dars mavzularini taklif qil", sub:"Mavjud kursga mos qo'shimcha mavzular ro'yxatini beradi",
+        match:['yangi dars','mavzu','g\'oya','qo\'shsam'],
+        response:"<p><b>Taklif etilgan mavzular:</b></p><ul><li>Throttling va rate limiting</li><li>JWT bilan autentifikatsiya</li><li>API versiyalash strategiyalari</li><li>Testlarni CI'da avtomatlashtirish</li></ul>" },
+
+      { key:'weekly-report', icon:'bi-bar-chart', group:"Hisobot", title:"Haftalik xulosa tayyorla", sub:"Kurs statistikasini qisqa hisobotga jamlaydi",
+        match:['hisobot','hafta','xulosa','statistika'],
+        response:"<p><b>Haftalik hisobot:</b></p><ul><li>Yangi ro'yxatdan o'tganlar: 12 ta</li><li>Yakunlangan darslar: 348 ta</li><li>O'rtacha sharh bahosi: 4.7</li><li>Javobsiz savollar: 3 ta</li></ul>" },
+      { key:'announcement', icon:'bi-megaphone', group:"Hisobot", title:"Talabalarga e'lon matnini yoz", sub:"Kurs yangilanishi haqidagi e'lonni tayyorlaydi",
+        match:['e\'lon','xabarnoma','announcement','ogohlantir'],
+        response:"<p><b>Taklif etilgan e'lon:</b></p><p>Salom! Kursga 3 ta yangi dars qo'shildi: throttling, JWT va API versiyalash. Ular 5-bo'lim ichida — allaqachon sotib olganlar uchun bepul. Savollaringizni Muhokama bo'limiga yozing.</p>" }
     ]
   }
 };
+
+/* JS ichida yasaladigan matnlar uchun tarjima (js/i18n.js `isloh_tx`).
+   Aynan shu faylda, chunki u AI fayllaridan birinchi yuklanadi —
+   js/ai-panel.js drawer markupini parse vaqtida yasaydi va o'sha paytda
+   js/ai-chat.js hali yuklanmagan bo'ladi. i18n.js ulanmagan sahifada ham
+   yiqilmaydi: o'zbekcha matn qaytadi. */
+function isloh_aiT(key, uz, vars) {
+  if (typeof isloh_tx === 'function') return isloh_tx(key, uz, vars);
+  if (!vars) return uz;
+  return String(uz).replace(/\{(\w+)\}/g, (m, name) => (name in vars ? String(vars[name]) : m));
+}
+
+/* Shablon matnlari tarjimasi. Kalitlar shablon `key`idan tuziladi —
+   ular butun registr bo'ylab noyob, shuning uchun kontekst prefiksi shart
+   emas. Tarjimasi bo'lmagan shablon o'zbekcha qolaveradi. */
+function isloh_aiTplTitle(t) { return isloh_aiT('ai.tpl.' + t.key + '.title', t.title); }
+function isloh_aiTplSub(t) { return isloh_aiT('ai.tpl.' + t.key + '.sub', t.sub); }
 
 function isloh_aiContext(key) {
   return ISLOH_AI_CONTEXTS[key] || null;
@@ -134,20 +198,82 @@ function isloh_aiFindTemplate(contextKey, templateKey) {
   return ctx.templates.find((t) => t.key === templateKey) || null;
 }
 
-/* --- Widget expand/collapse (Smart Widgets on Course Player / Learning
-   Progress / Dashboard) --- */
-function isloh_initAiWidgetToggles() {
-  document.querySelectorAll('[data-ai-widget-toggle]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const more = btn.closest('.card')?.querySelector('[data-ai-widget-more]');
-      if (!more) return;
-      const show = more.hidden;
-      more.hidden = !show;
-      btn.innerHTML = show
-        ? '<i class="bi bi-chevron-up"></i> Kamroq'
-        : '<i class="bi bi-chevron-down"></i> Ko\'proq';
-    });
-  });
+/* --- Shablon kartochkalari ----------------------------------------------
+   Bu ikki render funksiyasi ilgari js/ai-panel.js ichida edi, ya'ni faqat
+   drawer'da ishlatilardi. To'liq sahifali AI Yordamchi esa xuddi shu
+   kartochkalarni markupda QO'LDA takrorlardi (CLAUDE.md §2 DRY). Endi
+   ular registr yonida — drawer ham, to'liq sahifa ham shu yerdan oladi. */
+
+function isloh_aiRenderSuggestCard(t) {
+  return `<button class="suggest-card" type="button" data-ai-run="${t.key}"><i class="bi ${t.icon}"></i><div class="txt">${isloh_aiTplTitle(t)}</div></button>`;
 }
 
-document.addEventListener('DOMContentLoaded', isloh_initAiWidgetToggles);
+function isloh_aiRenderPromptCard(t) {
+  return `<button class="ai-prompt-card" type="button" data-ai-run="${t.key}">
+    <i class="bi ${t.icon}"></i>
+    <div><div class="apc-title">${isloh_aiTplTitle(t)}</div><div class="apc-sub">${isloh_aiTplSub(t)}</div></div>
+  </button>`;
+}
+
+/* Shablonlarni `group` bo'yicha bo'lib chizadi. Guruhsiz kontekstlarda
+   (drawer kontekstlari) bitta sarlavhasiz blok qaytadi. */
+function isloh_aiRenderPromptGroups(ctx) {
+  if (!ctx) return '';
+  const groups = [];
+  ctx.templates.forEach((t) => {
+    const name = t.group || '';
+    const found = groups.find((g) => g.name === name);
+    (found || groups[groups.push({ name: name, items: [] }) - 1]).items.push(t);
+  });
+  return groups.map((g) => {
+    const label = g.name ? isloh_aiT('ai.group.' + g.name, g.name) : '';
+    const head = label ? `<div class="ai-template-group">${label}</div>` : '';
+    return head + `<div class="ai-prompt-grid">${g.items.map(isloh_aiRenderPromptCard).join('')}</div>`;
+  }).join('');
+}
+
+/* --- Erkin matnni shablonga yo'naltirish ---------------------------------
+   Ilgari har qanday savolga bitta va o'sha "demo rejim" paragrafi
+   qaytarilardi — hatto savol aynan mavjud shablon haqida bo'lsa ham.
+   Endi matn kalit so'zlar bo'yicha baholanadi va eng mos shablon ishga
+   tushadi. Bu real AI emas, shuning uchun taxmin qilinmaydi: mos keladigan
+   shablon topilmasa, javob buni ochiq aytadi (js/ai-chat.js). */
+
+/* Apostrof variantlari (o' / o‘ / o`) bir ko'rinishga keltiriladi */
+function isloh_aiNormalize(text) {
+  return String(text || '').toLowerCase().replace(/[’‘`´]/g, "'");
+}
+
+/* Sarlavhadan olinadigan zaxira kalit so'zlar — 4 harfdan uzunlari */
+function isloh_aiTitleKeywords(t) {
+  return isloh_aiNormalize(t.title).split(/[^a-z'çğışöü0-9]+/).filter((w) => w.length > 4);
+}
+
+function isloh_aiScoreTemplate(t, text) {
+  let score = 0;
+  (t.match || []).forEach((kw) => { if (text.includes(isloh_aiNormalize(kw))) score += 2; });
+  isloh_aiTitleKeywords(t).forEach((w) => { if (text.includes(w)) score += 1; });
+  return score;
+}
+
+/* Eng mos shablon va yaqin muqobillar. `best` null bo'lishi mumkin. */
+function isloh_aiMatchTemplate(contextKey, rawText) {
+  const ctx = isloh_aiContext(contextKey);
+  if (!ctx) return { best: null, nearest: [] };
+
+  const text = isloh_aiNormalize(rawText);
+  const ranked = ctx.templates
+    .map((t) => ({ t: t, score: isloh_aiScoreTemplate(t, text) }))
+    .sort((a, b) => b.score - a.score);
+
+  return {
+    best: ranked[0] && ranked[0].score >= 2 ? ranked[0].t : null,
+    nearest: ranked.slice(0, 2).map((r) => r.t)
+  };
+}
+
+/* Eslatma: bu yerda `isloh_initAiWidgetToggles()` bo'lgan — `[data-ai-widget-
+   toggle]` / `[data-ai-widget-more]` juftligini ochib-yopardi. Bu atributlar
+   67 sahifaning birortasida ham ishlatilmagan, ya'ni funksiya hech qachon
+   chaqirilmagan. O'lik kod olib tashlandi; vidjet kerak bo'lsa naqsh
+   `js/tabs.js` va `js/dropdown.js` kabi umumiy modullardan olinadi. */

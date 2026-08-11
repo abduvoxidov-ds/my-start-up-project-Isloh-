@@ -17,45 +17,81 @@
   </aside>
 
   <div class="main-col">
-    <div class="ai-shell" id="ai-drawer-mount">
-      <!-- CONVERSATION SIDEBAR -->
-      <div class="ai-history-col">
-        <div class="new-chat-btn" data-ai-clear><i class="bi bi-plus-lg"></i> Yangi suhbat</div>
-        <div class="hist-label">Bugun</div>
-        <div class="hist-item active">Django Auth bo'yicha savol</div>
-        <div class="hist-item">Motivatsiya tahlili</div>
-        <div class="hist-label">Kecha</div>
-        <div class="hist-item">DRF Serializer xatosi</div>
-        <div class="hist-item">Ingliz tili — Present Perfect</div>
-        <div class="hist-label">Oldingi 7 kun</div>
-        <div class="hist-item">PostgreSQL indekslash</div>
-        <div class="hist-item">Docker compose sozlash</div>
+    <!-- Topbar yo'q edi: bildirishnoma qo'ng'irog'i ham, profil menyusi ham
+         yetishmasdi, `.ai-shell` esa balandligini `100vh - 68px` deb
+         hisoblab, pastda 68px bo'sh joy qoldirardi. -->
+    <header class="topbar">
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span data-i18n="bc.student">Talaba</span><span class="sep">/</span><span class="current" data-i18n="nav.ai-assistant">AI Yordamchi</span></nav>
+      <div class="topbar-actions">
+        <a href="../shared/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
+        <div class="avatar" data-user-avatar>SM</div>
       </div>
+    </header>
+
+    <div class="ai-shell" id="ai-drawer-mount">
+      <!-- SUHBATLAR USTUNI — ro'yxat do'kondan chiziladi (js/ai-chat.js).
+           Ilgari bu yerda 6 ta o'ylab topilgan sarlavha qattiq yozilgan edi:
+           ular hech qachon o'zgarmasdi va bosilganda hech narsa qilmasdi. -->
+      <nav class="ai-history-col" id="ai-history-col" aria-label="Suhbatlar" data-i18n-aria-label="ai.threads">
+        <!-- Yangi suhbat eskisini o'chirmaydi — u tarixda qoladi -->
+        <button class="new-chat-btn" type="button" data-ai-new-thread><i class="bi bi-plus-lg"></i> <span data-i18n="ai.new">Yangi suhbat</span></button>
+        <div class="ai-history-label" data-i18n="ai.threads">Suhbatlar</div>
+        <div class="ai-history-scroll">
+          <div data-ai-history-list role="list"></div>
+          <div class="ai-history-empty" data-ai-history-empty hidden>
+            <i class="bi bi-clock-history"></i>
+            <div class="ai-empty-title" data-i18n="ai.history.empty.title">Saqlangan suhbat yo'q</div>
+            <p class="ai-empty-sub" data-i18n="ai.history.empty.sub">Savol berganingizdan keyin suhbat shu yerda saqlanadi.</p>
+          </div>
+        </div>
+      </nav>
+      <!-- Tor ekranda suhbatlar ustuni ustidan ochiladi — fon bosilsa yopiladi -->
+      <div class="ai-history-backdrop" data-ai-history-backdrop hidden></div>
 
       <!-- MAIN CHAT -->
       <div class="ai-main" id="ai-drawer-panel" data-ai-context-key="student-chat">
-        <div class="ai-body">
-          <div data-ai-empty style="text-align:center; margin-bottom:24px;">
-            <h2 style="font-size:18px; color:var(--violet-600);">Salom, Samar! ✨</h2>
-            <p style="color:var(--ink-500); font-size:13.5px; margin-top:4px;">Men sizning o'quv tahlilingizni ko'rib chiqdim</p>
-          </div>
-
-          <div class="suggest-row" data-ai-suggestions style="margin-bottom:28px;">
-            <button class="suggest-card" type="button" data-ai-run="today-plan"><i class="bi bi-lightbulb-fill"></i><div class="txt">Bugun nima o'rganay?</div></button>
-            <button class="suggest-card" type="button" data-ai-run="focus-check"><i class="bi bi-clipboard-check"></i><div class="txt">E'tiborimni qanday tekshiray?</div></button>
-            <button class="suggest-card" type="button" data-ai-run="motivation"><i class="bi bi-graph-up-arrow"></i><div class="txt">Motivatsiyani tahlil qil</div></button>
-          </div>
-
-          <div data-ai-messages></div>
+        <!-- Faqat ≤900px da ko'rinadi (css/responsive.css) -->
+        <div class="ai-main-bar">
+          <button class="ai-history-toggle" type="button" data-ai-history-toggle
+                  aria-expanded="false" aria-controls="ai-history-col">
+            <i class="bi bi-chat-left-text"></i> <span data-i18n="ai.threads">Suhbatlar</span>
+          </button>
         </div>
 
-        <div class="ai-input-wrap">
-          <div class="ai-input-box">
-            <input placeholder="Xabar yozing..." aria-label="Xabar yozing" data-ai-input>
-            <button class="icon-btn" style="width:34px;height:34px;" aria-label="Fayl biriktirish"><i class="bi bi-paperclip"></i></button>
-            <button class="send-btn btn btn-primary" style="width:38px;height:38px;padding:0;border-radius:50%;" aria-label="Yuborish" data-ai-send type="button"><i class="bi bi-send-fill"></i></button>
+        <div class="ai-body">
+          <div class="ai-greeting" data-ai-empty>
+            <h2 data-ai-greeting>Salom! ✨</h2>
+            <p data-i18n="ai.sub.student">Men sizning o'quv tahlilingizni ko'rib chiqdim</p>
           </div>
-          <div class="ai-disclaimer">AI yordamchi xato qilishi mumkin. Muhim ma'lumotlarni tekshiring.</div>
+
+          <!-- Kartochkalar ISLOH_AI_CONTEXTS registridan chiziladi
+               (js/ai-chat.js) — markupda takrorlanmaydi -->
+          <div class="suggest-row" data-ai-suggestions></div>
+
+          <div class="ai-templates" data-ai-empty-extra>
+            <button class="ai-templates-toggle" type="button" data-ai-templates-toggle aria-expanded="false">
+              <i class="bi bi-chevron-down"></i> <span data-i18n="ai.templates.all">Barcha shablonlar</span> (<span data-ai-template-count>0</span>)
+            </button>
+            <div class="ai-templates-panel" data-ai-templates-panel hidden>
+              <div data-ai-template-grid></div>
+            </div>
+          </div>
+
+          <!-- role="log" + aria-live: skrin-rider yangi javobni eshitadi.
+               Drawer'da bu allaqachon bor edi, to'liq sahifada yo'q edi. -->
+          <div data-ai-messages role="log" aria-live="polite"></div>
+        </div>
+
+        <!-- Skrepka tugmasi ishlamasdi va nega ishlamasligini aytmasdi.
+             Endi u Xabarlar sahifasidagi bilan bir xil naqshda o'chirilgan
+             holatda turadi (js/backend-pending.js). -->
+        <div class="ai-input-wrap" data-backend-pending-note data-backend-pending-reason="fayl saqlash uchun server talab qiladi">
+          <div class="ai-input-box">
+            <input placeholder="Xabar yozing..." data-i18n-placeholder="ai.input.ph" aria-label="Xabar yozing" data-i18n-aria-label="ai.input.ph" data-ai-input>
+            <button class="icon-btn ai-attach-btn" data-backend-pending="Fayl biriktirish" aria-label="Fayl biriktirish" data-i18n-aria-label="ai.attach"><i class="bi bi-paperclip"></i></button>
+            <button class="send-btn btn btn-primary" aria-label="Yuborish" data-i18n-aria-label="ai.send" data-ai-send type="button"><i class="bi bi-send-fill"></i></button>
+          </div>
+          <div class="ai-disclaimer" data-i18n="ai.disclaimer">AI yordamchi xato qilishi mumkin. Muhim ma'lumotlarni tekshiring.</div>
         </div>
       </div>
     </div>
@@ -63,13 +99,24 @@
 </div>
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
+<!-- chat-store.js — yon menyudagi "Xabarlar" o'qilmagan belgisi uchun
+     (js/sidebar.js `isloh_chatMountNavBadge` ni chaqiradi) -->
 <script src="../../js/chat-store.js"></script>
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- toast.js yetishmasdi: "Suhbat tozalandi" va "Nusxalandi" kabi
+     bildirishnomalar jimgina yo'qolib ketardi -->
+<script src="../../js/toast.js"></script>
+<!-- modal.js — suhbatni o'chirishni tasdiqlash dialogi (fon, Escape, fokus) -->
+<script src="../../js/modal.js"></script>
 <script src="../../js/ai-assistant.js"></script>
-<!-- Foydalanuvchi bosh harflari suhbat avatarida ishlatiladi -->
+<!-- Foydalanuvchi ismi va bosh harflari salomlashuv hamda suhbat avatarida -->
 <script src="../../js/profile.js"></script>
+<script src="../../js/dropdown.js"></script>
+<script src="../../js/user-menu.js"></script>
+<!-- Fayl biriktirish tugmasini o'chirib qo'yadi va sababini aytadi -->
+<script src="../../js/backend-pending.js"></script>
 <script src="../../js/ai-store.js"></script>
 <script src="../../js/ai-chat.js"></script>
 </body>

@@ -21,6 +21,13 @@
 function isloh_aiPanel() { return document.getElementById('ai-drawer-panel'); }
 function isloh_aiContextKey() { return isloh_aiPanel()?.dataset.aiContextKey || null; }
 
+/* `isloh_aiT` js/ai-assistant.js da — u birinchi yuklanadi va js/ai-panel.js
+   ham undan foydalanadi (drawer markupi parse vaqtida yasaladi). */
+
+function isloh_aiToast(message, type) {
+  if (typeof isloh_showToast === 'function') isloh_showToast(message, type);
+}
+
 /* --- Joriy kontekst (kurs / dars) ---------------------------------------- */
 
 /* Kurs pleerida faol dars qatoridan, boshqa sahifalarda esa bo'sh qaytadi.
@@ -37,17 +44,33 @@ function isloh_aiCurrentLesson() {
   };
 }
 
-/* Thread meta — do'kon uchun ham, tarix qatori sarlavhasi uchun ham */
+/* Thread meta — do'kon uchun ham, tarix qatori sarlavhasi uchun ham.
+
+   Ikki xil suhbat mavjud:
+     • darsga bog'langan (kurs pleeri) — id deterministik, bitta dars = bitta
+       suhbat, sarlavha dars nomi;
+     • erkin (to'liq sahifali AI Yordamchi) — id do'konda saqlangan faol
+       suhbatdan olinadi, sarlavha esa birinchi savoldan tuziladi.
+
+   Ilgari ikkinchi holat umuman yo'q edi: `instructor-chat` uchun id har doim
+   `instructor-chat::::` chiqardi, ya'ni bittadan ortiq suhbat texnik jihatdan
+   mumkin emasdi — tarix ro'yxati ham, "Yangi suhbat" ham shu sabab
+   ma'nosiz edi. */
 function isloh_aiThreadMeta() {
   const ctxKey = isloh_aiContextKey();
-  const ctx = (typeof isloh_aiContext === 'function' && ctxKey) ? isloh_aiContext(ctxKey) : null;
   const cur = isloh_aiCurrentLesson();
+  const threadId = cur.lessonId
+    ? isloh_aiThreadId(ctxKey, cur.courseId, cur.lessonId)
+    : (typeof isloh_aiGetActiveThreadId === 'function'
+        ? isloh_aiGetActiveThreadId(ctxKey)
+        : isloh_aiThreadId(ctxKey, '', ''));
+
   return {
-    threadId: isloh_aiThreadId(ctxKey, cur.courseId, cur.lessonId),
+    threadId: threadId,
     contextKey: ctxKey,
     courseId: cur.courseId,
     lessonId: cur.lessonId,
-    title: cur.lessonTitle || (ctx ? ctx.label : 'Suhbat')
+    title: cur.lessonTitle || ''
   };
 }
 
@@ -67,7 +90,9 @@ function isloh_aiSyncContextLabel() {
   const ctx = (typeof isloh_aiContext === 'function' && ctxKey) ? isloh_aiContext(ctxKey) : null;
   if (!el || !ctx) return;
   const lessonTitle = isloh_aiCurrentLesson().lessonTitle;
-  el.textContent = 'Kontekst: ' + ctx.label + (lessonTitle ? ' · ' + lessonTitle : '');
+  const label = isloh_aiT('ai.ctx.' + ctxKey, ctx.label);
+  el.textContent = isloh_aiT('ai.context', 'Kontekst: {label}', { label: label })
+    + (lessonTitle ? ' · ' + lessonTitle : '');
 }
 
 /* Foydalanuvchi bosh harflari — profil do'konidan (js/profile.js), qattiq
@@ -79,29 +104,59 @@ function isloh_aiUserInitials() {
   return '?';
 }
 
+/* Salomlashuvdagi ism. Ilgari "Salom, Akmal!" markupga qattiq yozilgan edi:
+   profil sahifasida ism o'zgartirilsa ham AI paneli eski ismni aytaverardi.
+   Avatar bosh harflari allaqachon do'kondan olinardi — endi ism ham. */
+function isloh_aiSyncGreeting() {
+  const el = document.querySelector('[data-ai-greeting]');
+  if (!el || typeof isloh_getUserProfile !== 'function') return;
+  const firstName = String(isloh_getUserProfile().name || '').trim().split(/\s+/)[0];
+  if (!firstName) return;
+  el.textContent = isloh_aiT('ai.greeting', 'Salom, {name}! ✨', { name: firstName });
+}
+
 function isloh_aiAvatar(role) {
   return role === 'ai'
     ? '<div class="avatar-sm"><i class="bi bi-stars"></i></div>'
     : `<div class="avatar-sm">${isloh_aiUserInitials()}</div>`;
 }
 
+/* Suhbat ikki xil qobiqda yashaydi: drawer'da skroller `.ai-drawer-body`,
+   to'liq sahifali AI Yordamchida esa `.ai-body`. Ilgari faqat birinchisi
+   qidirilardi — natijada to'liq sahifada oyna hech qachon pastga tushmasdi
+   va yangi javob ekrandan tashqarida qolib ketardi. */
 function isloh_aiScrollToBottom() {
-  const body = document.querySelector('.ai-drawer-body');
+  const body = document.querySelector('.ai-drawer-body, .ai-body');
   if (body) body.scrollTop = body.scrollHeight;
 }
 
+/* `data-ai-empty-extra` — bo'sh holatda ko'rinadigan qo'shimcha blok
+   (to'liq sahifadagi "Barcha shablonlar" ro'yxati). Suhbat boshlangach u ham
+   yig'ishtiriladi, aks holda javoblar ro'yxat ostida qolib ketardi. */
 function isloh_aiSetEmptyVisible(visible) {
-  const empty = document.querySelector('[data-ai-empty]');
-  const suggestions = document.querySelector('[data-ai-suggestions]');
-  if (empty) empty.hidden = !visible;
-  if (suggestions) suggestions.hidden = !visible;
+  ['[data-ai-empty]', '[data-ai-suggestions]', '[data-ai-empty-extra]'].forEach((sel) => {
+    const el = document.querySelector(sel);
+    if (el) el.hidden = !visible;
+  });
 }
 
 /* Do'konga yozish. `persist=false` — saqlangan suhbatni qayta chizayotganda
    (aks holda har ochilishda xabarlar ikkilanardi). */
+/* Kvota to'lganda ogohlantirish bir marta beriladi — har bir xabarda
+   takrorlansa suhbat toast'lar ostida qolib ketardi. Ilgari do'kon `false`
+   qaytarardi, lekin buni hech kim tekshirmasdi: yozishma jimgina
+   saqlanmay qo'yardi va foydalanuvchi buni sahifani yangilagandagina
+   bilardi. */
+let isloh_aiQuotaWarned = false;
+
 function isloh_aiPersist(message) {
   if (typeof isloh_aiAppendMessage !== 'function') return;
-  isloh_aiAppendMessage(isloh_aiThreadMeta(), message);
+
+  const saved = isloh_aiAppendMessage(isloh_aiThreadMeta(), message);
+  if (!saved && !isloh_aiQuotaWarned) {
+    isloh_aiQuotaWarned = true;
+    isloh_aiToast(isloh_aiT('ai.quota', "Xotira to'ldi — suhbat saqlanmayapti. Eski suhbatlarni o'chiring."), 'error');
+  }
   // Tarix ro'yxati har yangi xabardan keyin yangilanadi (xabar soni, vaqti)
   isloh_aiRenderHistory();
 }
@@ -155,12 +210,12 @@ function isloh_aiFlashcardsHtml() {
 function isloh_aiInsertIntoEditor(sourceEl) {
   const target = document.querySelector('[data-ai-insert-target]') || document.querySelector('.editor-textarea');
   if (!target) {
-    if (typeof isloh_showToast === 'function') isloh_showToast("Muharrirda joy topilmadi", 'error');
+    isloh_aiToast(isloh_aiT('ai.insert.nospot', "Muharrirda joy topilmadi"), 'error');
     return;
   }
   target.value = (target.value ? target.value + '\n\n' : '') + sourceEl.innerText.trim();
   target.dispatchEvent(new Event('input', { bubbles: true }));
-  if (typeof isloh_showToast === 'function') isloh_showToast("Muharrirga qo'shildi", 'success');
+  isloh_aiToast(isloh_aiT('ai.insert.done', "Muharrirga qo'shildi"), 'success');
 }
 
 function isloh_aiAppendAiMessage(templateKey, html, persist) {
@@ -180,9 +235,9 @@ function isloh_aiAppendAiMessage(templateKey, html, persist) {
   row.innerHTML = `${isloh_aiAvatar('ai')}<div>
     <div class="${bubbleClass}" data-ai-response>${html}</div>
     <div class="msg-actions">
-      <button data-ai-copy><i class="bi bi-clipboard"></i> Nusxalash</button>
-      ${isGenerate ? '<button data-ai-insert><i class="bi bi-box-arrow-in-down"></i> Muharrirga qo\'shish</button>' : ''}
-      <button data-ai-regen data-key="${templateKey || ''}"><i class="bi bi-arrow-clockwise"></i> Qayta yaratish</button>
+      <button data-ai-copy><i class="bi bi-clipboard"></i> ${isloh_aiT('ai.act.copy', 'Nusxalash')}</button>
+      ${isGenerate ? `<button data-ai-insert><i class="bi bi-box-arrow-in-down"></i> ${isloh_aiT('ai.act.insert', "Muharrirga qo'shish")}</button>` : ''}
+      <button data-ai-regen data-key="${templateKey || ''}"><i class="bi bi-arrow-clockwise"></i> ${isloh_aiT('ai.act.regen', 'Qayta yaratish')}</button>
     </div>
   </div>`;
   list.appendChild(row);
@@ -193,14 +248,13 @@ function isloh_aiAppendAiMessage(templateKey, html, persist) {
      ham "Nusxalandi" deb yolg'on aytardi. */
   row.querySelector('[data-ai-copy]')?.addEventListener('click', () => {
     const text = row.querySelector('[data-ai-response]').innerText;
-    const toast = (msg, type) => { if (typeof isloh_showToast === 'function') isloh_showToast(msg, type); };
     if (!navigator.clipboard) {
-      toast('Brauzer nusxalashni qo\'llab-quvvatlamaydi', 'error');
+      isloh_aiToast(isloh_aiT('ai.copy.unsupported', "Brauzer nusxalashni qo'llab-quvvatlamaydi"), 'error');
       return;
     }
     navigator.clipboard.writeText(text)
-      .then(() => toast('Nusxalandi', 'success'))
-      .catch(() => toast('Nusxalab bo\'lmadi', 'error'));
+      .then(() => isloh_aiToast(isloh_aiT('ai.copy.done', 'Nusxalandi'), 'success'))
+      .catch(() => isloh_aiToast(isloh_aiT('ai.copy.fail', "Nusxalab bo'lmadi"), 'error'));
   });
   row.querySelector('[data-ai-insert]')?.addEventListener('click', () => {
     isloh_aiInsertIntoEditor(row.querySelector('[data-ai-response]'));
@@ -224,7 +278,7 @@ function isloh_aiRunTemplate(templateKey, echo) {
   const template = (typeof isloh_aiFindTemplate === 'function') ? isloh_aiFindTemplate(ctxKey, templateKey) : null;
   if (!template) return;
 
-  if (echo !== false) isloh_aiAppendUserMessage(template.title);
+  if (echo !== false) isloh_aiAppendUserMessage(isloh_aiTplTitle(template));
   isloh_aiSetEmptyVisible(false);
   const typingRow = isloh_aiAppendTyping();
   setTimeout(() => {
@@ -233,16 +287,36 @@ function isloh_aiRunTemplate(templateKey, echo) {
   }, 900);
 }
 
+/* Mos shablon topilmaganda: demo ekani ochiq aytiladi va eng yaqin ikki
+   shablon tugma sifatida taklif qilinadi (kartochkalar registrdan chiziladi,
+   ya'ni matn ikki joyda takrorlanmaydi). */
+function isloh_aiFallbackHtml(nearest) {
+  const cards = (nearest || []).map(isloh_aiRenderPromptCard).join('');
+  const lead = isloh_aiT('ai.demo.lead', 'Bu savolga aniq javob berish uchun real AI ulanishi kerak — hozir demo rejim ishlayapti.');
+  const hint = isloh_aiT('ai.demo.hint', 'Shu oraliqda quyidagilardan biri yordam berishi mumkin:');
+  return `<p>${lead}</p>` +
+    (cards ? `<p class="ai-hint">${hint}</p><div class="ai-prompt-grid">${cards}</div>` : '');
+}
+
+/* Erkin matn. Ilgari savol nima bo'lishidan qat'i nazar bitta va o'sha
+   paragraf qaytarilardi — hatto savol aynan mavjud shablon haqida bo'lsa
+   ham. Endi matn kalit so'zlar bo'yicha shablonga yo'naltiriladi. */
 function isloh_aiSendFreeText() {
   const input = document.querySelector('[data-ai-input]');
   if (!input || !input.value.trim()) return;
   const text = input.value.trim();
   input.value = '';
   isloh_aiAppendUserMessage(text);
+
+  const match = (typeof isloh_aiMatchTemplate === 'function')
+    ? isloh_aiMatchTemplate(isloh_aiContextKey(), text)
+    : { best: null, nearest: [] };
+
   const typingRow = isloh_aiAppendTyping();
   setTimeout(() => {
     typingRow?.remove();
-    isloh_aiAppendAiMessage(null, `<p>Savolingiz uchun rahmat! Bu demo rejim — real AI javobi hozircha ulanmagan, lekin yuqoridagi shablonlardan birini sinab ko'rishingiz mumkin.</p>`);
+    if (match.best) isloh_aiAppendAiMessage(match.best.key, match.best.response);
+    else isloh_aiAppendAiMessage(null, isloh_aiFallbackHtml(match.nearest));
   }, 900);
 }
 
@@ -280,47 +354,90 @@ function isloh_aiRenderHistory() {
   if (empty) empty.hidden = threads.length > 0;
 
   threads.forEach((t) => {
+    const isActive = t.id === activeId;
     const row = document.createElement('div');
-    row.className = 'ai-history-row' + (t.id === activeId ? ' active' : '');
+    row.className = 'ai-history-row' + (isActive ? ' active' : '');
+    row.setAttribute('role', 'listitem');
+    /* aria-current: skrin-rider qaysi suhbat ochiqligini eshitadi —
+       ilgari buni faqat fon rangi bildirardi */
     row.innerHTML = `
-      <button class="ai-history-open" type="button" data-ai-history-open>
+      <button class="ai-history-open" type="button" data-ai-history-open${isActive ? ' aria-current="true"' : ''}>
         <i class="bi bi-chat-left-text" aria-hidden="true"></i>
         <span class="ahr-body">
           <span class="ahr-title"></span>
           <span class="ahr-meta"></span>
         </span>
       </button>
-      <button class="icon-btn ai-history-del" type="button" data-ai-history-del aria-label="Suhbatni o'chirish"><i class="bi bi-trash3"></i></button>`;
+      <button class="icon-btn ai-history-del" type="button" data-ai-history-del aria-label="${isloh_aiT('ai.history.del', "Suhbatni o'chirish")}"><i class="bi bi-trash3"></i></button>`;
 
     row.dataset.threadId = t.id;
     row.dataset.lessonId = t.lessonId || '';
-    row.querySelector('.ahr-title').textContent = t.title || 'Suhbat';
+    row.querySelector('.ahr-title').textContent = t.title || isloh_aiT('ai.thread', 'Suhbat');
     row.querySelector('.ahr-meta').textContent =
-      (t.messages || []).length + ' xabar · ' + isloh_aiRelativeTime(t.updatedAt);
+      isloh_aiT('ai.history.meta', '{n} xabar', { n: (t.messages || []).length })
+      + ' · ' + isloh_aiRelativeTime(t.updatedAt);
     mount.appendChild(row);
   });
 }
 
-/* Tarix qatori bosilganda: suhbat darsga bog'langani uchun avval o'sha
-   darsga o'tiladi (pleer `isloh:lesson-change` yuboradi → suhbat o'zi
-   tiklanadi). Dars shu sahifada bo'lmasa (boshqa kurs suhbati) — ochib
-   bo'lmasligi ochiq aytiladi, jimgina noto'g'ri suhbat ko'rsatilmaydi. */
+/* Tarix qatori bosilganda uch xil holat bor:
+
+   1. Bosilgan suhbat allaqachon ochiq — faqat Suhbat tabiga qaytiladi.
+   2. Suhbat darsga bog'langan — avval o'sha darsga o'tiladi (pleer
+      `isloh:lesson-change` yuboradi → suhbat o'zi tiklanadi). Dars shu
+      sahifada bo'lmasa, ochib bo'lmasligi ochiq aytiladi.
+   3. Erkin suhbat (to'liq sahifali AI Yordamchi) — faol suhbat almashadi va
+      yozishmalar darhol qayta chiziladi. Ilgari bu tarmoq umuman yo'q edi:
+      har qanday boshqa suhbat "boshqa kursga tegishli" deb rad etilardi. */
 function isloh_aiOpenHistoryThread(row) {
   const threadId = row.dataset.threadId;
   const lessonId = row.dataset.lessonId;
-  const current = isloh_aiThreadMeta().threadId;
+  const meta = isloh_aiThreadMeta();
 
-  if (threadId !== current) {
-    const lessonRow = lessonId ? document.querySelector(`[data-cps-lesson][data-lesson-id="${lessonId}"]`) : null;
-    if (!lessonRow || typeof isloh_setActiveLesson !== 'function') {
-      if (typeof isloh_showToast === 'function') isloh_showToast('Bu suhbat boshqa kursga tegishli', 'info');
-      return;
+  if (threadId !== meta.threadId) {
+    if (lessonId) {
+      const lessonRow = document.querySelector(`[data-cps-lesson][data-lesson-id="${lessonId}"]`);
+      if (!lessonRow || typeof isloh_setActiveLesson !== 'function') {
+        isloh_aiToast(isloh_aiT('ai.thread.other', 'Bu suhbat boshqa kursga tegishli'), 'info');
+        return;
+      }
+      isloh_setActiveLesson(lessonId);
+    } else {
+      if (typeof isloh_aiSetActiveThreadId === 'function') {
+        isloh_aiSetActiveThreadId(meta.contextKey, threadId);
+      }
+      isloh_aiRestoreThread();
+      isloh_aiRenderHistory();
     }
-    isloh_setActiveLesson(lessonId);
   }
 
-  // Suhbat tabiga qaytish
+  // Suhbat tabiga qaytish (drawer'da; to'liq sahifada tab yo'q)
   document.querySelector('.ai-drawer-tabs .tab-item[data-tab-target="ai-tab-chat"]')?.click();
+}
+
+/* Sahifalararo kirish nuqtasi: `ai-assistant.html?run=<templateKey>`.
+
+   Nega kerak: Dashboard'dagi "AI tahlili" kartochkalari shu paytgacha
+   shunchaki matn edi — o'qituvchi "Xavf ostidagi talabalar" degan xulosani
+   ko'rardi-yu, uni ochib ko'ra olmasdi. `data-ai-quick` faqat BIR sahifa
+   ichida ishlaydi, chunki drawer o'sha sahifada bo'lishi kerak.
+
+   Query satri `file://` ostida ham ishlaydi (CLAUDE.md §3), shuning uchun
+   bu yondashuv serversiz ham buziladigan joyi yo'q. */
+function isloh_aiRunFromQuery() {
+  const key = new URLSearchParams(window.location.search).get('run');
+  if (!key) return;
+  if (typeof isloh_aiFindTemplate !== 'function') return;
+  if (!isloh_aiFindTemplate(isloh_aiContextKey(), key)) return;
+
+  /* Yangi suhbatda ochiladi — mavjud yozishmaning oxiriga jimgina
+     qo'shilib qolmasin */
+  if (typeof isloh_aiStartNewThread === 'function') {
+    isloh_aiStartNewThread(isloh_aiContextKey());
+    isloh_aiRestoreThread();
+  }
+  isloh_aiRunTemplate(key);
+  isloh_aiRenderHistory();
 }
 
 function isloh_aiOpenAndRun(contextKey, templateKey) {
@@ -329,6 +446,91 @@ function isloh_aiOpenAndRun(contextKey, templateKey) {
   isloh_openModal('ai-drawer-overlay');
   document.getElementById('ai-drawer-panel')?.classList.remove('minimized');
   isloh_aiRunTemplate(templateKey);
+}
+
+/* --- Suhbatni o'chirishni tasdiqlash -------------------------------------
+   O'chirish qaytarib bo'lmaydi, shuning uchun bir bosishda ketmasin.
+   Dialog markupi JS'da yasaladi: u drawer'ning "Tarix" tabida ham, ikkala
+   to'liq sahifada ham kerak — uchta joyda takrorlashning ma'nosi yo'q.
+   Fon bosish, Escape va fokus tuzog'i js/modal.js zimmasida. */
+
+const ISLOH_AI_CONFIRM_ID = 'ai-delete-confirm';
+let isloh_aiPendingDeleteId = null;
+
+function isloh_aiEnsureConfirmDialog() {
+  if (document.getElementById(ISLOH_AI_CONFIRM_ID)) return;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'modal-overlay';
+  wrap.id = ISLOH_AI_CONFIRM_ID;
+  wrap.hidden = true;
+  wrap.innerHTML = `
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="ai-delete-confirm-title">
+      <div class="modal-head">
+        <h3 id="ai-delete-confirm-title">${isloh_aiT('ai.del.title', "Suhbatni o'chirish")}</h3>
+        <button class="icon-btn" data-modal-close="${ISLOH_AI_CONFIRM_ID}" aria-label="${isloh_aiT('ai.close', 'Yopish')}"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-note" data-ai-del-note></p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-outline" data-modal-close="${ISLOH_AI_CONFIRM_ID}" data-modal-autofocus>${isloh_aiT('ai.cancel', 'Bekor qilish')}</button>
+        <button class="btn btn-danger" data-ai-del-confirm>${isloh_aiT('ai.del.ok', "O'chirish")}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(wrap);
+}
+
+function isloh_aiAskDeleteThread(row) {
+  isloh_aiPendingDeleteId = row.dataset.threadId;
+
+  const title = row.querySelector('.ahr-title')?.textContent || isloh_aiT('ai.thread', 'Suhbat');
+  const message = isloh_aiT('ai.del.note',
+    '"{title}" suhbati butunlay o\'chiriladi. Bu amalni qaytarib bo\'lmaydi.', { title: title });
+
+  /* js/modal.js ulanmagan sahifada dialog ko'rinmasdi va savat tugmasi
+     jimgina hech narsa qilmasdi. Zaxira sifatida brauzer tasdig'i —
+     amal hech qachon "o'lik" bo'lib qolmasin. */
+  if (typeof isloh_openModal !== 'function') {
+    if (window.confirm(message)) isloh_aiConfirmDeleteThread();
+    else isloh_aiPendingDeleteId = null;
+    return;
+  }
+
+  isloh_aiEnsureConfirmDialog();
+  const note = document.querySelector('[data-ai-del-note]');
+  if (note) note.textContent = message;
+  isloh_openModal(ISLOH_AI_CONFIRM_ID);
+}
+
+function isloh_aiConfirmDeleteThread() {
+  if (typeof isloh_closeModal === 'function') isloh_closeModal(ISLOH_AI_CONFIRM_ID);
+  const threadId = isloh_aiPendingDeleteId;
+  isloh_aiPendingDeleteId = null;
+  if (!threadId) return;
+
+  const wasActive = threadId === isloh_aiThreadMeta().threadId;
+  if (typeof isloh_aiDeleteThread === 'function') isloh_aiDeleteThread(threadId);
+  if (wasActive) isloh_aiRestoreThread();
+  isloh_aiRenderHistory();
+  isloh_aiToast(isloh_aiT('ai.del.done', "Suhbat o'chirildi"), 'info');
+}
+
+/* --- Tor ekranda suhbatlar ustuni ---------------------------------------
+   ≤900px da ustun `display:none` edi va uni qaytaradigan hech narsa yo'q
+   edi — ya'ni telefonda saqlangan suhbatlarga umuman kirib bo'lmasdi. */
+function isloh_aiSetHistoryOpen(open) {
+  const col = document.getElementById('ai-history-col');
+  const backdrop = document.querySelector('[data-ai-history-backdrop]');
+  const toggle = document.querySelector('[data-ai-history-toggle]');
+  if (!col) return;
+
+  col.classList.toggle('open', open);
+  if (backdrop) backdrop.hidden = !open;
+  if (toggle) toggle.setAttribute('aria-expanded', String(open));
+  // Yopilganda fokus ochgan tugmaga qaytadi
+  if (open) col.querySelector('.new-chat-btn')?.focus();
+  else toggle?.focus();
 }
 
 function isloh_initAiDrawerEvents() {
@@ -341,6 +543,9 @@ function isloh_initAiDrawerEvents() {
 
     if (e.target.closest('[data-ai-send]')) { isloh_aiSendFreeText(); return; }
 
+    const tplBtn = e.target.closest('[data-ai-templates-toggle]');
+    if (tplBtn) { isloh_aiToggleTemplates(tplBtn); return; }
+
     const minBtn = e.target.closest('[data-ai-minimize]');
     if (minBtn) {
       const panel = isloh_aiPanel();
@@ -352,6 +557,18 @@ function isloh_initAiDrawerEvents() {
       return;
     }
 
+    /* "Yangi suhbat" — tozalashdan farqli o'laroq eskisini O'CHIRMAYDI,
+       shunchaki yangi faol suhbat ochadi va eskisi tarixda qoladi. */
+    if (e.target.closest('[data-ai-new-thread]')) {
+      if (typeof isloh_aiStartNewThread === 'function') {
+        isloh_aiStartNewThread(isloh_aiContextKey());
+      }
+      isloh_aiRestoreThread();
+      isloh_aiRenderHistory();
+      document.querySelector('[data-ai-input]')?.focus();
+      return;
+    }
+
     // Tozalash endi do'kondan ham o'chiradi — aks holda sahifa yangilanganda
     // "tozalangan" suhbat qaytib kelardi
     if (e.target.closest('[data-ai-clear]')) {
@@ -360,28 +577,97 @@ function isloh_initAiDrawerEvents() {
       if (typeof isloh_aiDeleteThread === 'function') isloh_aiDeleteThread(isloh_aiThreadMeta().threadId);
       isloh_aiSetEmptyVisible(true);
       isloh_aiRenderHistory();
-      if (typeof isloh_showToast === 'function') isloh_showToast('Suhbat tozalandi', 'info');
+      isloh_aiToast(isloh_aiT('ai.cleared', 'Suhbat tozalandi'), 'info');
       return;
     }
 
+    // O'chirish endi darhol bajarilmaydi — avval tasdiqlash so'raladi
     const delBtn = e.target.closest('[data-ai-history-del]');
-    if (delBtn) {
-      const row = delBtn.closest('.ai-history-row');
-      const isActive = row.dataset.threadId === isloh_aiThreadMeta().threadId;
-      if (typeof isloh_aiDeleteThread === 'function') isloh_aiDeleteThread(row.dataset.threadId);
-      if (isActive) isloh_aiRestoreThread();
-      isloh_aiRenderHistory();
-      if (typeof isloh_showToast === 'function') isloh_showToast("Suhbat o'chirildi", 'info');
-      return;
-    }
+    if (delBtn) { isloh_aiAskDeleteThread(delBtn.closest('.ai-history-row')); return; }
 
     const histBtn = e.target.closest('[data-ai-history-open]');
-    if (histBtn) { isloh_aiOpenHistoryThread(histBtn.closest('.ai-history-row')); return; }
+    if (histBtn) {
+      isloh_aiOpenHistoryThread(histBtn.closest('.ai-history-row'));
+      // Telefonda suhbat tanlangach ustun yopiladi
+      if (document.getElementById('ai-history-col')?.classList.contains('open')) {
+        isloh_aiSetHistoryOpen(false);
+      }
+      return;
+    }
+
+    if (e.target.closest('[data-ai-history-toggle]')) {
+      isloh_aiSetHistoryOpen(!document.getElementById('ai-history-col')?.classList.contains('open'));
+      return;
+    }
+    if (e.target.closest('[data-ai-history-backdrop]')) { isloh_aiSetHistoryOpen(false); return; }
+  });
+
+  /* Tasdiqlash dialogi <body> ga qo'shiladi (mount ichida emas), shuning
+     uchun uning tugmasi hujjat darajasida tinglanadi */
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-ai-del-confirm]')) isloh_aiConfirmDeleteThread();
+  });
+
+  // Escape ustunni ham yopsin (modal.js faqat overlay'lar bilan ishlaydi)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('ai-history-col')?.classList.contains('open')) {
+      isloh_aiSetHistoryOpen(false);
+    }
   });
 
   mount.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && e.target.matches('[data-ai-input]')) { e.preventDefault(); isloh_aiSendFreeText(); }
   });
+}
+
+/* To'liq sahifali AI Yordamchida takliflar va shablonlar ro'yxati ham
+   registrdan chiziladi. Drawer'da buni js/ai-panel.js bajaradi — endi ikkala
+   qobiq ham bir manbadan oziqlanadi va markupda kartochka takrorlanmaydi. */
+function isloh_aiRenderShellTemplates(force) {
+  const ctxKey = isloh_aiContextKey();
+  const ctx = (typeof isloh_aiContext === 'function' && ctxKey) ? isloh_aiContext(ctxKey) : null;
+  if (!ctx) return;
+
+  /* Drawer'da bu joy js/ai-panel.js tomonidan allaqachon to'ldirilgan —
+     ikki marta chizilmasin. `force` faqat til almashganda beriladi. */
+  const suggestMount = document.querySelector('[data-ai-suggestions]');
+  if (suggestMount && (force || !suggestMount.children.length)) {
+    suggestMount.innerHTML = ctx.templates.slice(0, 3).map(isloh_aiRenderSuggestCard).join('');
+  }
+
+  const grid = document.querySelector('[data-ai-template-grid]');
+  if (grid) grid.innerHTML = isloh_aiRenderPromptGroups(ctx);
+
+  /* Drawer'ning "Shablonlar" tabi ham registrdan — u markupda emas,
+     ai-panel.js yasagan HTML'da, ya'ni `data-i18n` unga yetib bormaydi */
+  const drawerPanel = document.querySelector('[data-tab-panel="ai-tab-templates"]');
+  if (drawerPanel && force) drawerPanel.innerHTML = isloh_aiRenderPromptGroups(ctx);
+
+  const count = document.querySelector('[data-ai-template-count]');
+  if (count) count.textContent = ctx.templates.length;
+}
+
+/* Til almashganda registrdan chizilgan hamma narsa qayta chiziladi.
+   `data-i18n` faqat markupdagi matnni almashtiradi — kartochkalar,
+   suhbat tarixi va yozishmalar esa JS bilan yasalgan. */
+function isloh_aiOnLanguageApplied() {
+  if (!isloh_aiPanel()) return;
+  isloh_aiRenderShellTemplates(true);
+  isloh_aiSyncContextLabel();
+  isloh_aiSyncGreeting();
+  isloh_aiRestoreThread();
+  isloh_aiRenderHistory();
+}
+
+/* Shablonlar ro'yxatini ochish/yopish (to'liq sahifada tab yo'q) */
+function isloh_aiToggleTemplates(btn) {
+  const panel = document.querySelector('[data-ai-templates-panel]');
+  if (!panel) return;
+  const show = panel.hidden;
+  panel.hidden = !show;
+  btn.setAttribute('aria-expanded', String(show));
+  const icon = btn.querySelector('i');
+  if (icon) icon.className = show ? 'bi bi-chevron-up' : 'bi bi-chevron-down';
 }
 
 function isloh_initAiQuickChips() {
@@ -405,9 +691,13 @@ function isloh_aiSyncToLesson() {
 document.addEventListener('DOMContentLoaded', () => {
   isloh_initAiDrawerEvents();
   isloh_initAiQuickChips();
+  isloh_aiRenderShellTemplates();
+  isloh_aiSyncGreeting();
 
   /* Pleer darslarni chizgandan keyin ishlashi uchun hodisaga ulanamiz;
      dastlabki holat esa darhol tiklanadi (dars yo'q sahifalar uchun). */
   document.addEventListener('isloh:lesson-change', isloh_aiSyncToLesson);
+  document.addEventListener('isloh:i18n-applied', isloh_aiOnLanguageApplied);
   isloh_aiSyncToLesson();
+  isloh_aiRunFromQuery();
 });
