@@ -21,7 +21,10 @@ const NAV_CONFIG = {
     { key: 'marketplace',    label: 'Marketplace',       icon: 'bi-bag-fill',               href: 'marketplace.html' },
     { key: 'bookmarks',      label: 'Saqlanganlar',      icon: 'bi-bookmark-star',          href: 'bookmarks.html' },
     { key: 'calendar',       label: 'Vazifalar',         icon: 'bi-check2-square',          href: 'calendar.html' },
-    { key: 'chat',           label: 'Chat',               icon: 'bi-chat-dots-fill',         href: 'chat.html' },
+    /* Nom uch rolda ham bir xil — "Xabarlar". Fayl nomi `chat.html`
+       bo'lib qoldi (havolalar buzilmasligi uchun), tarjima kaliti ham
+       shundan olinadi: `nav.chat`. */
+    { key: 'chat',           label: 'Xabarlar',          icon: 'bi-chat-dots-fill',         href: 'chat.html' },
     { key: 'ai-assistant',   label: 'AI Yordamchi',      icon: 'bi-stars',                  href: 'ai-assistant.html' },
     { key: 'certificates',   label: 'Sertifikatlar',     icon: 'bi-patch-check-fill',       href: 'certificates.html' },
     /* "Profil" ataylab yon menyuda yo'q — u topbar'dagi avatar menyusiga
@@ -52,12 +55,17 @@ const NAV_CONFIG = {
 
   /* Admin role (Sprint 9 — Admin Foundation). Frontend-only management
      views over existing entities (users, courses, marketplace) plus
-     platform settings — no new backend workflows. */
+     platform settings — no new backend workflows.
+
+     `admin-messages` — qo'llab-quvvatlash qutisi. Ilgari talaba chatidagi
+     "Isloh Support" suhbatdoshining ikkinchi tomoni umuman yo'q edi:
+     savol yozilardi-yu, unga javob beradigan ekran mavjud emasdi. */
   admin: [
     { key: 'admin-dashboard',    label: 'Dashboard',        icon: 'bi-grid-1x2-fill',    href: '../admin/admin-dashboard.html' },
     { key: 'admin-users',        label: 'Foydalanuvchilar', icon: 'bi-people-fill',      href: '../admin/admin-users.html' },
     { key: 'admin-courses',      label: 'Kurslar',          icon: 'bi-journal-bookmark-fill', href: '../admin/admin-courses.html' },
     { key: 'admin-marketplace',  label: 'Marketplace',      icon: 'bi-bag-fill',         href: '../admin/admin-marketplace.html' },
+    { key: 'admin-messages',     label: 'Xabarlar',         icon: 'bi-chat-dots-fill',   href: '../admin/admin-messages.html' },
     { key: 'admin-settings',     label: 'Sozlamalar',       icon: 'bi-gear-fill',        href: '../admin/admin-settings.html' }
   ],
 

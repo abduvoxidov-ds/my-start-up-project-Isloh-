@@ -313,6 +313,9 @@
 .dropdown-menu { position:absolute; top:calc(100% + 6px); left:0; background:var(--bg-card); border:1px solid var(--border-soft); border-radius:var(--r-md); box-shadow:var(--shadow-md); min-width:170px; padding:6px; display:none; z-index:var(--z-dropdown); }
 .dropdown.open .dropdown-menu { display:block; }
 .dropdown-item { padding:9px 12px; border-radius:var(--r-sm); font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:8px; color:var(--ink-900); }
+/* Band amal bajarsa (havola emas) `<button>` bo'ladi — brauzer stillari
+   bekor qilinadi, aks holda u havola ko'rinishidagi bandlardan farq qilardi */
+button.dropdown-item { width:100%; background:none; border:none; font-family:inherit; text-align:left; }
 .dropdown-item:hover { background:var(--bg-app); }
 .dropdown-item:focus-visible { outline:2px solid var(--violet-500); outline-offset:-2px; }
 .dropdown-item.is-danger { color:var(--danger); }

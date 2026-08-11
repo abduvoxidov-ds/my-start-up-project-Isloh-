@@ -31,6 +31,9 @@ function isloh_readStudentRow(row) {
 
   data.name = row.querySelector('.cell-title') ? row.querySelector('.cell-title').textContent.trim() : '';
   data.email = row.querySelector('.cell-sub') ? row.querySelector('.cell-sub').textContent.trim() : '';
+  /* Xabarlar do'konidagi hisob id'si (js/chat-store.js) — "Xabar yozish"
+     havolasi shu orqali aynan mana shu talaba bilan suhbatni ochadi. */
+  data.studentId = row.dataset.studentId || '';
   return data;
 }
 
@@ -42,12 +45,15 @@ function isloh_renderStudentDetail(data) {
 
   if (nameEl) nameEl.textContent = data.name;
   if (mailEl) mailEl.textContent = data.email;
-  if (mailLink) mailLink.href = 'messages.html';
+  /* Ilgari bu havola doim bo'sh `messages.html` edi — qaysi talabani
+     tanlaganingizdan qat'i nazar bir xil suhbat ochilardi. */
+  if (mailLink) mailLink.href = data.studentId ? 'messages.html?u=' + encodeURIComponent(data.studentId) : 'messages.html';
 
   if (!listEl) return;
-  /* Ism/email allaqachon sarlavhada — qolgan ustunlar ro'yxatga tushadi. */
+  /* Ism/email va ichki id allaqachon sarlavhada yoki havolada — qolgan
+     ustunlar ro'yxatga tushadi. */
   listEl.innerHTML = Object.keys(data)
-    .filter((key) => key !== 'name' && key !== 'email' && key !== 'Talaba' && data[key])
+    .filter((key) => key !== 'name' && key !== 'email' && key !== 'studentId' && key !== 'Talaba' && data[key])
     .map((key) => `<div class="review-summary-row"><span class="lbl">${key}</span><span class="val">${data[key]}</span></div>`)
     .join('');
 }

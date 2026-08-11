@@ -6,7 +6,8 @@
 <title>Xabarlar — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<!-- Chat shell styles: css/widgets.css (Sprint 4B — shared with Student Chat via .chat-shell / .theme-teach) -->
+<!-- Chat qobig'i stillari: css/widgets.css (talaba sahifasi bilan umumiy —
+     `.chat-shell`, instruktor uchun `.theme-teach` yashil urg'usi) -->
 </head>
 <body>
 <div class="app-shell">
@@ -18,133 +19,134 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><span class="current">Xabarlar</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span data-i18n="bc.instructor">Instructor</span><span class="sep">/</span><span class="current" data-i18n="chat.title">Xabarlar</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
         <div class="avatar avatar-teach">AY</div>
       </div>
     </header>
 
-    <div class="chat-shell theme-teach">
-      <!-- CHAT LIST -->
-      <div class="chat-list-col">
-        <div class="chat-list-head" style="display:flex; justify-content:space-between; align-items:center;">
-          <h3 style="font-size:17px;">Xabarlar</h3>
-          <button class="icon-btn" style="width:32px; height:32px;" title="E'lon yuborish" aria-label="E'lon yuborish"><i class="bi bi-megaphone-fill"></i></button>
-        </div>
-        <div class="chat-tabs">
-          <div class="chat-tab active">Suhbatlar</div>
-          <div class="chat-tab">Kurs guruhlari</div>
-          <div class="chat-tab">Arxiv</div>
-        </div>
-        <div class="chat-search"><i class="bi bi-search"></i><input placeholder="Talaba yoki guruh qidirish..." aria-label="Talaba yoki guruh qidirish"></div>
+    <!-- Butun oyna js/chat.js tomonidan to'ldiriladi: markupda birorta ham
+         suhbat yoki xabar qattiq yozilmagan. Ma'lumot js/chat-store.js dagi
+         umumiy do'kondan keladi, ya'ni talaba yozgan xabar shu yerda
+         o'qilmagan bo'lib paydo bo'ladi.
 
-        <div style="overflow-y:auto; flex:1;">
-          <div class="chat-item active">
-            <div class="presence-wrap"><div class="avatar" style="background:linear-gradient(135deg,#306998,#FFD43B);">PB</div><span class="presence-dot online"></span></div>
-            <div>
-              <div class="name">Python Backend (guruh)</div>
-              <div class="last-msg">Nodira: Ustoz, 5-dars bo'yicha savolim bor edi</div>
-            </div>
-            <div class="meta">10 daq<div class="unread">2</div></div>
-          </div>
-          <div class="chat-item">
-            <div class="presence-wrap"><div class="avatar" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">SI</div><span class="presence-dot online"></span></div>
-            <div>
-              <div class="name">Samarqand Islomov</div>
-              <div class="last-msg">Rahmat ustoz, tushundim!</div>
-            </div>
-            <div class="meta">1 soat</div>
-          </div>
-          <div class="chat-item">
-            <div class="presence-wrap"><div class="avatar" style="background:linear-gradient(135deg,#0F766E,#14B8A6);">DR</div><span class="presence-dot offline"></span></div>
-            <div>
-              <div class="name">Django REST (guruh)</div>
-              <div class="last-msg">Javohir: Serializer xatosini tuzatdim</div>
-            </div>
-            <div class="meta">3 soat</div>
-          </div>
-          <div class="chat-item">
-            <div class="presence-wrap"><div class="avatar" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">AK</div><span class="presence-dot offline"></span></div>
-            <div>
-              <div class="name">Alisher Karimov</div>
-              <div class="last-msg">Sertifikat uchun rahmat!</div>
-            </div>
-            <div class="meta">Kecha</div>
-          </div>
-          <div class="chat-item">
-            <div class="presence-wrap"><div class="avatar" style="background:var(--ink-300);">SP</div><span class="presence-dot busy"></span></div>
-            <div>
-              <div class="name">Isloh Support</div>
-              <div class="last-msg">Yangi to'lov usuli tasdiqlandi</div>
-            </div>
-            <div class="meta">2 kun</div>
-          </div>
+         Tuzilma talaba va admin sahifalari bilan AYNI — farqi `.theme-teach`
+         urg'usi va instruktorga xos qo'shimchalar: "Guruhlar" tab'i, e'lon
+         joylash (megafon) va e'lonni olib tashlash bandi. Ular
+         js/instructor-messages.js zimmasida. -->
+    <div class="chat-shell theme-teach">
+      <!-- SUHBATLAR RO'YXATI -->
+      <div class="chat-list-col">
+        <div class="chat-list-head">
+          <h3 data-i18n="chat.title">Xabarlar</h3>
+          <button class="btn btn-teach btn-sm" data-new-chat><i class="bi bi-plus-lg"></i> <span data-i18n="chat.new">Yangi chat</span></button>
+        </div>
+        <!-- Tab'lar ro'yxat filtrini almashtiradi (js/chat.js) -->
+        <div class="chat-tabs" role="tablist" aria-label="Suhbat turlari">
+          <button type="button" class="chat-tab active" role="tab" aria-selected="true" data-chat-tab="all" data-i18n="chat.tab.all">Suhbatlar</button>
+          <button type="button" class="chat-tab" role="tab" aria-selected="false" tabindex="-1" data-chat-tab="groups" data-i18n="chat.tab.groups">Guruhlar</button>
+          <button type="button" class="chat-tab" role="tab" aria-selected="false" tabindex="-1" data-chat-tab="archive" data-i18n="chat.tab.archive">Arxiv</button>
+        </div>
+        <div class="chat-search"><i class="bi bi-search"></i><input type="text" id="chat-search-input" placeholder="Suhbat yoki foydalanuvchi qidirish..." data-i18n-placeholder="chat.search.ph" aria-label="Suhbat yoki foydalanuvchi qidirish..." data-i18n-aria-label="chat.search.ph"></div>
+
+        <div class="chat-scroll" data-chat-list></div>
+        <div class="empty-state chat-list-empty" data-chat-list-empty hidden>
+          <div class="empty-icon"><i class="bi bi-chat-dots"></i></div>
+          <div class="empty-title" data-i18n="chat.empty.list.title">Suhbat topilmadi</div>
+          <div class="empty-sub" data-i18n="chat.empty.list.sub">"Yangi chat" orqali email bilan boshlang.</div>
         </div>
       </div>
 
-      <!-- THREAD -->
+      <!-- SUHBAT -->
       <div class="chat-thread">
-        <div class="thread-head">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div class="presence-wrap"><div class="avatar" style="background:linear-gradient(135deg,#306998,#FFD43B);">PB</div><span class="presence-dot online"></span></div>
-            <div class="info">
-              <div class="name">Python Backend (guruh)</div>
-              <div class="sub">248 a'zo &middot; 12 tasi onlayn</div>
-            </div>
-          </div>
-          <div class="thread-actions">
-            <button class="icon-btn" aria-label="Ishtirokchilar"><i class="bi bi-people-fill"></i></button>
-            <button class="icon-btn" aria-label="Fayllar"><i class="bi bi-folder-fill"></i></button>
-            <button class="icon-btn" aria-label="Ko'proq"><i class="bi bi-three-dots"></i></button>
+        <div class="chat-thread-empty" data-chat-empty-state>
+          <div class="empty-state">
+            <div class="empty-icon"><i class="bi bi-chat-square-text"></i></div>
+            <div class="empty-title" data-i18n="chat.empty.thread.title">Suhbatni tanlang</div>
+            <div class="empty-sub" data-i18n="chat.empty.thread.sub">Chapdagi ro'yxatdan birini tanlang yoki "Yangi chat" orqali boshlang.</div>
           </div>
         </div>
 
-        <div class="pin-banner"><i class="bi bi-pin-angle-fill"></i> E'lon: 6-modul (Deployment) darsi ertaga soat 18:00 da boshlanadi</div>
+        <div class="chat-thread-pane" data-chat-active-thread hidden>
+          <div class="thread-head">
+            <div class="thread-head-main">
+              <button type="button" class="icon-btn chat-back" data-chat-back aria-label="Suhbatlar ro'yxatiga qaytish" data-i18n-aria-label="chat.back"><i class="bi bi-arrow-left"></i></button>
+              <div class="presence-wrap"><div class="avatar" data-thread-avatar></div><span class="presence-dot" data-thread-presence hidden></span></div>
+              <div class="info">
+                <div class="name" data-thread-name></div>
+                <div class="sub" data-thread-status></div>
+              </div>
+            </div>
+            <div class="thread-actions">
+              <!-- E'lon faqat kurs guruhida ma'noga ega — js/instructor-messages.js
+                   uni 1-ga-1 suhbatda yashiradi -->
+              <button type="button" class="icon-btn" data-chat-announce aria-label="E'lon joylash" data-i18n-aria-label="chat.announce" hidden><i class="bi bi-megaphone-fill"></i></button>
+              <div class="dropdown">
+                <button type="button" class="icon-btn dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Suhbat amallari" data-i18n-aria-label="chat.actions"><i class="bi bi-three-dots"></i></button>
+                <div class="dropdown-menu dropdown-menu-right" role="menu">
+                  <button type="button" class="dropdown-item" role="menuitem" data-thread-mute><i class="bi bi-bell-slash"></i> <span data-thread-mute-label>Ovozni o'chirish</span></button>
+                  <button type="button" class="dropdown-item" role="menuitem" data-thread-archive><i class="bi bi-archive"></i> <span data-thread-archive-label>Arxivlash</span></button>
+                  <button type="button" class="dropdown-item" role="menuitem" data-thread-unpin hidden><i class="bi bi-pin-angle"></i> <span data-i18n="chat.unpin">E'lonni olib tashlash</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div class="thread-body">
-          <div class="bubble-row">
-            <div class="avatar" style="width:32px; height:32px; font-size:12px; background:linear-gradient(135deg,#DB2777,#F472B6);">NY</div>
-            <div>
-              <div class="bubble">Ustoz, 5-dars bo'yicha savolim bor edi — ManyToMany maydonlarni serializerda qanday ko'rsataman?</div>
-              <div class="bubble-time">10:02</div>
-            </div>
-          </div>
-          <div class="bubble-row me">
-            <div>
-              <div class="bubble">Salom Nodira! SlugRelatedField yoki nested serializer ishlatishingiz mumkin. Hozir kodini yuboraman 👍</div>
-              <div class="bubble-time" style="text-align:right;">10:07</div>
-            </div>
-          </div>
-          <div class="bubble-row me">
-            <div>
-              <div class="bubble">Bu masala bo'yicha video ham qo'shdim, "Materiallar" bo'limini tekshiring.</div>
-              <div class="bubble-time" style="text-align:right;">10:08</div>
-            </div>
-          </div>
-          <div class="bubble-row">
-            <div class="avatar" style="width:32px; height:32px; font-size:12px; background:linear-gradient(135deg,#DB2777,#F472B6);">NY</div>
-            <div>
-              <div class="bubble">Rahmat ustoz, tushundim!</div>
-              <div class="bubble-time">10:14</div>
-            </div>
-          </div>
-          <div class="bubble-row">
-            <div class="avatar" style="width:32px; height:32px; font-size:12px; background:linear-gradient(135deg,#0EA5E9,#0369A1);">SI</div>
-            <div class="typing-dots"><span></span><span></span><span></span></div>
-          </div>
-        </div>
+          <!-- Qadalgan e'lon: faqat do'konda `pinnedNote` bor threadda
+               ko'rinadi (hozircha kurs guruhlarida) -->
+          <div class="pin-banner" data-thread-pin hidden><i class="bi bi-pin-angle-fill"></i> <span data-thread-pin-text></span></div>
 
-        <div class="thread-input">
-          <button class="icon-btn" aria-label="Fayl biriktirish"><i class="bi bi-paperclip"></i></button>
-          <button class="icon-btn emoji-btn" aria-label="Emoji"><i class="bi bi-emoji-smile"></i></button>
-          <input placeholder="Xabar yozing..." aria-label="Xabar yozing">
-          <button class="send-btn" aria-label="Yuborish"><i class="bi bi-send-fill"></i></button>
+          <div class="thread-body" data-thread-body role="log" aria-live="polite"></div>
+
+          <div class="thread-input" data-backend-pending-reason="fayl saqlash uchun server talab qiladi">
+            <button class="icon-btn" data-backend-pending="Fayl biriktirish" aria-label="Fayl biriktirish" data-i18n-aria-label="chat.attach"><i class="bi bi-paperclip"></i></button>
+            <input type="text" id="chat-message-input" placeholder="Xabar yozing..." data-i18n-placeholder="chat.input.ph" aria-label="Xabar yozing..." data-i18n-aria-label="chat.input.ph">
+            <button class="send-btn" data-chat-send aria-label="Yuborish" data-i18n-aria-label="chat.send"><i class="bi bi-send-fill"></i></button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<div class="modal-overlay" id="new-chat-modal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <h3 class="chat-modal-title" data-i18n="chat.modal.new.title">Yangi chat boshlash</h3>
+      <button class="icon-btn" data-modal-close aria-label="Yopish" data-i18n-aria-label="ui.close"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="email" id="new-chat-email" class="chat-email-input" placeholder="Foydalanuvchi email manzilini kiriting..." data-i18n-placeholder="chat.modal.new.ph">
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-modal-close data-i18n="ui.cancel">Bekor qilish</button>
+      <button class="btn btn-teach" data-new-chat-submit><i class="bi bi-chat-dots"></i> <span data-i18n="chat.modal.new.submit">Boshlash</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- E'LON JOYLASH — faqat kurs guruhlari uchun -->
+<div class="modal-overlay" id="chat-announce-modal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <h3 class="chat-modal-title" data-i18n="chat.modal.ann.title">Guruhga e'lon joylash</h3>
+      <button class="icon-btn" data-modal-close aria-label="Yopish" data-i18n-aria-label="ui.close"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <label class="chat-field-label" for="chat-announce-title" data-i18n="chat.modal.ann.subject">Sarlavha</label>
+      <input type="text" id="chat-announce-title" class="chat-email-input" placeholder="Masalan: 6-modul darsi ertaga 18:00 da" data-i18n-placeholder="chat.modal.ann.subjectPh">
+      <label class="chat-field-label" for="chat-announce-body" data-i18n="chat.modal.ann.body">Matn</label>
+      <textarea id="chat-announce-body" class="chat-email-input chat-announce-body" rows="4" placeholder="E'lonning to'liq matni — u guruhga xabar bo'lib ham yuboriladi" data-i18n-placeholder="chat.modal.ann.bodyPh"></textarea>
+      <p class="pending-note"><i class="bi bi-info-circle"></i> <span data-i18n="chat.modal.ann.note">Sarlavha suhbat tepasiga qadaladi, matn esa guruhga xabar sifatida yuboriladi va Muhokamalar sahifasida chiqadi.</span></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-modal-close data-i18n="ui.cancel">Bekor qilish</button>
+      <button class="btn btn-teach" data-chat-announce-submit><i class="bi bi-megaphone"></i> <span data-i18n="chat.modal.ann.submit">Joylash</span></button>
+    </div>
+  </div>
+</div>
+
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/profile.js"></script>
@@ -153,6 +155,17 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/modal.js"></script>
+<!-- chat-store.js chat.js dan oldin: ko'rinish do'kondagi funksiyalarni chaqiradi -->
+<!-- Fayl biriktirish tugmasini o'chirib qo'yadi va sababini aytadi -->
+<script src="../../js/backend-pending.js"></script>
+<script src="../../js/chat-store.js"></script>
 <script src="../../js/chat.js"></script>
+<!-- instructor-compose.js e'lon do'koni kalitini beradi (Muhokamalar sahifasi
+     bilan umumiy). Uning o'z formalari bu sahifada yo'q, shuning uchun ikkala
+     init'i ham jim qaytadi. -->
+<script src="../../js/instructor-compose.js"></script>
+<script src="../../js/instructor-messages.js"></script>
 </body>
 </html>

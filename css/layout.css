@@ -66,6 +66,19 @@
   border: 1px solid rgba(255,255,255,0.12);
 }
 .nav-item .bi { font-size: 17px; width: 18px; text-align: center; }
+/* O'qilmagan xabarlar soni (js/chat-store.js qo'yadi). O'ngga suriladi,
+   shuning uchun band matni bilan to'qnashmaydi. */
+.nav-badge {
+  margin-left: auto;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 3px 7px;
+  border-radius: var(--r-pill);
+}
+.nav-item.active .nav-badge { background: rgba(255,255,255,0.22); }
 .sidebar-footer {
   margin-top: auto;
   padding-top: 12px;

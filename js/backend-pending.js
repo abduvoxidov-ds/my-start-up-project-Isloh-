@@ -50,7 +50,10 @@ function isloh_initBackendPending() {
   if (card && !card.querySelector('.pending-note, .placeholder-note')) {
     const note = document.createElement('p');
     note.className = 'pending-note';
-    note.innerHTML = '<i class="bi bi-info-circle"></i> Bu amallar ' + isloh_backendPendingReason(buttons[0]) + '.';
+    /* Kartochkada bitta tugma bo'lsa "Bu amallar" deyish noto'g'ri —
+       masalan chat oynasida faqat "Fayl biriktirish" o'chirilgan. */
+    const subject = buttons.length > 1 ? 'Bu amallar ' : 'Bu amal ';
+    note.innerHTML = '<i class="bi bi-info-circle"></i> ' + subject + isloh_backendPendingReason(buttons[0]) + '.';
     card.appendChild(note);
   }
 }

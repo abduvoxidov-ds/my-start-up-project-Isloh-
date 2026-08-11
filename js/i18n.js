@@ -49,7 +49,7 @@ const ISLOH_I18N = {
     'nav.marketplace': 'Marketplace',
     'nav.bookmarks': 'Saved',
     'nav.calendar': 'Assignments',
-    'nav.chat': 'Chat',
+    'nav.chat': 'Messages',
     'nav.ai-assistant': 'AI assistant',
     'nav.certificates': 'Certificates',
     'nav.settings': 'Settings',
@@ -64,6 +64,7 @@ const ISLOH_I18N = {
     'nav.admin-users': 'Users',
     'nav.admin-courses': 'Courses',
     'nav.admin-marketplace': 'Marketplace',
+    'nav.admin-messages': 'Messages',
     'nav.admin-settings': 'Settings',
     'nav.logout': 'Log out',
 
@@ -212,7 +213,68 @@ const ISLOH_I18N = {
     'ui.close': 'Close',
     'ui.reset.title': 'Reset settings to defaults',
     'ui.reset.warn': 'This cannot be undone. Your profile, courses and learning progress are untouched.',
-    'ui.reset.confirm': 'Yes, reset'
+    'ui.reset.confirm': 'Yes, reset',
+    /* --- Xabarlar moduli (chat) --- uchala rol sahifasida bir xil */
+    'chat.title': 'Messages',
+    'chat.new': 'New chat',
+    'chat.tab.all': 'Chats',
+    'chat.tab.groups': 'Groups',
+    'chat.tab.archive': 'Archive',
+    'chat.search.ph': 'Search a chat or person...',
+    'chat.empty.list.title': 'No chats found',
+    'chat.empty.list.sub': 'Start one by email with "New chat".',
+    'chat.empty.thread.title': 'Select a chat',
+    'chat.empty.thread.sub': 'Pick one from the list on the left, or start one with "New chat".',
+    'chat.input.ph': 'Write a message...',
+    'chat.attach': 'Attach a file',
+    'chat.send': 'Send',
+    'chat.back': 'Back to the chat list',
+    'chat.actions': 'Chat actions',
+    'chat.mute': 'Mute notifications',
+    'chat.unmute': 'Unmute notifications',
+    'chat.archive': 'Archive',
+    'chat.unarchive': 'Move out of archive',
+    'chat.unpin': 'Remove announcement',
+    'chat.announce': 'Post an announcement',
+    'chat.modal.new.title': 'Start a new chat',
+    'chat.modal.new.ph': "Enter the person's email address...",
+    'chat.modal.new.submit': 'Start',
+    'chat.modal.ann.title': 'Post an announcement to the group',
+    'chat.modal.ann.subject': 'Subject',
+    'chat.modal.ann.subjectPh': 'For example: module 6 class tomorrow at 18:00',
+    'chat.modal.ann.body': 'Text',
+    'chat.modal.ann.bodyPh': 'The full announcement — it is also sent to the group as a message',
+    'chat.modal.ann.note': 'The subject is pinned to the top of the chat; the text is sent to the group as a message and appears on the Discussions page.',
+    'chat.modal.ann.submit': 'Post',
+    'chat.time.now': 'now',
+    'chat.time.min': '{n} min',
+    'chat.time.hour': '{n} h',
+    'chat.time.yesterday': 'Yesterday',
+    'chat.time.day': '{n} d',
+    'chat.members': '{n} members · {online} online',
+    'chat.presence.online': 'Online',
+    'chat.presence.busy': 'Busy',
+    'chat.presence.offline': 'Offline',
+    'chat.you': 'You',
+    'chat.group': 'Group',
+    'chat.unknownUser': 'Unknown user',
+    'chat.badge.aria': '{n} unread messages',
+    'chat.toast.notFound': 'No user found with that email',
+    'chat.toast.self': 'You cannot start a chat with yourself',
+    'chat.toast.createFail': 'Could not create the chat',
+    'chat.toast.started': 'Chat with {name} started',
+    'chat.toast.quota': 'Could not save the message — browser storage is full',
+    'chat.toast.archived': 'Chat archived',
+    'chat.toast.unarchived': 'Chat moved out of the archive',
+    'chat.toast.muted': 'Notifications muted',
+    'chat.toast.unmuted': 'Notifications unmuted',
+    'chat.toast.userNotFound': 'This user was not found',
+    'chat.toast.openFail': 'Could not open the chat',
+    'chat.toast.annSubject': 'Enter the announcement subject',
+    'chat.toast.annBody': 'Enter the announcement text',
+    'chat.toast.annSaveFail': 'Could not save the announcement — browser storage is full',
+    'chat.toast.annPosted': 'Announcement posted',
+    'chat.toast.unpinned': 'Announcement removed'
   },
 
   ru: {
@@ -221,7 +283,7 @@ const ISLOH_I18N = {
     'nav.marketplace': 'Маркетплейс',
     'nav.bookmarks': 'Сохранённое',
     'nav.calendar': 'Задания',
-    'nav.chat': 'Чат',
+    'nav.chat': 'Сообщения',
     'nav.ai-assistant': 'ИИ-помощник',
     'nav.certificates': 'Сертификаты',
     'nav.settings': 'Настройки',
@@ -236,6 +298,7 @@ const ISLOH_I18N = {
     'nav.admin-users': 'Пользователи',
     'nav.admin-courses': 'Курсы',
     'nav.admin-marketplace': 'Маркетплейс',
+    'nav.admin-messages': 'Сообщения',
     'nav.admin-settings': 'Настройки',
     'nav.logout': 'Выйти',
 
@@ -379,7 +442,68 @@ const ISLOH_I18N = {
     'ui.close': 'Закрыть',
     'ui.reset.title': 'Сбросить настройки к значениям по умолчанию',
     'ui.reset.warn': 'Это действие необратимо. Профиль, курсы и прогресс обучения не затрагиваются.',
-    'ui.reset.confirm': 'Да, сбросить'
+    'ui.reset.confirm': 'Да, сбросить',
+    /* --- Xabarlar moduli (chat) --- uchala rol sahifasida bir xil */
+    'chat.title': 'Сообщения',
+    'chat.new': 'Новый чат',
+    'chat.tab.all': 'Чаты',
+    'chat.tab.groups': 'Группы',
+    'chat.tab.archive': 'Архив',
+    'chat.search.ph': 'Поиск чата или человека...',
+    'chat.empty.list.title': 'Чаты не найдены',
+    'chat.empty.list.sub': 'Начните по email через «Новый чат».',
+    'chat.empty.thread.title': 'Выберите чат',
+    'chat.empty.thread.sub': 'Выберите чат слева или начните через «Новый чат».',
+    'chat.input.ph': 'Напишите сообщение...',
+    'chat.attach': 'Прикрепить файл',
+    'chat.send': 'Отправить',
+    'chat.back': 'Назад к списку чатов',
+    'chat.actions': 'Действия с чатом',
+    'chat.mute': 'Отключить уведомления',
+    'chat.unmute': 'Включить уведомления',
+    'chat.archive': 'В архив',
+    'chat.unarchive': 'Из архива',
+    'chat.unpin': 'Убрать объявление',
+    'chat.announce': 'Опубликовать объявление',
+    'chat.modal.new.title': 'Начать новый чат',
+    'chat.modal.new.ph': 'Введите email пользователя...',
+    'chat.modal.new.submit': 'Начать',
+    'chat.modal.ann.title': 'Объявление для группы',
+    'chat.modal.ann.subject': 'Заголовок',
+    'chat.modal.ann.subjectPh': 'Например: занятие по модулю 6 завтра в 18:00',
+    'chat.modal.ann.body': 'Текст',
+    'chat.modal.ann.bodyPh': 'Полный текст объявления — он также уйдёт в группу сообщением',
+    'chat.modal.ann.note': 'Заголовок закрепляется сверху чата, текст уходит в группу и появляется на странице Обсуждений.',
+    'chat.modal.ann.submit': 'Опубликовать',
+    'chat.time.now': 'сейчас',
+    'chat.time.min': '{n} мин',
+    'chat.time.hour': '{n} ч',
+    'chat.time.yesterday': 'Вчера',
+    'chat.time.day': '{n} дн',
+    'chat.members': '{n} участников · {online} онлайн',
+    'chat.presence.online': 'Онлайн',
+    'chat.presence.busy': 'Занят',
+    'chat.presence.offline': 'Не в сети',
+    'chat.you': 'Вы',
+    'chat.group': 'Группа',
+    'chat.unknownUser': 'Неизвестный пользователь',
+    'chat.badge.aria': '{n} непрочитанных сообщений',
+    'chat.toast.notFound': 'Пользователь с таким email не найден',
+    'chat.toast.self': 'Нельзя начать чат с самим собой',
+    'chat.toast.createFail': 'Не удалось создать чат',
+    'chat.toast.started': 'Чат с {name} начат',
+    'chat.toast.quota': 'Не удалось сохранить сообщение — память браузера заполнена',
+    'chat.toast.archived': 'Чат архивирован',
+    'chat.toast.unarchived': 'Чат возвращён из архива',
+    'chat.toast.muted': 'Уведомления отключены',
+    'chat.toast.unmuted': 'Уведомления включены',
+    'chat.toast.userNotFound': 'Этот пользователь не найден',
+    'chat.toast.openFail': 'Не удалось открыть чат',
+    'chat.toast.annSubject': 'Введите заголовок объявления',
+    'chat.toast.annBody': 'Введите текст объявления',
+    'chat.toast.annSaveFail': 'Не удалось сохранить объявление — память браузера заполнена',
+    'chat.toast.annPosted': 'Объявление опубликовано',
+    'chat.toast.unpinned': 'Объявление убрано'
   }
 };
 
@@ -399,6 +523,22 @@ function isloh_i18nLang() {
 function isloh_t(key) {
   const dict = ISLOH_I18N[isloh_i18nLang()];
   return (dict && dict[key]) || null;
+}
+
+/* --- JS ichida yasaladigan matnlar ----------------------------------------
+   `data-i18n` faqat markupdagi matnni almashtiradi. JS bilan qurilgan
+   satrlar (masalan "3 daq", "5 a'zo · 2 tasi onlayn", toast xabarlari)
+   uchun shu funksiya: tarjimasi bo'lsa — o'sha, bo'lmasa berilgan
+   o'zbekcha matn. Ya'ni qoida markupdagi bilan bir xil — manba tili
+   o'zbekcha, lug'atda faqat en/ru.
+
+   O'rin egallovchilar `{nom}` ko'rinishida:
+     isloh_tx('chat.time.min', '{n} daq', { n: 5 })  ->  "5 daq" / "5 min"  */
+function isloh_tx(key, uz, vars) {
+  let text = isloh_t(key);
+  if (text === null) text = uz;
+  if (!vars) return text;
+  return String(text).replace(/\{(\w+)\}/g, (match, name) => (name in vars ? String(vars[name]) : match));
 }
 
 /* --- DOM ga qo'llash ------------------------------------------------------

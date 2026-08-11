@@ -80,6 +80,16 @@ function isloh_renderSidebar() {
   /* Menyu JS bilan yasalgani uchun js/i18n.js uni DOMContentLoaded'da
      topa olmasligi mumkin — tayyor bo'lgani haqida xabar beramiz. */
   document.dispatchEvent(new CustomEvent('isloh:sidebar-rendered'));
+
+  /* O'qilmagan xabarlar nishoni. Sanash mantiqi js/chat-store.js da —
+     bu yerda takrorlanmaydi (CLAUDE.md §2). Do'kon ulanmagan sahifada
+     menyu nishonsiz qolaveradi.
+
+     TARTIB MUHIM: nishon i18n dan KEYIN qo'yiladi. js/i18n.js bandning
+     asl matnini `el.textContent` orqali eslab qoladi, nishon esa bandning
+     ichida turadi — oldin qo'yilsa, "Xabarlar" o'rniga "Xabarlar1" asl
+     matn sifatida saqlanib qolardi. */
+  if (typeof isloh_chatMountNavBadge === 'function') isloh_chatMountNavBadge();
 }
 
 /* --- Klaviatura yorliqlari ------------------------------------------------
@@ -124,11 +134,22 @@ function isloh_isTypingTarget(el) {
 /* Tooltip bandning MATNIDAN yasaladi, matn esa tarjima bilan o'zgaradi —
    shuning uchun belgilash alohida funksiyada va til almashganda qayta
    chaqiriladi (js/i18n.js dagi `isloh:i18n-applied` hodisasi). */
+/* Bandning MATNI — faqat matn tugunlaridan yig'iladi. `textContent` bo'lmaydi:
+   u bandning ichidagi elementlarni ham qo'shib yuboradi, ya'ni o'qilmaganlar
+   nishoni tooltip'ga "Xabarlar1" bo'lib tushardi. */
+function isloh_navItemLabel(item) {
+  return [...item.childNodes]
+    .filter((n) => n.nodeType === Node.TEXT_NODE)
+    .map((n) => n.textContent)
+    .join('')
+    .trim();
+}
+
 function isloh_labelNavShortcuts(items) {
   items.forEach((item, i) => {
     const combo = 'Alt+' + (i + 1);
     item.setAttribute('aria-keyshortcuts', combo);
-    item.title = item.textContent.trim() + ' (' + combo + ')';
+    item.title = isloh_navItemLabel(item) + ' (' + combo + ')';
   });
 }
 

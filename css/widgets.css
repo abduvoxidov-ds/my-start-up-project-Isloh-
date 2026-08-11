@@ -786,22 +786,62 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
    ========================================================================== */
 .chat-shell { display:flex; height: calc(100vh - 68px); }
 .chat-list-col { width: 300px; flex-shrink:0; border-right:1px solid var(--border-soft); display:flex; flex-direction:column; }
-.chat-list-head { padding: 18px 18px 10px; }
-.chat-tabs { display:flex; gap:4px; padding: 0 18px; border-bottom:1px solid var(--border-soft); }
-.chat-tab { padding: 10px 6px; margin-right:18px; font-size:13px; font-weight:600; color:var(--ink-500); border-bottom:2px solid transparent; cursor:pointer; }
-.chat-tab.active { color:var(--violet-600); border-color:var(--violet-600); }
+.chat-list-head { padding: 18px 18px 10px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.chat-list-head h3 { font-size:17px; }
+/* Ustun tor (≤900px da 240px), shuning uchun tugma matni ikki qatorga
+   bo'linib ketmasin */
+.chat-list-head .btn { white-space:nowrap; flex-shrink:0; }
+/* Suhbatlar ro'yxati va thread panellari — ilgari bu o'lchamlar har bir
+   sahifada inline `style="overflow-y:auto; flex:1;"` bo'lib takrorlanardi
+   (CLAUDE.md §2). Ko'rinish/yashirinish `hidden` atributi orqali, uni
+   css/base.css dagi umumiy qoida hal qiladi. */
+.chat-scroll { flex:1; overflow-y:auto; }
+/* Ro'yxat bo'sh bo'lganda joyni egallamasin — aks holda `flex:1` butun
+   ustunni to'ldirib, "Suhbat topilmadi" kartochkasini pastga surib
+   yuborardi. */
+.chat-scroll:empty { flex: 0 0 auto; }
+.chat-list-empty { padding: 32px 18px; }
+.chat-thread-empty { flex:1; display:flex; align-items:center; justify-content:center; }
+.chat-thread-pane { flex:1; min-height:0; display:flex; flex-direction:column; }
+/* Ustun tor (≤900px da 240px), shuning uchun tab'lar o'ralmaydi — sig'masa
+   gorizontal siljiydi. Ilgari oraliq har bir tab'ning `margin-right:18px`
+   i bilan berilardi, endi `gap` — oxirgi tab'dan keyin ortiqcha bo'shliq
+   qolmaydi. */
+.chat-tabs { display:flex; gap:16px; padding: 0 18px; border-bottom:1px solid var(--border-soft); overflow-x:auto; scrollbar-width:none; }
+.chat-tabs::-webkit-scrollbar { display:none; }
+/* Tab endi `<button role="tab">` — klaviatura bilan ishlashi uchun. Shu
+   sababli brauzerning o'z tugma stillari bekor qilinadi. */
+.chat-tab { padding: 10px 0; font-size:13px; font-weight:600; color:var(--ink-500); border:none; border-bottom:2px solid transparent; background:none; font-family:inherit; white-space:nowrap; cursor:pointer; }
+.chat-tab.active { color:var(--violet-600); border-bottom-color:var(--violet-600); }
+.chat-tab:focus-visible { outline:2px solid var(--violet-500); outline-offset:2px; border-radius:var(--r-sm); }
 .chat-search { margin: 12px 18px; display:flex; align-items:center; gap:8px; background:var(--bg-app); border-radius:var(--r-pill); padding:8px 14px; font-size:13px; color:var(--ink-500); }
 .chat-search input { border:none; background:transparent; outline:none; width:100%; font-size:13px; }
 .chat-item { display:flex; gap:12px; align-items:center; padding: 12px 18px; cursor:pointer; border-left: 3px solid transparent; }
 .chat-item:hover { background: var(--bg-app); }
 .chat-item.active { background: var(--violet-100); border-left-color: var(--violet-600); }
-.chat-item .name { font-size:14px; font-weight:600; }
-.chat-item .last-msg { font-size:12.5px; color:var(--ink-500); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:170px; }
-.chat-item .meta { margin-left:auto; text-align:right; font-size:11px; color:var(--ink-300); flex-shrink:0; }
-.chat-item .unread { background:var(--violet-600); color:#fff; font-size:10.5px; font-weight:700; border-radius:var(--r-pill); padding:2px 6px; margin-top:4px; display:inline-block; }
+/* `min-width:0` bo'lmasa flex bola qisqarmaydi va uzun ism ikki qatorga
+   bo'linib ketadi (masalan "Nodira Yusupova" tor ustunda). */
+.chat-item-main { flex:1; min-width:0; }
+.chat-item .name { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.chat-item .last-msg { font-size:12.5px; color:var(--ink-500); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* Vaqt va o'qilmaganlar soni ustma-ust turadi. Ilgari nishon
+   `display:inline-block` edi va tor ustunda vaqt bilan bir qatorga
+   tiqilib qolardi. */
+.chat-item .meta { margin-left:auto; display:flex; flex-direction:column; align-items:flex-end; gap:4px; text-align:right; font-size:11px; color:var(--ink-300); flex-shrink:0; }
+.chat-item .unread { background:var(--violet-600); color:#fff; font-size:10.5px; font-weight:700; border-radius:var(--r-pill); padding:2px 6px; }
 
 .chat-thread { flex:1; display:flex; flex-direction:column; }
 .thread-head { display:flex; align-items:center; justify-content:space-between; padding: 14px 24px; border-bottom:1px solid var(--border-soft); }
+.thread-head-main { display:flex; align-items:center; gap:12px; }
+/* "Yangi chat" modalidagi email maydoni */
+.chat-modal-title { font-size:15px; }
+.chat-email-input { width:100%; border:1.5px solid var(--border-soft); border-radius:var(--r-md); padding:11px 14px; font-size:14px; font-family:inherit; outline:none; }
+.chat-email-input:focus { border-color: var(--violet-500); }
+body[data-role="instructor"] .chat-email-input:focus { border-color: var(--teach-green); }
+/* E'lon modalidagi maydonlar */
+.chat-field-label { display:block; font-size:12.5px; font-weight:600; color:var(--ink-500); margin-bottom:6px; }
+.chat-field-label + .chat-email-input { margin-bottom:14px; }
+.chat-announce-body { resize:vertical; line-height:1.5; }
 .thread-head .info .name { font-size:15px; font-weight:700; }
 .thread-head .info .sub { font-size:12px; color:var(--ink-500); }
 .thread-actions { display:flex; gap:8px; }
@@ -812,6 +852,13 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .bubble-row:not(.me) .bubble { background:var(--bg-card); border:1px solid var(--border-soft); border-bottom-left-radius:4px; }
 .bubble-row.me .bubble { background:var(--violet-600); color:#fff; border-bottom-right-radius:4px; }
 .bubble-time { font-size:11px; color:var(--ink-300); margin-top:4px; }
+/* O'z xabarim o'ngga tekislanadi — ilgari bu har bir puffakda inline
+   `style="text-align:right"` bo'lib takrorlanardi (CLAUDE.md §2). */
+.bubble-time-me { text-align:right; }
+/* Puffak yonidagi kichik avatar */
+.bubble-avatar { width:32px; height:32px; font-size:12px; flex-shrink:0; }
+/* Guruh suhbatida kim yozgani — 1-ga-1 da bu qator chizilmaydi */
+.bubble-sender { font-size:12px; font-weight:600; color:var(--ink-500); margin-bottom:4px; }
 .thread-input { display:flex; align-items:center; gap:10px; padding: 16px 24px; border-top:1px solid var(--border-soft); }
 .thread-input input { flex:1; border:1.5px solid var(--border-soft); border-radius:var(--r-pill); padding:12px 18px; outline:none; font-size:14px; }
 .thread-input input:focus { border-color: var(--violet-500); }
@@ -827,9 +874,49 @@ body[data-role="instructor"] .row-action:hover { color:var(--teach-green); }
 .chat-shell.theme-teach .bubble-row.me .bubble { background:var(--teach-green); }
 .chat-shell.theme-teach .thread-input input:focus { border-color:var(--teach-green); }
 .chat-shell.theme-teach .send-btn { background:var(--teach-green); }
+/* Bo'sh holat belgisi ham yashil bo'lsin — binafsha doira instruktor
+   sahifasida begona ko'rinardi */
+.chat-shell.theme-teach .empty-state .empty-icon { background:var(--teach-green-100); color:var(--teach-green); }
+
+/* Admin urg'usi — `.sidebar.theme-admin` bilan bir xil indigo (css/layout.css).
+   Tuzilma va o'lchamlar o'zgarmaydi, faqat urg'u rangi. */
+.chat-shell.theme-admin .chat-tab.active { color:var(--indigo-800); border-bottom-color:var(--indigo-800); }
+.chat-shell.theme-admin .chat-item.active { background:var(--violet-100); border-left-color:var(--indigo-800); }
+.chat-shell.theme-admin .chat-item .unread { background:var(--indigo-800); }
+.chat-shell.theme-admin .bubble-row.me .bubble { background:var(--indigo-800); }
+.chat-shell.theme-admin .thread-input input:focus { border-color:var(--indigo-800); }
+.chat-shell.theme-admin .send-btn { background:var(--indigo-800); }
+
+/* Klaviatura bilan tanlangan band ko'rinib tursin (role="option") */
+.chat-item:focus-visible { outline:2px solid var(--violet-500); outline-offset:-2px; }
+.chat-shell.theme-teach .chat-item:focus-visible { outline-color:var(--teach-green); }
+.chat-shell.theme-admin .chat-item:focus-visible { outline-color:var(--indigo-800); }
+
+/* "Orqaga" tugmasi faqat tor ekranda kerak (pastdagi media so'rov) */
+.chat-back { display:none; }
+
+/* "Fayl biriktirish" backend'gacha ishlamaydi (js/backend-pending.js).
+   Izoh yozuv qatorining tagida alohida satrda turadi, tugmalar bilan bir
+   qatorga tiqilib qolmasin. */
+.thread-input { flex-wrap:wrap; }
+.thread-input .pending-note { flex-basis:100%; margin:6px 0 0; }
 
 @media (max-width:900px) { .chat-list-col { width:240px; } .bubble-row { max-width:80%; } }
-@media (max-width:700px) { .chat-list-col { display:none; } }
+
+/* Tor ekran: ro'yxat va suhbat navbat bilan, butun kenglikda. Ilgari
+   ro'yxat shunchaki `display:none` bo'lardi — ya'ni telefonda boshqa
+   suhbatga o'tishning umuman iloji yo'q edi. Qaysi biri ko'rinishini
+   `.is-thread-open` klassi hal qiladi (js/chat.js). */
+@media (max-width:700px) {
+  .chat-list-col { width:100%; border-right:none; }
+  .chat-thread { display:none; }
+  .chat-shell.is-thread-open .chat-list-col { display:none; }
+  .chat-shell.is-thread-open .chat-thread { display:flex; }
+  .chat-back { display:inline-flex; }
+  .thread-body { padding:18px 16px; }
+  .thread-head, .thread-input { padding-left:16px; padding-right:16px; }
+  .bubble-row { max-width:88%; }
+}
 
 /* ==========================================================================
    Sprint 4B — AI Assistant shell (promoted from the former page-local
