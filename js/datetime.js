@@ -184,6 +184,24 @@ function isloh_dtDayTime(value) {
   return isloh_dtIntl(value, { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
 }
 
+/* "Hozirgina" | "40 daqiqa oldin" | "3 soat oldin" | "2 kun oldin"
+   Kun darajasidan yuqorisini js/course-store.js dagi isloh_relativeDate()
+   hal qiladi (u kurs ro'yxatidagi "Yangilangan" ustunini ham chizadi) —
+   shu sababli bu funksiya faqat SUTKA ICHIDAGI farqni o'zi hisoblaydi.
+   Modul ulanmagan sahifada qisqa sana ko'rsatiladi, xato bermaydi. */
+function isloh_relativeTime(value) {
+  if (!value) return '—';
+  const then = new Date(value);
+  if (isNaN(then.getTime())) return String(value);
+
+  const minutes = Math.floor((Date.now() - then.getTime()) / 60000);
+  if (minutes < 1) return 'Hozirgina';
+  if (minutes < 60) return minutes + ' daqiqa oldin';
+  if (minutes < 1440) return Math.floor(minutes / 60) + ' soat oldin';
+
+  return typeof isloh_relativeDate === 'function' ? isloh_relativeDate(value) : isloh_dtShortDate(value);
+}
+
 /* Sozlama o'zgarsa, sahifadagi sanalarni qayta chizish kerak bo'lishi mumkin.
    Modullar shu hodisaga ulanadi (js/theme.js dagi naqsh bilan bir xil). */
 function isloh_dtNotifyChange() {

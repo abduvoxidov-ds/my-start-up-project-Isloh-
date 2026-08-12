@@ -36,4 +36,26 @@ function isloh_initRepeatingRows() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', isloh_initRepeatingRows);
+/* "Darslarga qaytish" havolasi qaysi kurs va modulga qaytishni bilishi
+   kerak — dars muharriri `?course=&module=&lesson=` bilan ochiladi.
+   Ilgari havola parametrsiz edi va boshqa modulni ochib yuborardi.
+
+   Bu blok faqat `[data-lesson-back]` bor sahifada ishlaydi, ya'ni shu
+   faylni yuklaydigan boshqa muharrirlarga (topshiriq, test) tegmaydi. */
+function isloh_initLessonBackLinks() {
+  const links = document.querySelectorAll('[data-lesson-back]');
+  if (!links.length) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const course = params.get('course') || params.get('id') || '';
+  const module = params.get('module') || '';
+  if (!course) return;
+
+  const query = 'course=' + encodeURIComponent(course) + (module ? '&module=' + encodeURIComponent(module) : '');
+  links.forEach((link) => { link.href = 'lesson-builder.html?' + query; });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  isloh_initRepeatingRows();
+  isloh_initLessonBackLinks();
+});

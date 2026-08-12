@@ -211,6 +211,22 @@ function isloh_todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
+/* Provider tomonidagi pul birligi — USD: 1480 -> "$1,480". Kurslar ro'yxati,
+   dashboard va profil statistikasi bir xil ko'rinishdan foydalanadi, shuning
+   uchun format shu yerda — do'kon USD/UZS koeffitsientini bilgan joyda. */
+function isloh_formatUsd(amount) {
+  return '$' + Math.round(Number(amount) || 0).toLocaleString('en-US');
+}
+
+/* Bajarilish chizig'i rangi kurs holatidan kelib chiqadi (css/components.css).
+   Kurslar ro'yxati ham, dashboard'dagi qoralamalar ro'yxati ham shu jadvalga
+   tayanadi — ranglar ikki sahifada ajralib qolmasin. */
+function isloh_courseFillClass(status) {
+  if (status === 'draft') return ' fill-warning';
+  if (status === 'archived') return ' fill-muted';
+  return '';
+}
+
 /* "2026-08-02" -> "2 kun oldin". Ro'yxatdagi "Yangilangan" ustuni uchun. */
 function isloh_relativeDate(value) {
   if (!value) return '—';
@@ -289,6 +305,18 @@ function isloh_applyCourseLinks(courseId) {
     link.href = link.dataset.courseLink + '?id=' + encodeURIComponent(courseId);
   });
 }
+
+/* Zaxira: sahifa moduli o'z kursini o'zi bilmasa (masalan dars muharriri),
+   havolalar URL'dagi `?course=` dan to'ldiriladi. Bu fayl sahifa
+   modullaridan OLDIN yuklanadi, ya'ni modul keyinroq o'z aniqroq
+   qiymatini qo'yib chiqadi.
+
+   Ataylab faqat `?course=`: `?id=` sahifadan sahifaga turli narsani
+   anglatadi (topshiriq muharririda — topshiriq, test muharririda — test),
+   shuning uchun undan kurs id'si sifatida foydalanib bo'lmaydi. */
+document.addEventListener('DOMContentLoaded', () => {
+  isloh_applyCourseLinks(new URLSearchParams(window.location.search).get('course') || '');
+});
 
 /* --- Talaba katalogiga ko'prik -------------------------------------------- */
 

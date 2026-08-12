@@ -17,7 +17,7 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><a class="text-inherit" href="course-builder.html">Kurs tarkibi</a><span class="sep">/</span><span class="current">Resurslar</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><a class="text-inherit" href="course-builder.html" data-course-link="course-builder.html">Kurs tarkibi</a><span class="sep">/</span><span class="current">Resurslar</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
         <div class="avatar avatar-teach">AY</div>
@@ -26,9 +26,9 @@
 
     <main class="content" data-filterable>
       <div class="page-header">
-        <div><h1>Resurslar</h1><p>Python Backend Development · Kurs, dars, topshiriq va test resurslarini boshqaring.</p></div>
+        <div><h1>Resurslar</h1><p><span data-resource-course>—</span> · Kurs, dars, topshiriq va test resurslarini boshqaring.</p></div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <a href="course-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kurs tarkibiga qaytish</a>
+          <a href="course-builder.html" data-course-link="course-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kurs tarkibiga qaytish</a>
           <a href="resource-library.html" class="btn btn-outline btn-sm"><i class="bi bi-collection"></i> Resurslar kutubxonasi</a>
           <button class="btn btn-teach" data-modal-open="upload-resource-modal"><i class="bi bi-upload"></i> Resurs yuklash</button>
         </div>
@@ -36,10 +36,10 @@
 
       <!-- STATS -->
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-folder-fill"></i></div><div class="stat-value">37</div><div class="stat-label">Jami resurslar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-hdd-stack-fill"></i></div><div class="stat-value">1.8 GB</div><div class="stat-label">Jami hajm</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-collection"></i></div><div class="stat-value">4</div><div class="stat-label">Papkalar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-archive"></i></div><div class="stat-value">3</div><div class="stat-label">Arxivlangan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-folder-fill"></i></div><div class="stat-value" data-resource-stat="total">0</div><div class="stat-label">Jami resurslar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-hdd-stack-fill"></i></div><div class="stat-value" data-resource-stat="size">—</div><div class="stat-label">Jami hajm</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-collection"></i></div><div class="stat-value" data-resource-stat="folders">0</div><div class="stat-label">Papkalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-archive"></i></div><div class="stat-value" data-resource-stat="archived">0</div><div class="stat-label">Arxivlangan</div></div>
       </div>
 
       <!-- TOOLBAR -->
@@ -78,9 +78,9 @@
       <div class="bulk-bar" data-bulk-bar hidden>
         <span><span class="bulk-count" data-bulk-count>0</span> ta resurs tanlandi</span>
         <div class="bulk-spacer"></div>
-        <button class="btn btn-outline btn-sm" data-modal-open="move-resource-modal"><i class="bi bi-folder-symlink"></i> Ko'chirish</button>
-        <button class="btn btn-outline btn-sm"><i class="bi bi-archive"></i> Arxivlash</button>
-        <button class="btn btn-outline btn-sm" style="color:#FF9B9E; border-color:rgba(255,255,255,.25);"><i class="bi bi-trash"></i> O'chirish</button>
+        <button class="btn btn-outline btn-sm" data-bulk-duplicate><i class="bi bi-copy"></i> Nusxalash</button>
+        <button class="btn btn-outline btn-sm" data-bulk-archive><i class="bi bi-archive"></i> Arxivlash</button>
+        <button class="btn btn-outline btn-sm bulk-danger" data-bulk-delete><i class="bi bi-trash"></i> O'chirish</button>
         <button class="btn btn-outline btn-sm" data-bulk-cancel>Bekor qilish</button>
       </div>
 
@@ -93,264 +93,22 @@
       <div data-list-content hidden data-bulk-scope>
 
         <!-- FOLDER VIEW (default) -->
-        <div class="collection-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:16px;" data-folder-grid data-view-panel="folder">
-          <div class="card collection-card" data-folder-tile="lessons" data-folder-label="Dars resurslari" style="cursor:pointer;">
-            <div class="collection-icon" style="background:var(--violet-600);"><i class="bi bi-journal-text"></i></div>
-            <div><div style="font-weight:700; font-size:13.5px;">Dars resurslari</div><div style="font-size:12px; color:var(--ink-500);">18 ta fayl</div></div>
-          </div>
-          <div class="card collection-card" data-folder-tile="assignments" data-folder-label="Topshiriq resurslari" style="cursor:pointer;">
-            <div class="collection-icon" style="background:#0EA5E9;"><i class="bi bi-file-earmark-text"></i></div>
-            <div><div style="font-weight:700; font-size:13.5px;">Topshiriq resurslari</div><div style="font-size:12px; color:var(--ink-500);">9 ta fayl</div></div>
-          </div>
-          <div class="card collection-card" data-folder-tile="quizzes" data-folder-label="Test resurslari" style="cursor:pointer;">
-            <div class="collection-icon" style="background:#F59E0B;"><i class="bi bi-patch-question"></i></div>
-            <div><div style="font-weight:700; font-size:13.5px;">Test resurslari</div><div style="font-size:12px; color:var(--ink-500);">4 ta fayl</div></div>
-          </div>
-          <div class="card collection-card" data-folder-tile="general" data-folder-label="Umumiy kurs resurslari" style="cursor:pointer;">
-            <div class="collection-icon" style="background:var(--teach-green);"><i class="bi bi-mortarboard"></i></div>
-            <div><div style="font-weight:700; font-size:13.5px;">Umumiy kurs resurslari</div><div style="font-size:12px; color:var(--ink-500);">6 ta fayl</div></div>
-          </div>
-        </div>
+        <!-- Papka kafellari js/resource-manager.js tomonidan
+             `isloh_resources` do'konidan chiziladi; "N ta fayl" soni ham
+             haqiqiy fayllardan hisoblanadi. -->
+        <div class="collection-grid mt-16" data-folder-grid data-view-panel="folder"></div>
 
         <!-- GRID VIEW -->
-        <div class="resource-grid" style="margin-top:16px;" data-view-panel="grid" hidden>
+        <div class="resource-grid mt-16" data-view-panel="grid" data-resource-grid hidden></div>
 
-          <div class="card resource-card" data-resource-item data-folder="lessons" data-filter-item data-type="pdf" data-filter-text="Docker_cheat_sheet.pdf">
-            <input type="checkbox" data-select-item aria-label="Docker_cheat_sheet.pdf tanlash">
-            <div class="resource-icon" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">Docker_cheat_sheet.pdf</div><div class="resource-meta">PDF · 340 KB</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                  <div class="dropdown-item" data-action="move-resource"><i class="bi bi-folder-symlink"></i> Ko'chirish</div>
-                  <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                  <div class="dropdown-item" data-action="archive-resource"><i class="bi bi-archive"></i> Arxivlash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card resource-card" data-resource-item data-folder="general" data-filter-item data-type="zip" data-filter-text="starter-files.zip">
-            <input type="checkbox" data-select-item aria-label="starter-files.zip tanlash">
-            <div class="resource-icon" style="background:var(--ink-500);"><i class="bi bi-file-earmark-zip-fill"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">starter-files.zip</div><div class="resource-meta">ZIP · 1.2 MB</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                  <div class="dropdown-item" data-action="move-resource"><i class="bi bi-folder-symlink"></i> Ko'chirish</div>
-                  <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                  <div class="dropdown-item" data-action="archive-resource"><i class="bi bi-archive"></i> Arxivlash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card resource-card" data-resource-item data-folder="lessons" data-filter-item data-type="video" data-filter-text="intro-video.mp4">
-            <input type="checkbox" data-select-item aria-label="intro-video.mp4 tanlash">
-            <div class="resource-icon" style="background:#0369A1;"><i class="bi bi-camera-video-fill"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">intro-video.mp4</div><div class="resource-meta">Video · 42 MB</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                  <div class="dropdown-item" data-action="move-resource"><i class="bi bi-folder-symlink"></i> Ko'chirish</div>
-                  <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                  <div class="dropdown-item" data-action="archive-resource"><i class="bi bi-archive"></i> Arxivlash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card resource-card" data-resource-item data-folder="lessons" data-filter-item data-type="audio" data-filter-text="podcast-intro.mp3">
-            <input type="checkbox" data-select-item aria-label="podcast-intro.mp3 tanlash">
-            <div class="resource-icon" style="background:#0F766E;"><i class="bi bi-mic-fill"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">podcast-intro.mp3</div><div class="resource-meta">Audio · 8.4 MB</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                  <div class="dropdown-item" data-action="move-resource"><i class="bi bi-folder-symlink"></i> Ko'chirish</div>
-                  <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                  <div class="dropdown-item" data-action="archive-resource"><i class="bi bi-archive"></i> Arxivlash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card resource-card" data-resource-item data-folder="general" data-filter-item data-type="image" data-filter-text="architecture-diagram.png">
-            <input type="checkbox" data-select-item aria-label="architecture-diagram.png tanlash">
-            <div class="resource-icon" style="background:var(--violet-600);"><i class="bi bi-file-earmark-image-fill"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">architecture-diagram.png</div><div class="resource-meta">Rasm · 220 KB</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                  <div class="dropdown-item" data-action="move-resource"><i class="bi bi-folder-symlink"></i> Ko'chirish</div>
-                  <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                  <div class="dropdown-item" data-action="archive-resource"><i class="bi bi-archive"></i> Arxivlash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card resource-card" data-resource-item data-folder="general" data-filter-item data-type="presentation" data-filter-text="slides.pptx">
-            <input type="checkbox" data-select-item aria-label="slides.pptx tanlash">
-            <div class="resource-icon" style="background:#EA580C;"><i class="bi bi-file-earmark-slides-fill"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">slides.pptx</div><div class="resource-meta">Taqdimot · 3.1 MB</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                  <div class="dropdown-item" data-action="move-resource"><i class="bi bi-folder-symlink"></i> Ko'chirish</div>
-                  <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                  <div class="dropdown-item" data-action="archive-resource"><i class="bi bi-archive"></i> Arxivlash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card resource-card" data-resource-item data-folder="assignments" data-filter-item data-type="spreadsheet" data-filter-text="baholash-jadvali.xlsx">
-            <input type="checkbox" data-select-item aria-label="baholash-jadvali.xlsx tanlash">
-            <div class="resource-icon" style="background:#0F7A3F;"><i class="bi bi-file-earmark-spreadsheet-fill"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">baholash-jadvali.xlsx</div><div class="resource-meta">Jadval · 48 KB</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                  <div class="dropdown-item" data-action="move-resource"><i class="bi bi-folder-symlink"></i> Ko'chirish</div>
-                  <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                  <div class="dropdown-item" data-action="archive-resource"><i class="bi bi-archive"></i> Arxivlash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card resource-card" data-resource-item data-folder="assignments" data-filter-item data-type="document" data-filter-text="lesson-transcript.docx">
-            <input type="checkbox" data-select-item aria-label="lesson-transcript.docx tanlash">
-            <div class="resource-icon" style="background:#374151;"><i class="bi bi-file-earmark-text-fill"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">lesson-transcript.docx</div><div class="resource-meta">Hujjat · 90 KB</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                  <div class="dropdown-item" data-action="move-resource"><i class="bi bi-folder-symlink"></i> Ko'chirish</div>
-                  <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                  <div class="dropdown-item" data-action="archive-resource"><i class="bi bi-archive"></i> Arxivlash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card resource-card" data-resource-item data-folder="general" data-filter-item data-type="url" data-filter-text="docs.docker.com">
-            <input type="checkbox" data-select-item aria-label="docs.docker.com tanlash">
-            <div class="resource-icon" style="background:var(--teach-green);"><i class="bi bi-box-arrow-up-right"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">docs.docker.com</div><div class="resource-meta">Tashqi havola</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-box-arrow-up-right"></i> Ochish</div>
-                  <div class="dropdown-item" data-action="move-resource"><i class="bi bi-folder-symlink"></i> Ko'chirish</div>
-                  <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                  <div class="dropdown-item" data-action="archive-resource"><i class="bi bi-archive"></i> Arxivlash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card resource-card" data-resource-item data-folder="quizzes" data-filter-item data-type="code" data-filter-text="grading-script.py">
-            <input type="checkbox" data-select-item aria-label="grading-script.py tanlash">
-            <div class="resource-icon" style="background:#1C1B29;"><i class="bi bi-file-earmark-code-fill"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">grading-script.py</div><div class="resource-meta">Kod · 6 KB</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                  <div class="dropdown-item" data-action="move-resource"><i class="bi bi-folder-symlink"></i> Ko'chirish</div>
-                  <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                  <div class="dropdown-item" data-action="archive-resource"><i class="bi bi-archive"></i> Arxivlash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card resource-card is-archived" data-resource-item data-folder="general" data-filter-item data-type="pdf" data-filter-text="eski-topshiriq-2024.pdf">
-            <input type="checkbox" data-select-item aria-label="eski-topshiriq-2024.pdf tanlash">
-            <div class="resource-icon" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div>
-            <div class="resource-body"><div class="resource-name filter-title">eski-topshiriq-2024.pdf</div><div class="resource-meta">PDF · 210 KB · Arxivlangan</div></div>
-            <div class="resource-actions">
-              <div class="dropdown">
-                <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                  <div class="dropdown-item" data-action="restore-resource"><i class="bi bi-arrow-counterclockwise"></i> Tiklash</div>
-                  <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> Butunlay o'chirish</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- LIST VIEW -->
+                <!-- LIST VIEW -->
         <div class="card" style="margin-top:16px; overflow:hidden;" data-view-panel="list" hidden>
           <div class="itable-wrap">
             <table class="itable">
               <thead><tr>
                 <th style="width:36px;"></th><th>Resurs</th><th>Turi</th><th>Papka</th><th>Hajm</th><th>Yuklangan</th><th>Amallar</th>
               </tr></thead>
-              <tbody>
-                <tr data-resource-item data-folder="lessons" data-filter-item data-type="pdf" data-filter-text="Docker_cheat_sheet.pdf">
-                  <td><input type="checkbox" data-select-item aria-label="Docker_cheat_sheet.pdf tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div><div class="cell-title filter-title">Docker_cheat_sheet.pdf</div></div></td>
-                  <td>PDF</td><td>Dars resurslari</td><td>340 KB</td><td>3 kun oldin</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                        <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr data-resource-item data-folder="general" data-filter-item data-type="zip" data-filter-text="starter-files.zip">
-                  <td><input type="checkbox" data-select-item aria-label="starter-files.zip tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb" style="background:var(--ink-500);"><i class="bi bi-file-earmark-zip-fill"></i></div><div class="cell-title filter-title">starter-files.zip</div></div></td>
-                  <td>ZIP</td><td>Umumiy kurs resurslari</td><td>1.2 MB</td><td>1 hafta oldin</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <div class="dropdown-item" data-action="preview-resource"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                        <div class="dropdown-item" data-action="duplicate-resource"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item text-danger" data-action="delete-resource"><i class="bi bi-trash"></i> O'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody data-resource-rows></tbody>
             </table>
           </div>
         </div>
@@ -367,18 +125,29 @@
 <!-- UPLOAD RESOURCE MODAL -->
 <div class="modal-overlay" id="upload-resource-modal" hidden>
   <div class="modal" style="max-width:440px;">
-    <div class="modal-head"><b>Resurs yuklash</b><button class="icon-btn icon-btn-sm" data-modal-close="upload-resource-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
-    <div class="modal-body">
-      <div class="upload-dropzone"><i class="bi bi-cloud-arrow-up"></i><div class="dz-title">Faylni shu yerga tashlang</div><div class="dz-sub">yoki tanlash uchun bosing — PDF, ZIP, rasm, video va h.k.</div></div>
-      <div class="upload-progress"><div class="progress-track"><div class="progress-fill" style="width:64%;"></div></div><span class="up-pct">64%</span></div>
-      <div class="field" style="margin-top:14px; margin-bottom:0;"><label>Qaysi papkaga</label>
-        <select class="btn btn-outline select-block"><option>Umumiy kurs resurslari</option><option>Dars resurslari</option><option>Topshiriq resurslari</option><option>Test resurslari</option></select>
+    <form data-upload-resource-form>
+      <div class="modal-head"><b>Resurs qo'shish</b><button type="button" class="icon-btn icon-btn-sm" data-modal-close="upload-resource-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+      <div class="modal-body">
+        <div class="field"><label for="up-file">Fayl tanlang</label><input id="up-file" type="file" data-upload-file></div>
+        <div class="field"><label for="up-url">yoki tashqi havola</label><input id="up-url" type="url" data-upload-url placeholder="https://docs.example.com"></div>
+        <div class="field"><label for="up-folder">Qaysi papkaga</label>
+          <select id="up-folder" data-upload-folder class="btn btn-outline select-block"><option value="general">Umumiy kurs resurslari</option><option value="lessons">Dars resurslari</option><option value="assignments">Topshiriq resurslari</option><option value="quizzes">Test resurslari</option></select>
+        </div>
+        <div class="field"><label for="up-category">Kategoriya</label>
+          <select id="up-category" data-upload-category class="btn btn-outline select-block">
+            <option value="python">Python asoslari</option><option value="django">Django va DRF</option><option value="devops">DevOps va Docker</option><option value="umumiy" selected>Umumiy</option>
+          </select>
+        </div>
+        <!-- Faylning O'ZI saqlanmaydi: localStorage'ga megabaytlik fayl
+             sig'maydi. Do'konga faqat metama'lumot (nom, tur, hajm) tushadi —
+             buni foydalanuvchidan yashirish yolg'on bo'lardi. -->
+        <p class="placeholder-note"><i class="bi bi-info-circle"></i> Hozircha faqat fayl ma'lumotlari (nomi, turi, hajmi) saqlanadi — faylni haqiqiy yuklash backend ulangach ishlaydi.</p>
       </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" data-modal-close="upload-resource-modal">Bekor qilish</button>
-      <button class="btn btn-teach btn-sm"><i class="bi bi-upload"></i> Yuklash</button>
-    </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline btn-sm" data-modal-close="upload-resource-modal">Bekor qilish</button>
+        <button type="submit" class="btn btn-teach btn-sm"><i class="bi bi-plus-lg"></i> Qo'shish</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -387,8 +156,9 @@
   <div class="modal" style="max-width:400px;">
     <div class="modal-head"><b>Resursni ko'chirish</b><button class="icon-btn icon-btn-sm" data-modal-close="move-resource-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
-      <div class="field" style="margin-bottom:0;"><label>Qaysi papkaga ko'chirish</label>
-        <select class="btn btn-outline select-block"><option>Umumiy kurs resurslari</option><option>Dars resurslari</option><option>Topshiriq resurslari</option><option>Test resurslari</option></select>
+      <p class="text-muted"><b data-move-resource-name></b></p>
+      <div class="field" style="margin-bottom:0;"><label for="move-folder">Qaysi papkaga ko'chirish</label>
+        <select id="move-folder" data-move-resource-folder class="btn btn-outline select-block"><option value="general">Umumiy kurs resurslari</option><option value="lessons">Dars resurslari</option><option value="assignments">Topshiriq resurslari</option><option value="quizzes">Test resurslari</option></select>
       </div>
     </div>
     <div class="modal-foot">
@@ -418,7 +188,7 @@
 <div class="modal-overlay" id="delete-resource-modal" hidden>
   <div class="modal">
     <div class="modal-head"><b class="text-danger">Resursni o'chirishni tasdiqlang</b><button class="icon-btn icon-btn-sm" data-modal-close="delete-resource-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
-    <div class="modal-body">Bu resurs butunlay o'chiriladi. Undan foydalangan darslar/topshiriqlarga ta'sir qilishi mumkin. Bu amalni qaytarib bo'lmaydi.</div>
+    <div class="modal-body"><b data-delete-resource-name></b> butunlay o'chiriladi. Undan foydalangan darslar/topshiriqlarga ta'sir qilishi mumkin. Bu amalni qaytarib bo'lmaydi.</div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="delete-resource-modal">Bekor qilish</button>
       <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-resource>Ha, o'chirish</button>
@@ -438,7 +208,11 @@
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/toast.js"></script>
-<script src="../../js/courses.js"></script>
+<!-- resource-manager.js courses.js DAN OLDIN: avval ro'yxat do'kondan
+     chiziladi, keyin umumiy modul (skeleton, ko'p tanlash) unga ulanadi. -->
+<script src="../../js/course-store.js"></script>
+<script src="../../js/resource-store.js"></script>
 <script src="../../js/resource-manager.js"></script>
+<script src="../../js/courses.js"></script>
 </body>
 </html>

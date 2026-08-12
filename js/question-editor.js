@@ -100,20 +100,70 @@ function isloh_initQuestionPreviewSync() {
   });
 }
 
+/* --- Do'kon bilan bog'lanish ----------------------------------------------
+   Modal ikkala sahifada bir xil, shuning uchun ochish/to'ldirish/saqlash
+   ham shu yerda — savollar bazasi ham, test muharriri ham o'z nusxasini
+   yozmasin (CLAUDE.md §2).
+
+   `modal.dataset.editingId` — tahrirlanayotgan savol id'si. Bo'sh bo'lsa
+   yangi savol yaratilyapti. Ilgari bu yerda `editingRow` bor edi, lekin
+   hech qachon o'qilmasdi: "tahrirlash" ham har safar YANGI savol
+   yaratardi. */
+
+const ISLOH_QE_FIELDS = {
+  title: 'qe-title',
+  type: 'qe-type',
+  difficulty: 'qe-difficulty',
+  category: 'qe-category',
+  instructions: 'qe-instructions',
+  explanation: 'qe-explanation',
+  hint: 'qe-hint'
+};
+
+function isloh_qeValue(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
 /* Modaldagi maydonlardan savol obyektini yig'adi. */
 function isloh_readQuestionForm() {
-  const value = (id, fallback) => {
-    const el = document.getElementById(id);
-    return el ? el.value.trim() : fallback;
-  };
-  return {
-    id: 'q-' + Date.now(),
-    title: value('qe-title', ''),
-    type: value('qe-type', 'single'),
-    points: parseInt(value('qe-points', '5'), 10) || 0,
-    difficulty: value('qe-difficulty', 'easy'),
-    category: value('qe-category', 'Umumiy')
-  };
+  const data = {};
+  Object.keys(ISLOH_QE_FIELDS).forEach((name) => {
+    const el = document.getElementById(ISLOH_QE_FIELDS[name]);
+    if (el) data[name] = el.value.trim();
+  });
+  data.points = parseInt(isloh_qeValue('qe-points'), 10) || 0;
+  return data;
+}
+
+/* Savolni modalga yozadi. `questionId` bo'lmasa — bo'sh forma. */
+function isloh_openQuestionEditor(questionId) {
+  const modal = document.getElementById('question-editor-modal');
+  if (!modal) return;
+
+  const question = questionId && typeof isloh_getQuestion === 'function'
+    ? isloh_getQuestion(questionId)
+    : null;
+
+  modal.dataset.editingId = question ? question.id : '';
+  modal.querySelector('.modal-head b').textContent = question ? 'Savolni tahrirlash' : "Yangi savol qo'shish";
+
+  Object.keys(ISLOH_QE_FIELDS).forEach((name) => {
+    const el = document.getElementById(ISLOH_QE_FIELDS[name]);
+    if (el) el.value = question ? (question[name] || '') : '';
+  });
+
+  const points = document.getElementById('qe-points');
+  if (points) points.value = question ? question.points : 5;
+
+  const type = document.getElementById('qe-type');
+  if (type && !question) type.value = 'single';
+
+  document.getElementById('qe-title')?.classList.remove('is-invalid');
+  document.getElementById('qe-title')?.dispatchEvent(new Event('input'));
+  type?.dispatchEvent(new Event('change'));
+
+  if (typeof isloh_openModal === 'function') isloh_openModal('question-editor-modal');
 }
 
 function isloh_initQuestionSave() {
@@ -126,20 +176,27 @@ function isloh_initQuestionSave() {
     }
     titleInput.classList.remove('is-invalid');
 
-    /* Savol endi haqiqatan saqlanadi va ro'yxatga qo'shiladi
-       (js/question-store.js). Ilgari bu yerda faqat modal yopilib,
-       "Savol saqlandi" degan yolg'on toast chiqarilardi. */
-    if (typeof isloh_addQuestion === 'function') {
-      const question = isloh_readQuestionForm();
-      if (!isloh_addQuestion(question)) {
-        if (typeof isloh_showToast === 'function') isloh_showToast("Saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
-        return;
-      }
-      isloh_appendQuestionToList(question);
+    const modal = document.getElementById('question-editor-modal');
+    const editingId = modal ? modal.dataset.editingId : '';
+    const data = isloh_readQuestionForm();
+    if (editingId) data.id = editingId;
+
+    const saved = isloh_saveQuestion(data);
+    if (!saved) {
+      if (typeof isloh_showToast === 'function') isloh_showToast("Saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
+      return;
     }
 
-    isloh_closeModal('question-editor-modal');
-    if (typeof isloh_showToast === 'function') isloh_showToast("Savol saqlandi", 'success');
+    /* Test muharririda yaratilgan YANGI savol darhol shu testga qo'shiladi.
+       Ilgari u faqat bankka tushardi va qaysi testga tegishli ekani hech
+       qayerda yozilmasdi — natijada u barcha testlarda ko'rinardi. */
+    if (!editingId && typeof isloh_quizEditorId === 'function' && isloh_quizEditorId()) {
+      isloh_addQuestionToQuiz(isloh_quizEditorId(), saved.id);
+    }
+
+    if (typeof isloh_closeModal === 'function') isloh_closeModal('question-editor-modal');
+    document.dispatchEvent(new CustomEvent('isloh:question-saved', { detail: saved }));
+    if (typeof isloh_showToast === 'function') isloh_showToast('Savol saqlandi', 'success');
   });
 }
 

@@ -36,10 +36,10 @@
 
       <!-- STATS -->
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-journal-text"></i></div><div class="stat-value">142</div><div class="stat-label">Jami savollar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-collection-fill"></i></div><div class="stat-value">6</div><div class="stat-label">Kategoriyalar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-tags-fill"></i></div><div class="stat-value">28</div><div class="stat-label">Teglar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-archive"></i></div><div class="stat-value">9</div><div class="stat-label">Arxivlangan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-journal-text"></i></div><div class="stat-value" data-bank-stat="total">0</div><div class="stat-label">Jami savollar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-collection-fill"></i></div><div class="stat-value" data-bank-stat="categories">0</div><div class="stat-label">Kategoriyalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-tags-fill"></i></div><div class="stat-value" data-bank-stat="tags">0</div><div class="stat-label">Teglar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-archive"></i></div><div class="stat-value" data-bank-stat="archived">0</div><div class="stat-label">Arxivlangan</div></div>
       </div>
 
       <!-- TOOLBAR -->
@@ -82,9 +82,9 @@
       <div class="bulk-bar" data-bulk-bar hidden>
         <span><span class="bulk-count" data-bulk-count>0</span> ta savol tanlandi</span>
         <div class="bulk-spacer"></div>
-        <button class="btn btn-outline btn-sm"><i class="bi bi-archive"></i> Arxivlash</button>
-        <button class="btn btn-outline btn-sm"><i class="bi bi-copy"></i> Nusxalash</button>
-        <button class="btn btn-outline btn-sm" style="color:#FF9B9E; border-color:rgba(255,255,255,.25);"><i class="bi bi-trash"></i> O'chirish</button>
+        <button class="btn btn-outline btn-sm" data-bulk-archive><i class="bi bi-archive"></i> Arxivlash</button>
+        <button class="btn btn-outline btn-sm" data-bulk-duplicate><i class="bi bi-copy"></i> Nusxalash</button>
+        <button class="btn btn-outline btn-sm bulk-danger" data-bulk-delete><i class="bi bi-trash"></i> O'chirish</button>
         <button class="btn btn-outline btn-sm" data-bulk-cancel>Bekor qilish</button>
       </div>
 
@@ -105,108 +105,9 @@
                 <th style="width:36px;"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th>
                 <th>Savol</th><th>Turi</th><th>Kategoriya</th><th>Qiyinlik</th><th>Teglar</th><th>Ishlatilgan</th><th>Amallar</th>
               </tr></thead>
-              <tbody>
-                <tr data-filter-item data-category="python" data-type="single" data-difficulty="easy" data-status="active" data-filter-text="Python'da qaysi kalit so'z funksiya e'lon qiladi?">
-                  <td><input type="checkbox" data-select-item aria-label="Savolni tanlash"></td>
-                  <td><div class="cell-title filter-title">Python'da qaysi kalit so'z funksiya e'lon qiladi?</div></td>
-                  <td><span class="badge badge-violet question-type-badge"><i class="bi bi-ui-radios"></i> Bitta tanlov</span></td>
-                  <td>Python</td>
-                  <td><span class="badge badge-green difficulty-badge"><span class="difficulty-dot easy"></span> Oson</span></td>
-                  <td><span class="chip-demo">sintaksis</span> <span class="chip-demo">asoslar</span></td>
-                  <td>3 testda</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
-                        <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
-                        <div class="dropdown-item text-danger" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr data-filter-item data-category="python" data-type="multi" data-difficulty="medium" data-status="active" data-filter-text="Quyidagilardan qaysilari o'zgaruvchan (mutable) turlar?">
-                  <td><input type="checkbox" data-select-item aria-label="Savolni tanlash"></td>
-                  <td><div class="cell-title filter-title">Quyidagilardan qaysilari o'zgaruvchan (mutable) turlar?</div></td>
-                  <td><span class="badge badge-violet question-type-badge"><i class="bi bi-ui-checks"></i> Ko'p tanlov</span></td>
-                  <td>Python</td>
-                  <td><span class="badge badge-warning difficulty-badge"><span class="difficulty-dot medium"></span> O'rta</span></td>
-                  <td><span class="chip-demo">ma'lumot turlari</span></td>
-                  <td>2 testda</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
-                        <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
-                        <div class="dropdown-item text-danger" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr data-filter-item data-category="devops" data-type="order" data-difficulty="medium" data-status="active" data-filter-text="Docker image yaratish bosqichlarini to'g'ri tartibda joylashtiring">
-                  <td><input type="checkbox" data-select-item aria-label="Savolni tanlash"></td>
-                  <td><div class="cell-title filter-title">Docker image yaratish bosqichlarini to'g'ri tartibda joylashtiring</div></td>
-                  <td><span class="badge badge-violet question-type-badge"><i class="bi bi-sort-numeric-down"></i> Tartiblash</span></td>
-                  <td>DevOps</td>
-                  <td><span class="badge badge-warning difficulty-badge"><span class="difficulty-dot medium"></span> O'rta</span></td>
-                  <td><span class="chip-demo">docker</span> <span class="chip-demo">devops</span></td>
-                  <td>1 testda</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
-                        <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
-                        <div class="dropdown-item text-danger" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr data-filter-item data-category="django" data-type="match" data-difficulty="hard" data-status="active" data-filter-text="Django ORM metodlarini vazifasiga moslashtiring">
-                  <td><input type="checkbox" data-select-item aria-label="Savolni tanlash"></td>
-                  <td><div class="cell-title filter-title">Django ORM metodlarini vazifasiga moslashtiring</div></td>
-                  <td><span class="badge badge-violet question-type-badge"><i class="bi bi-arrow-left-right"></i> Moslashtirish</span></td>
-                  <td>Django</td>
-                  <td><span class="badge badge-danger difficulty-badge"><span class="difficulty-dot hard"></span> Qiyin</span></td>
-                  <td><span class="chip-demo">orm</span> <span class="chip-demo">django</span></td>
-                  <td>4 testda</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
-                        <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item" data-action="archive-bank-question"><i class="bi bi-archive"></i> Arxivlash</div>
-                        <div class="dropdown-item text-danger" data-action="delete-bank-question"><i class="bi bi-trash"></i> O'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr class="is-archived" data-filter-item data-category="db" data-type="short" data-difficulty="easy" data-status="archived" data-filter-text="SQL'da JOIN nima uchun ishlatiladi?">
-                  <td><input type="checkbox" data-select-item aria-label="Savolni tanlash"></td>
-                  <td><div class="cell-title filter-title">SQL'da JOIN nima uchun ishlatiladi?</div></td>
-                  <td><span class="badge badge-violet question-type-badge"><i class="bi bi-input-cursor-text"></i> Qisqa javob</span></td>
-                  <td>Ma'lumotlar bazasi</td>
-                  <td><span class="badge badge-green difficulty-badge"><span class="difficulty-dot easy"></span> Oson</span></td>
-                  <td><span class="chip-demo">sql</span></td>
-                  <td>0 testda</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <div class="dropdown-item" data-action="edit-bank-question"><i class="bi bi-pencil"></i> Tahrirlash</div>
-                        <div class="dropdown-item" data-action="duplicate-bank-question"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item" data-action="restore-bank-question"><i class="bi bi-arrow-counterclockwise"></i> Tiklash</div>
-                        <div class="dropdown-item text-danger" data-action="delete-bank-question"><i class="bi bi-trash"></i> Butunlay o'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <!-- Qatorlar js/question-bank.js tomonidan
+                   `isloh_questions` do'konidan chiziladi. -->
+              <tbody data-bank-rows></tbody>
             </table>
           </div>
           <div class="empty-state" data-filter-empty style="display:none;">
@@ -256,7 +157,10 @@
 <div class="modal-overlay" id="delete-bank-question-modal" hidden>
   <div class="modal">
     <div class="modal-head"><b class="text-danger">Savolni o'chirishni tasdiqlang</b><button class="icon-btn icon-btn-sm" data-modal-close="delete-bank-question-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
-    <div class="modal-body">Bu savol savollar bankidan butunlay o'chiriladi. Undan foydalangan testlarga ta'sir qilishi mumkin. Bu amalni qaytarib bo'lmaydi.</div>
+    <div class="modal-body">
+      <b data-delete-question-name></b> savoli bankdan butunlay o'chiriladi. Bu amalni qaytarib bo'lmaydi.
+      <p class="placeholder-note mt-8" data-delete-question-usage hidden></p>
+    </div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="delete-bank-question-modal">Bekor qilish</button>
       <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-bank-question>Ha, o'chirish</button>
@@ -300,6 +204,17 @@
                 <option value="easy">Oson</option>
                 <option value="medium" selected>O'rta</option>
                 <option value="hard">Qiyin</option>
+              </select>
+            </div>
+            <!-- Kategoriya savollar bazasidagi filtr chiplari bilan bir xil
+                 slug'lardan iborat (js/question-store.js dagi jadval). -->
+            <div class="field" style="width:170px;"><label for="qe-category">Kategoriya</label>
+              <select id="qe-category" class="btn btn-outline select-block">
+                <option value="python">Python</option>
+                <option value="django">Django</option>
+                <option value="devops">DevOps</option>
+                <option value="db">Ma'lumotlar bazasi</option>
+                <option value="umumiy" selected>Umumiy</option>
               </select>
             </div>
           </div>
@@ -432,9 +347,13 @@
 <script src="../../js/toast.js"></script>
 <script src="../../js/course-wizard.js"></script>
 <script src="../../js/lesson-editor.js"></script>
-<script src="../../js/courses.js"></script>
-<script src="../../js/question-bank.js"></script>
+<!-- Do'konlar sahifa modullaridan OLDIN. quiz-store.js ham kerak:
+     "Ishlatilgan: N testda" ustuni testlar do'konidan hisoblanadi. -->
+<script src="../../js/course-store.js"></script>
 <script src="../../js/question-store.js"></script>
+<script src="../../js/quiz-store.js"></script>
 <script src="../../js/question-editor.js"></script>
+<script src="../../js/question-bank.js"></script>
+<script src="../../js/courses.js"></script>
 </body>
 </html>

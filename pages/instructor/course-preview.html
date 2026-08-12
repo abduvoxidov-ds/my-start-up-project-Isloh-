@@ -20,8 +20,8 @@
   <i class="bi bi-eye-fill"></i>
   <span><b>Preview rejimi</b> — talabalar aynan shu ko'rinishni ko'radi. Bu haqiqiy kayd (enrollment) emas.</span>
   <div class="preview-bar-actions">
-    <a href="course-publish.html" class="btn btn-outline btn-sm"><i class="bi bi-rocket-takeoff"></i> Nashr etish sahifasiga qaytish</a>
-    <a href="course-edit.html" class="btn btn-outline btn-sm"><i class="bi bi-pencil"></i> Tahrirlash</a>
+    <a href="course-publish.html" data-course-link="course-publish.html" class="btn btn-outline btn-sm"><i class="bi bi-rocket-takeoff"></i> Nashr etish sahifasiga qaytish</a>
+    <a href="course-edit.html" data-course-link="course-edit.html" class="btn btn-outline btn-sm"><i class="bi bi-pencil"></i> Tahrirlash</a>
   </div>
 </div>
 
@@ -29,7 +29,7 @@
   <div class="landing-hero">
     <div>
       <span class="badge badge-neutral">DevOps · Boshlang'ich</span>
-      <h1 style="font-size:26px; margin-top:10px;">Docker for Beginners</h1>
+      <h1 style="font-size:26px; margin-top:10px;" data-preview-course-title>Docker for Beginners</h1>
       <p style="color:var(--ink-500); font-size:14px; margin-top:6px;">Konteynerlashtirish asoslarini noldan o'rganing — Docker, Dockerfile va Docker Compose.</p>
       <div style="display:flex; gap:16px; align-items:center; margin-top:14px; font-size:13px; color:var(--ink-500); flex-wrap:wrap;">
         <span><i class="bi bi-star-fill" style="color:var(--warning);"></i> Yangi kurs</span>
@@ -99,5 +99,8 @@
 <script src="../../js/i18n.js"></script>
 
 <script src="../../js/theme.js"></script>
+<!-- Havolalar joriy kursni yo'qotmasligi uchun (?id=) -->
+<script src="../../js/course-store.js"></script>
+<script src="../../js/course-preview.js"></script>
 </body>
 </html>

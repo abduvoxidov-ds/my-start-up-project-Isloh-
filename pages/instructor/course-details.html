@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Python Backend Development — Isloh</title>
+<!-- Sarlavhani js/course-details.js ochilgan kurs nomiga almashtiradi -->
+<title>Kurs tafsilotlari — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
 </head>
@@ -27,28 +28,28 @@
     <main class="content">
       <div class="page-header">
         <div style="display:flex; align-items:center; gap:14px;">
-          <div class="cell-thumb" style="width:52px; height:52px; font-size:22px; background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div>
+          <div class="cell-thumb course-details-cover" data-course-cover></div>
           <div>
-            <div style="display:flex; align-items:center; gap:10px;"><h1 style="font-size:22px;">Python Backend Development</h1><span class="badge badge-green">Nashr etilgan</span></div>
-            <p style="margin-top:2px;">Dasturlash · O'rta daraja · 48 dars · Yangilangan 2 kun oldin</p>
+            <div style="display:flex; align-items:center; gap:10px;"><h1 style="font-size:22px;" data-course-out="title">—</h1><span class="badge badge-warning" data-course-status-badge>—</span></div>
+            <p style="margin-top:2px;" data-course-out="meta">—</p>
           </div>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <a href="course-preview.html" class="btn btn-outline btn-sm"><i class="bi bi-eye"></i> Oldindan ko'rish</a>
+          <a href="course-preview.html" data-course-link="course-preview.html" class="btn btn-outline btn-sm"><i class="bi bi-eye"></i> Oldindan ko'rish</a>
           <a href="discussions.html" class="btn btn-outline btn-sm"><i class="bi bi-chat-square-text"></i> Muhokamalar</a>
           <a href="live-sessions.html" class="btn btn-outline btn-sm"><i class="bi bi-camera-video"></i> Jonli sessiyalar</a>
-          <a href="course-publish.html" class="btn btn-outline btn-sm"><i class="bi bi-rocket-takeoff"></i> Nashr etish</a>
-          <a href="course-settings.html" class="btn btn-outline btn-sm"><i class="bi bi-gear"></i> Sozlamalar</a>
-          <a href="course-edit.html" class="btn btn-teach btn-sm"><i class="bi bi-pencil"></i> Tahrirlash</a>
+          <a href="course-publish.html" data-course-link="course-publish.html" class="btn btn-outline btn-sm"><i class="bi bi-rocket-takeoff"></i> Nashr etish</a>
+          <a href="course-settings.html" data-course-link="course-settings.html" class="btn btn-outline btn-sm"><i class="bi bi-gear"></i> Sozlamalar</a>
+          <a href="course-edit.html" data-course-link="course-edit.html" class="btn btn-teach btn-sm"><i class="bi bi-pencil"></i> Tahrirlash</a>
         </div>
       </div>
 
       <!-- STATS -->
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-cash-stack"></i></div><div class="stat-value">$1,480</div><div class="stat-label">Jami daromad</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div><div class="stat-value">248</div><div class="stat-label">Talabalar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon badge-warning" style="width:40px;height:40px;border-radius:var(--r-md);"><i class="bi bi-star-fill"></i></div><div class="stat-value">4.9</div><div class="stat-label">O'rtacha reyting</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-check2-circle"></i></div><div class="stat-value">78%</div><div class="stat-label">Yakunlash darajasi</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-cash-stack"></i></div><div class="stat-value" data-course-detail-stat="revenue">—</div><div class="stat-label">Jami daromad</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div><div class="stat-value" data-course-detail-stat="students">—</div><div class="stat-label">Talabalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-star-fill"></i></div><div class="stat-value" data-course-detail-stat="rating">—</div><div class="stat-label">O'rtacha reyting</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-check2-circle"></i></div><div class="stat-value" data-course-detail-stat="completion">—</div><div class="stat-label">Yakunlash darajasi</div></div>
       </div>
 
       <div class="split-main" style="margin-top:18px;">
@@ -57,13 +58,8 @@
           <!-- General info -->
           <div class="card card-pad">
             <div class="section-header"><h3>Umumiy ma'lumot</h3></div>
-            <p style="font-size:13.5px; color:var(--ink-700); line-height:1.6;">
-              Ushbu kursda talabalar Python, Django va Django REST Framework yordamida to'liq backend
-              tizimlarni qurishni o'rganadilar. Kurs 48 darsdan iborat bo'lib, amaliy loyihalar bilan yakunlanadi.
-            </p>
-            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
-              <span class="cci-tag">Python</span><span class="cci-tag">Django</span><span class="cci-tag">Backend</span>
-            </div>
+            <p style="font-size:13.5px; color:var(--ink-700); line-height:1.6;" data-course-out="description">—</p>
+            <div class="cci-tags mt-12" data-course-tags-out></div>
           </div>
 
           <!-- Revenue summary -->
@@ -85,54 +81,23 @@
             <div class="chart-xaxis"><span>Yan</span><span>Fev</span><span>Mar</span><span>Apr</span><span>May</span><span>Iyun</span><span>Iyul</span></div>
           </div>
 
-          <!-- Students summary -->
+          <!-- Kurs tarkibi — modullar js/content-store.js dan. Ilgari bu
+               yerda "Talabalar xulosasi" turardi: 3 ta talaba ismi, seriya
+               va foizlari markupga qo'lda yozilgan edi va hech qanday
+               do'konda bunday ma'lumot yo'q. Ro'yxatga olish do'koni
+               qo'shilgach (keyingi bosqich) u qaytariladi. -->
           <div class="card card-pad">
-            <div class="section-header"><h3>Talabalar xulosasi</h3><a href="students.html" class="section-action">Barchasi</a></div>
-            <div class="roster-row">
-              <div class="avatar avatar-sm">SI</div>
-              <div class="roster-info"><div class="roster-name">Samarqand Islomov</div><div class="roster-sub">🔥 12 kunlik seriya</div></div>
-              <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:66%;"></div></div></div>
-              <div class="roster-meta">66%</div>
-            </div>
-            <div class="roster-row">
-              <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#EA580C);">JR</div>
-              <div class="roster-info"><div class="roster-name">Javohir Rasimov</div><div class="roster-sub">🔥 21 kunlik seriya</div></div>
-              <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:90%;"></div></div></div>
-              <div class="roster-meta">90%</div>
-            </div>
-            <div class="roster-row">
-              <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">BO</div>
-              <div class="roster-info"><div class="roster-name">Bekzod Odilov</div><div class="roster-sub">🔥 3 kunlik seriya</div></div>
-              <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:40%;"></div></div></div>
-              <div class="roster-meta">40%</div>
-            </div>
+            <div class="section-header"><h3>Kurs tarkibi</h3><a href="course-builder.html" data-course-link="course-builder.html" class="section-action">Boshqarish</a></div>
+            <div data-course-modules></div>
           </div>
 
           <!-- Recent reviews -->
           <div class="card card-pad">
             <div class="section-header"><h3>So'nggi sharhlar</h3><a href="reviews.html" class="section-action">Barchasi</a></div>
-            <div class="review-card">
-              <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">BO</div>
-              <div style="flex:1; min-width:0;">
-                <div class="review-head">
-                  <span class="review-name">Bekzod Odilov</span>
-                  <span class="rating-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></span>
-                  <span class="review-time">4 soat oldin</span>
-                </div>
-                <div class="review-text">Ajoyib kurs, hammasi tushunarli tushuntirilgan!</div>
-              </div>
-            </div>
-            <div class="review-card">
-              <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#059669,#10B981);">SA</div>
-              <div style="flex:1; min-width:0;">
-                <div class="review-head">
-                  <span class="review-name">Sardor Aliyev</span>
-                  <span class="rating-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></span>
-                  <span class="review-time">2 kun oldin</span>
-                </div>
-                <div class="review-text">Yaxshi kurs, lekin ba'zi darslar biroz uzun.</div>
-              </div>
-            </div>
+            <!-- Sharhlar ro'yxati hali do'konda emas (javoblar saqlanadi,
+                 sharhlarning o'zi yo'q) — shuning uchun bu yerda o'ylab
+                 topilgan sharhlar ko'rsatilmaydi. -->
+            <p class="placeholder-note"><i class="bi bi-info-circle"></i> Sharhlar do'koni hali yo'q — ularni "Sharhlar" bo'limida ko'ring.</p>
           </div>
         </div>
 
@@ -141,46 +106,39 @@
           <!-- Completion summary -->
           <div class="card card-pad">
             <div class="section-header"><h3>Yakunlash xulosasi</h3></div>
-            <div class="cell-progress" style="min-width:0;"><div class="progress-track"><div class="progress-fill" style="width:78%;"></div></div></div>
-            <div style="font-size:12px; color:var(--ink-500); margin-top:8px;">O'rtacha 78% talaba kursni yakunlagan</div>
-            <div class="goal-item" style="border-bottom:none; padding-bottom:0;">
-              <div class="goal-text" style="font-size:12.5px;">To'liq yakunlagan</div>
-              <span class="badge badge-green">62%</span>
-            </div>
+            <div class="cell-progress" style="min-width:0;"><div class="progress-track"><div class="progress-fill" data-course-completion-bar style="width:0%;"></div></div></div>
+            <div class="text-xs text-muted mt-8" data-course-out="completionNote">—</div>
           </div>
 
           <!-- Quick shortcuts -->
           <div class="card card-pad">
             <div class="section-header"><h3>Tezkor havolalar</h3></div>
             <div class="quick-actions" style="grid-template-columns:1fr;">
-              <a href="course-builder.html" class="quick-action">
+              <a href="course-builder.html" data-course-link="course-builder.html" class="quick-action">
                 <div class="qa-icon tint-violet"><i class="bi bi-diagram-3"></i></div>
                 <div class="qa-title">Kurs tarkibi</div><div class="qa-sub">Modul va darslarni boshqarish</div>
               </a>
-              <a href="course-edit.html" class="quick-action">
+              <a href="course-edit.html" data-course-link="course-edit.html" class="quick-action">
                 <div class="qa-icon tint-green"><i class="bi bi-pencil-fill"></i></div>
                 <div class="qa-title">Kursni tahrirlash</div><div class="qa-sub">Ma'lumot, narx, SEO</div>
               </a>
-              <a href="course-settings.html" class="quick-action">
+              <a href="course-settings.html" data-course-link="course-settings.html" class="quick-action">
                 <div class="qa-icon"><i class="bi bi-gear-fill"></i></div>
                 <div class="qa-title">Sozlamalar</div><div class="qa-sub">Ko'rinish, bildirishnoma</div>
               </a>
               <a href="students.html" class="quick-action">
                 <div class="qa-icon tint-warning"><i class="bi bi-people-fill"></i></div>
-                <div class="qa-title">Talabalar</div><div class="qa-sub">248 ta faol</div>
+                <div class="qa-title">Talabalar</div><div class="qa-sub"><span data-course-detail-stat="students">—</span> ta talaba</div>
               </a>
             </div>
           </div>
 
-          <!-- Recent activity -->
+          <!-- Kurs materiallari — har bir raqam o'z do'konidan hisoblanadi
+               (topshiriq, test, resurs). Ilgari bu yerda "So'nggi faoliyat"
+               turardi: to'rttala qator ham o'ylab topilgan edi. -->
           <div class="card card-pad">
-            <div class="section-header"><h3>So'nggi faoliyat</h3></div>
-            <div class="timeline">
-              <div class="timeline-item tl-green"><div class="timeline-time">Bugun</div><div class="timeline-title">3 ta topshiriq baholandi</div></div>
-              <div class="timeline-item"><div class="timeline-time">Kecha</div><div class="timeline-title">Yangi 5★ sharh qabul qilindi</div></div>
-              <div class="timeline-item tl-warning"><div class="timeline-time">2 kun oldin</div><div class="timeline-title">6-modul (Deployment) yangilandi</div></div>
-              <div class="timeline-item"><div class="timeline-time">5 kun oldin</div><div class="timeline-title">12 ta yangi talaba qo'shildi</div></div>
-            </div>
+            <div class="section-header"><h3>Kurs materiallari</h3></div>
+            <div data-course-materials></div>
           </div>
         </div>
       </div>
@@ -196,5 +154,14 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<script src="../../js/toast.js"></script>
+<!-- Sahifadagi har bir blok o'z do'konidan o'qiydi -->
+<script src="../../js/course-store.js"></script>
+<script src="../../js/content-store.js"></script>
+<script src="../../js/assignment-store.js"></script>
+<script src="../../js/quiz-store.js"></script>
+<script src="../../js/question-store.js"></script>
+<script src="../../js/resource-store.js"></script>
+<script src="../../js/course-details.js"></script>
 </body>
 </html>

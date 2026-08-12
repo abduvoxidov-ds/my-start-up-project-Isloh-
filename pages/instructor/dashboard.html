@@ -31,111 +31,109 @@
 
     <main class="content">
       <!-- HEADER + PRIMARY ACTION -->
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <!-- Ism js/profile.js dagi `isloh_profiles` do'konidan keladi
+           (data-user-firstname) — profilda ism o'zgarsa, salomlashish ham
+           o'zgaradi. Ilgari "Akmal" markupga qo'lda yozilgan edi. -->
+      <div class="page-header">
         <div>
-          <h1 style="font-size:24px;">Salom, Akmal! 👋</h1>
-          <p style="color:var(--ink-500); margin-top:4px;">Bugungi ko'rsatkichlaringiz va e'tibor talab qiladigan ishlar.</p>
+          <h1>Salom, <span data-user-firstname></span>! 👋</h1>
+          <p>Kurslaringiz bo'yicha umumiy ko'rsatkichlar va e'tibor talab qiladigan ishlar.</p>
         </div>
         <a href="course-create.html" class="btn btn-teach"><i class="bi bi-plus-lg"></i> Yangi kurs yaratish</a>
       </div>
 
       <!-- QUICK ACTIONS -->
-      <div class="section-header" style="margin-top:24px;"><h3>Tezkor amallar</h3></div>
+      <div class="section-header mt-24"><h3>Tezkor amallar</h3></div>
       <div class="quick-actions">
-        <a href="../shared/coming-soon.html?page=Mening+kurslarim&role=instructor" class="quick-action">
+        <a href="course-create.html" class="quick-action">
           <div class="qa-icon tint-green"><i class="bi bi-plus-square-fill"></i></div>
           <div class="qa-title">Kurs yaratish</div><div class="qa-sub">Yangi kurs qo'shish</div>
         </a>
-        <a href="../shared/coming-soon.html?page=Talabalar&role=instructor" class="quick-action">
+        <a href="students.html" class="quick-action">
           <div class="qa-icon"><i class="bi bi-people-fill"></i></div>
-          <div class="qa-title">Talabalar</div><div class="qa-sub">245 ta faol</div>
+          <div class="qa-title">Talabalar</div><div class="qa-sub"><span data-stat="students"></span> ta talaba</div>
         </a>
-        <a href="../instructor/messages.html" class="quick-action">
+        <a href="messages.html" class="quick-action">
           <div class="qa-icon tint-warning"><i class="bi bi-chat-dots-fill"></i></div>
-          <div class="qa-title">Xabarlar</div><div class="qa-sub">3 ta yangi</div>
+          <div class="qa-title">Xabarlar</div><div class="qa-sub" data-dash-unread>—</div>
         </a>
-        <a href="../instructor/ai-assistant.html" class="quick-action">
+        <a href="ai-assistant.html" class="quick-action">
           <div class="qa-icon"><i class="bi bi-stars"></i></div>
           <div class="qa-title">AI Yordamchi</div><div class="qa-sub">Tahlil va takliflar</div>
         </a>
       </div>
 
-      <!-- TOP SUMMARY STATS -->
-      <div class="wk-grid-4" style="margin-top:22px;">
+      <!-- TOP SUMMARY STATS
+           Barcha raqamlar js/profile-stats.js tomonidan HAQIQIY do'konlardan
+           hisoblanadi (`data-stat` shartnomasi) — markupda qo'lda yozilgan
+           son yo'q. O'sish nishonlari (trend-pill) va mini-grafiklar olib
+           tashlandi: ular vaqt qatorini talab qiladi, uni esa hech qaysi
+           do'kon saqlamaydi (CLAUDE.md §4). -->
+      <div class="wk-grid-4 mt-24">
         <div class="card card-pad stat-card">
-          <div class="stat-top">
-            <div class="stat-icon tint-green"><i class="bi bi-cash-stack"></i></div>
-            <span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 12%</span>
-          </div>
-          <div class="stat-value">$3,245</div>
-          <div class="stat-label">Oylik daromad</div>
-          <svg class="mini-spark" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
-            <path class="spark-area" d="M0,28 L14,22 L28,25 L42,16 L56,18 L70,10 L84,13 L100,6 L100,34 L0,34 Z"></path>
-            <path class="spark-line" d="M0,28 L14,22 L28,25 L42,16 L56,18 L70,10 L84,13 L100,6"></path>
-          </svg>
+          <div class="stat-icon tint-green"><i class="bi bi-cash-stack"></i></div>
+          <div class="stat-value" data-stat="totalRevenue">—</div>
+          <div class="stat-label">Jami daromad</div>
+          <div class="stat-sub">Barcha kurslar bo'yicha</div>
         </div>
 
         <div class="card card-pad stat-card">
-          <div class="stat-top">
-            <div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div>
-            <span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 8%</span>
-          </div>
-          <div class="stat-value">245</div>
-          <div class="stat-label">Faol talabalar</div>
-          <svg class="mini-spark violet" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
-            <path class="spark-area" d="M0,26 L14,24 L28,20 L42,22 L56,14 L70,16 L84,9 L100,11 L100,34 L0,34 Z"></path>
-            <path class="spark-line" d="M0,26 L14,24 L28,20 L42,22 L56,14 L70,16 L84,9 L100,11"></path>
-          </svg>
+          <div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div>
+          <div class="stat-value" data-stat="students">—</div>
+          <div class="stat-label">Jami talabalar</div>
+          <div class="stat-sub">Nashr etilgan kurslarda</div>
         </div>
 
         <div class="card card-pad stat-card">
-          <div class="stat-top">
-            <div class="stat-icon tint-warning"><i class="bi bi-journal-bookmark-fill"></i></div>
-            <span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 2</span>
-          </div>
-          <div class="stat-value">6</div>
+          <div class="stat-icon tint-warning"><i class="bi bi-journal-bookmark-fill"></i></div>
+          <div class="stat-value" data-stat="publishedCourses">—</div>
           <div class="stat-label">Nashr etilgan kurslar</div>
-          <div class="stat-sub">2 ta qoralama tayyorlanmoqda</div>
+          <div class="stat-sub"><span data-stat="archivedCourses"></span> ta arxivda</div>
         </div>
 
         <div class="card card-pad stat-card">
-          <div class="stat-top">
-            <div class="stat-icon tint-green"><i class="bi bi-star-fill"></i></div>
-            <span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 0.2</span>
-          </div>
-          <div class="stat-value">4.8</div>
+          <div class="stat-icon tint-green"><i class="bi bi-star-fill"></i></div>
+          <div class="stat-value" data-stat="rating">—</div>
           <div class="stat-label">O'rtacha reyting</div>
-          <div class="stat-sub">128 ta sharh asosida</div>
+          <div class="stat-sub"><span data-stat="ratedCourses"></span> ta baholangan kurs bo'yicha</div>
         </div>
       </div>
 
       <!-- SECONDARY STATS -->
-      <div class="wk-grid-4" style="margin-top:18px;">
+      <div class="wk-grid-4 mt-16">
         <div class="card card-pad stat-card">
-          <div class="stat-icon tint-green"><i class="bi bi-wallet2"></i></div>
-          <div class="stat-value">$180</div><div class="stat-label">Bugungi daromad</div>
-        </div>
-        <div class="card card-pad stat-card">
-          <div class="stat-icon tint-violet"><i class="bi bi-check2-circle"></i></div>
-          <div class="stat-value">78%</div><div class="stat-label">Yakunlash darajasi</div>
+          <div class="stat-icon tint-violet"><i class="bi bi-play-btn-fill"></i></div>
+          <div class="stat-value" data-stat="totalLessons">—</div><div class="stat-label">Jami darslar</div>
         </div>
         <div class="card card-pad stat-card">
           <div class="stat-icon tint-warning"><i class="bi bi-clock-history"></i></div>
-          <div class="stat-value">1,240<span style="font-size:14px; color:var(--ink-500); font-weight:600;">s</span></div><div class="stat-label">O'quv soatlari</div>
+          <div class="stat-value" data-stat="teachingHours">—</div><div class="stat-label">O'quv soatlari</div>
         </div>
         <div class="card card-pad stat-card">
-          <div class="stat-icon tint-danger"><i class="bi bi-file-earmark-text-fill"></i></div>
-          <div class="stat-value">8</div><div class="stat-label">Kutayotgan topshiriqlar</div>
+          <div class="stat-icon tint-green"><i class="bi bi-check2-circle"></i></div>
+          <div class="stat-value" data-stat="avgCompletion">—</div><div class="stat-label">O'rtacha yakunlash</div>
         </div>
+        <!-- Baholash navbati — 2-bosqichdan beri haqiqiy
+             (js/assignment-store.js). Kartochka to'g'ridan-to'g'ri navbatga
+             olib boradi, chunki bu raqam harakat talab qiladi. -->
+        <a href="assignments.html" class="card card-pad stat-card text-inherit">
+          <div class="stat-icon tint-danger"><i class="bi bi-file-earmark-text-fill"></i></div>
+          <div class="stat-value" data-stat="pendingSubmissions">—</div><div class="stat-label">Kutayotgan topshiriqlar</div>
+        </a>
       </div>
 
-      <!-- ANALYTICS SECTION (chart placeholders) -->
-      <div class="split-main" style="margin-top:18px;">
+      <!-- ANALYTICS SECTION (chart placeholders)
+           Bu ikki grafik VAQT QATORI (kunlik daromad, kunlik ro'yxatga
+           olish) talab qiladi — bunday tarix hech qanday do'konda
+           saqlanmaydi, shuning uchun ular ochiq "namuna" deb belgilangan.
+           Yuqoridagi kartochkalardan farqi shu: u yerdagi raqamlar
+           haqiqiy, bu yerdagi chiziqlar esa faqat ko'rinish. -->
+      <div class="split-main mt-16">
         <div class="card card-pad chart-container">
           <div class="chart-head">
-            <div class="section-title-icon"><h3 style="font-size:16px;">Daromad dinamikasi</h3></div>
+            <div class="section-title-icon"><h3>Daromad dinamikasi</h3></div>
             <div class="chart-legend">
-              <span class="cl"><span class="cl-dot" style="background:var(--teach-green);"></span> Daromad</span>
+              <span class="cl"><span class="cl-dot cl-dot-teach"></span> Daromad</span>
             </div>
           </div>
           <div class="chart-body">
@@ -149,13 +147,17 @@
             </svg>
           </div>
           <div class="chart-xaxis"><span>Yan</span><span>Fev</span><span>Mar</span><span>Apr</span><span>May</span><span>Iyun</span><span>Iyul</span></div>
+          <p class="placeholder-note mt-12"><i class="bi bi-info-circle"></i> Kunlik daromad tarixi hali saqlanmaydi — chiziq faqat namuna.</p>
         </div>
 
         <div class="card card-pad chart-container">
           <div class="chart-head">
-            <div class="section-title-icon"><h3 style="font-size:16px;">Haftalik ro'yxatga olish</h3></div>
+            <div class="section-title-icon"><h3>Haftalik ro'yxatga olish</h3></div>
           </div>
-          <div class="chart-bars" style="margin-top:16px;">
+          <!-- Ustun balandliklari — ma'lumot qiymati (progress-fill kabi),
+               shuning uchun inline qoladi; ular namuna ekani pastdagi
+               izohda ochiq aytilgan. -->
+          <div class="chart-bars mt-16">
             <div class="cb"><div class="cb-fill" style="height:45%;"></div><div class="cb-lbl">Du</div></div>
             <div class="cb"><div class="cb-fill" style="height:70%;"></div><div class="cb-lbl">Se</div></div>
             <div class="cb"><div class="cb-fill light" style="height:30%;"></div><div class="cb-lbl">Ch</div></div>
@@ -164,145 +166,92 @@
             <div class="cb"><div class="cb-fill light" style="height:25%;"></div><div class="cb-lbl">Sh</div></div>
             <div class="cb"><div class="cb-fill" style="height:95%;"></div><div class="cb-lbl">Ya</div></div>
           </div>
-          <div style="font-size:12px; color:var(--ink-500); margin-top:14px;">Bu hafta: 42 yangi ro'yxatga olish</div>
+          <p class="placeholder-note mt-16"><i class="bi bi-info-circle"></i> Ro'yxatga olish tarixi hali saqlanmaydi — ustunlar faqat namuna.</p>
         </div>
       </div>
 
-      <!-- TEACHING OVERVIEW -->
-      <div class="split-even" style="margin-top:18px;">
+      <!-- TEACHING OVERVIEW
+           Ikkala ro'yxat ham js/instructor-dashboard.js tomonidan
+           `isloh_courses` do'konidan chiziladi: chapda talaba soni bo'yicha
+           eng yuqori nashr etilgan kurslar, o'ngda tugallanmagan
+           qoralamalar. "Davom" tugmasi endi aynan o'sha kursni ochadi. -->
+      <div class="split-even mt-16">
         <div class="card card-pad">
-          <div class="section-header"><h3>Eng yaxshi kurslar</h3><a href="../shared/coming-soon.html?page=Mening+kurslarim&role=instructor" class="section-action">Barchasi</a></div>
-          <div class="perf-row">
-            <div class="perf-cover" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div>
-            <div class="perf-info"><div class="perf-title">Python Backend Development</div><div class="perf-sub">248 talaba · 4.9 ★</div></div>
-            <div class="perf-metric"><div class="perf-metric-val" style="color:var(--teach-green);">$1,480</div><div class="perf-metric-lbl">daromad</div></div>
-          </div>
-          <div class="perf-row">
-            <div class="perf-cover" style="background:linear-gradient(135deg,#0F766E,#14B8A6);"><i class="bi bi-database-fill"></i></div>
-            <div class="perf-info"><div class="perf-title">Django REST Masterclass</div><div class="perf-sub">130 talaba · 4.8 ★</div></div>
-            <div class="perf-metric"><div class="perf-metric-val" style="color:var(--teach-green);">$920</div><div class="perf-metric-lbl">daromad</div></div>
-          </div>
-          <div class="perf-row">
-            <div class="perf-cover" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);"><i class="bi bi-box-fill"></i></div>
-            <div class="perf-info"><div class="perf-title">PostgreSQL Complete Guide</div><div class="perf-sub">60 talaba · 4.7 ★</div></div>
-            <div class="perf-metric"><div class="perf-metric-val" style="color:var(--teach-green);">$540</div><div class="perf-metric-lbl">daromad</div></div>
-          </div>
+          <div class="section-header"><h3>Eng yaxshi kurslar</h3><a href="courses.html" class="section-action">Barchasi</a></div>
+          <div data-dash-top-courses></div>
         </div>
 
         <div class="card card-pad">
-          <div class="section-header"><h3>Qoralama kurslar</h3></div>
-          <div class="perf-row">
-            <div class="perf-cover tint-muted"><i class="bi bi-hourglass-split"></i></div>
-            <div class="perf-info"><div class="perf-title">Docker for Beginners</div><div class="perf-sub">85% tayyor</div>
-              <div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:85%; background:var(--teach-green);"></div></div>
-            </div>
-            <a href="../shared/coming-soon.html?page=Mening+kurslarim&role=instructor" class="btn btn-outline btn-sm">Davom</a>
-          </div>
-          <div class="perf-row">
-            <div class="perf-cover tint-muted"><i class="bi bi-hourglass-split"></i></div>
-            <div class="perf-info"><div class="perf-title">Advanced API Design</div><div class="perf-sub">40% tayyor</div>
-              <div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:40%; background:var(--teach-green);"></div></div>
-            </div>
-            <a href="../shared/coming-soon.html?page=Mening+kurslarim&role=instructor" class="btn btn-outline btn-sm">Davom</a>
-          </div>
+          <div class="section-header"><h3>Qoralama kurslar</h3><a href="courses.html" class="section-action">Barchasi</a></div>
+          <div data-dash-drafts></div>
         </div>
       </div>
 
-      <!-- ACTIVITY + STUDENTS + AI -->
-      <div class="split-main" style="margin-top:18px;">
-        <!-- Recent activity -->
+      <!-- ACTIVITY + LIVE + STUDENTS -->
+      <div class="split-main mt-16">
+        <!-- So'nggi o'zgarishlar — kurs do'konidagi `updatedAt` bo'yicha.
+             Ilgari bu yerda "talaba yozildi", "sharh qoldirdi" kabi
+             voqealar turardi: bunday voqealar tasmasi hech qanday do'konda
+             yo'q edi, ya'ni to'rttala qator ham o'ylab topilgan edi. -->
         <div class="card card-pad">
-          <div class="section-header"><h3>So'nggi faoliyat</h3><a href="discussions.html" class="section-action">Muhokamalar</a></div>
-          <div class="activity-row">
-            <div class="activity-ic tint-green"><i class="bi bi-person-plus-fill"></i></div>
-            <div class="activity-main"><div class="activity-text"><b>Samarqand Islomov</b> "Python Backend" kursiga yozildi</div><div class="activity-time">10 daqiqa oldin</div></div>
-          </div>
-          <div class="activity-row">
-            <div class="activity-ic tint-violet"><i class="bi bi-chat-square-text-fill"></i></div>
-            <div class="activity-main"><div class="activity-text"><b>Javohir Rasimov</b> "Celery worker ishga tushmayapti" mavzusini ochdi</div><div class="activity-time">2 soat oldin</div></div>
-          </div>
-          <div class="activity-row">
-            <div class="activity-ic tint-warning"><i class="bi bi-star-fill"></i></div>
-            <div class="activity-main"><div class="activity-text"><b>Bekzod Odilov</b> yangi sharh qoldirdi (5 ★)</div><div class="activity-time">3 soat oldin</div></div>
-          </div>
-          <div class="activity-row">
-            <div class="activity-ic tint-green"><i class="bi bi-patch-check-fill"></i></div>
-            <div class="activity-main"><div class="activity-text"><b>Alisher Karimov</b> kursni yakunladi va sertifikat oldi</div><div class="activity-time">Kecha</div></div>
-          </div>
+          <div class="section-header"><h3>So'nggi o'zgarishlar</h3><a href="courses.html" class="section-action">Kurslarim</a></div>
+          <div data-dash-activity></div>
         </div>
 
-        <!-- Live session widget -->
+        <!-- Jonli sessiya. Sessiyalar do'koni hali yo'q (js/live-session.js
+             faqat markupdagi sessiyalarni boshqaradi), shuning uchun bu yerda
+             "hozir jonli efirda" deb yozib qo'yish yolg'on bo'lardi. -->
         <div class="card card-pad">
           <div class="section-header"><h3>Jonli sessiya</h3><a href="live-sessions.html" class="section-action">Barchasi</a></div>
-          <div class="live-session-card" style="padding:0; border:1.5px solid var(--danger); border-radius:var(--r-md); padding:14px 16px;">
-            <div class="flex-1">
-              <span class="ls-status live"><span class="dot-blink"></span> Jonli efirda</span>
-              <div class="ls-title" style="font-size:13.5px;">Haftalik Q&A sessiyasi</div>
-              <div class="ls-meta"><span><i class="bi bi-people-fill"></i> 24 ishtirokchi</span></div>
-            </div>
-            <a href="live-sessions.html" class="btn btn-teach btn-sm">Boshqarish</a>
-          </div>
+          <p class="placeholder-note"><i class="bi bi-broadcast"></i> Rejalashtirilgan sessiyalar do'koni hali yo'q — sessiyalarni "Jonli sessiyalar" bo'limida boshqaring.</p>
+          <a href="live-sessions.html" class="btn btn-outline btn-sm mt-12">Jonli sessiyalar</a>
         </div>
 
-        <!-- Recent students -->
+        <!-- Talabalar. Ro'yxatga olish (enrollment) do'koni hali yo'q, shuning
+             uchun "so'nggi talabalar" ro'yxati ham to'qib chiqarilmaydi.
+             Ko'rsatiladigan yagona haqiqiy raqam — jami talabalar soni. -->
         <div class="card card-pad">
-          <div class="section-header"><h3>So'nggi talabalar</h3><a href="../shared/coming-soon.html?page=Talabalar&role=instructor" class="section-action">Barchasi</a></div>
-          <div class="roster-row">
-            <div class="avatar avatar-sm">SI</div>
-            <div class="roster-info"><div class="roster-name">Samarqand Islomov</div><div class="roster-sub">Python Backend</div></div>
-            <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:66%;"></div></div></div>
-            <div class="roster-meta">66%</div>
-          </div>
-          <div class="roster-row">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#EA580C);">JR</div>
-            <div class="roster-info"><div class="roster-name">Javohir Rasimov</div><div class="roster-sub">Django REST</div></div>
-            <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:90%;"></div></div></div>
-            <div class="roster-meta">90%</div>
-          </div>
-          <div class="roster-row">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">BO</div>
-            <div class="roster-info"><div class="roster-name">Bekzod Odilov</div><div class="roster-sub">Python Backend</div></div>
-            <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:40%;"></div></div></div>
-            <div class="roster-meta">40%</div>
-          </div>
-          <div class="roster-row">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">AK</div>
-            <div class="roster-info"><div class="roster-name">Alisher Karimov</div><div class="roster-sub">PostgreSQL Guide</div></div>
-            <div class="roster-progress"><div class="progress-track"><div class="progress-fill" style="width:100%; background:var(--teach-green);"></div></div></div>
-            <div class="roster-meta">100%</div>
-          </div>
+          <div class="section-header"><h3>Talabalar</h3><a href="students.html" class="section-action">Barchasi</a></div>
+          <div class="stat-value" data-stat="students">—</div>
+          <div class="stat-label">Nashr etilgan kurslardagi jami talabalar</div>
+          <p class="placeholder-note mt-12"><i class="bi bi-info-circle"></i> Kim qachon ro'yxatga olingani hali saqlanmaydi — ro'yxat backend ulanganda paydo bo'ladi.</p>
         </div>
       </div>
 
       <!-- AI RECOMMENDATIONS -->
-      <div class="card card-pad ai-panel" style="margin-top:18px;">
+      <div class="card card-pad ai-panel mt-16">
         <div class="section-header"><div class="section-title-icon"><i class="bi bi-stars"></i><h3>AI o'qituvchi tahlili</h3></div></div>
-        <!-- Har bir xulosa AI Yordamchida mos shablonni ochadi
-             (`?run=` — js/ai-chat.js `isloh_aiRunFromQuery`). Ilgari bular
-             shunchaki matn edi: o'qituvchi xulosani ko'rardi-yu, uni
-             ochib ko'ra olmasdi. -->
+        <!-- Har bir band AI Yordamchida mos shablonni ochadi
+             (`?run=` — js/ai-chat.js `isloh_aiRunFromQuery`).
+
+             Izohlar ataylab TAKLIF, xulosa emas: ilgari bu yerda "5 talaba
+             7 kundan beri faol emas", "daromad 12% o'sdi" kabi tayyor
+             xulosalar turardi — ular hech qanday tahlildan chiqmagan,
+             shunchaki markupga yozib qo'yilgan edi. Matnlar
+             js/ai-assistant.js dagi shablonlarning `sub` maydoni bilan bir
+             xil, ya'ni tugmani bosgandan keyingi va'da bir xil qoladi. -->
         <div class="split-even">
           <div>
-            <a class="ai-insight" href="../instructor/ai-assistant.html?run=at-risk">
+            <a class="ai-insight" href="ai-assistant.html?run=at-risk">
               <div class="ai-insight-ic"><i class="bi bi-exclamation-triangle"></i></div>
-              <div class="ai-insight-body"><div class="ai-insight-title">Xavf ostidagi talabalar</div><div class="ai-insight-desc">5 talaba 7 kundan beri faol emas. Ularga eslatma yuboring.</div></div>
+              <div class="ai-insight-body"><div class="ai-insight-title">Xavf ostidagi talabalar</div><div class="ai-insight-desc">Faolligi pasaygan talabalarni tahlil qilib topadi.</div></div>
               <i class="bi bi-chevron-right ai-insight-go" aria-hidden="true"></i>
             </a>
-            <a class="ai-insight" href="../instructor/ai-assistant.html?run=improve-course">
+            <a class="ai-insight" href="ai-assistant.html?run=improve-course">
               <div class="ai-insight-ic"><i class="bi bi-graph-up-arrow"></i></div>
-              <div class="ai-insight-body"><div class="ai-insight-title">Kurs yaxshilash taklifi</div><div class="ai-insight-desc">"Django REST" kursida 4-bo'limda tark etish yuqori — videoni qisqartiring.</div></div>
+              <div class="ai-insight-body"><div class="ai-insight-title">Kursni qanday yaxshilash mumkin?</div><div class="ai-insight-desc">Kurs statistikasiga asoslangan yaxshilash takliflarini beradi.</div></div>
               <i class="bi bi-chevron-right ai-insight-go" aria-hidden="true"></i>
             </a>
           </div>
           <div>
-            <a class="ai-insight" href="../instructor/ai-assistant.html?run=lesson-ideas">
+            <a class="ai-insight" href="ai-assistant.html?run=lesson-ideas">
               <div class="ai-insight-ic"><i class="bi bi-lightbulb"></i></div>
-              <div class="ai-insight-body"><div class="ai-insight-title">Kontent tavsiyasi</div><div class="ai-insight-desc">Talabalar "amaliy loyihalar" so'rashmoqda. Yangi modul qo'shishni ko'rib chiqing.</div></div>
+              <div class="ai-insight-body"><div class="ai-insight-title">Yangi dars mavzulari</div><div class="ai-insight-desc">Mavjud kursga mos qo'shimcha mavzular ro'yxatini beradi.</div></div>
               <i class="bi bi-chevron-right ai-insight-go" aria-hidden="true"></i>
             </a>
-            <a class="ai-insight" href="../instructor/ai-assistant.html?run=weekly-report">
+            <a class="ai-insight" href="ai-assistant.html?run=weekly-report">
               <div class="ai-insight-ic"><i class="bi bi-calendar-check"></i></div>
-              <div class="ai-insight-body"><div class="ai-insight-title">Haftalik xulosa</div><div class="ai-insight-desc">Bu hafta daromad 12% o'sdi va 42 yangi talaba qo'shildi.</div></div>
+              <div class="ai-insight-body"><div class="ai-insight-title">Haftalik xulosa</div><div class="ai-insight-desc">Kurs statistikasini qisqa hisobotga jamlaydi.</div></div>
               <i class="bi bi-chevron-right ai-insight-go" aria-hidden="true"></i>
             </a>
           </div>
@@ -320,5 +269,12 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- course-store.js oldin: profile-stats.js (raqamlar) ham,
+     instructor-dashboard.js (ro'yxatlar) ham shu do'kondan o'qiydi. -->
+<script src="../../js/course-store.js"></script>
+<!-- "Kutayotgan topshiriqlar" ko'rsatkichi baholash navbatidan hisoblanadi -->
+<script src="../../js/assignment-store.js"></script>
+<script src="../../js/profile-stats.js"></script>
+<script src="../../js/instructor-dashboard.js"></script>
 </body>
 </html>

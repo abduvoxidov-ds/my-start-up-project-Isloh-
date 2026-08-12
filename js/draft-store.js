@@ -20,10 +20,28 @@
 const ISLOH_DRAFTS_KEY = 'isloh_drafts';
 const ISLOH_DRAFT_FIELD_SEL = 'input:not([type="file"]):not([data-no-draft]), textarea:not([data-no-draft]), select:not([data-no-draft])';
 
-/* Sahifa kaliti — fayl nomi (query'siz), masalan "lesson-editor.html". */
+/* Kalitni aniqlaydigan query parametrlari — TARTIB QAT'IY, aks holda
+   `?course=a&module=b` va `?module=b&course=a` ikki xil kalit berardi. */
+const ISLOH_DRAFT_SCOPE_PARAMS = ['id', 'course', 'module', 'lesson'];
+
+/* Sahifa kaliti — fayl nomi + ochilgan yozuv identifikatorlari, masalan
+   "lesson-editor.html?py-101:mod-1:les-3".
+
+   NEGA IDENTIFIKATOR KERAK: ilgari kalit faqat fayl nomi edi
+   ("lesson-editor.html"), ya'ni BARCHA darslar bitta qoralamani baham
+   ko'rardi — A darsida yozilgan matn keyin B darsini ochganda paydo
+   bo'lardi. Endi har bir yozuvning o'z qoralamasi bor. */
 function isloh_draftPageKey() {
   const parts = window.location.pathname.split('/');
-  return parts[parts.length - 1] || 'index.html';
+  const page = parts[parts.length - 1] || 'index.html';
+
+  const params = new URLSearchParams(window.location.search);
+  const scope = ISLOH_DRAFT_SCOPE_PARAMS
+    .map((name) => params.get(name))
+    .filter(Boolean)
+    .join(':');
+
+  return scope ? page + '?' + scope : page;
 }
 
 function isloh_readDrafts() {

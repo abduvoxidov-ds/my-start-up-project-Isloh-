@@ -17,7 +17,7 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><a class="text-inherit" href="course-builder.html">Kurs tarkibi</a><span class="sep">/</span><span class="current">Testlar</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><a class="text-inherit" href="course-builder.html" data-course-link="course-builder.html">Kurs tarkibi</a><span class="sep">/</span><span class="current">Testlar</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
         <div class="avatar avatar-teach">AY</div>
@@ -31,10 +31,10 @@
             <h1>Testlar</h1>
             <span class="unsaved-badge" data-unsaved-indicator hidden><i class="bi bi-exclamation-circle-fill"></i> Saqlanmagan o'zgarishlar</span>
           </div>
-          <p>Python Backend Development · Barcha testlarni yarating va boshqaring.</p>
+          <p><span data-quiz-course>—</span> · Barcha testlarni yarating va boshqaring.</p>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <a href="course-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kurs tarkibiga qaytish</a>
+          <a href="course-builder.html" data-course-link="course-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kurs tarkibiga qaytish</a>
           <a href="question-bank.html" class="btn btn-outline btn-sm"><i class="bi bi-collection"></i> Savollar banki</a>
           <a href="discussions.html" class="btn btn-outline btn-sm"><i class="bi bi-chat-square-text"></i> Talaba savollari</a>
           <button class="btn btn-outline btn-sm" data-ai-drawer-trigger><i class="bi bi-stars"></i> AI Yordamchi</button>
@@ -42,12 +42,14 @@
         </div>
       </div>
 
-      <!-- STATS -->
+      <!-- STATS — raqamlar ro'yxatdan hisoblanadi (js/quiz-store.js).
+           "Jami savollar" — TAKRORLANMAYDIGAN savollar soni: bitta savol
+           uchta testda tursa ham bir marta sanaladi. -->
       <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-patch-question-fill"></i></div><div class="stat-value">5</div><div class="stat-label">Jami testlar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-check2-circle"></i></div><div class="stat-value">3</div><div class="stat-label">Nashr etilgan</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon badge-warning" style="width:40px;height:40px;border-radius:var(--r-md);"><i class="bi bi-pencil-square"></i></div><div class="stat-value">2</div><div class="stat-label">Qoralama</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-journal-text"></i></div><div class="stat-value">86</div><div class="stat-label">Jami savollar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-patch-question-fill"></i></div><div class="stat-value" data-quiz-stat="total">0</div><div class="stat-label">Jami testlar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-check2-circle"></i></div><div class="stat-value" data-quiz-stat="published">0</div><div class="stat-label">Nashr etilgan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-pencil-square"></i></div><div class="stat-value" data-quiz-stat="draft">0</div><div class="stat-label">Qoralama</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-journal-text"></i></div><div class="stat-value" data-quiz-stat="questions">0</div><div class="stat-label">Jami savollar</div></div>
       </div>
 
       <!-- TOOLBAR -->
@@ -71,9 +73,9 @@
       <div class="bulk-bar" data-bulk-bar hidden>
         <span><span class="bulk-count" data-bulk-count>0</span> ta test tanlandi</span>
         <div class="bulk-spacer"></div>
-        <button class="btn btn-teach btn-sm"><i class="bi bi-journal-check"></i> Nashr etish</button>
-        <button class="btn btn-outline btn-sm"><i class="bi bi-copy"></i> Nusxalash</button>
-        <button class="btn btn-outline btn-sm" style="color:#FF9B9E; border-color:rgba(255,255,255,.25);"><i class="bi bi-trash"></i> O'chirish</button>
+        <button class="btn btn-teach btn-sm" data-bulk-publish><i class="bi bi-journal-check"></i> Nashr etish</button>
+        <button class="btn btn-outline btn-sm" data-bulk-duplicate><i class="bi bi-copy"></i> Nusxalash</button>
+        <button class="btn btn-outline btn-sm bulk-danger" data-bulk-delete><i class="bi bi-trash"></i> O'chirish</button>
         <button class="btn btn-outline btn-sm" data-bulk-cancel>Bekor qilish</button>
       </div>
 
@@ -87,159 +89,10 @@
       <div data-list-content hidden data-bulk-scope>
 
         <!-- GRID VIEW -->
-        <div class="course-grid-instr" style="margin-top:16px;" data-quiz-grid data-course-grid>
-
-          <div class="card course-card-instr quiz-card" data-filter-item data-status="published" data-filter-text="1-modul yakuniy testi" draggable="false">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="1-modul yakuniy testi tanlash">
-            <div class="cci-cover" style="background:linear-gradient(135deg,#6C5DD3,#4B3FA8);"><i class="bi bi-patch-question-fill"></i></div>
-            <span class="badge badge-green cci-status">Nashr etilgan</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">1-modul yakuniy testi</div>
-              <div class="cci-tags">
-                <span class="cci-tag"><i class="bi bi-journal-text"></i> 12 savol</span>
-                <span class="cci-tag"><i class="bi bi-clock"></i> 15 daq</span>
-                <span class="cci-tag"><i class="bi bi-arrow-repeat"></i> 2 urinish</span>
-              </div>
-              <div class="cci-stats">
-                <span><i class="bi bi-bullseye"></i> O'tish balli: 70%</span>
-                <span class="badge badge-green difficulty-badge"><span class="difficulty-dot easy"></span> Oson</span>
-              </div>
-              <div class="cci-foot">
-                <span class="cci-meta">Yangilangan: 2 kun oldin</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Test amallari"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="quiz-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
-                    <div class="dropdown-item" data-action="preview-quiz"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                    <div class="dropdown-item" data-action="duplicate-quiz"><i class="bi bi-copy"></i> Nusxalash</div>
-                    <div class="dropdown-item text-danger" data-action="delete-quiz"><i class="bi bi-trash"></i> O'chirish</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card course-card-instr quiz-card" data-filter-item data-status="published" data-filter-text="Python asoslari — bilim testi" draggable="false">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="Python asoslari — bilim testi tanlash">
-            <div class="cci-cover" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);"><i class="bi bi-patch-question-fill"></i></div>
-            <span class="badge badge-green cci-status">Nashr etilgan</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">Python asoslari — bilim testi</div>
-              <div class="cci-tags">
-                <span class="cci-tag"><i class="bi bi-journal-text"></i> 20 savol</span>
-                <span class="cci-tag"><i class="bi bi-clock"></i> 25 daq</span>
-                <span class="cci-tag"><i class="bi bi-arrow-repeat"></i> 3 urinish</span>
-              </div>
-              <div class="cci-stats">
-                <span><i class="bi bi-bullseye"></i> O'tish balli: 75%</span>
-                <span class="badge badge-warning difficulty-badge"><span class="difficulty-dot medium"></span> O'rta</span>
-              </div>
-              <div class="cci-foot">
-                <span class="cci-meta">Yangilangan: 5 kun oldin</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Test amallari"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="quiz-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
-                    <div class="dropdown-item" data-action="preview-quiz"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                    <div class="dropdown-item" data-action="duplicate-quiz"><i class="bi bi-copy"></i> Nusxalash</div>
-                    <div class="dropdown-item text-danger" data-action="delete-quiz"><i class="bi bi-trash"></i> O'chirish</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card course-card-instr quiz-card" data-filter-item data-status="published" data-filter-text="Django ORM chuqurlashtirilgan test" draggable="false">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="Django ORM chuqurlashtirilgan test tanlash">
-            <div class="cci-cover" style="background:linear-gradient(135deg,#0F766E,#14B8A6);"><i class="bi bi-patch-question-fill"></i></div>
-            <span class="badge badge-green cci-status">Nashr etilgan</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">Django ORM chuqurlashtirilgan test</div>
-              <div class="cci-tags">
-                <span class="cci-tag"><i class="bi bi-journal-text"></i> 18 savol</span>
-                <span class="cci-tag"><i class="bi bi-clock"></i> 30 daq</span>
-                <span class="cci-tag"><i class="bi bi-arrow-repeat"></i> 1 urinish</span>
-              </div>
-              <div class="cci-stats">
-                <span><i class="bi bi-bullseye"></i> O'tish balli: 80%</span>
-                <span class="badge badge-danger difficulty-badge"><span class="difficulty-dot hard"></span> Qiyin</span>
-              </div>
-              <div class="cci-foot">
-                <span class="cci-meta">Yangilangan: 1 hafta oldin</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Test amallari"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="quiz-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
-                    <div class="dropdown-item" data-action="preview-quiz"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                    <div class="dropdown-item" data-action="duplicate-quiz"><i class="bi bi-copy"></i> Nusxalash</div>
-                    <div class="dropdown-item text-danger" data-action="delete-quiz"><i class="bi bi-trash"></i> O'chirish</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card course-card-instr quiz-card" data-filter-item data-status="draft" data-filter-text="Deployment va DevOps oraliq nazorat" draggable="false">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="Deployment va DevOps oraliq nazorat tanlash">
-            <div class="cci-cover tint-muted"><i class="bi bi-patch-question"></i></div>
-            <span class="badge badge-warning cci-status">Qoralama</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">Deployment va DevOps oraliq nazorat</div>
-              <div class="cci-tags">
-                <span class="cci-tag"><i class="bi bi-journal-text"></i> 10 savol</span>
-                <span class="cci-tag"><i class="bi bi-clock"></i> Cheklanmagan</span>
-                <span class="cci-tag"><i class="bi bi-arrow-repeat"></i> Cheksiz</span>
-              </div>
-              <div class="cci-stats">
-                <span><i class="bi bi-bullseye"></i> O'tish balli: 60%</span>
-                <span class="badge badge-warning difficulty-badge"><span class="difficulty-dot medium"></span> O'rta</span>
-              </div>
-              <div class="cci-foot">
-                <span class="cci-meta">Yangilangan: Bugun</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Test amallari"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="quiz-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Davom ettirish</a>
-                    <div class="dropdown-item" data-action="preview-quiz"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                    <div class="dropdown-item" data-action="duplicate-quiz"><i class="bi bi-copy"></i> Nusxalash</div>
-                    <div class="dropdown-item text-danger" data-action="delete-quiz"><i class="bi bi-trash"></i> O'chirish</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card course-card-instr quiz-card" data-filter-item data-status="draft" data-filter-text="Yakuniy kurs imtihoni" draggable="false">
-            <input type="checkbox" class="cci-select" data-select-item aria-label="Yakuniy kurs imtihoni tanlash">
-            <div class="cci-cover tint-muted"><i class="bi bi-patch-question"></i></div>
-            <span class="badge badge-warning cci-status">Qoralama</span>
-            <div class="cci-body">
-              <div class="cci-title filter-title">Yakuniy kurs imtihoni</div>
-              <div class="cci-tags">
-                <span class="cci-tag"><i class="bi bi-journal-text"></i> 26 savol</span>
-                <span class="cci-tag"><i class="bi bi-clock"></i> 45 daq</span>
-                <span class="cci-tag"><i class="bi bi-arrow-repeat"></i> 1 urinish</span>
-              </div>
-              <div class="cci-stats">
-                <span><i class="bi bi-bullseye"></i> O'tish balli: 85%</span>
-                <span class="badge badge-danger difficulty-badge"><span class="difficulty-dot hard"></span> Qiyin</span>
-              </div>
-              <div class="cci-foot">
-                <span class="cci-meta">Yangilangan: 3 kun oldin</span>
-                <div class="dropdown">
-                  <button class="row-action" aria-label="Test amallari"><i class="bi bi-three-dots"></i></button>
-                  <div class="dropdown-menu">
-                    <a href="quiz-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Davom ettirish</a>
-                    <div class="dropdown-item" data-action="preview-quiz"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-                    <div class="dropdown-item" data-action="duplicate-quiz"><i class="bi bi-copy"></i> Nusxalash</div>
-                    <div class="dropdown-item text-danger" data-action="delete-quiz"><i class="bi bi-trash"></i> O'chirish</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
+        <!-- GRID VIEW — kartochkalar js/quiz-builder.js tomonidan
+             `isloh_quizzes` do'konidan chiziladi; jadval ko'rinishi ham
+             ayni ro'yxatdan (markup takrorlanmaydi). -->
+        <div class="course-grid-instr" style="margin-top:16px;" data-quiz-grid data-course-grid></div>
 
         <!-- TABLE VIEW -->
         <div class="card" style="margin-top:16px; overflow:hidden;" data-course-table hidden>
@@ -249,42 +102,7 @@
                 <th style="width:36px;"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th>
                 <th>Test</th><th>Holat</th><th>Qiyinlik</th><th>Savollar</th><th>Vaqt limiti</th><th>Urinishlar</th><th>O'tish balli</th><th>Amallar</th>
               </tr></thead>
-              <tbody>
-                <tr data-filter-item data-status="published" data-filter-text="1-modul yakuniy testi">
-                  <td><input type="checkbox" data-select-item aria-label="1-modul yakuniy testi tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb" style="background:linear-gradient(135deg,#6C5DD3,#4B3FA8);"><i class="bi bi-patch-question-fill"></i></div><div class="cell-title filter-title">1-modul yakuniy testi</div></div></td>
-                  <td><span class="badge badge-green">Nashr etilgan</span></td>
-                  <td><span class="badge badge-green difficulty-badge"><span class="difficulty-dot easy"></span> Oson</span></td>
-                  <td>12</td><td>15 daq</td><td>2</td><td>70%</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <a href="quiz-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Tahrirlash</a>
-                        <div class="dropdown-item" data-action="duplicate-quiz"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item text-danger" data-action="delete-quiz"><i class="bi bi-trash"></i> O'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr data-filter-item data-status="draft" data-filter-text="Yakuniy kurs imtihoni">
-                  <td><input type="checkbox" data-select-item aria-label="Yakuniy kurs imtihoni tanlash"></td>
-                  <td><div class="cell-main"><div class="cell-thumb tint-muted"><i class="bi bi-patch-question"></i></div><div class="cell-title filter-title">Yakuniy kurs imtihoni</div></div></td>
-                  <td><span class="badge badge-warning">Qoralama</span></td>
-                  <td><span class="badge badge-danger difficulty-badge"><span class="difficulty-dot hard"></span> Qiyin</span></td>
-                  <td>26</td><td>45 daq</td><td>1</td><td>85%</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="row-action" aria-label="Amallar"><i class="bi bi-three-dots"></i></button>
-                      <div class="dropdown-menu">
-                        <a href="quiz-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Davom ettirish</a>
-                        <div class="dropdown-item" data-action="duplicate-quiz"><i class="bi bi-copy"></i> Nusxalash</div>
-                        <div class="dropdown-item text-danger" data-action="delete-quiz"><i class="bi bi-trash"></i> O'chirish</div>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody data-quiz-rows></tbody>
             </table>
           </div>
         </div>
@@ -298,38 +116,6 @@
   </div>
 </div>
 
-<!-- QUIZ CARD TEMPLATE (cloned by js/quiz-builder.js on "Test yaratish") -->
-<template id="quiz-card-template">
-  <div class="card course-card-instr quiz-card" data-filter-item data-status="draft" draggable="false">
-    <input type="checkbox" class="cci-select" data-select-item aria-label="Testni tanlash">
-    <div class="cci-cover tint-muted"><i class="bi bi-patch-question"></i></div>
-    <span class="badge badge-warning cci-status">Qoralama</span>
-    <div class="cci-body">
-      <div class="cci-title filter-title">Yangi test</div>
-      <div class="cci-tags">
-        <span class="cci-tag"><i class="bi bi-journal-text"></i> 0 savol</span>
-        <span class="cci-tag"><i class="bi bi-clock"></i> —</span>
-        <span class="cci-tag"><i class="bi bi-arrow-repeat"></i> —</span>
-      </div>
-      <div class="cci-stats">
-        <span><i class="bi bi-bullseye"></i> O'tish balli: —</span>
-        <span class="badge badge-warning difficulty-badge"><span class="difficulty-dot medium"></span> O'rta</span>
-      </div>
-      <div class="cci-foot">
-        <span class="cci-meta">Hozir yaratildi</span>
-        <div class="dropdown">
-          <button class="row-action" aria-label="Test amallari"><i class="bi bi-three-dots"></i></button>
-          <div class="dropdown-menu">
-            <a href="quiz-editor.html" class="dropdown-item"><i class="bi bi-pencil"></i> Savollarni tahrirlash</a>
-            <div class="dropdown-item" data-action="preview-quiz"><i class="bi bi-eye"></i> Oldindan ko'rish</div>
-            <div class="dropdown-item" data-action="duplicate-quiz"><i class="bi bi-copy"></i> Nusxalash</div>
-            <div class="dropdown-item text-danger" data-action="delete-quiz"><i class="bi bi-trash"></i> O'chirish</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 
 <!-- CREATE QUIZ MODAL -->
 <div class="modal-overlay" id="add-quiz-modal" hidden>
@@ -372,7 +158,7 @@
 <div class="modal-overlay" id="delete-quiz-modal" hidden>
   <div class="modal">
     <div class="modal-head"><b class="text-danger">Testni o'chirishni tasdiqlang</b><button class="icon-btn icon-btn-sm" data-modal-close="delete-quiz-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
-    <div class="modal-body">Bu test va undagi barcha savollar o'chiriladi. Bu amalni qaytarib bo'lmaydi.</div>
+    <div class="modal-body"><b data-delete-quiz-name></b> testi o'chiriladi. Savollar BANKDA QOLADI — ular boshqa testlarda ham ishlatilgan bo'lishi mumkin.</div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="delete-quiz-modal">Bekor qilish</button>
       <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-quiz data-marks-dirty>Ha, o'chirish</button>
@@ -398,8 +184,13 @@
 <script src="../../js/tabs.js"></script>
 <script src="../../js/draft-store.js"></script>
 <script src="../../js/unsaved-guard.js"></script>
-<script src="../../js/courses.js"></script>
+<!-- quiz-builder.js courses.js DAN OLDIN: avval ro'yxat do'kondan
+     chiziladi, keyin umumiy modul unga ulanadi. -->
+<script src="../../js/course-store.js"></script>
+<script src="../../js/question-store.js"></script>
+<script src="../../js/quiz-store.js"></script>
 <script src="../../js/quiz-builder.js"></script>
+<script src="../../js/courses.js"></script>
 <script src="../../js/ai-assistant.js"></script>
 <script src="../../js/ai-panel.js"></script>
 <script src="../../js/ai-store.js"></script>

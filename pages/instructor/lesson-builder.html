@@ -17,7 +17,7 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><a class="text-inherit" href="course-builder.html" data-builder-link>Kurs tarkibi</a><span class="sep">/</span><span class="current" data-module-crumb>Modul</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><a class="text-inherit" href="course-builder.html" data-course-link="course-builder.html" data-builder-link>Kurs tarkibi</a><span class="sep">/</span><span class="current" data-module-crumb>Modul</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
         <div class="avatar avatar-teach">AY</div>
@@ -34,9 +34,9 @@
           <p>6 ta dars · 2 soat 10 daqiqa · Docker, Git va muhitni sozlash bo'yicha boshlang'ich modul.</p>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <a href="course-builder.html" class="btn btn-outline btn-sm" data-builder-link><i class="bi bi-arrow-left"></i> Modullarga qaytish</a>
-          <a href="quiz-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-patch-question"></i> Testlar</a>
-          <a href="resource-manager.html" class="btn btn-outline btn-sm"><i class="bi bi-folder2-open"></i> Resurslar</a>
+          <a href="course-builder.html" data-course-link="course-builder.html" class="btn btn-outline btn-sm" data-builder-link><i class="bi bi-arrow-left"></i> Modullarga qaytish</a>
+          <a href="quiz-builder.html" data-course-link="quiz-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-patch-question"></i> Testlar</a>
+          <a href="resource-manager.html" data-course-link="resource-manager.html" class="btn btn-outline btn-sm"><i class="bi bi-folder2-open"></i> Resurslar</a>
           <button class="btn btn-teach" data-modal-open="add-lesson-modal" data-marks-dirty><i class="bi bi-plus-lg"></i> Dars qo'shish</button>
         </div>
       </div>

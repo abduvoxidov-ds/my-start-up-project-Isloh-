@@ -108,6 +108,10 @@ function isloh_renderLessonHeader(scope) {
   document.querySelectorAll('[data-builder-link]').forEach((link) => {
     link.href = `course-builder.html?id=${scope.courseId}`;
   });
+
+  /* Boshqa kurs bo'limlariga havolalar ham joriy kursni olib yursin
+     (Testlar, Resurslar, Kurs tarkibi) — js/course-store.js. */
+  if (typeof isloh_applyCourseLinks === 'function') isloh_applyCourseLinks(scope.courseId);
 }
 
 function isloh_lessonToast(message, type) {

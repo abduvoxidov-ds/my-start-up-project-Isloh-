@@ -269,6 +269,8 @@ function isloh_toast(message, type) {
      osilib qolmasligi uchun. O'ramning o'zida ham turishi mumkin.        */
 const ISLOH_USER_TEXT_BINDINGS = {
   'data-user-name': (u) => u.name,
+  /* Salomlashish uchun faqat ism ("Salom, Akmal!") — to'liq ism juda uzun. */
+  'data-user-firstname': (u) => String(u.name || '').trim().split(/\s+/)[0],
   'data-user-email': (u) => u.email,
   'data-user-headline': (u) => u.headline,
   'data-user-role-line': (u) => [u.headline, u.location].filter(Boolean).join(' · '),

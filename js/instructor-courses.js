@@ -53,17 +53,14 @@ function isloh_courseMenuHtml(course) {
     </div>`;
 }
 
-/* Bajarilish chizig'i rangi holatdan kelib chiqadi (css/components.css). */
-function isloh_courseFillClass(status) {
-  if (status === 'draft') return ' fill-warning';
-  if (status === 'archived') return ' fill-muted';
-  return '';
-}
+/* isloh_courseFillClass() js/course-store.js ga ko'chirildi — dashboard'dagi
+   qoralamalar ro'yxati ham shu jadvalga muhtoj, bu fayl esa u yerda
+   yuklanmaydi. */
 
 function isloh_courseRevenueHtml(course) {
   if (!course.revenue) return '<td>—</td>';
   const cls = course.status === 'archived' ? 'cell-sub' : 'cell-revenue';
-  return `<td class="${cls}">$${course.revenue.toLocaleString('en-US')}</td>`;
+  return `<td class="${cls}">${isloh_formatUsd(course.revenue)}</td>`;
 }
 
 function isloh_courseTableRowHtml(course) {
@@ -93,7 +90,7 @@ function isloh_courseCardHtml(course) {
   const meta = ISLOH_COURSE_STATUSES[course.status] || ISLOH_COURSE_STATUSES.draft;
   const progressLabel = course.status === 'draft' ? `${course.completion}% tayyor` : `${course.completion}%`;
   const revenue = course.revenue
-    ? `<span class="cell-revenue">$${course.revenue.toLocaleString('en-US')}</span>`
+    ? `<span class="cell-revenue">${isloh_formatUsd(course.revenue)}</span>`
     : '<span>—</span>';
 
   return `<div class="card course-card-instr" data-filter-item data-status="${course.status}" data-filter-text="${course.title}">
@@ -118,17 +115,29 @@ function isloh_courseCardHtml(course) {
 }
 
 /* Statistika kartochkalari ro'yxatdan hisoblanadi — qo'lda yozilgan
-   raqamlar endi yo'q. */
+   raqamlar endi yo'q.
+
+   "Jami talabalar" ataylab js/profile-stats.js dagi isloh_statTotalStudents()
+   ga topshirilgan: u FAQAT nashr etilgan kurslarni sanaydi. Bu yerda barcha
+   kurslar sanalardi, natijada bir xil "Jami talabalar" yorlig'i ostida
+   kurslar ro'yxati 3 312, dashboard va profil esa 2 330 ko'rsatardi. Ta'rif
+   bitta joyda tursin — modul ulanmagan bo'lsa eski hisob zaxira sifatida
+   qoladi. */
 function isloh_renderCourseStats(courses) {
   const counts = {
     published: courses.filter((c) => c.status === 'published').length,
     draft: courses.filter((c) => c.status === 'draft').length,
     archived: courses.filter((c) => c.status === 'archived').length,
-    students: courses.reduce((sum, c) => sum + (c.students || 0), 0)
+    students: typeof isloh_statTotalStudents === 'function'
+      ? isloh_statTotalStudents()
+      : courses.filter((c) => c.status === 'published').reduce((sum, c) => sum + (c.students || 0), 0)
   };
+  /* Ming ajratgichi ham bir joydan — profil va dashboard "2,330" deb
+     yozayotganda bu sahifa "2330" deb yozmasin. */
+  const format = typeof isloh_formatStatCount === 'function' ? isloh_formatStatCount : String;
   Object.keys(counts).forEach((key) => {
     const el = document.querySelector(`[data-course-stat="${key}"]`);
-    if (el) el.textContent = counts[key];
+    if (el) el.textContent = format(counts[key]);
   });
 }
 

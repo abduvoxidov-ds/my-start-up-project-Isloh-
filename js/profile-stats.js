@@ -20,7 +20,14 @@
 
    Kalitlar rol bo'yicha:
      student    -> completedCourses | certificates | studyHours | streak
-     instructor -> publishedCourses | students | rating | teachingHours
+     instructor -> publishedCourses | students | rating | teachingHours |
+                   draftCourses | archivedCourses | ratedCourses |
+                   totalRevenue | totalLessons | avgCompletion |
+                   pendingSubmissions
+
+   Modul faqat profil sahifasiga tegishli emas: `[data-stat]` bor istalgan
+   sahifada ishlaydi (instruktor dashboard'i ham shu shartnomadan
+   foydalanadi).
    ========================================================================== */
 
 /* Ming ajratgichi mavjud sahifalardagi uslub bilan bir xil: 1,240 */
@@ -108,6 +115,65 @@ function isloh_statTeachingHours() {
     .reduce((sum, course) => sum + (parseInt(course.estimate, 10) || 0), 0);
 }
 
+/* Holat bo'yicha kurslar soni — qoralama/arxiv kartochkalari uchun. Bu yerda
+   isloh_getCourses() ishlatiladi, isloh_getPublishedCourses() emas: savol
+   aynan nashr etilMAGAN kurslar haqida. */
+function isloh_statCoursesByStatus(status) {
+  if (typeof isloh_getCourses !== 'function') return null;
+  return isloh_getCourses().filter((course) => course.status === status).length;
+}
+
+function isloh_statDraftCourses() {
+  return isloh_statCoursesByStatus('draft');
+}
+
+function isloh_statArchivedCourses() {
+  return isloh_statCoursesByStatus('archived');
+}
+
+/* "O'rtacha reyting N ta kurs bo'yicha" izohi uchun — o'rtacha qaysi
+   kurslardan olinganini aytadi (isloh_statAverageRating bilan bir xil
+   to'plam: reytingi bor nashr etilgan kurslar). */
+function isloh_statRatedCourses() {
+  if (typeof isloh_getPublishedCourses !== 'function') return null;
+  return isloh_getPublishedCourses().filter((course) => course.rating > 0).length;
+}
+
+/* Jami daromad. Arxivlangan kurslar ham qo'shiladi — pul allaqachon
+   ishlangan, kursni ro'yxatdan olish uni yo'q qilmaydi. */
+function isloh_statTotalRevenue() {
+  if (typeof isloh_getCourses !== 'function') return null;
+  return isloh_getCourses().reduce((sum, course) => sum + (course.revenue || 0), 0);
+}
+
+/* Darslar soni kurs yozuvidagi `lessons` maydonidan olinadi — kurslar
+   ro'yxati ham aynan shu raqamni ko'rsatadi, ikki sahifa qarama-qarshi
+   raqam aytmasin. Maydonni js/content-store.js modul yoki dars
+   qo'shilganda o'zi yangilab boradi. */
+function isloh_statTotalLessons() {
+  if (typeof isloh_getCourses !== 'function') return null;
+  return isloh_getCourses().reduce((sum, course) => sum + (course.lessons || 0), 0);
+}
+
+/* Baholanmagan topshirilgan ishlar (kechikkanlar ham shu yerda) — o'qituvchi
+   uchun eng harakatga chorlovchi raqam. Manba js/assignment-store.js; modul
+   ulanmagan sahifada "—" bo'lib qoladi. */
+function isloh_statPendingSubmissions() {
+  if (typeof isloh_submissionStats !== 'function') return null;
+  const stats = isloh_submissionStats();
+  return stats.pending + stats.late;
+}
+
+/* Nashr etilgan kurslarning o'rtacha yakunlash darajasi. Qoralamalarda
+   `completion` butunlay boshqa narsani anglatadi ("necha foizi tayyor"),
+   shuning uchun ular hisobga kirmaydi. */
+function isloh_statAvgCompletion() {
+  if (typeof isloh_getPublishedCourses !== 'function') return null;
+  const list = isloh_getPublishedCourses();
+  if (!list.length) return 0;
+  return list.reduce((sum, course) => sum + (course.completion || 0), 0) / list.length;
+}
+
 /* --- Render --------------------------------------------------------------- */
 
 const ISLOH_PROFILE_STATS = {
@@ -121,17 +187,32 @@ const ISLOH_PROFILE_STATS = {
     publishedCourses: isloh_statPublishedCourses,
     students: isloh_statTotalStudents,
     rating: isloh_statAverageRating,
-    teachingHours: isloh_statTeachingHours
+    teachingHours: isloh_statTeachingHours,
+    /* Quyidagilar instruktor dashboard'i uchun qo'shildi — sahifa o'z
+       hisoblagichini yozmasin, raqam manbasi bitta bo'lsin. */
+    draftCourses: isloh_statDraftCourses,
+    archivedCourses: isloh_statArchivedCourses,
+    ratedCourses: isloh_statRatedCourses,
+    totalRevenue: isloh_statTotalRevenue,
+    totalLessons: isloh_statTotalLessons,
+    avgCompletion: isloh_statAvgCompletion,
+    pendingSubmissions: isloh_statPendingSubmissions
   }
 };
 
-/* Reyting yagona kasrli ko'rsatkich (4.8), qolganlari butun son. */
-const ISLOH_STAT_DECIMALS = { rating: 1 };
+/* Sukut bo'yicha barcha ko'rsatkich butun son va ming ajratgichli. Bundan
+   chetga chiqadiganlar (kasr, valyuta, foiz) shu yerda e'lon qilinadi —
+   shunda formatlash mantiqi markupda emas, bitta jadvalda qoladi. */
+const ISLOH_STAT_FORMATS = {
+  rating: (v) => v.toFixed(1),
+  totalRevenue: (v) => (typeof isloh_formatUsd === 'function' ? isloh_formatUsd(v) : isloh_formatStatCount(v)),
+  avgCompletion: (v) => isloh_formatStatCount(v) + '%'
+};
 
 function isloh_formatStat(key, value) {
   if (value === null || value === undefined) return '—';
-  if (ISLOH_STAT_DECIMALS[key]) return value.toFixed(ISLOH_STAT_DECIMALS[key]);
-  return isloh_formatStatCount(value);
+  const format = ISLOH_STAT_FORMATS[key];
+  return format ? format(value) : isloh_formatStatCount(value);
 }
 
 function isloh_renderProfileStats() {
@@ -162,4 +243,9 @@ function isloh_renderProfileStats() {
 /* Profil tahrirlanganda ham qayta hisoblanadi (rol o'zgarmaydi, lekin
    sinxron bitta joydan boshqarilgani ma'qul). */
 document.addEventListener('isloh:user-updated', isloh_renderProfileStats);
+
+/* Provayder ko'rsatkichlari kurs do'konidan hisoblanadi, shuning uchun kurs
+   nashr etilgani yoki o'chirilgani raqamlarni ham darhol yangilashi kerak —
+   aks holda dashboard sahifa yangilanmaguncha eski sonni ko'rsatib turardi. */
+document.addEventListener('isloh:courses-updated', isloh_renderProfileStats);
 document.addEventListener('DOMContentLoaded', isloh_renderProfileStats);

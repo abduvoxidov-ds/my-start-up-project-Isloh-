@@ -12,14 +12,24 @@
                                                             to match .checked
    ========================================================================== */
 
+/* Faqat ko'rinishni holatga moslaydi — hodisa ulamaydi. Qiymatlar JS bilan
+   (masalan do'kondan) qo'yilganda `change` hodisasi otilmaydi, shuning uchun
+   bunday sahifalar shu funksiyani chaqiradi (js/assignment-editor.js). */
+function isloh_syncRevealToggles() {
+  document.querySelectorAll('[data-reveals]').forEach((control) => {
+    const target = document.getElementById(control.dataset.reveals);
+    if (target) target.hidden = !control.checked;
+  });
+}
+
 function isloh_initRevealToggles() {
   document.querySelectorAll('[data-reveals]').forEach((control) => {
     const target = document.getElementById(control.dataset.reveals);
-    if (!target) return;
-    const sync = () => { target.hidden = !control.checked; };
-    control.addEventListener('change', sync);
-    sync();
+    if (!target || control.dataset.revealsReady) return;
+    control.dataset.revealsReady = '1';
+    control.addEventListener('change', () => { target.hidden = !control.checked; });
   });
+  isloh_syncRevealToggles();
 }
 
 document.addEventListener('DOMContentLoaded', isloh_initRevealToggles);
