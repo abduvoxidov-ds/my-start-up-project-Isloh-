@@ -7,10 +7,6 @@
 <title>Testni tahrirlash — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  /* Page-local layout only. Quiz/Question widgets live in css/widgets.css. */
-  .qz-shell { max-width: 980px; margin: 0 auto; }
-</style>
 </head>
 <body>
 <div class="app-shell">
@@ -31,23 +27,23 @@
 
     <main class="content" data-unsaved-scope data-unsaved-store="quiz" data-filterable>
       <div class="page-header">
-        <div style="flex:1; min-width:260px;">
-          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div class="page-head-main">
+          <div class="flex items-center gap-10 flex-wrap">
             <span class="badge badge-warning" data-quiz-status-badge>—</span>
             <span class="unsaved-badge" data-unsaved-indicator hidden><i class="bi bi-exclamation-circle-fill"></i> Saqlanmagan o'zgarishlar</span>
           </div>
-          <div class="field" style="margin:10px 0 0; max-width:480px;">
-            <input id="quiz-title-input" data-quiz-field="title" style="font-size:18px; font-weight:700; font-family:var(--font-display); padding:10px 14px;" data-char-counter="100" maxlength="100">
+          <div class="field mt-10 mb-0 mw-480">
+            <input class="title-input" id="quiz-title-input" data-quiz-field="title" data-char-counter="100" maxlength="100">
             <div class="field-hint" data-char-counter-for="quiz-title-input">20 / 100</div>
           </div>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="flex gap-8 flex-wrap">
           <a href="quiz-builder.html" class="btn btn-outline btn-sm" data-quiz-back><i class="bi bi-arrow-left"></i> Testlarga qaytish</a>
           <button class="btn btn-teach" data-save-action><i class="bi bi-save"></i> Saqlash</button>
         </div>
       </div>
 
-      <div class="qz-shell" style="margin-top:20px;" data-tabs>
+      <div class="qz-shell mt-20" data-tabs>
         <div class="tab-strip" role="tablist" aria-label="Test muharriri bo'limlari">
           <div class="tab-item active" data-tab-target="questions">Savollar</div>
           <div class="tab-item" data-tab-target="settings">Sozlamalar</div>
@@ -55,7 +51,7 @@
         </div>
 
         <!-- QUESTIONS TAB -->
-        <div data-tab-panel="questions" style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="questions">
 
           <div class="wk-grid-4">
             <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-journal-text"></i></div><div class="stat-value" data-quiz-stat="count">0</div><div class="stat-label">Savollar soni</div></div>
@@ -75,8 +71,8 @@
               <button class="filter-chip" data-filter-value="order">Tartiblash</button>
               <button class="filter-chip" data-filter-value="blank">Bo'sh joy</button>
             </div>
-            <div style="display:flex; gap:10px; align-items:center;">
-              <div class="topbar-search" style="width:200px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Savol qidirish..." aria-label="Savol qidirish"></div>
+            <div class="flex gap-10 items-center">
+              <div class="topbar-search sw-200"><i class="bi bi-search"></i><input data-filter-search placeholder="Savol qidirish..." aria-label="Savol qidirish"></div>
               <button class="btn btn-outline btn-sm" data-quiz-bank-open><i class="bi bi-collection"></i> Bankdan tanlash</button>
               <button class="btn btn-teach btn-sm" data-add-question-btn data-marks-dirty><i class="bi bi-plus-lg"></i> Yangi savol</button>
             </div>
@@ -91,14 +87,14 @@
         </div>
 
         <!-- SETTINGS TAB -->
-        <div data-tab-panel="settings" hidden style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="settings" hidden>
           <div class="wk-col">
 
             <div class="card card-pad">
               <div class="settings-section-title">Umumiy</div>
               <div class="settings-section-sub">Testning asosiy ma'lumotlari.</div>
               <div class="field"><label for="qs-desc">Tavsif</label><input id="qs-desc" data-quiz-field="desc"></div>
-              <div class="field" style="margin-bottom:0;"><label for="qs-instructions">Ko'rsatma (talabaga ko'rinadi)</label><input id="qs-instructions" data-quiz-field="instructions"></div>
+              <div class="field mb-0"><label for="qs-instructions">Ko'rsatma (talabaga ko'rinadi)</label><input id="qs-instructions" data-quiz-field="instructions"></div>
             </div>
 
             <div class="card card-pad">
@@ -108,7 +104,7 @@
                 <div class="settings-item-info"><div class="settings-item-label">Vaqt limiti</div><div class="settings-item-desc">Belgilangan vaqtdan so'ng test avtomatik topshiriladi</div></div>
                 <label class="switch settings-item-control"><input type="checkbox" data-quiz-check="timeLimit" data-reveals="qs-time-field"><span class="slider"></span></label>
               </div>
-              <div class="field" id="qs-time-field" style="margin-top:12px; margin-bottom:0; max-width:200px;"><label for="qs-duration">Davomiylik (daqiqa)</label><input id="qs-duration" type="number" data-quiz-field="duration" min="1"></div>
+              <div class="field mt-12 mb-0 mw-200" id="qs-time-field"><label for="qs-duration">Davomiylik (daqiqa)</label><input id="qs-duration" type="number" data-quiz-field="duration" min="1"></div>
             </div>
 
             <div class="card card-pad">
@@ -118,7 +114,7 @@
                 <div class="settings-item-info"><div class="settings-item-label">Urinishlarni cheklash</div><div class="settings-item-desc">O'chirilsa — talaba cheksiz marta urinib ko'ra oladi</div></div>
                 <label class="switch settings-item-control"><input type="checkbox" data-quiz-check="limitAttempts" data-reveals="qs-attempts-field"><span class="slider"></span></label>
               </div>
-              <div class="field" id="qs-attempts-field" style="margin-top:12px; margin-bottom:0; max-width:200px;"><label for="qs-attempts">Maksimal urinishlar</label><input id="qs-attempts" type="number" data-quiz-field="attempts" min="1"></div>
+              <div class="field mt-12 mb-0 mw-200" id="qs-attempts-field"><label for="qs-attempts">Maksimal urinishlar</label><input id="qs-attempts" type="number" data-quiz-field="attempts" min="1"></div>
             </div>
 
             <div class="card card-pad">
@@ -140,13 +136,13 @@
             <div class="card card-pad">
               <div class="settings-section-title">O'tish qoidalari</div>
               <div class="settings-section-sub">Testdan o'tish uchun minimal ballni belgilang.</div>
-              <div class="field" style="max-width:200px; margin-bottom:0;"><label for="qs-passing-score">O'tish balli (%)</label><input id="qs-passing-score" type="number" data-quiz-field="passingScore" min="0" max="100"></div>
+              <div class="field mw-200 mb-0"><label for="qs-passing-score">O'tish balli (%)</label><input id="qs-passing-score" type="number" data-quiz-field="passingScore" min="0" max="100"></div>
             </div>
 
             <div class="card card-pad">
               <div class="settings-section-title">Ko'rinish</div>
               <div class="settings-section-sub">Testni kim va qachon ko'ra olishini belgilang.</div>
-              <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="flex-col gap-8">
                 <label class="opt-row"><input type="radio" name="quiz-visibility" checked> Ochiq — barcha ro'yxatdan o'tgan talabalar ko'ra oladi</label>
                 <label class="opt-row"><input type="radio" name="quiz-visibility"> Yashirin — faqat instruktor ko'ra oladi</label>
                 <label class="opt-row"><input type="radio" name="quiz-visibility"> Rejalashtirilgan — belgilangan sanadan boshlab ochiladi</label>
@@ -168,7 +164,7 @@
                 <div class="settings-item-info"><div class="settings-item-label">Savollarning tasodifiy qismini ko'rsatish</div><div class="settings-item-desc">Har bir urinishda savollarning faqat bir qismi tanlab beriladi</div></div>
                 <label class="switch settings-item-control"><input type="checkbox" data-quiz-check="randomSubset" data-reveals="qs-subset-field"><span class="slider"></span></label>
               </div>
-              <div class="field" id="qs-subset-field" hidden style="margin-top:12px; margin-bottom:0; max-width:200px;"><label for="qs-subset-size">Nechta savol berilsin</label><input id="qs-subset-size" type="number" data-quiz-field="subsetSize" min="1">
+              <div class="field mt-12 mb-0 mw-200" id="qs-subset-field" hidden><label for="qs-subset-size">Nechta savol berilsin</label><input id="qs-subset-size" type="number" data-quiz-field="subsetSize" min="1">
               </div>
             </div>
 
@@ -179,7 +175,7 @@
                 <div class="settings-item-info"><div class="settings-item-label">Sertifikat berish</div><div class="settings-item-desc">O'tish ballidan yuqori natija ko'rsatgan talabalarga avtomatik beriladi</div></div>
                 <label class="switch settings-item-control"><input type="checkbox" data-quiz-check="certificate" data-reveals="qs-cert-field"><span class="slider"></span></label>
               </div>
-              <div class="field" id="qs-cert-field" hidden style="margin-top:12px; margin-bottom:0;"><label for="qs-cert-name">Sertifikat nomi</label><input id="qs-cert-name" data-quiz-field="certName" placeholder="Masalan: 1-modul sertifikati"></div>
+              <div class="field mt-12 mb-0" id="qs-cert-field" hidden><label for="qs-cert-name">Sertifikat nomi</label><input id="qs-cert-name" data-quiz-field="certName" placeholder="Masalan: 1-modul sertifikati"></div>
             </div>
 
             <div class="card card-pad">
@@ -199,23 +195,23 @@
         </div>
 
         <!-- PREVIEW TAB -->
-        <div data-tab-panel="preview" hidden style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="preview" hidden>
           <div class="lesson-preview-frame">
             <div class="lesson-preview-body">
-              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                <h2 style="font-size:19px;" data-quiz-out="title">—</h2>
+              <div class="flex items-center gap-10 flex-wrap">
+                <h2 data-quiz-out="title">—</h2>
                 <span class="badge badge-violet" data-quiz-out="summary">—</span>
               </div>
-              <p style="font-size:13.5px; color:var(--ink-700); line-height:1.7; margin-top:12px;" data-quiz-out="desc">—</p>
-              <p style="font-size:13px; color:var(--ink-500); margin-top:6px;" data-quiz-out="instructions">—</p>
-              <div class="score-indicator" style="margin-top:14px;">
+              <p class="preview-lead mt-12" data-quiz-out="desc">—</p>
+              <p class="preview-sub mt-6" data-quiz-out="instructions">—</p>
+              <div class="score-indicator mt-14">
                 <span>O'tish balli</span>
                 <div class="progress-track"><div class="progress-fill" data-quiz-passing-bar style="width:0%;"></div></div>
                 <span data-quiz-stat="passing">—</span>
               </div>
-              <div class="section-header" style="margin-top:22px;"><h3 style="font-size:14px;">Savollar tartibi</h3></div>
-              <ol style="padding-left:18px; display:flex; flex-direction:column; gap:8px; font-size:13.5px; color:var(--ink-700);" data-quiz-preview-questions></ol>
-              <p style="font-size:11.5px; color:var(--ink-300); margin-top:18px;"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan test sahifasining taxminiy ko'rinishi — faqat oldindan ko'rish rejimi.</p>
+              <div class="section-header mt-22"><h3>Savollar tartibi</h3></div>
+              <ol class="preview-list" data-quiz-preview-questions></ol>
+              <p class="preview-note mt-18"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan test sahifasining taxminiy ko'rinishi — faqat oldindan ko'rish rejimi.</p>
             </div>
           </div>
         </div>
@@ -233,7 +229,7 @@
   <div class="modal modal-lg">
     <div class="modal-head"><b>Bankdan savol tanlash</b><button class="icon-btn icon-btn-sm" data-modal-close="quiz-bank-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
-      <div style="display:flex; flex-direction:column; gap:8px;" data-quiz-bank-list></div>
+      <div class="flex-col gap-8" data-quiz-bank-list></div>
     </div>
     <div class="modal-foot">
       <a href="question-bank.html" class="btn btn-outline btn-sm"><i class="bi bi-collection"></i> Savollar bankiga o'tish</a>
@@ -275,7 +271,7 @@
             <div class="field-hint" data-char-counter-for="qe-title">0 / 300</div>
           </div>
 
-          <div style="display:flex; gap:12px;">
+          <div class="flex gap-12">
             <div class="field flex-1"><label for="qe-type">Savol turi</label>
               <select id="qe-type" data-question-type-select class="btn btn-outline select-block">
                 <option value="single">Bitta tanlov</option>
@@ -288,8 +284,8 @@
                 <option value="blank">Bo'sh joyni to'ldirish</option>
               </select>
             </div>
-            <div class="field" style="width:110px;"><label for="qe-points">Ball</label><input id="qe-points" type="number" value="5" min="0"></div>
-            <div class="field" style="width:150px;"><label for="qe-difficulty">Qiyinlik</label>
+            <div class="field qe-field-points"><label for="qe-points">Ball</label><input id="qe-points" type="number" value="5" min="0"></div>
+            <div class="field qe-field-level"><label for="qe-difficulty">Qiyinlik</label>
               <select id="qe-difficulty" class="btn btn-outline select-block">
                 <option value="easy">Oson</option>
                 <option value="medium" selected>O'rta</option>
@@ -298,7 +294,7 @@
             </div>
             <!-- Kategoriya savollar bazasidagi filtr chiplari bilan bir xil
                  slug'lardan iborat (js/question-store.js dagi jadval). -->
-            <div class="field" style="width:170px;"><label for="qe-category">Kategoriya</label>
+            <div class="field qe-field-category"><label for="qe-category">Kategoriya</label>
               <select id="qe-category" class="btn btn-outline select-block">
                 <option value="python">Python</option>
                 <option value="django">Django</option>
@@ -313,30 +309,30 @@
 
           <!-- SINGLE CHOICE -->
           <div data-qtype-panel="single">
-            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Variantlar (to'g'ri javobni belgilang)</label>
+            <label class="qe-group-label">Variantlar (to'g'ri javobni belgilang)</label>
             <div data-row-list="qopt-single-template">
               <div class="question-option-row is-correct"><input type="radio" name="qopt-single" class="qo-mark" checked><input type="text" value="def"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
               <div class="question-option-row"><input type="radio" name="qopt-single" class="qo-mark"><input type="text" value="function"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
               <div class="question-option-row"><input type="radio" name="qopt-single" class="qo-mark"><input type="text" value="lambda"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-single-template"><i class="bi bi-plus-lg"></i> Variant qo'shish</button>
+            <button type="button" class="btn btn-outline btn-sm mt-10" data-add-row="qopt-single-template"><i class="bi bi-plus-lg"></i> Variant qo'shish</button>
           </div>
 
           <!-- MULTIPLE SELECT -->
           <div data-qtype-panel="multi" hidden>
-            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Variantlar (barcha to'g'ri javoblarni belgilang)</label>
+            <label class="qe-group-label">Variantlar (barcha to'g'ri javoblarni belgilang)</label>
             <div data-row-list="qopt-multi-template">
               <div class="question-option-row is-correct"><input type="checkbox" class="qo-mark" checked><input type="text" value="list"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
               <div class="question-option-row is-correct"><input type="checkbox" class="qo-mark" checked><input type="text" value="dict"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
               <div class="question-option-row"><input type="checkbox" class="qo-mark"><input type="text" value="tuple"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
               <div class="question-option-row"><input type="checkbox" class="qo-mark"><input type="text" value="str"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-multi-template"><i class="bi bi-plus-lg"></i> Variant qo'shish</button>
+            <button type="button" class="btn btn-outline btn-sm mt-10" data-add-row="qopt-multi-template"><i class="bi bi-plus-lg"></i> Variant qo'shish</button>
           </div>
 
           <!-- TRUE / FALSE -->
           <div data-qtype-panel="boolean" hidden>
-            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">To'g'ri javobni belgilang</label>
+            <label class="qe-group-label">To'g'ri javobni belgilang</label>
             <div class="question-option-row is-correct"><input type="radio" name="qopt-bool" class="qo-mark" checked><span class="flex-1">To'g'ri</span></div>
             <div class="question-option-row"><input type="radio" name="qopt-bool" class="qo-mark"><span class="flex-1">Noto'g'ri</span></div>
           </div>
@@ -348,45 +344,45 @@
 
           <!-- LONG ANSWER -->
           <div data-qtype-panel="long" hidden>
-            <div class="field" style="margin-bottom:0;"><label for="qe-long-rubric">Baholash mezoni (o'qituvchi uchun)</label><textarea id="qe-long-rubric" class="editor-textarea" rows="3">To'liq javobda kamida 3 ta afzallik sanab o'tilgan bo'lishi kerak.</textarea></div>
+            <div class="field mb-0"><label for="qe-long-rubric">Baholash mezoni (o'qituvchi uchun)</label><textarea id="qe-long-rubric" class="editor-textarea" rows="3">To'liq javobda kamida 3 ta afzallik sanab o'tilgan bo'lishi kerak.</textarea></div>
           </div>
 
           <!-- MATCHING -->
           <div data-qtype-panel="match" hidden>
-            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Juftliklarni kiriting</label>
+            <label class="qe-group-label">Juftliklarni kiriting</label>
             <div data-row-list="qopt-match-template">
               <div class="question-option-row match-row"><input type="text" value="git commit"><span class="qo-sep"><i class="bi bi-arrow-right"></i></span><input type="text" value="O'zgarishlarni saqlash"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
               <div class="question-option-row match-row"><input type="text" value="git push"><span class="qo-sep"><i class="bi bi-arrow-right"></i></span><input type="text" value="Serverga yuklash"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-match-template"><i class="bi bi-plus-lg"></i> Juftlik qo'shish</button>
+            <button type="button" class="btn btn-outline btn-sm mt-10" data-add-row="qopt-match-template"><i class="bi bi-plus-lg"></i> Juftlik qo'shish</button>
           </div>
 
           <!-- ORDERING -->
           <div data-qtype-panel="order" hidden>
-            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">Elementlarni to'g'ri tartibda joylashtiring</label>
+            <label class="qe-group-label">Elementlarni to'g'ri tartibda joylashtiring</label>
             <div data-row-list="qopt-order-template" data-sortable-list>
               <div class="question-option-row" data-sortable-item draggable="true"><i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Tashish"></i><input type="text" value="Dockerfile yozish"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
               <div class="question-option-row" data-sortable-item draggable="true"><i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Tashish"></i><input type="text" value="docker build buyrug'ini ishga tushirish"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
               <div class="question-option-row" data-sortable-item draggable="true"><i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Tashish"></i><input type="text" value="Image'ni registry'ga yuklash"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="qopt-order-template"><i class="bi bi-plus-lg"></i> Element qo'shish</button>
+            <button type="button" class="btn btn-outline btn-sm mt-10" data-add-row="qopt-order-template"><i class="bi bi-plus-lg"></i> Element qo'shish</button>
           </div>
 
           <!-- FILL IN THE BLANK -->
           <div data-qtype-panel="blank" hidden>
             <div class="field"><label for="qe-blank-text">Matn (bo'sh joyni ___ bilan belgilang)</label><input id="qe-blank-text" value="Python'da ro'yxat elementiga ___ orqali murojaat qilinadi"></div>
-            <div class="field" style="margin-bottom:0;"><label for="qe-blank-answer">To'g'ri javob</label><input id="qe-blank-answer" value="indeks"></div>
+            <div class="field mb-0"><label for="qe-blank-answer">To'g'ri javob</label><input id="qe-blank-answer" value="indeks"></div>
           </div>
 
-          <div class="editor-block" style="margin-top:22px;">
+          <div class="editor-block mt-22">
             <div class="editor-block-label"><i class="bi bi-lightbulb"></i> Izoh va maslahat</div>
             <div class="field"><label for="qe-explanation">Tushuntirish (javobdan so'ng ko'rsatiladi)</label><input id="qe-explanation" placeholder="To'g'ri javob nima uchun to'g'ri ekanini tushuntiring"></div>
-            <div class="field" style="margin-bottom:0;"><label for="qe-hint">Maslahat (ixtiyoriy)</label><input id="qe-hint" placeholder="Talaba qiynalsa ko'rsatiladigan maslahat"></div>
+            <div class="field mb-0"><label for="qe-hint">Maslahat (ixtiyoriy)</label><input id="qe-hint" placeholder="Talaba qiynalsa ko'rsatiladigan maslahat"></div>
           </div>
 
           <div class="editor-block">
             <div class="editor-block-label"><i class="bi bi-tags"></i> Teglar</div>
-            <div class="field" style="margin-bottom:0;"><input placeholder="Masalan: python, asoslar, sintaksis"></div>
+            <div class="field mb-0"><input placeholder="Masalan: python, asoslar, sintaksis"></div>
           </div>
 
           <div class="editor-block">
@@ -405,11 +401,11 @@
 
         <!-- LIVE PREVIEW -->
         <div class="qe-preview-col">
-          <div class="card question-preview" style="position:sticky; top:0;">
+          <div class="card question-preview">
             <div class="card-pad">
-              <div class="section-header" style="margin-bottom:10px;"><h3 style="font-size:13px;"><i class="bi bi-eye"></i> Jonli ko'rib chiqish</h3></div>
-              <div class="badge badge-violet" data-qe-preview-type style="margin-bottom:10px;">Bitta tanlov</div>
-              <div data-qe-preview-title style="font-size:14.5px; font-weight:700; margin-bottom:12px;">Savol matni shu yerda ko'rinadi</div>
+              <div class="section-header mb-10"><h3 class="text-sm"><i class="bi bi-eye"></i> Jonli ko'rib chiqish</h3></div>
+              <div class="badge badge-violet mb-10" data-qe-preview-type>Bitta tanlov</div>
+              <div class="qe-preview-title" data-qe-preview-title>Savol matni shu yerda ko'rinadi</div>
               <div data-qe-preview-options></div>
             </div>
           </div>
@@ -436,6 +432,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/sortable.js"></script>

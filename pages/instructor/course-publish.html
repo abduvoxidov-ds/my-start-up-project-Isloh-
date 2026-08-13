@@ -6,11 +6,6 @@
 <title>Kursni nashr etish — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  /* Page-local layout only. Wizard/publish widgets live in css/widgets.css. */
-  .wizard-shell { max-width: 820px; margin: 0 auto; }
-  @media (max-width:700px){ .validation-summary{ flex-direction:column; } }
-</style>
 </head>
 <body>
 <div class="app-shell">
@@ -32,14 +27,14 @@
     <main class="content">
       <div class="page-header">
         <div><h1>Kursni nashr etish</h1><p data-publish-meta>Kurs tanlanmagan</p></div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="flex gap-8 flex-wrap">
           <a href="course-preview.html" data-course-link="course-preview.html" class="btn btn-outline btn-sm"><i class="bi bi-eye"></i> Kursni ko'rish (Preview)</a>
           <a href="course-edit.html" data-course-link="course-edit.html" class="btn btn-outline btn-sm" data-course-link="course-edit.html"><i class="bi bi-pencil"></i> Tahrirlashga qaytish</a>
         </div>
       </div>
 
       <!-- CURRENT STATUS -->
-      <div class="publish-status-card" style="margin-top:20px;" data-publish-status>
+      <div class="publish-status-card mt-20" data-publish-status>
         <div class="publish-status-ic"><i class="bi bi-hourglass-split"></i></div>
         <div>
           <div class="publish-status-title">Hali nashr etilmagan</div>
@@ -47,7 +42,7 @@
         </div>
       </div>
 
-      <div class="wizard-shell" style="margin-top:22px;" data-wizard>
+      <div class="wizard-shell mt-22" data-wizard>
         <div class="card card-pad">
           <div class="wizard-stepper">
             <button class="wizard-step-item active" data-stepper-item type="button"><span class="wizard-step-circle">1</span><span class="wizard-step-label">Holat va ko'rinish</span></button>
@@ -63,7 +58,7 @@
               <div class="settings-section-sub">Kursingiz talabalarga qachon va qanday ko'rinishini tanlang.</div>
 
               <div class="field">
-                <div style="display:flex; flex-direction:column; gap:8px;">
+                <div class="flex-col gap-8">
                   <label class="opt-row"><input type="radio" name="pub-visibility" value="draft" checked> <b>Qoralama</b> — hech kimga ko'rinmaydi, faqat siz ko'rasiz</label>
                   <label class="opt-row"><input type="radio" name="pub-visibility" value="private"> <b>Yashirin</b> — faqat to'g'ridan-to'g'ri havola orqali kirish mumkin</label>
                   <label class="opt-row"><input type="radio" name="pub-visibility" value="scheduled"> <b>Rejalashtirilgan</b> — belgilangan sanada avtomatik nashr etiladi</label>
@@ -77,10 +72,10 @@
                 <div class="field-hint">Kurs shu sanada avtomatik "Ochiq" holatiga o'tadi.</div>
               </div>
 
-              <div class="field" style="margin-top:6px;">
+              <div class="field mt-6">
                 <label>Narxlash</label>
-                <div class="enroll-price-box card card-pad" style="text-align:left; background:var(--bg-app);">
-                  <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
+                <div class="enroll-price-box card card-pad publish-option">
+                  <div class="flex-col gap-8 mb-10">
                     <label class="opt-row"><input type="radio" name="pub-pricing"> Bepul</label>
                     <label class="opt-row"><input type="radio" name="pub-pricing" checked> Pullik</label>
                   </div>
@@ -97,21 +92,21 @@
 
               <div class="field-row-2">
                 <div>
-                  <label style="font-weight:700; font-size:13.5px;">Talab qilinadigan bilimlar</label>
-                  <div class="card card-pad" style="margin-top:8px; background:var(--bg-app);">
+                  <label class="publish-option-title">Talab qilinadigan bilimlar</label>
+                  <div class="card card-pad publish-option-note">
                     <div class="requirement-row"><i class="bi bi-dot"></i><input value="Linux terminali bilan asosiy tanishlik"></div>
                     <div class="requirement-row"><i class="bi bi-dot"></i><input value="Har qanday matn muharriri (VS Code tavsiya etiladi)"></div>
                     <div class="requirement-row"><i class="bi bi-dot"></i><input value="Internetga ulangan kompyuter"></div>
-                    <button class="btn btn-outline btn-sm" style="margin-top:10px;"><i class="bi bi-plus-lg"></i> Talab qo'shish</button>
+                    <button class="btn btn-outline btn-sm mt-10"><i class="bi bi-plus-lg"></i> Talab qo'shish</button>
                   </div>
                 </div>
                 <div>
-                  <label style="font-weight:700; font-size:13.5px;">Bu kursda o'rganasiz</label>
-                  <div class="card card-pad" style="margin-top:8px; background:var(--bg-app);">
+                  <label class="publish-option-title">Bu kursda o'rganasiz</label>
+                  <div class="card card-pad publish-option-note">
                     <div class="outcome-row"><i class="bi bi-check2"></i><input value="Docker konteynerlarini yaratish va boshqarish"></div>
                     <div class="outcome-row"><i class="bi bi-check2"></i><input value="Dockerfile yozish va image quratish"></div>
                     <div class="outcome-row"><i class="bi bi-check2"></i><input value="Docker Compose bilan ko'p konteynerli ilovalar"></div>
-                    <button class="btn btn-outline btn-sm" style="margin-top:10px;"><i class="bi bi-plus-lg"></i> Natija qo'shish</button>
+                    <button class="btn btn-outline btn-sm mt-10"><i class="bi bi-plus-lg"></i> Natija qo'shish</button>
                   </div>
                 </div>
               </div>
@@ -128,11 +123,11 @@
                 <div class="seo-preview-desc">Docker asoslarini noldan o'rganing: konteynerlar, image'lar va Docker Compose. Amaliy loyihalar bilan mustahkamlang.</div>
               </div>
 
-              <div class="card card-pad" style="margin-top:16px; display:flex; gap:16px; align-items:center;">
-                <div class="landing-cover" style="width:120px; height:68px; flex-shrink:0; background:linear-gradient(135deg,#0EA5E9,#1E3A8A);"><i class="bi bi-filetype-py"></i></div>
+              <div class="card card-pad publish-course-row">
+                <div class="landing-cover" class="publish-cover" style="background:linear-gradient(135deg,#0EA5E9,#1E3A8A);"><i class="bi bi-filetype-py"></i></div>
                 <div>
-                  <div style="font-weight:700; font-size:14px;">Ijtimoiy tarmoq ulashish kartasi</div>
-                  <div style="font-size:12.5px; color:var(--ink-500); margin-top:2px;">Kurs havolasi ulashilganda shu rasm va sarlavha ko'rsatiladi.</div>
+                  <div class="tile-title">Ijtimoiy tarmoq ulashish kartasi</div>
+                  <div class="section-meta mt-2">Kurs havolasi ulashilganda shu rasm va sarlavha ko'rsatiladi.</div>
                 </div>
               </div>
             </section>
@@ -142,26 +137,23 @@
               <div class="settings-section-title">Nashrdan oldingi tekshiruv</div>
               <div class="settings-section-sub">Quyidagi bandlarni ko'rib chiqing va nashrni tasdiqlang.</div>
 
-              <div class="validation-summary" style="margin-bottom:16px;">
+              <div class="validation-summary mb-16">
                 <span class="validation-pill ok"><i class="bi bi-check-circle-fill"></i> <span data-validation-ok>0</span> tayyor</span>
                 <span class="validation-pill warn"><i class="bi bi-exclamation-triangle-fill"></i> <span data-validation-warn>0</span> ogohlantirish</span>
                 <span class="validation-pill fail"><i class="bi bi-x-circle-fill"></i> <span data-validation-fail>0</span> talab qilinadi</span>
               </div>
 
-              <div class="card card-pad" data-publish-checklist>
-                <div class="publish-checklist">
-                  <div class="publish-check-item ok"><span class="pci-ic"><i class="bi bi-check-lg"></i></span><span class="pci-label">Asosiy ma'lumotlar to'ldirilgan</span></div>
-                  <div class="publish-check-item ok"><span class="pci-ic"><i class="bi bi-check-lg"></i></span><span class="pci-label">Thumbnail va cover rasm yuklangan</span></div>
-                  <div class="publish-check-item ok"><span class="pci-ic"><i class="bi bi-check-lg"></i></span><span class="pci-label">SEO ma'lumotlari to'ldirilgan</span></div>
-                  <div class="publish-check-item ok"><span class="pci-ic"><i class="bi bi-check-lg"></i></span><span class="pci-label">Talablar va natijalar kiritilgan</span></div>
-                  <div class="publish-check-item warn"><span class="pci-ic"><i class="bi bi-exclamation"></i></span><span class="pci-label">3 ta darsda video yuklanmagan</span><span class="pci-note">Course Builder → Lesson Builder</span></div>
-                  <div class="publish-check-item fail"><span class="pci-ic"><i class="bi bi-x-lg"></i></span><span class="pci-label">Kamida 1 ta test qo'shilishi shart</span><span class="pci-note">Quiz Builder</span></div>
-                </div>
-              </div>
+              <!-- Tekshiruv bandlari js/course-publish.js tomonidan
+                   do'konlardan hisoblanadi (kurs yozuvi + kurs tarkibi +
+                   test/topshiriq do'konlari). Ilgari ular markupda qotib
+                   qolgan edi: har qanday kurs uchun bir xil olti band
+                   ko'rinardi va "1 talab qilinadi" bandi tufayli nashr
+                   tugmasi HECH QACHON ochilmasdi (9-bosqich auditi). -->
+              <div class="card card-pad" data-publish-checklist></div>
 
-              <div style="display:flex; gap:8px; margin-top:20px; flex-wrap:wrap;">
+              <div class="flex gap-8 mt-20 flex-wrap">
                 <button class="btn btn-outline btn-sm"><i class="bi bi-clock-history"></i> Keyinroq nashr etish</button>
-                <button class="btn btn-teach" data-publish-btn data-modal-open="publish-confirm-modal" style="margin-left:auto;"><i class="bi bi-rocket-takeoff-fill"></i> Kursni nashr etish</button>
+                <button class="btn btn-teach ml-auto" data-publish-btn data-modal-open="publish-confirm-modal"><i class="bi bi-rocket-takeoff-fill"></i> Kursni nashr etish</button>
               </div>
             </section>
           </div>
@@ -179,7 +171,7 @@
 <!-- PUBLISH CONFIRMATION MODAL -->
 <div class="modal-overlay" id="publish-confirm-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3 style="font-size:15px;">Kursni nashr etish</h3><button class="icon-btn" data-modal-close="publish-confirm-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><h3>Kursni nashr etish</h3><button class="icon-btn" data-modal-close="publish-confirm-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">"Docker for Beginners" kursini tanlangan ko'rinish sozlamalari bilan nashr etmoqchimisiz? Bu amalni keyinroq Sozlamalar bo'limidan o'zgartirishingiz mumkin.</div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="publish-confirm-modal">Bekor qilish</button>
@@ -197,9 +189,16 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/course-store.js"></script>
+<!-- Tekshiruv bandlari shu do'konlardan hisoblanadi (js/course-publish.js) -->
+<script src="../../js/content-store.js"></script>
+<script src="../../js/quiz-store.js"></script>
+<script src="../../js/assignment-store.js"></script>
+<script src="../../js/resource-store.js"></script>
 <script src="../../js/course-wizard.js"></script>
 <script src="../../js/course-publish.js"></script>
 </body>

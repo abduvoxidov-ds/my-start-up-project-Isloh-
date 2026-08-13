@@ -138,3 +138,9 @@
 
 /* Animatsiyani o'chirgan foydalanuvchi uchun (body.no-animations — js/theme.js) */
 body.no-animations .ai-history-col { transition: none; }
+
+/* Nashr sehrgaridagi tekshiruv xulosasi (course-publish.html) — tor ekranda
+   ustunga aylanadi. Ilgari sahifaning o'z <style> blokida edi (8-bosqich). */
+@media (max-width: 700px) {
+  .validation-summary { flex-direction: column; }
+}

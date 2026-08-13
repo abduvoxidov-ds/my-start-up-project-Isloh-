@@ -33,24 +33,24 @@
         <button class="btn btn-teach btn-sm" data-modal-open="announce-modal"><i class="bi bi-megaphone-fill"></i> E'lon joylash</button>
       </div>
 
-      <div class="wk-grid-4" style="margin-top:20px;">
+      <div class="wk-grid-4 mt-20">
         <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-chat-square-text-fill"></i></div><div class="stat-value">34</div><div class="stat-label">Faol mavzular</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-exclamation-circle-fill"></i></div><div class="stat-value">3</div><div class="stat-label">Javobsiz savollar</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-check2-circle"></i></div><div class="stat-value">28</div><div class="stat-label">Hal qilingan</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-clock-history"></i></div><div class="stat-value">1.4 soat</div><div class="stat-label">O'rtacha javob vaqti</div></div>
       </div>
 
-      <div class="card card-pad" style="margin-top:18px;" data-filterable data-thread-list>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
-          <div class="topbar-search" style="width:260px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Mavzularni qidirish..." aria-label="Mavzularni qidirish"></div>
-          <div data-filter-group="mtype" style="display:flex; gap:6px;">
+      <div class="card card-pad mt-18" data-filterable data-thread-list>
+        <div class="discussion-toolbar">
+          <div class="topbar-search sw-260"><i class="bi bi-search"></i><input data-filter-search placeholder="Mavzularni qidirish..." aria-label="Mavzularni qidirish"></div>
+          <div class="filter-chip-row" data-filter-group="mtype">
             <button class="category-chip active" data-filter-value="all">Barchasi</button>
             <button class="category-chip" data-filter-value="unanswered">Javobsiz</button>
             <button class="category-chip" data-filter-value="pinned">Qadalgan</button>
           </div>
         </div>
 
-        <div style="margin-top:16px; display:flex; flex-direction:column; gap:12px;">
+        <div class="thread-list">
           <div class="card discussion-thread" data-thread data-filter-item data-mtype="unanswered" data-filter-text="Celery worker ishga tushmayapti">
             <div class="dt-head">
               <div class="avatar-sm">JR</div>
@@ -66,11 +66,11 @@
                   <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 0 ta javob</button>
                   <button class="dt-stat-btn" data-thread-pin><i class="bi bi-pin-angle"></i> Qadash</button>
                   <button class="dt-stat-btn" data-thread-solve><i class="bi bi-check2-circle"></i> Hal qilindi deb belgilash</button>
-                  <button class="dt-stat-btn" data-reply-box-toggle style="margin-left:auto;"><i class="bi bi-reply"></i> Javob berish</button>
+                  <button class="dt-stat-btn ml-auto" data-reply-box-toggle><i class="bi bi-reply"></i> Javob berish</button>
                 </div>
-                <span class="solved-badge" data-solved-badge hidden style="margin-top:8px; display:inline-flex;"><i class="bi bi-check-circle-fill"></i> Hal qilindi</span>
-                <div data-reply-box hidden style="display:flex; gap:8px; margin-top:12px;">
-                  <input placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing" style="flex:1; border:1px solid var(--border-soft); border-radius:var(--r-sm); padding:8px 12px; font-size:13px;">
+                <span class="solved-badge" data-solved-badge hidden><i class="bi bi-check-circle-fill"></i> Hal qilindi</span>
+                <div class="reply-box" data-reply-box hidden>
+                  <input class="reply-input" placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing">
                   <button class="btn btn-teach btn-sm">Yuborish</button>
                 </div>
                 <div data-reply-list hidden></div>
@@ -92,17 +92,17 @@
                   <button class="dt-stat-btn like-btn" data-thread-like><i class="bi bi-hand-thumbs-up"></i> <span data-like-count>18</span></button>
                   <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 6 ta javobni ko'rish</button>
                   <button class="dt-stat-btn active" data-thread-pin><i class="bi bi-pin-fill"></i> Qadalgan</button>
-                  <button class="dt-stat-btn" data-reply-box-toggle style="margin-left:auto;"><i class="bi bi-reply"></i> Javob berish</button>
+                  <button class="dt-stat-btn ml-auto" data-reply-box-toggle><i class="bi bi-reply"></i> Javob berish</button>
                 </div>
-                <div data-reply-box hidden style="display:flex; gap:8px; margin-top:12px;">
-                  <input placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing" style="flex:1; border:1px solid var(--border-soft); border-radius:var(--r-sm); padding:8px 12px; font-size:13px;">
+                <div class="reply-box" data-reply-box hidden>
+                  <input class="reply-input" placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing">
                   <button class="btn btn-teach btn-sm">Yuborish</button>
                 </div>
                 <div data-reply-list hidden>
                   <div class="comment-card pinned">
                     <div class="avatar-sm">SM</div>
                     <div class="comment-body">
-                      <div class="comment-head"><span class="comment-name">Samar Mirzayev</span><span class="role-badge student">Talaba</span><span class="comment-time">1 kun oldin</span><button data-comment-pin class="icon-btn" style="width:22px;height:22px;margin-left:auto;" aria-label="Izohni qadash"><i class="bi bi-pin-angle"></i></button></div>
+                      <div class="comment-head"><span class="comment-name">Samar Mirzayev</span><span class="role-badge student">Talaba</span><span class="comment-time">1 kun oldin</span><button data-comment-pin class="icon-btn icon-btn-xs ml-auto" aria-label="Izohni qadash"><i class="bi bi-pin-angle"></i></button></div>
                       <div class="comment-text" data-comment-text>Rahmat, materiallar juda foydali bo'ldi!</div>
                       <div class="comment-actions">
                         <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>3</span></button>
@@ -130,10 +130,10 @@
 <!-- ANNOUNCEMENT MODAL -->
 <div class="modal-overlay" id="announce-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3 style="font-size:15px;">Yangi e'lon joylash</h3><button class="icon-btn" data-modal-close="announce-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><h3>Yangi e'lon joylash</h3><button class="icon-btn" data-modal-close="announce-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
       <div class="field"><label for="announce-title">Sarlavha</label><input id="announce-title" placeholder="E'lon sarlavhasi"></div>
-      <div class="field" style="margin-bottom:0;"><label for="announce-body">Matn</label><textarea id="announce-body" class="editor-textarea" style="min-height:100px;" placeholder="E'lon matnini yozing..."></textarea></div>
+      <div class="field mb-0"><label for="announce-body">Matn</label><textarea id="announce-body" class="editor-textarea is-tall" placeholder="E'lon matnini yozing..."></textarea></div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="announce-modal">Bekor qilish</button>
@@ -151,6 +151,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/filterable.js"></script>

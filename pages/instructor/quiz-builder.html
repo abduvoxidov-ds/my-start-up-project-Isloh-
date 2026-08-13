@@ -27,13 +27,13 @@
     <main class="content" data-unsaved-scope data-filterable data-ai-context="quiz-builder">
       <div class="page-header">
         <div>
-          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div class="flex items-center gap-10 flex-wrap">
             <h1>Testlar</h1>
             <span class="unsaved-badge" data-unsaved-indicator hidden><i class="bi bi-exclamation-circle-fill"></i> Saqlanmagan o'zgarishlar</span>
           </div>
           <p><span data-quiz-course>—</span> · Barcha testlarni yarating va boshqaring.</p>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="flex gap-8 flex-wrap">
           <a href="course-builder.html" data-course-link="course-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kurs tarkibiga qaytish</a>
           <a href="question-bank.html" class="btn btn-outline btn-sm"><i class="bi bi-collection"></i> Savollar banki</a>
           <a href="discussions.html" class="btn btn-outline btn-sm"><i class="bi bi-chat-square-text"></i> Talaba savollari</a>
@@ -45,7 +45,7 @@
       <!-- STATS — raqamlar ro'yxatdan hisoblanadi (js/quiz-store.js).
            "Jami savollar" — TAKRORLANMAYDIGAN savollar soni: bitta savol
            uchta testda tursa ham bir marta sanaladi. -->
-      <div class="wk-grid-4" style="margin-top:20px;">
+      <div class="wk-grid-4 mt-20">
         <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-patch-question-fill"></i></div><div class="stat-value" data-quiz-stat="total">0</div><div class="stat-label">Jami testlar</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-check2-circle"></i></div><div class="stat-value" data-quiz-stat="published">0</div><div class="stat-label">Nashr etilgan</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-pencil-square"></i></div><div class="stat-value" data-quiz-stat="draft">0</div><div class="stat-label">Qoralama</div></div>
@@ -53,15 +53,15 @@
       </div>
 
       <!-- TOOLBAR -->
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:22px;">
+      <div class="page-header mt-22">
         <div class="filter-bar" data-filter-group="status">
           <button class="filter-chip active" data-filter-value="all">Barchasi</button>
           <button class="filter-chip" data-filter-value="published">Nashr etilgan</button>
           <button class="filter-chip" data-filter-value="draft">Qoralama</button>
         </div>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-          <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Test qidirish..." aria-label="Test qidirish"></div>
-          <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Saralash"><option>Eng yangi</option><option>Nomi bo'yicha</option><option>Savollar soni bo'yicha</option><option>Qiyinlik bo'yicha</option></select>
+        <div class="flex gap-10 items-center flex-wrap">
+          <div class="topbar-search sw-220"><i class="bi bi-search"></i><input data-filter-search placeholder="Test qidirish..." aria-label="Test qidirish"></div>
+          <select class="btn btn-outline select-btn" aria-label="Saralash"><option>Eng yangi</option><option>Nomi bo'yicha</option><option>Savollar soni bo'yicha</option><option>Qiyinlik bo'yicha</option></select>
           <div class="view-switch" data-view-switch role="tablist" aria-label="Ko'rinishni tanlash">
             <button class="active" data-view="grid" aria-label="Katakcha ko'rinishi"><i class="bi bi-grid-3x3-gap-fill"></i></button>
             <button data-view="table" aria-label="Jadval ko'rinishi"><i class="bi bi-table"></i></button>
@@ -80,10 +80,10 @@
       </div>
 
       <!-- LOADING SKELETON -->
-      <div style="margin-top:16px;" data-list-skeleton>
-        <div class="card skeleton-card" style="margin-bottom:12px;"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
-        <div class="card skeleton-card" style="margin-bottom:12px;"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
-        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
+      <div class="mt-16" data-list-skeleton>
+        <div class="card skeleton-card mb-12"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div></div>
+        <div class="card skeleton-card mb-12"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div></div>
+        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div></div>
       </div>
 
       <div data-list-content hidden data-bulk-scope>
@@ -92,14 +92,14 @@
         <!-- GRID VIEW — kartochkalar js/quiz-builder.js tomonidan
              `isloh_quizzes` do'konidan chiziladi; jadval ko'rinishi ham
              ayni ro'yxatdan (markup takrorlanmaydi). -->
-        <div class="course-grid-instr" style="margin-top:16px;" data-quiz-grid data-course-grid></div>
+        <div class="course-grid-instr mt-16" data-quiz-grid data-course-grid></div>
 
         <!-- TABLE VIEW -->
-        <div class="card" style="margin-top:16px; overflow:hidden;" data-course-table hidden>
+        <div class="card mt-16 overflow-hidden" data-course-table hidden>
           <div class="itable-wrap">
             <table class="itable">
               <thead><tr>
-                <th style="width:36px;"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th>
+                <th class="col-select"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th>
                 <th>Test</th><th>Holat</th><th>Qiyinlik</th><th>Savollar</th><th>Vaqt limiti</th><th>Urinishlar</th><th>O'tish balli</th><th>Amallar</th>
               </tr></thead>
               <tbody data-quiz-rows></tbody>
@@ -119,12 +119,12 @@
 
 <!-- CREATE QUIZ MODAL -->
 <div class="modal-overlay" id="add-quiz-modal" hidden>
-  <div class="modal" style="max-width:420px;">
+  <div class="modal mw-420">
     <form data-add-quiz-form>
       <div class="modal-head"><b>Yangi test yaratish</b><button type="button" class="icon-btn icon-btn-sm" data-modal-close="add-quiz-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
       <div class="modal-body">
         <div class="field"><label for="quiz-title">Test nomi</label><input id="quiz-title" name="title" placeholder="Masalan: 2-modul yakuniy testi" required></div>
-        <div class="field" style="margin-bottom:0;"><label for="quiz-difficulty">Qiyinlik darajasi</label>
+        <div class="field mb-0"><label for="quiz-difficulty">Qiyinlik darajasi</label>
           <select id="quiz-difficulty" name="difficulty" class="btn btn-outline select-block">
             <option value="easy">Oson</option>
             <option value="medium" selected>O'rta</option>
@@ -142,11 +142,11 @@
 
 <!-- PREVIEW QUIZ MODAL -->
 <div class="modal-overlay" id="preview-quiz-modal" hidden>
-  <div class="modal" style="max-width:460px;">
+  <div class="modal mw-460">
     <div class="modal-head"><b data-preview-quiz-title>Test</b><button class="icon-btn icon-btn-sm" data-modal-close="preview-quiz-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
-      <p style="color:var(--ink-500); margin-bottom:10px;" data-preview-quiz-meta>—</p>
-      <p style="font-size:12.5px; color:var(--ink-300);"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan test sahifasining taxminiy ko'rinishi.</p>
+      <p class="text-muted mb-10" data-preview-quiz-meta>—</p>
+      <p class="card-note"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan test sahifasining taxminiy ko'rinishi.</p>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="preview-quiz-modal">Yopish</button>
@@ -161,7 +161,7 @@
     <div class="modal-body"><b data-delete-quiz-name></b> testi o'chiriladi. Savollar BANKDA QOLADI — ular boshqa testlarda ham ishlatilgan bo'lishi mumkin.</div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="delete-quiz-modal">Bekor qilish</button>
-      <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-quiz data-marks-dirty>Ha, o'chirish</button>
+      <button class="btn btn-sm btn-danger" data-confirm-delete-quiz data-marks-dirty>Ha, o'chirish</button>
     </div>
   </div>
 </div>
@@ -177,6 +177,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/modal.js"></script>

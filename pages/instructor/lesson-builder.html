@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1-modul: Kirish va sozlash — Isloh</title>
+<!-- Sarlavhani js/lesson-builder.js ochilgan modul nomiga almashtiradi -->
+<title>Modul darslari — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
 </head>
@@ -27,13 +28,15 @@
     <main class="content" data-unsaved-scope>
       <div class="page-header">
         <div>
-          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div class="flex items-center gap-10 flex-wrap">
             <h1 data-module-heading>Modul darslari</h1>
             <span class="unsaved-badge" data-unsaved-indicator hidden><i class="bi bi-exclamation-circle-fill"></i> Saqlanmagan o'zgarishlar</span>
           </div>
-          <p>6 ta dars · 2 soat 10 daqiqa · Docker, Git va muhitni sozlash bo'yicha boshlang'ich modul.</p>
+          <!-- Dars soni va tavsif do'kondan (js/lesson-builder.js): ilgari bu
+               yerda boshqa kursning moduli haqidagi matn qotib qolgan edi. -->
+          <p data-module-sub>—</p>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="flex gap-8 flex-wrap">
           <a href="course-builder.html" data-course-link="course-builder.html" class="btn btn-outline btn-sm" data-builder-link><i class="bi bi-arrow-left"></i> Modullarga qaytish</a>
           <a href="quiz-builder.html" data-course-link="quiz-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-patch-question"></i> Testlar</a>
           <a href="resource-manager.html" data-course-link="resource-manager.html" class="btn btn-outline btn-sm"><i class="bi bi-folder2-open"></i> Resurslar</a>
@@ -42,7 +45,7 @@
       </div>
 
       <!-- STATS -->
-      <div class="wk-grid-4" style="margin-top:20px;">
+      <div class="wk-grid-4 mt-20">
         <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-journal-text"></i></div><div class="stat-value" data-lessons-total>0</div><div class="stat-label">Jami darslar</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-info"><i class="bi bi-play-circle-fill"></i></div><div class="stat-value" data-lessons-video>0</div><div class="stat-label">Video darslar</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-patch-question-fill"></i></div><div class="stat-value" data-lessons-published>0</div><div class="stat-label">Nashr etilgan</div></div>
@@ -59,17 +62,17 @@
           <button class="filter-chip" data-filter-value="assignment">Topshiriq</button>
           <button class="filter-chip" data-filter-value="resource">Resurs</button>
         </div>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Dars qidirish..." aria-label="Dars qidirish"></div>
-          <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Saralash"><option>Tartib bo'yicha</option><option>Nomi bo'yicha</option><option>Davomiylik bo'yicha</option></select>
+        <div class="flex gap-10 items-center">
+          <div class="topbar-search sw-220"><i class="bi bi-search"></i><input data-filter-search placeholder="Dars qidirish..." aria-label="Dars qidirish"></div>
+          <select class="btn btn-outline select-btn" aria-label="Saralash"><option>Tartib bo'yicha</option><option>Nomi bo'yicha</option><option>Davomiylik bo'yicha</option></select>
         </div>
       </div>
 
       <!-- LOADING SKELETON -->
       <div data-list-skeleton>
-        <div class="card skeleton-card" style="margin-bottom:10px;"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60" style="margin-bottom:0;"></div></div></div></div>
-        <div class="card skeleton-card" style="margin-bottom:10px;"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80" style="margin-bottom:0;"></div></div></div></div>
-        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
+        <div class="card skeleton-card mb-10"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60 mb-0"></div></div></div></div>
+        <div class="card skeleton-card mb-10"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80 mb-0"></div></div></div></div>
+        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div></div>
       </div>
 
       <div data-list-content hidden data-filterable>
@@ -87,12 +90,12 @@
 
 <!-- ADD LESSON MODAL -->
 <div class="modal-overlay" id="add-lesson-modal" hidden>
-  <div class="modal" style="max-width:420px;">
+  <div class="modal mw-420">
     <form data-add-lesson-form>
       <div class="modal-head"><b>Yangi dars qo'shish</b><button type="button" class="icon-btn icon-btn-sm" data-modal-close="add-lesson-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
       <div class="modal-body">
         <div class="field"><label for="les-title">Dars nomi</label><input id="les-title" name="title" placeholder="Masalan: Docker Compose asoslari" required></div>
-        <div class="field" style="margin-bottom:0;"><label for="les-type">Dars turi</label>
+        <div class="field mb-0"><label for="les-type">Dars turi</label>
           <select id="les-type" name="type" class="btn btn-outline select-block">
             <option value="video">Video</option>
             <option value="article">Maqola</option>
@@ -117,7 +120,7 @@
     <div class="modal-body">Bu dars va unga bog'liq resurslar o'chiriladi. Bu amalni qaytarib bo'lmaydi.</div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="delete-lesson-modal">Bekor qilish</button>
-      <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-lesson data-marks-dirty>Ha, o'chirish</button>
+      <button class="btn btn-sm btn-danger" data-confirm-delete-lesson data-marks-dirty>Ha, o'chirish</button>
     </div>
   </div>
 </div>
@@ -130,6 +133,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/sortable.js"></script>

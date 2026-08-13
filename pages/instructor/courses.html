@@ -31,7 +31,7 @@
       </div>
 
       <!-- STATS — raqamlar ro'yxatdan hisoblanadi (js/instructor-courses.js) -->
-      <div class="wk-grid-4" style="margin-top:20px;">
+      <div class="wk-grid-4 mt-20">
         <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-journal-check"></i></div><div class="stat-value" data-course-stat="published">0</div><div class="stat-label">Nashr etilgan</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-pencil-square"></i></div><div class="stat-value" data-course-stat="draft">0</div><div class="stat-label">Qoralama</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-archive"></i></div><div class="stat-value" data-course-stat="archived">0</div><div class="stat-label">Arxivlangan</div></div>
@@ -66,12 +66,12 @@
       </div>
 
       <!-- LOADING SKELETON (shown briefly on page load) -->
-      <div class="card" style="margin-top:16px;" data-list-skeleton>
-        <div class="skeleton-table" style="padding:8px 22px;">
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
-          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-100"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div>
+      <div class="card mt-16" data-list-skeleton>
+        <div class="skeleton-table">
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div>
+          <div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-100"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div>
         </div>
       </div>
 
@@ -82,7 +82,7 @@
           <div class="itable-wrap">
             <table class="itable">
               <thead><tr>
-                <th style="width:36px;"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th>
+                <th class="col-select"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th>
                 <th>Kurs</th><th>Holat</th><th>Kategoriya</th><th>Talabalar</th><th>Reyting</th><th>Yakunlash</th><th>Daromad</th><th>Yangilangan</th><th>Amallar</th>
               </tr></thead>
               <tbody data-course-rows></tbody>
@@ -93,7 +93,7 @@
           </div>
         </div>
 
-        <div class="course-grid-instr" style="margin-top:16px;" data-course-grid hidden></div>
+        <div class="course-grid-instr mt-16" data-course-grid hidden></div>
       </div>
     </main>
   </div>
@@ -107,7 +107,7 @@
       <button type="button" class="icon-btn icon-btn-sm" data-modal-close="delete-course-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="modal-body">
-      <p style="font-size:13.5px; color:var(--ink-700);"><b data-delete-course-name></b> butunlay o'chiriladi. Bu amalni qaytarib bo'lmaydi.</p>
+      <p class="modal-text"><b data-delete-course-name></b> butunlay o'chiriladi. Bu amalni qaytarib bo'lmaydi.</p>
     </div>
     <div class="modal-foot">
       <button type="button" class="btn btn-outline btn-sm" data-modal-close="delete-course-modal">Bekor qilish</button>
@@ -124,6 +124,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/modal.js"></script>

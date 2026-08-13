@@ -18,7 +18,7 @@
 
   <div class="main-col">
     <header class="topbar">
-      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><span class="current">Python Backend Development</span></nav>
+      <nav class="breadcrumb-demo" aria-label="Breadcrumb"><span>Instructor</span><span class="sep">/</span><a class="text-inherit" href="courses.html">Kurslarim</a><span class="sep">/</span><span class="current" data-course-crumb>Kurs</span></nav>
       <div class="topbar-actions">
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
         <div class="avatar avatar-teach">AY</div>
@@ -27,14 +27,14 @@
 
     <main class="content">
       <div class="page-header">
-        <div style="display:flex; align-items:center; gap:14px;">
+        <div class="course-details-head">
           <div class="cell-thumb course-details-cover" data-course-cover></div>
           <div>
-            <div style="display:flex; align-items:center; gap:10px;"><h1 style="font-size:22px;" data-course-out="title">—</h1><span class="badge badge-warning" data-course-status-badge>—</span></div>
-            <p style="margin-top:2px;" data-course-out="meta">—</p>
+            <div class="flex items-center gap-10"><h1 class="course-details-title" data-course-out="title">—</h1><span class="badge badge-warning" data-course-status-badge>—</span></div>
+            <p class="course-details-meta" data-course-out="meta">—</p>
           </div>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="flex gap-8 flex-wrap">
           <a href="course-preview.html" data-course-link="course-preview.html" class="btn btn-outline btn-sm"><i class="bi bi-eye"></i> Oldindan ko'rish</a>
           <a href="discussions.html" class="btn btn-outline btn-sm"><i class="bi bi-chat-square-text"></i> Muhokamalar</a>
           <a href="live-sessions.html" class="btn btn-outline btn-sm"><i class="bi bi-camera-video"></i> Jonli sessiyalar</a>
@@ -45,28 +45,28 @@
       </div>
 
       <!-- STATS -->
-      <div class="wk-grid-4" style="margin-top:20px;">
+      <div class="wk-grid-4 mt-20">
         <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-cash-stack"></i></div><div class="stat-value" data-course-detail-stat="revenue">—</div><div class="stat-label">Jami daromad</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div><div class="stat-value" data-course-detail-stat="students">—</div><div class="stat-label">Talabalar</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-star-fill"></i></div><div class="stat-value" data-course-detail-stat="rating">—</div><div class="stat-label">O'rtacha reyting</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-check2-circle"></i></div><div class="stat-value" data-course-detail-stat="completion">—</div><div class="stat-label">Yakunlash darajasi</div></div>
       </div>
 
-      <div class="split-main" style="margin-top:18px;">
+      <div class="split-main mt-18">
         <!-- LEFT COLUMN -->
         <div class="wk-col">
           <!-- General info -->
           <div class="card card-pad">
             <div class="section-header"><h3>Umumiy ma'lumot</h3></div>
-            <p style="font-size:13.5px; color:var(--ink-700); line-height:1.6;" data-course-out="description">—</p>
+            <p class="course-desc-text" data-course-out="description">—</p>
             <div class="cci-tags mt-12" data-course-tags-out></div>
           </div>
 
           <!-- Revenue summary -->
           <div class="card card-pad chart-container">
             <div class="chart-head">
-              <h3 style="font-size:16px;">Daromad xulosasi</h3>
-              <div class="chart-legend"><span class="cl"><span class="cl-dot" style="background:var(--teach-green);"></span> Daromad</span></div>
+              <h3>Daromad xulosasi</h3>
+              <div class="chart-legend"><span class="cl"><span class="cl-dot cl-dot-teach"></span> Daromad</span></div>
             </div>
             <div class="chart-body">
               <span class="chart-placeholder-note">Namuna ma'lumot</span>
@@ -94,10 +94,10 @@
           <!-- Recent reviews -->
           <div class="card card-pad">
             <div class="section-header"><h3>So'nggi sharhlar</h3><a href="reviews.html" class="section-action">Barchasi</a></div>
-            <!-- Sharhlar ro'yxati hali do'konda emas (javoblar saqlanadi,
-                 sharhlarning o'zi yo'q) — shuning uchun bu yerda o'ylab
-                 topilgan sharhlar ko'rsatilmaydi. -->
-            <p class="placeholder-note"><i class="bi bi-info-circle"></i> Sharhlar do'koni hali yo'q — ularni "Sharhlar" bo'limida ko'ring.</p>
+            <!-- Shu kursning sharhlari js/review-store.js dagi
+                 `isloh_reviews` do'konidan (javoblar — `isloh_review_replies`
+                 dan) chiziladi. -->
+            <div data-course-reviews></div>
           </div>
         </div>
 
@@ -106,14 +106,14 @@
           <!-- Completion summary -->
           <div class="card card-pad">
             <div class="section-header"><h3>Yakunlash xulosasi</h3></div>
-            <div class="cell-progress" style="min-width:0;"><div class="progress-track"><div class="progress-fill" data-course-completion-bar style="width:0%;"></div></div></div>
+            <div class="cell-progress min-w-0"><div class="progress-track"><div class="progress-fill" data-course-completion-bar style="width:0%;"></div></div></div>
             <div class="text-xs text-muted mt-8" data-course-out="completionNote">—</div>
           </div>
 
           <!-- Quick shortcuts -->
           <div class="card card-pad">
             <div class="section-header"><h3>Tezkor havolalar</h3></div>
-            <div class="quick-actions" style="grid-template-columns:1fr;">
+            <div class="quick-actions qa-stack">
               <a href="course-builder.html" data-course-link="course-builder.html" class="quick-action">
                 <div class="qa-icon tint-violet"><i class="bi bi-diagram-3"></i></div>
                 <div class="qa-title">Kurs tarkibi</div><div class="qa-sub">Modul va darslarni boshqarish</div>
@@ -162,6 +162,8 @@
 <script src="../../js/quiz-store.js"></script>
 <script src="../../js/question-store.js"></script>
 <script src="../../js/resource-store.js"></script>
+<script src="../../js/review-store.js"></script>
 <script src="../../js/course-details.js"></script>
+<script src="../../js/notification-store.js"></script>
 </body>
 </html>

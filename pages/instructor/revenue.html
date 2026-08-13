@@ -28,46 +28,52 @@
          sabab bir joyda (js/backend-pending.js uni tooltip va izohda
          ishlatadi; sukut bo'yicha sabab neytral) -->
     <main class="content" data-backend-pending-reason="to'lov tizimi ulangandan keyin ishlaydi">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-        <div><h1 style="font-size:24px;">Daromad</h1><p style="color:var(--ink-500); margin-top:4px;">Daromadingizni kuzating va pul yechib oling.</p></div>
-        <select class="btn btn-outline period-select" data-period-select aria-label="Davr"><option value="30">Oxirgi 30 kun</option><option value="7">Oxirgi 7 kun</option><option value="365">Bu yil</option></select>
+      <!-- Davr tanlovi ataylab olib tashlandi: sanali to'lovlar do'koni yo'q,
+           shuning uchun "Oxirgi 7 kun" ham, "Bu yil" ham bir xil raqamni
+           ko'rsatardi. Sabab js/period-stats.js sarlavhasida. -->
+      <div class="page-header">
+        <h1>Daromad</h1>
+        <p class="text-muted mt-4">Daromadingizni kuzating va pul yechib oling.</p>
       </div>
 
-      <!-- PAYOUT BALANCE -->
-      <div class="card card-pad payout-card" style="margin-top:20px;">
+      <!-- PAYOUT BALANCE — ko'rsatilayotgan raqam kurs yozuvlaridan
+           hisoblangan JAMI daromad (js/profile-stats.js). Yechib olish
+           balansi (yechilgan pullar ayirilgan holda) hech qayerda
+           saqlanmaydi, shuning uchun u shunday deb atalmaydi. -->
+      <div class="card card-pad payout-card mt-20">
         <div>
-          <div class="payout-label">Yechib olish mumkin bo'lgan mablag'</div>
-          <div class="payout-value">$2,140.00</div>
+          <div class="payout-label" data-i18n="rev.totalEarned">Kurslardan yig'ilgan jami daromad</div>
+          <div class="payout-value" data-stat="totalRevenue">—</div>
         </div>
         <button class="btn btn-teach" data-backend-pending="Pulni yechish"><i class="bi bi-wallet2"></i> Pulni yechish</button>
       </div>
+      <p class="placeholder-note mt-12"><i class="bi bi-info-circle"></i> Yechib olish mumkin bo'lgan balans — yig'ilgan daromaddan yechib olinganlarni ayirish demak; yechib olishlar tarixi hali saqlanmaydi, u to'lov tizimi bilan birga keladi.</p>
 
-      <!-- STATS -->
-      <div class="wk-grid-4" style="margin-top:18px;">
+      <!-- STATS — uchalasi ham kurs do'konidan hisoblanadi. Davr kesimidagi
+           daromad, kutilayotgan to'lov va o'rtacha buyurtma bu yerda ATAYLAB
+           yo'q: ular sanali tranzaksiyalarni talab qiladi (pastdagi izoh). -->
+      <div class="wk-grid-3 mt-18">
         <div class="card card-pad stat-card">
-          <div class="stat-top"><div class="stat-icon tint-green"><i class="bi bi-cash-stack"></i></div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 12%</span></div>
-          <div class="stat-value" data-period-value='{"30":"$3,245","7":"$812","365":"$28,940"}'>$3,245</div><div class="stat-label" data-period-value='{"30":"Oxirgi 30 kunlik daromad","7":"Oxirgi 7 kunlik daromad","365":"Bu yilgi daromad"}'>Oxirgi 30 kunlik daromad</div>
+          <div class="stat-icon tint-green"><i class="bi bi-journal-check"></i></div>
+          <div class="stat-value" data-stat="earningCourses">—</div><div class="stat-label" data-i18n="rev.earningCourses">Daromad keltirgan kurslar</div>
         </div>
         <div class="card card-pad stat-card">
-          <div class="stat-top"><div class="stat-icon tint-violet"><i class="bi bi-graph-up"></i></div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 8%</span></div>
-          <div class="stat-value" data-period-value='{"30":"$28,940","7":"$28,940","365":"$28,940"}'>$28,940</div><div class="stat-label">Jami daromad</div>
+          <div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div>
+          <div class="stat-value" data-stat="students">—</div><div class="stat-label" data-i18n="rev.students">Nashr etilgan kurslardagi talabalar</div>
         </div>
         <div class="card card-pad stat-card">
-          <div class="stat-icon tint-warning"><i class="bi bi-hourglass-split"></i></div>
-          <div class="stat-value" data-period-value='{"30":"$180","7":"$45","365":"$1,960"}'>$180</div><div class="stat-label">Kutilayotgan to'lov</div>
-        </div>
-        <div class="card card-pad stat-card">
-          <div class="stat-icon tint-danger"><i class="bi bi-receipt"></i></div>
-          <div class="stat-value" data-period-value='{"30":"$38.6","7":"$40.6","365":"$36.2"}'>$38.6</div><div class="stat-label">O'rtacha buyurtma</div>
+          <div class="stat-icon tint-warning"><i class="bi bi-tag-fill"></i></div>
+          <div class="stat-value" data-stat="avgCoursePrice">—</div><div class="stat-label" data-i18n="rev.avgPrice">O'rtacha kurs narxi</div>
         </div>
       </div>
+      <p class="placeholder-note mt-12"><i class="bi bi-info-circle"></i> Davr bo'yicha daromad, kutilayotgan to'lov va o'rtacha buyurtma summasi har bir to'lovning sanasini talab qiladi — tranzaksiyalar jurnali to'lov tizimi ulangandan keyin paydo bo'ladi.</p>
 
       <!-- CHARTS -->
-      <div class="split-main" style="margin-top:18px;">
+      <div class="split-main mt-18">
         <div class="card card-pad chart-container">
           <div class="chart-head">
-            <h3 style="font-size:16px;">Daromad dinamikasi</h3>
-            <div class="chart-legend"><span class="cl"><span class="cl-dot" style="background:var(--teach-green);"></span> Daromad</span></div>
+            <h3>Daromad dinamikasi</h3>
+            <div class="chart-legend"><span class="cl"><span class="cl-dot cl-dot-teach"></span> Daromad</span></div>
           </div>
           <div class="chart-body">
             <span class="chart-placeholder-note">Namuna ma'lumot</span>
@@ -80,79 +86,46 @@
             </svg>
           </div>
           <div class="chart-xaxis"><span>Yan</span><span>Fev</span><span>Mar</span><span>Apr</span><span>May</span><span>Iyun</span><span>Iyul</span></div>
+          <!-- Dashboard'dagi bir xil uslub: kunlik daromad tarixi
+               saqlanmagani uchun chiziq ochiq "namuna" deb belgilanadi. -->
+          <p class="placeholder-note mt-12"><i class="bi bi-info-circle"></i> Kunlik daromad tarixi hali saqlanmaydi — chiziq faqat namuna. Haqiqiy raqamlar: yuqoridagi jami daromad va pastdagi kurslar kesimi.</p>
         </div>
 
         <div class="card card-pad">
           <div class="section-header"><h3>To'lov usuli</h3></div>
-          <div class="payout-method-row">
+          <!-- Karta va bank hisobi — namuna yozuvlar: to'lov usullari
+               do'konda saqlanmaydi va saqlanmasligi ham kerak (karta
+               ma'lumotlari to'lov provayderi tomonida yashaydi). Amallar
+               js/backend-pending.js zimmasida. -->
+          <p class="placeholder-note"><i class="bi bi-info-circle"></i> Quyidagi usullar — namuna: haqiqiy kartalar to'lov tizimi ulangach ko'rinadi.</p>
+          <div class="payout-method-row mt-8">
             <div class="payout-method-ic"><i class="bi bi-credit-card-2-front-fill"></i></div>
-            <div class="flex-1"><div style="font-size:13.5px; font-weight:600;">Visa •••• 4821</div><div style="font-size:12px; color:var(--ink-500);">Asosiy usul</div></div>
+            <div class="flex-1"><div class="payout-method-name">Visa •••• 4821</div><div class="text-xs text-muted">Asosiy usul</div></div>
             <span class="badge badge-green">Tasdiqlangan</span>
           </div>
           <div class="payout-method-row">
             <div class="payout-method-ic"><i class="bi bi-bank"></i></div>
-            <div class="flex-1"><div style="font-size:13.5px; font-weight:600;">Xalq banki hisobi</div><div style="font-size:12px; color:var(--ink-500);">Zaxira usul</div></div>
+            <div class="flex-1"><div class="payout-method-name">Xalq banki hisobi</div><div class="text-xs text-muted">Zaxira usul</div></div>
             <button class="btn btn-outline btn-sm" data-backend-pending="To'lov usulini boshqarish">Boshqarish</button>
           </div>
-          <div style="margin-top:14px;"><button class="btn btn-outline btn-block btn-sm" data-backend-pending="Yangi to'lov usuli qo'shish"><i class="bi bi-plus-lg"></i> Yangi usul qo'shish</button></div>
+          <div class="mt-14"><button class="btn btn-outline btn-block btn-sm" data-backend-pending="Yangi to'lov usuli qo'shish"><i class="bi bi-plus-lg"></i> Yangi usul qo'shish</button></div>
         </div>
       </div>
 
-      <!-- REVENUE BY COURSE -->
-      <div class="card card-pad" style="margin-top:18px;">
-        <div class="section-header"><h3>Kurslar bo'yicha daromad</h3></div>
-        <div class="perf-row">
-          <div class="perf-cover" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div>
-          <div class="perf-info"><div class="perf-title">Python Backend Development</div><div class="perf-sub">248 talaba · 4.9 ★</div></div>
-          <div class="perf-metric"><div class="perf-metric-val" style="color:var(--teach-green);">$1,480</div><div class="perf-metric-lbl">daromad</div></div>
-        </div>
-        <div class="perf-row">
-          <div class="perf-cover" style="background:linear-gradient(135deg,#0F766E,#14B8A6);"><i class="bi bi-database-fill"></i></div>
-          <div class="perf-info"><div class="perf-title">Django REST Masterclass</div><div class="perf-sub">130 talaba · 4.8 ★</div></div>
-          <div class="perf-metric"><div class="perf-metric-val" style="color:var(--teach-green);">$920</div><div class="perf-metric-lbl">daromad</div></div>
-        </div>
-        <div class="perf-row">
-          <div class="perf-cover" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);"><i class="bi bi-box-fill"></i></div>
-          <div class="perf-info"><div class="perf-title">PostgreSQL Complete Guide</div><div class="perf-sub">60 talaba · 4.7 ★</div></div>
-          <div class="perf-metric"><div class="perf-metric-val" style="color:var(--teach-green);">$540</div><div class="perf-metric-lbl">daromad</div></div>
-        </div>
+      <!-- REVENUE BY COURSE — js/instructor-revenue.js `isloh_courses`
+           do'konidan chizadi; ulush foizi ham shu yerda hisoblanadi. -->
+      <div class="card card-pad mt-18">
+        <div class="section-header"><h3 data-i18n="rev.byCourse">Kurslar bo'yicha daromad</h3><a href="courses.html" class="section-action">Kurslarim</a></div>
+        <div data-revenue-courses></div>
       </div>
 
-      <!-- TRANSACTIONS -->
-      <div class="card" style="margin-top:18px; overflow:hidden;">
-        <div style="padding:18px 22px 0;"><h3 style="font-size:16px;">So'nggi tranzaksiyalar</h3></div>
-        <div class="itable-wrap" style="margin-top:10px;">
-          <table class="itable">
-            <thead><tr><th>Talaba</th><th>Kurs</th><th>Sana</th><th>Summa</th><th>Holat</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">BO</div><div class="cell-title">Bekzod Odilov</div></div></td>
-                <td>Python Backend</td><td>Bugun, 14:20</td><td style="font-weight:700;">$45.00</td>
-                <td><span class="badge badge-green">To'landi</span></td>
-              </tr>
-              <tr>
-                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#DB2777,#F472B6);">NY</div><div class="cell-title">Nodira Yusupova</div></div></td>
-                <td>Django REST</td><td>Bugun, 09:05</td><td style="font-weight:700;">$39.00</td>
-                <td><span class="badge badge-green">To'landi</span></td>
-              </tr>
-              <tr>
-                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#059669,#10B981);">SA</div><div class="cell-title">Sardor Aliyev</div></div></td>
-                <td>Python Backend</td><td>Kecha</td><td style="font-weight:700;">$45.00</td>
-                <td><span class="badge badge-warning">Kutilmoqda</span></td>
-              </tr>
-              <tr>
-                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">AK</div><div class="cell-title">Alisher Karimov</div></div></td>
-                <td>PostgreSQL Guide</td><td>2 kun oldin</td><td style="font-weight:700;">$29.00</td>
-                <td><span class="badge badge-green">To'landi</span></td>
-              </tr>
-              <tr>
-                <td><div class="cell-main"><div class="avatar avatar-sm">SI</div><div class="cell-title">Samarqand Islomov</div></div></td>
-                <td>Python Backend</td><td>3 kun oldin</td><td style="font-weight:700; color:var(--danger);">-$45.00</td>
-                <td><span class="badge badge-danger">Qaytarilgan</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <!-- TRANSACTIONS — jurnal uchun har bir to'lovning kim/qachon/qancha
+           yozuvi kerak, bunday do'kon loyihada yo'q. Ilgari bu yerda beshta
+           o'ylab topilgan qator turardi (ulardan biri hech qanday do'konda
+           mavjud bo'lmagan talaba nomidan) — ular olib tashlandi. -->
+      <div class="card card-pad mt-18">
+        <div class="section-header"><h3 data-i18n="rev.transactions">So'nggi tranzaksiyalar</h3></div>
+        <p class="placeholder-note"><i class="bi bi-receipt"></i> Tranzaksiyalar jurnali to'lov tizimi ulangandan keyin paydo bo'ladi — har bir sotuvning sanasi va holati o'sha yerdan keladi.</p>
       </div>
     </main>
   </div>
@@ -166,8 +139,14 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/toast.js"></script>
-<script src="../../js/period-stats.js"></script>
+<!-- Daromad raqamlari kurs do'konidan (js/period-stats.js bu sahifada
+     ataylab yuklanmaydi — davr tanlovi olib tashlandi). -->
+<script src="../../js/course-store.js"></script>
+<script src="../../js/profile-stats.js"></script>
+<script src="../../js/instructor-revenue.js"></script>
 <script src="../../js/backend-pending.js"></script>
 </body>
 </html>

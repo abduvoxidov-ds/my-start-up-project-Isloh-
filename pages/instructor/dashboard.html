@@ -17,13 +17,13 @@
 
   <div class="main-col">
     <header class="topbar">
-      <div style="display:flex; align-items:center; gap:16px; min-width:0;">
+      <div class="flex items-center gap-16 min-w-0">
         <nav class="breadcrumb-demo" aria-label="Breadcrumb">
           <span>Instructor</span><span class="sep">/</span><span class="current">Dashboard</span>
         </nav>
       </div>
       <div class="topbar-actions">
-        <div class="topbar-search" style="width:240px;"><i class="bi bi-search"></i><input placeholder="Kurs, talaba qidirish..." aria-label="Qidirish"></div>
+        <div class="topbar-search sw-240"><i class="bi bi-search"></i><input placeholder="Kurs, talaba qidirish..." aria-label="Qidirish"></div>
         <a href="../instructor/notifications.html" class="icon-btn" aria-label="Bildirishnomalar"><i class="bi bi-bell-fill"></i><span class="dot"></span></a>
         <div class="avatar avatar-teach">AY</div>
       </div>
@@ -118,7 +118,7 @@
              olib boradi, chunki bu raqam harakat talab qiladi. -->
         <a href="assignments.html" class="card card-pad stat-card text-inherit">
           <div class="stat-icon tint-danger"><i class="bi bi-file-earmark-text-fill"></i></div>
-          <div class="stat-value" data-stat="pendingSubmissions">—</div><div class="stat-label">Kutayotgan topshiriqlar</div>
+          <div class="stat-value" data-stat="pendingSubmissions">—</div><div class="stat-label">Baholash navbati</div>
         </a>
       </div>
 
@@ -207,14 +207,15 @@
           <a href="live-sessions.html" class="btn btn-outline btn-sm mt-12">Jonli sessiyalar</a>
         </div>
 
-        <!-- Talabalar. Ro'yxatga olish (enrollment) do'koni hali yo'q, shuning
-             uchun "so'nggi talabalar" ro'yxati ham to'qib chiqarilmaydi.
-             Ko'rsatiladigan yagona haqiqiy raqam — jami talabalar soni. -->
+        <!-- Talabalar. Yuqoridagi raqam — kurs yozuvlaridagi umumiy sotuv
+             soni (js/profile-stats.js), pastdagi ro'yxat esa
+             js/enrollment-store.js dagi `isloh_enrollments` do'konidan:
+             kim qachon ro'yxatga olingani endi saqlanadi. -->
         <div class="card card-pad">
           <div class="section-header"><h3>Talabalar</h3><a href="students.html" class="section-action">Barchasi</a></div>
           <div class="stat-value" data-stat="students">—</div>
           <div class="stat-label">Nashr etilgan kurslardagi jami talabalar</div>
-          <p class="placeholder-note mt-12"><i class="bi bi-info-circle"></i> Kim qachon ro'yxatga olingani hali saqlanmaydi — ro'yxat backend ulanganda paydo bo'ladi.</p>
+          <div class="mt-12" data-dash-recent-students></div>
         </div>
       </div>
 
@@ -274,7 +275,9 @@
 <script src="../../js/course-store.js"></script>
 <!-- "Kutayotgan topshiriqlar" ko'rsatkichi baholash navbatidan hisoblanadi -->
 <script src="../../js/assignment-store.js"></script>
+<script src="../../js/enrollment-store.js"></script>
 <script src="../../js/profile-stats.js"></script>
 <script src="../../js/instructor-dashboard.js"></script>
+<script src="../../js/notification-store.js"></script>
 </body>
 </html>

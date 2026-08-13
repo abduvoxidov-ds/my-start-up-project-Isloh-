@@ -22,8 +22,7 @@ function isloh_csvCell(text) {
 
 /* Katakning "ma'noli" matni. Ikki maxsus holat bor:
      - jarayon chizig'ida matn yo'q, qiymat CSS kengligida turadi;
-     - avatar ichidagi bosh harflar ismning oldiga yopishib qoladi.
-   js/instructor-students.js ham shu funksiyani ishlatadi. */
+     - avatar ichidagi bosh harflar ismning oldiga yopishib qoladi. */
 function isloh_cellText(cell) {
   const progress = cell.querySelector('.progress-fill');
   if (progress) return progress.style.width || '';

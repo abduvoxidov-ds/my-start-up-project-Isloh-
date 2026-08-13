@@ -16,8 +16,9 @@
      "Kurs materiallari"                     → assignment / quiz / resource
                                                 do'konlari
      "Yakunlash xulosasi"                    → kursning `completion` maydoni
-   Sharhlar ro'yxati va daromad dinamikasi hech qanday do'konda yo'q,
-   shuning uchun ular `.placeholder-note` bilan ochiq belgilangan
+     "So'nggi sharhlar"                      → js/review-store.js
+   Daromad dinamikasi hech qanday do'konda yo'q (kunlik tarix saqlanmaydi),
+   shuning uchun u `.placeholder-note` bilan ochiq belgilangan
    (CLAUDE.md §4).
 
    Markup shartnomasi:
@@ -25,6 +26,7 @@
      [data-course-detail-stat="…"]  → statistika kartochkalari
      [data-course-modules]          → modullar ro'yxati
      [data-course-materials]        → materiallar hisoblagichlari
+     [data-course-reviews]          → shu kursning sharhlari
      [data-course-link="<sahifa>"]  → havolaga ?id= qo'shiladi (course-store)
    ========================================================================== */
 
@@ -102,6 +104,59 @@ function isloh_renderCourseMaterials(course) {
     </a>`).join('');
 }
 
+/* --- So'nggi sharhlar -----------------------------------------------------
+   Ilgari bu blokda "sharhlar do'koni hali yo'q" degan izoh turardi. Endi
+   shu kursning sharhlari js/review-store.js dan chiziladi; javob berish
+   sharhlar sahifasida qoladi, bu yerda faqat ko'rinadi. */
+
+const ISLOH_COURSE_REVIEW_LIMIT = 3;
+
+function isloh_courseReviewHtml(review) {
+  const reply = isloh_getReviewReply(review.id);
+  const replyBlock = reply
+    ? `<div class="review-reply"><div class="lbl">Sizning javobingiz</div><div class="txt">${reply}</div></div>`
+    : '';
+
+  return `<div class="review-card">
+    <div class="avatar avatar-sm"${review.avatar ? ` style="background:${review.avatar};"` : ''}>${isloh_getUserInitials(review.studentName)}</div>
+    <div class="flex-1 min-w-0">
+      <div class="review-head">
+        <span class="review-name">${review.studentName}</span>
+        <span class="rating-stars">${isloh_reviewStarsHtml(review.rating)}</span>
+        <span class="review-time">${isloh_reviewTimeLabel(review)}</span>
+      </div>
+      <div class="review-text">${review.text}</div>
+      ${replyBlock}
+    </div>
+  </div>`;
+}
+
+function isloh_renderCourseReviews(course) {
+  const mount = document.querySelector('[data-course-reviews]');
+  if (!mount) return;
+
+  /* Do'kon ulanmagan sahifada soxta sharh chizilmaydi. */
+  if (typeof isloh_getCourseReviews !== 'function') {
+    mount.innerHTML = `<p class="placeholder-note"><i class="bi bi-info-circle"></i> Sharhlar moduli bu sahifaga ulanmagan.</p>`;
+    return;
+  }
+
+  const reviews = isloh_getCourseReviews(course.id);
+  if (!reviews.length) {
+    mount.innerHTML = `<p class="placeholder-note"><i class="bi bi-info-circle"></i> Bu kursga hali sharh qoldirilmagan.</p>`;
+    return;
+  }
+
+  const stats = isloh_reviewStats(course.id);
+  let html = reviews.slice(0, ISLOH_COURSE_REVIEW_LIMIT).map(isloh_courseReviewHtml).join('');
+
+  /* Ro'yxat qisqartirilgan bo'lsa, nechtasi ko'rinmagani ochiq aytiladi. */
+  if (reviews.length > ISLOH_COURSE_REVIEW_LIMIT) {
+    html += `<p class="text-xs text-muted mt-8">Jami ${stats.total} ta sharh · o'rtacha ${stats.average.toFixed(1)} ★ — barchasi "Sharhlar" bo'limida.</p>`;
+  }
+  mount.innerHTML = html;
+}
+
 /* --- Render --------------------------------------------------------------- */
 
 function isloh_renderCourseDetails() {
@@ -166,8 +221,10 @@ function isloh_renderCourseDetails() {
 
   isloh_renderCourseModules(course);
   isloh_renderCourseMaterials(course);
+  isloh_renderCourseReviews(course);
 
   /* Barcha amal havolalari joriy kursni olib yuradi. */
+  document.querySelectorAll('[data-course-crumb]').forEach((el) => { el.textContent = course.title; });
   isloh_applyCourseLinks(course.id);
   document.title = course.title + ' — Isloh';
 }

@@ -12,6 +12,11 @@
      js/certificate-engine.js -> isloh_getCertificates()     (sertifikatlar)
      js/progress-metrics.js   -> isloh_getAnalytics()        (soat, seriya)
      js/course-store.js       -> isloh_getPublishedCourses() (provayder)
+     js/enrollment-store.js   -> isloh_enrollmentStats()     (talabalar)
+     js/review-store.js       -> isloh_reviewStats()         (sharhlar)
+     js/assignment-store.js   -> isloh_assignmentStats()     (topshiriqlar)
+     js/quiz-store.js         -> isloh_quizStats()           (testlar)
+     js/resource-store.js     -> isloh_libraryStats()        (resurslar)
      js/profile.js            -> isloh_getActiveRole()       (qaysi rol)
 
    Markup shartnomasi:
@@ -23,7 +28,15 @@
      instructor -> publishedCourses | students | rating | teachingHours |
                    draftCourses | archivedCourses | ratedCourses |
                    totalRevenue | totalLessons | avgCompletion |
-                   pendingSubmissions
+                   pendingSubmissions | enrolledStudents | activeStudents |
+                   inactiveStudents | avgProgress | reviewAverage |
+                   reviewCount | replyRate | pendingReplies |
+                   totalAssignments | totalQuizzes | totalResources |
+                   earningCourses | avgCoursePrice
+
+   DAVRGA BOG'LIQ raqamlar bu yerda emas — ular js/period-stats.js da
+   (`[data-period-stat]`), chunki ular sanali do'konlardan oyna bo'yicha
+   hisoblanadi va tanlangan davrga qarab o'zgaradi.
 
    Modul faqat profil sahifasiga tegishli emas: `[data-stat]` bor istalgan
    sahifada ishlaydi (instruktor dashboard'i ham shu shartnomadan
@@ -164,6 +177,103 @@ function isloh_statPendingSubmissions() {
   return stats.pending + stats.late;
 }
 
+/* --- Kontent hajmi (topshiriq / test / resurs do'konlari) -----------------
+   Analitika sahifasidagi "nima yaratilgan" kartochkalari. Har bir raqam o'z
+   do'konining STATISTIKA funksiyasidan olinadi — bu yerda qayta sanalmaydi,
+   aks holda "topshiriq" ta'rifi ikki joyda yashardi. */
+
+function isloh_statTotalAssignments() {
+  if (typeof isloh_assignmentStats !== 'function') return null;
+  return isloh_assignmentStats().total;
+}
+
+function isloh_statTotalQuizzes() {
+  if (typeof isloh_quizStats !== 'function') return null;
+  return isloh_quizStats().total;
+}
+
+/* Faqat faol (arxivlanmagan) resurslar — kutubxona ham shu sonni ko'rsatadi. */
+function isloh_statTotalResources() {
+  if (typeof isloh_libraryStats !== 'function') return null;
+  return isloh_libraryStats().total;
+}
+
+/* --- Daromad ko'rsatkichlari (js/course-store.js) -------------------------
+   Kunlik/oylik daromad tarixi hech qanday do'konda yo'q, shuning uchun bu
+   yerdagi hammasi KURS YOZUVIDAGI umrbod qiymatlardan hisoblanadi (davrga
+   bog'liq emas). Davr kesimidagi raqamlar revenue.html da `.placeholder-note`
+   bilan ochiq belgilangan. */
+
+/* Nechta kurs umuman pul keltirgan — arxivlangani ham sanaladi, pul
+   allaqachon ishlangan (isloh_statTotalRevenue bilan bir xil mantiq). */
+function isloh_statEarningCourses() {
+  if (typeof isloh_getCourses !== 'function') return null;
+  return isloh_getCourses().filter((course) => (course.revenue || 0) > 0).length;
+}
+
+/* O'rtacha kurs narxi — faqat nashr etilgan va BEPUL BO'LMAGAN kurslar:
+   bepul kurslar o'rtachani sun'iy ravishda pasaytirardi. */
+function isloh_statAvgCoursePrice() {
+  if (typeof isloh_getPublishedCourses !== 'function') return null;
+  const paid = isloh_getPublishedCourses().filter((course) => !course.free && course.price > 0);
+  if (!paid.length) return 0;
+  return paid.reduce((sum, course) => sum + course.price, 0) / paid.length;
+}
+
+/* --- Ro'yxatga olish ko'rsatkichlari (js/enrollment-store.js) -------------
+   Talabalar sahifasidagi 4 ta kartochka. Diqqat: bu yerdagi "jami" —
+   ro'yxatga olish YOZUVLARI bo'yicha noyob talabalar soni, yuqoridagi
+   isloh_statTotalStudents() esa kurs yozuvlaridagi umumiy sotuv sonini
+   qaytaradi. Ikkalasi boshqa savolga javob beradi va demo ma'lumotda
+   farq qiladi — farq students.html da ochiq izohlanadi. */
+
+function isloh_enrollmentStatValue(field) {
+  if (typeof isloh_enrollmentStats !== 'function') return null;
+  return isloh_enrollmentStats()[field];
+}
+
+function isloh_statEnrolledStudents() {
+  return isloh_enrollmentStatValue('total');
+}
+
+function isloh_statActiveStudents() {
+  return isloh_enrollmentStatValue('active');
+}
+
+function isloh_statInactiveStudents() {
+  return isloh_enrollmentStatValue('inactive');
+}
+
+function isloh_statAvgProgress() {
+  return isloh_enrollmentStatValue('avgProgress');
+}
+
+/* --- Sharh ko'rsatkichlari (js/review-store.js) ---------------------------
+   Sharhlar sahifasidagi 4 ta kartochka. Javob berilgan/berilmagan holati
+   `isloh_review_replies` do'konidan kelib chiqadi, ya'ni javob yozilishi
+   bilan uchala raqam ham qayta hisoblanadi. */
+
+function isloh_reviewStatValue(field) {
+  if (typeof isloh_reviewStats !== 'function') return null;
+  return isloh_reviewStats()[field];
+}
+
+function isloh_statReviewAverage() {
+  return isloh_reviewStatValue('average');
+}
+
+function isloh_statReviewCount() {
+  return isloh_reviewStatValue('total');
+}
+
+function isloh_statReplyRate() {
+  return isloh_reviewStatValue('replyRate');
+}
+
+function isloh_statPendingReplies() {
+  return isloh_reviewStatValue('pending');
+}
+
 /* Nashr etilgan kurslarning o'rtacha yakunlash darajasi. Qoralamalarda
    `completion` butunlay boshqa narsani anglatadi ("necha foizi tayyor"),
    shuning uchun ular hisobga kirmaydi. */
@@ -196,7 +306,23 @@ const ISLOH_PROFILE_STATS = {
     totalRevenue: isloh_statTotalRevenue,
     totalLessons: isloh_statTotalLessons,
     avgCompletion: isloh_statAvgCompletion,
-    pendingSubmissions: isloh_statPendingSubmissions
+    pendingSubmissions: isloh_statPendingSubmissions,
+    /* Analitika sahifasi (kontent hajmi va daromad kesimi) */
+    totalAssignments: isloh_statTotalAssignments,
+    totalQuizzes: isloh_statTotalQuizzes,
+    totalResources: isloh_statTotalResources,
+    earningCourses: isloh_statEarningCourses,
+    avgCoursePrice: isloh_statAvgCoursePrice,
+    /* Talabalar sahifasi (ro'yxatga olish do'koni) */
+    enrolledStudents: isloh_statEnrolledStudents,
+    activeStudents: isloh_statActiveStudents,
+    inactiveStudents: isloh_statInactiveStudents,
+    avgProgress: isloh_statAvgProgress,
+    /* Sharhlar sahifasi */
+    reviewAverage: isloh_statReviewAverage,
+    reviewCount: isloh_statReviewCount,
+    replyRate: isloh_statReplyRate,
+    pendingReplies: isloh_statPendingReplies
   }
 };
 
@@ -205,8 +331,13 @@ const ISLOH_PROFILE_STATS = {
    shunda formatlash mantiqi markupda emas, bitta jadvalda qoladi. */
 const ISLOH_STAT_FORMATS = {
   rating: (v) => v.toFixed(1),
+  reviewAverage: (v) => v.toFixed(1),
   totalRevenue: (v) => (typeof isloh_formatUsd === 'function' ? isloh_formatUsd(v) : isloh_formatStatCount(v)),
-  avgCompletion: (v) => isloh_formatStatCount(v) + '%'
+  /* Narx — dollar va sentlar bilan ($49.33): kurs narxlari butun son emas. */
+  avgCoursePrice: (v) => '$' + (Number(v) || 0).toFixed(2),
+  avgCompletion: (v) => isloh_formatStatCount(v) + '%',
+  avgProgress: (v) => isloh_formatStatCount(v) + '%',
+  replyRate: (v) => isloh_formatStatCount(v) + '%'
 };
 
 function isloh_formatStat(key, value) {
@@ -248,4 +379,9 @@ document.addEventListener('isloh:user-updated', isloh_renderProfileStats);
    nashr etilgani yoki o'chirilgani raqamlarni ham darhol yangilashi kerak —
    aks holda dashboard sahifa yangilanmaguncha eski sonni ko'rsatib turardi. */
 document.addEventListener('isloh:courses-updated', isloh_renderProfileStats);
+
+/* Xuddi shu sabab qolgan do'konlar uchun ham: talaba ro'yxatga olinsa yoki
+   sharhga javob yozilsa, kartochkalardagi raqamlar darhol yangilanadi. */
+document.addEventListener('isloh:enrollments-updated', isloh_renderProfileStats);
+document.addEventListener('isloh:reviews-updated', isloh_renderProfileStats);
 document.addEventListener('DOMContentLoaded', isloh_renderProfileStats);

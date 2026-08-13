@@ -7,10 +7,6 @@
 <title>Darsni tahrirlash — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  /* Page-local layout only. Editor widgets live in css/widgets.css. */
-  .editor-shell { max-width: 880px; margin: 0 auto; }
-</style>
 </head>
 <body>
 <div class="app-shell">
@@ -31,18 +27,18 @@
 
     <main class="content" data-unsaved-scope data-unsaved-store="lesson" data-ai-context="lesson-editor">
       <div class="page-header">
-        <div style="flex:1; min-width:260px;">
-          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div class="page-head-main">
+          <div class="flex items-center gap-10 flex-wrap">
             <span class="badge badge-warning" data-lesson-status-badge>—</span>
             <span class="unsaved-badge" data-unsaved-indicator hidden><i class="bi bi-exclamation-circle-fill"></i> Saqlanmagan o'zgarishlar</span>
           </div>
-          <div class="field" style="margin:10px 0 0; max-width:480px;">
-            <input id="lesson-title-input" data-lesson-field="title" style="font-size:18px; font-weight:700; font-family:var(--font-display); padding:10px 14px;" data-char-counter="100" maxlength="100">
+          <div class="field mt-10 mb-0 mw-480">
+            <input class="title-input" id="lesson-title-input" data-lesson-field="title" data-char-counter="100" maxlength="100">
             <div class="field-hint" data-char-counter-for="lesson-title-input">11 / 100</div>
-            <button class="ai-action-chip teach" style="margin-top:8px;" data-ai-quick="lesson-editor:title"><i class="bi bi-type"></i> AI: Sarlavha takliflari</button>
+            <button class="ai-action-chip teach mt-8" data-ai-quick="lesson-editor:title"><i class="bi bi-type"></i> AI: Sarlavha takliflari</button>
           </div>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="flex gap-8 flex-wrap">
           <a href="lesson-builder.html" class="btn btn-outline btn-sm" data-lesson-back><i class="bi bi-arrow-left"></i> Darslarga qaytish</a>
           <a href="discussions.html" class="btn btn-outline btn-sm"><i class="bi bi-chat-square-text"></i> Talaba savollari</a>
           <button class="btn btn-outline btn-sm" data-ai-drawer-trigger><i class="bi bi-stars"></i> AI Yordamchi</button>
@@ -50,7 +46,7 @@
         </div>
       </div>
 
-      <div class="editor-shell" style="margin-top:20px;" data-tabs>
+      <div class="editor-shell mt-20" data-tabs>
         <div class="tab-strip" role="tablist" aria-label="Dars muharriri bo'limlari">
           <div class="tab-item active" data-tab-target="content">Kontent</div>
           <div class="tab-item" data-tab-target="resources">Resurslar</div>
@@ -59,12 +55,12 @@
         </div>
 
         <!-- CONTENT TAB -->
-        <div data-tab-panel="content" style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="content">
 
           <div class="card card-pad editor-block">
             <div class="editor-block-label"><i class="bi bi-play-circle-fill"></i> Video</div>
             <div class="upload-dropzone"><i class="bi bi-camera-video"></i><div class="dz-title">intro-video.mp4 yuklangan</div><div class="dz-sub">4:32 · O'zgartirish uchun bosing</div></div>
-            <div class="field" style="margin-top:12px; margin-bottom:0;"><label for="video-url">Yoki tashqi video havolasi</label><input id="video-url" placeholder="https://youtube.com/watch?v=..." value="https://youtube.com/watch?v=isloh-intro"></div>
+            <div class="field mt-12 mb-0"><label for="video-url">Yoki tashqi video havolasi</label><input id="video-url" placeholder="https://youtube.com/watch?v=..." value="https://youtube.com/watch?v=isloh-intro"></div>
           </div>
 
           <div class="card card-pad editor-block">
@@ -82,15 +78,15 @@
               <button aria-label="Sitata"><i class="bi bi-quote"></i></button>
             </div>
             <textarea class="editor-textarea" data-char-counter="1000" id="lesson-text" data-ai-insert-target maxlength="1000">Ushbu darsda kursga umumiy kirish qilamiz va nimalarni o'rganishingizni ko'rib chiqamiz.</textarea>
-            <div class="field-hint" data-char-counter-for="lesson-text" style="margin-top:6px;">87 / 1000</div>
+            <div class="field-hint mt-6" data-char-counter-for="lesson-text">87 / 1000</div>
           </div>
 
           <div class="card card-pad editor-block">
             <div class="editor-block-label"><i class="bi bi-code-slash"></i> Kod bloki</div>
-            <div class="field" style="max-width:200px;"><label for="code-lang">Til</label>
+            <div class="field mw-200"><label for="code-lang">Til</label>
               <select id="code-lang" class="btn btn-outline select-block"><option>Python</option><option>JavaScript</option><option>Bash</option><option>SQL</option></select>
             </div>
-            <textarea class="editor-textarea" style="font-family:'SFMono-Regular',Consolas,monospace; background:#191830; color:#E4E2F5; border:none;" rows="4">print("Salom, Isloh!")</textarea>
+            <textarea class="editor-textarea code-input" rows="4">print("Salom, Isloh!")</textarea>
           </div>
 
           <div class="card card-pad editor-block">
@@ -109,10 +105,10 @@
               <div class="download-row">
                 <i class="bi bi-file-earmark-zip-fill text-muted"></i>
                 <input value="starter-files.zip" readonly>
-                <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+                <button class="icon-btn icon-btn-md" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
               </div>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="download-row-template"><i class="bi bi-plus-lg"></i> Fayl qo'shish</button>
+            <button type="button" class="btn btn-outline btn-sm mt-10" data-add-row="download-row-template"><i class="bi bi-plus-lg"></i> Fayl qo'shish</button>
           </div>
 
           <div class="card card-pad editor-block">
@@ -121,10 +117,10 @@
               <div class="link-row">
                 <i class="bi bi-box-arrow-up-right text-muted"></i>
                 <input value="https://docs.docker.com" readonly>
-                <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+                <button class="icon-btn icon-btn-md" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
               </div>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="link-row-template"><i class="bi bi-plus-lg"></i> Havola qo'shish</button>
+            <button type="button" class="btn btn-outline btn-sm mt-10" data-add-row="link-row-template"><i class="bi bi-plus-lg"></i> Havola qo'shish</button>
           </div>
 
           <div class="card card-pad editor-block">
@@ -134,9 +130,12 @@
         </div>
 
         <!-- RESOURCES TAB -->
-        <div data-tab-panel="resources" hidden style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="resources" hidden>
           <div class="card card-pad">
-            <div class="section-header"><h3>Resurslar</h3><div style="display:flex; gap:8px;"><a href="resource-library.html" class="btn btn-outline btn-sm"><i class="bi bi-collection"></i> Kutubxonadan tanlash</a><button type="button" class="btn btn-teach btn-sm" data-add-row="resource-card-template" data-marks-dirty><i class="bi bi-plus-lg"></i> Resurs qo'shish</button></div></div>
+            <div class="section-header"><h3>Resurslar</h3><div class="flex gap-8"><a href="resource-library.html" class="btn btn-outline btn-sm"><i class="bi bi-collection"></i> Kutubxonadan tanlash</a><button type="button" class="btn btn-teach btn-sm" data-add-row="resource-card-template" data-marks-dirty><i class="bi bi-plus-lg"></i> Resurs qo'shish</button></div></div>
+            <!-- `.resource-icon` foni — resurs TURIDAN kelgan rang (PDF qizil,
+                 ZIP kulrang ...), ya'ni ma'lumot qiymati. Shuning uchun
+                 inline qoladi (CLAUDE.md §2). -->
             <div class="resource-grid" data-row-list="resource-card-template" data-sortable-list>
               <div class="card resource-card" draggable="true" data-sortable-item>
                 <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
@@ -191,7 +190,7 @@
         </div>
 
         <!-- SETTINGS TAB -->
-        <div data-tab-panel="settings" hidden style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="settings" hidden>
           <div class="card card-pad">
             <div class="settings-section-title">Dars sozlamalari</div>
             <div class="settings-section-sub">Turi, davomiyligi va ko'rinishini belgilang.</div>
@@ -205,7 +204,7 @@
 
             <div class="field">
               <label>Ko'rinish</label>
-              <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="flex-col gap-8">
                 <label class="opt-row"><input type="radio" name="lesson-visibility" value="public" data-lesson-radio="visibility"> Ochiq — barcha ro'yxatdan o'tgan talabalar ko'ra oladi</label>
                 <label class="opt-row"><input type="radio" name="lesson-visibility" value="hidden" data-lesson-radio="visibility"> Yashirin — faqat instruktor ko'ra oladi</label>
                 <label class="opt-row"><input type="radio" name="lesson-visibility" value="preview" data-lesson-radio="visibility"> Bepul namuna — ro'yxatdan o'tmagan foydalanuvchilar ham ko'ra oladi</label>
@@ -228,25 +227,25 @@
         </div>
 
         <!-- PREVIEW TAB -->
-        <div data-tab-panel="preview" hidden style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="preview" hidden>
           <div class="lesson-preview-frame">
             <div class="lesson-preview-video">
               <div class="play-btn"><i class="bi bi-play-fill"></i></div>
             </div>
             <div class="lesson-preview-body">
-              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                <h2 style="font-size:19px;" data-lesson-out="title">—</h2>
+              <div class="flex items-center gap-10 flex-wrap">
+                <h2 data-lesson-out="title">—</h2>
                 <span class="badge badge-violet" data-lesson-out="summary">—</span>
               </div>
-              <p style="font-size:13.5px; color:var(--ink-700); line-height:1.7; margin-top:12px;">
+              <p class="preview-lead mt-12">
                 Ushbu darsda kursga umumiy kirish qilamiz va nimalarni o'rganishingizni ko'rib chiqamiz.
               </p>
-              <div class="section-header" style="margin-top:20px;"><h3 style="font-size:14px;">Resurslar</h3></div>
+              <div class="section-header mt-20"><h3>Resurslar</h3></div>
               <div class="resource-grid">
                 <div class="card resource-card"><div class="resource-icon" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div><div class="resource-body"><div class="resource-name">Docker_cheat_sheet.pdf</div><div class="resource-meta">PDF · 340 KB</div></div></div>
                 <div class="card resource-card"><div class="resource-icon" style="background:var(--ink-500);"><i class="bi bi-file-earmark-zip-fill"></i></div><div class="resource-body"><div class="resource-name">starter-files.zip</div><div class="resource-meta">ZIP · 1.2 MB</div></div></div>
               </div>
-              <p style="font-size:11.5px; color:var(--ink-300); margin-top:18px;"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan sahifaning taxminiy ko'rinishi — faqat oldindan ko'rish rejimi.</p>
+              <p class="preview-note mt-18"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan sahifaning taxminiy ko'rinishi — faqat oldindan ko'rish rejimi.</p>
             </div>
           </div>
         </div>
@@ -259,7 +258,7 @@
   <div class="link-row">
     <i class="bi bi-box-arrow-up-right text-muted"></i>
     <input placeholder="https://...">
-    <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+    <button class="icon-btn icon-btn-md" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
   </div>
 </template>
 
@@ -267,7 +266,7 @@
   <div class="download-row">
     <i class="bi bi-file-earmark-arrow-down-fill text-muted"></i>
     <input placeholder="fayl-nomi.pdf">
-    <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+    <button class="icon-btn icon-btn-md" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
   </div>
 </template>
 
@@ -292,6 +291,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/draft-store.js"></script>

@@ -22,6 +22,11 @@
 .gap-20 { gap: var(--sp-5); }
 .gap-24 { gap: var(--sp-6); }
 
+/* 10px — loyihada eng ko'p uchraydigan "shkaladan tashqari" oraliq
+   (tugmalar qatori, sarlavha yonidagi nishonlar). Quyidagi margin
+   izohiga qara: qiymat ataylab yaxlitlanmadi. */
+.gap-10 { gap: 10px; }
+
 .ml-auto { margin-left: auto; }
 
 /* --- Kenglik (foiz) ---
@@ -42,6 +47,37 @@
 .mt-20 { margin-top: var(--sp-5); }
 .mt-24 { margin-top: var(--sp-6); }
 
+/* --- Shkaladan tashqari oraliqlar (6/10/14/18/22) ---
+   Bular loyihaning MAVJUD ritmi: sahifalar shu bo'shliqlar bilan chizilgan
+   va ular inline `style="margin-top:22px"` ko'rinishida yozilgan edi. Ularni
+   4px shkalasiga "yaxlitlash" ko'rinishni o'zgartirardi, 8-bosqichning
+   sharti esa — bironta sahifa ko'rinishi o'zgarmasligi. Shuning uchun
+   qiymatlar saqlandi, faqat inline'dan klassga ko'chirildi. Ritmni
+   tokenlarga keltirish alohida DIZAYN qarori, refactoring emas. */
+.mt-6 { margin-top: 6px; }
+.mt-10 { margin-top: 10px; }
+.mt-14 { margin-top: 14px; }
+.mt-18 { margin-top: 18px; }
+.mt-22 { margin-top: 22px; }
+
+/* --- Margin-bottom ---
+   `.mb-0` eng ko'p ishlatiladigan utility: kartochka yoki modal ichidagi
+   OXIRGI `.field` ning pastki bo'shlig'ini olib tashlaydi. */
+.mb-0 { margin-bottom: 0; }
+.mb-8 { margin-bottom: var(--sp-2); }
+.mb-10 { margin-bottom: 10px; }
+.mb-12 { margin-bottom: var(--sp-3); }
+
+/* --- Maksimal kenglik ---
+   Tor maydonlar (daqiqa, ball, foiz) va o'qish qulayligi uchun cheklangan
+   matn bloklari. Piksel qiymatlari mavjud sahifalardan olindi. */
+.mw-160 { max-width: 160px; }
+.mw-200 { max-width: 200px; }
+.mw-400 { max-width: 400px; }
+.mw-420 { max-width: 420px; }
+.mw-440 { max-width: 440px; }
+.mw-480 { max-width: 480px; }
+
 /* --- Text helpers --- */
 .text-sm { font-size: 13px; }
 .text-xs { font-size: 12px; }
@@ -56,6 +92,10 @@
 .text-inherit { color: inherit; }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+/* Kartochka ichidagi jadval yoki grafik chetidan chiqib ketmasligi uchun
+   (ilgari `style="overflow:hidden"` — ayniqsa `.itable-wrap` o'ramlarida) */
+.overflow-hidden { overflow: hidden; }
+
 /* --- Faqat skrin-riderlar uchun matn (ko'rinmaydigan yorliqlar) --- */
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -69,3 +109,40 @@
   .hide-mobile { display: none; }
   .show-mobile { display: initial; }
 }
+
+/* --- Qolgan mayda yordamchilar (8-bosqich) --- */
+.text-center { text-align: center; }
+.text-warning { color: var(--warning); }
+.p-0 { padding: 0; }
+.mt-26 { margin-top: 26px; }
+.mb-16 { margin-bottom: var(--sp-4); }
+.min-w-0 { min-width: 0; }
+.mt-2 { margin-top: 2px; }
+.mb-18 { margin-bottom: 18px; }
+.gap-6 { gap: 6px; }
+.items-end { align-items: flex-end; }
+.mw-460 { max-width: 460px; }
+.mw-560 { max-width: 560px; }
+.mw-640 { max-width: 640px; }
+/* Havola rangi — matn ichidagi havolalar uchun (ilgari inline) */
+.text-violet { color: var(--violet-600); }
+/* Ikki uchga tarqaladigan qator (kartochka ichida) — `.page-header` bilan
+   bir xil qoidalar, lekin u sahifa sarlavhasiga tegishli semantik nom. */
+.row-between { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); flex-wrap: wrap; }
+
+/* ==========================================================================
+   NIMA UCHUN BA'ZI `style="..."` LAR SAHIFADA QOLDI (8-bosqich)
+
+   CLAUDE.md §2 inline stillarni taqiqlaydi, lekin bu qoida KO'RINISH
+   qarorlariga tegishli. Quyidagilar esa ma'lumot yoki JS holati:
+
+     style="width:64%"    — progress-fill: qiymatni do'kon/JS beradi
+     style="height:85%"   — grafik ustuni: namuna ma'lumot qiymati
+     style="background:#DC2626" — resurs turi yoki kurs muqovasi rangi
+     style="display:none" — js/filterable.js `style.display` ni
+        to'g'ridan-to'g'ri yozadi; klassga ko'chirilsa, JS elementni
+        ko'rsatmoqchi bo'lganda ham klass ustun kelib, u yashirin qolardi.
+
+   Ya'ni bu qiymatlar CSS'ga ko'chirilmaydi — ular sahifaning ko'rinishi
+   emas, mazmuni.
+   ========================================================================== */

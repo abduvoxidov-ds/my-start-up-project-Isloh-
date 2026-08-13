@@ -42,6 +42,9 @@
 }
 /* Modal sarlavhasidagi "×" — ilgari `style="width:28px;height:28px"` bilan */
 .icon-btn-sm { width: 28px; height: 28px; font-size: 14px; }
+/* Qator ichidagi "o'chirish" tugmasi (havola/fayl qatorlari) — 38px juda
+   katta, 28px esa juda kichik edi; ilgari `style="width:32px;height:32px"`. */
+.icon-btn-md { width: 32px; height: 32px; }
 .icon-btn .dot {
   position: absolute; top: 8px; right: 9px;
   width: 7px; height: 7px; border-radius: 50%;
@@ -326,7 +329,10 @@ button.dropdown-item { width:100%; background:none; border:none; font-family:inh
 
 /* Davr tanlagich (analitika / daromad) — ilgari har sahifada
    `style="border-radius:var(--r-md)"` deb yozilardi */
-.period-select { border-radius: var(--r-md); }
+/* <select> tugma ko'rinishida: `.btn` pill radiusini beradi, ochiladigan
+   ro'yxat esa to'rtburchakroq ko'rinishi kerak. `.period-select` — shu
+   qoidaning davr tanlovidagi tarixiy nomi. */
+.period-select, .select-btn { border-radius: var(--r-md); }
 
 /* Tooltip */
 .tooltip-wrap { position:relative; display:inline-block; }
@@ -353,6 +359,9 @@ button.dropdown-item { width:100%; background:none; border:none; font-family:inh
 /* Modal (also used as the real overlay target by js/modal.js) */
 .modal-demo, .modal { border:1px solid var(--border-soft); border-radius:var(--r-lg); box-shadow:var(--shadow-lg); max-width:340px; background:var(--bg-card); }
 .modal-demo .modal-head, .modal .modal-head { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; border-bottom:1px solid var(--border-soft); }
+/* Modal sarlavhasi <h3> bilan yozilgan sahifalarda o'lcham bir xil bo'lsin
+   (ilgari har birida `style="font-size:15px"` turardi) */
+.modal .modal-head h3 { font-size: 15px; }
 .modal-demo .modal-body, .modal .modal-body { padding:18px; font-size:13.5px; color:var(--ink-700); }
 .modal-demo .modal-foot, .modal .modal-foot { display:flex; justify-content:flex-end; gap:8px; padding:14px 18px; border-top:1px solid var(--border-soft); }
 .modal-overlay { position: fixed; inset: 0; background: rgba(23,18,59,0.45); display:flex; align-items:center; justify-content:center; z-index: var(--z-overlay); }
@@ -382,3 +391,10 @@ body.modal-open { overflow: hidden; }
 .modal-confirm-word { font-weight:700; }
 
 code.inline { background:var(--bg-app); padding:2px 6px; border-radius:5px; font-size:12px; color:var(--violet-600); }
+
+/* Izoh ichidagi eng kichik ikonka tugmasi (qadash). Faqat o'lcham —
+   ikonka o'lchami `.icon-btn` dan meros qoladi (ilgari ham shunday edi). */
+.icon-btn-xs { width: 22px; height: 22px; }
+
+/* Modal ichidagi tushuntirish matni (o'chirish tasdig'i kabi) */
+.modal-text { font-size: 13.5px; color: var(--ink-700); }

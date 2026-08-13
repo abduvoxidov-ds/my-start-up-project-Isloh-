@@ -31,7 +31,7 @@
       </div>
 
       <!-- STATS -->
-      <div class="wk-grid-4" style="margin-top:20px;">
+      <div class="wk-grid-4 mt-20">
         <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-collection-fill"></i></div><div class="stat-value" data-library-stat="total">0</div><div class="stat-label">Jami resurslar</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-folder-fill"></i></div><div class="stat-value" data-library-stat="collections">0</div><div class="stat-label">Kolleksiyalar</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-star-fill"></i></div><div class="stat-value" data-library-stat="favorites">0</div><div class="stat-label">Sevimlilar</div></div>
@@ -39,7 +39,7 @@
       </div>
 
       <!-- SCOPE TABS -->
-      <div style="margin-top:22px;" data-tabs>
+      <div class="mt-22" data-tabs>
         <div class="tab-strip" role="tablist" aria-label="Resurs manbai">
           <div class="tab-item active" data-tab-target="all">Barchasi</div>
           <div class="tab-item" data-tab-target="course">Kurs resurslari</div>
@@ -48,7 +48,7 @@
           <div class="tab-item" data-tab-target="quiz">Test resurslari</div>
         </div>
 
-        <div data-tab-panel="all" style="margin-top:20px;">
+        <div class="mt-20" data-tab-panel="all">
 
           <!-- COLLECTIONS -->
           <div class="section-header"><h3>Kolleksiyalar</h3></div>
@@ -57,12 +57,12 @@
           <div class="collection-grid" data-library-collections></div>
 
           <!-- RECENTLY USED -->
-          <div class="section-header" style="margin-top:26px;"><h3>Oxirgi ishlatilgan</h3></div>
+          <div class="section-header mt-26"><h3>Oxirgi ishlatilgan</h3></div>
           <div class="card card-pad" data-library-recent></div>
 
           <!-- TOOLBAR -->
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:26px;">
-            <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="page-header mt-26">
+            <div class="flex-col gap-10">
               <div class="filter-bar" data-filter-group="category">
                 <button class="filter-chip active" data-filter-value="all">Barcha kategoriyalar</button>
                 <button class="filter-chip" data-filter-value="python">Python</button>
@@ -78,7 +78,7 @@
                 <button class="filter-chip" data-filter-value="url">Havola</button>
               </div>
             </div>
-            <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Resurs qidirish..." aria-label="Resurs qidirish"></div>
+            <div class="topbar-search sw-220"><i class="bi bi-search"></i><input data-filter-search placeholder="Resurs qidirish..." aria-label="Resurs qidirish"></div>
           </div>
 
           <!-- RESOURCE GRID -->
@@ -93,16 +93,16 @@
         <!-- Qamrov tablari do'kondagi `folder` maydoniga to'g'ridan-to'g'ri
              mos keladi, shuning uchun ular endi bo'sh emas: har biri o'z
              papkasidagi resurslarni ko'rsatadi (js/resource-library.js). -->
-        <div data-tab-panel="course" hidden style="margin-top:20px;">
+        <div class="mt-20" data-tab-panel="course" hidden>
           <div class="resource-grid" data-library-grid="course"></div>
         </div>
-        <div data-tab-panel="lesson" hidden style="margin-top:20px;">
+        <div class="mt-20" data-tab-panel="lesson" hidden>
           <div class="resource-grid" data-library-grid="lesson"></div>
         </div>
-        <div data-tab-panel="assignment" hidden style="margin-top:20px;">
+        <div class="mt-20" data-tab-panel="assignment" hidden>
           <div class="resource-grid" data-library-grid="assignment"></div>
         </div>
-        <div data-tab-panel="quiz" hidden style="margin-top:20px;">
+        <div class="mt-20" data-tab-panel="quiz" hidden>
           <div class="resource-grid" data-library-grid="quiz"></div>
         </div>
       </div>
@@ -119,6 +119,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/tabs.js"></script>
 <script src="../../js/toast.js"></script>

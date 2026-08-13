@@ -7,10 +7,6 @@
 <title>Topshiriqni tahrirlash — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  /* Page-local layout only. Editor widgets live in css/widgets.css. */
-  .as-shell { max-width: 900px; margin: 0 auto; }
-</style>
 </head>
 <body>
 <div class="app-shell">
@@ -31,23 +27,23 @@
 
     <main class="content" data-unsaved-scope data-unsaved-store="assignment">
       <div class="page-header">
-        <div style="flex:1; min-width:260px;">
-          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div class="page-head-main">
+          <div class="flex items-center gap-10 flex-wrap">
             <span class="badge badge-warning" data-assignment-status-badge>—</span>
             <span class="unsaved-badge" data-unsaved-indicator hidden><i class="bi bi-exclamation-circle-fill"></i> Saqlanmagan o'zgarishlar</span>
           </div>
-          <div class="field" style="margin:10px 0 0; max-width:480px;">
-            <input id="assignment-title-input" data-assignment-field="title" style="font-size:18px; font-weight:700; font-family:var(--font-display); padding:10px 14px;" data-char-counter="100" maxlength="100">
+          <div class="field mt-10 mb-0 mw-480">
+            <input class="title-input" id="assignment-title-input" data-assignment-field="title" data-char-counter="100" maxlength="100">
             <div class="field-hint" data-char-counter-for="assignment-title-input">24 / 100</div>
           </div>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="flex gap-8 flex-wrap">
           <a href="assignment-builder.html" class="btn btn-outline btn-sm" data-assignment-back><i class="bi bi-arrow-left"></i> Topshiriqlarga qaytish</a>
           <button class="btn btn-teach" data-save-action><i class="bi bi-save"></i> Saqlash</button>
         </div>
       </div>
 
-      <div class="as-shell" style="margin-top:20px;" data-tabs>
+      <div class="as-shell mt-20" data-tabs>
         <div class="tab-strip" role="tablist" aria-label="Topshiriq muharriri bo'limlari">
           <div class="tab-item active" data-tab-target="content">Kontent</div>
           <div class="tab-item" data-tab-target="submission">Topshirish</div>
@@ -57,7 +53,7 @@
         </div>
 
         <!-- CONTENT TAB (mirrors lesson-editor.html's Content tab blocks) -->
-        <div data-tab-panel="content" style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="content">
 
           <div class="card card-pad editor-block">
             <div class="editor-block-label"><i class="bi bi-fonts"></i> Topshiriq matni</div>
@@ -69,7 +65,7 @@
               <button aria-label="Sitata"><i class="bi bi-quote"></i></button>
             </div>
             <textarea class="editor-textarea" data-char-counter="1500" id="assignment-text" data-assignment-field="instructions" maxlength="1500"></textarea>
-            <div class="field-hint" data-char-counter-for="assignment-text" style="margin-top:6px;">180 / 1500</div>
+            <div class="field-hint mt-6" data-char-counter-for="assignment-text">180 / 1500</div>
           </div>
 
           <div class="card card-pad editor-block">
@@ -80,15 +76,15 @@
           <div class="card card-pad editor-block">
             <div class="editor-block-label"><i class="bi bi-camera-video-fill"></i> Video</div>
             <div class="upload-dropzone"><i class="bi bi-camera-video"></i><div class="dz-title">Video qo'shish uchun bosing</div><div class="dz-sub">yoki tashqi havola kiriting</div></div>
-            <div class="field" style="margin-top:12px; margin-bottom:0;"><label for="assignment-video-url">Tashqi video havolasi</label><input id="assignment-video-url" placeholder="https://youtube.com/watch?v=..."></div>
+            <div class="field mt-12 mb-0"><label for="assignment-video-url">Tashqi video havolasi</label><input id="assignment-video-url" placeholder="https://youtube.com/watch?v=..."></div>
           </div>
 
           <div class="card card-pad editor-block">
             <div class="editor-block-label"><i class="bi bi-code-slash"></i> Kod bloki (namuna)</div>
-            <div class="field" style="max-width:200px;"><label for="assignment-code-lang">Til</label>
+            <div class="field mw-200"><label for="assignment-code-lang">Til</label>
               <select id="assignment-code-lang" class="btn btn-outline select-block"><option>Python</option><option>JavaScript</option><option>Bash</option><option>SQL</option></select>
             </div>
-            <textarea class="editor-textarea" style="font-family:'SFMono-Regular',Consolas,monospace; background:#191830; color:#E4E2F5; border:none;" rows="4">class Course(models.Model):
+            <textarea class="editor-textarea code-input" rows="4">class Course(models.Model):
     title = models.CharField(max_length=200)</textarea>
           </div>
 
@@ -98,10 +94,10 @@
               <div class="link-row">
                 <i class="bi bi-box-arrow-up-right text-muted"></i>
                 <input value="https://docs.djangoproject.com/en/stable/topics/db/models/" readonly>
-                <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+                <button class="icon-btn icon-btn-md" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
               </div>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="as-link-row-template"><i class="bi bi-plus-lg"></i> Havola qo'shish</button>
+            <button type="button" class="btn btn-outline btn-sm mt-10" data-add-row="as-link-row-template"><i class="bi bi-plus-lg"></i> Havola qo'shish</button>
           </div>
 
           <div class="card card-pad editor-block">
@@ -110,10 +106,10 @@
               <div class="download-row">
                 <i class="bi bi-file-earmark-zip-fill text-muted"></i>
                 <input value="starter-models.zip" readonly>
-                <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+                <button class="icon-btn icon-btn-md" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
               </div>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="as-download-row-template"><i class="bi bi-plus-lg"></i> Fayl qo'shish</button>
+            <button type="button" class="btn btn-outline btn-sm mt-10" data-add-row="as-download-row-template"><i class="bi bi-plus-lg"></i> Fayl qo'shish</button>
           </div>
 
           <div class="card card-pad editor-block">
@@ -123,7 +119,7 @@
         </div>
 
         <!-- SUBMISSION TAB -->
-        <div data-tab-panel="submission" hidden style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="submission" hidden>
           <div class="wk-col">
 
             <div class="card card-pad">
@@ -138,22 +134,22 @@
                 <label class="switch settings-item-control"><input type="checkbox" data-assignment-check="file" data-reveals="as-file-fields"><span class="slider"></span></label>
               </div>
 
-              <div id="as-file-fields" style="margin-top:6px;">
+              <div class="mt-6" id="as-file-fields">
                 <div class="settings-item">
                   <div class="settings-item-info"><div class="settings-item-label">Bir nechta fayl</div><div class="settings-item-desc">Talaba bittadan ortiq fayl biriktira oladi</div></div>
                   <label class="switch settings-item-control"><input type="checkbox" data-assignment-check="multi" data-reveals="as-max-files-field"><span class="slider"></span></label>
                 </div>
-                <div class="field" id="as-max-files-field" hidden style="max-width:160px; margin-top:10px;"><label for="as-max-files">Maksimal fayllar soni</label><input id="as-max-files" type="number" data-assignment-field="maxFiles" min="1"></div>
+                <div class="field mw-160 mt-10" id="as-max-files-field" hidden><label for="as-max-files">Maksimal fayllar soni</label><input id="as-max-files" type="number" data-assignment-field="maxFiles" min="1"></div>
 
-                <div class="field" style="margin-top:14px;"><label>Ruxsat etilgan fayl turlari</label>
-                  <div id="as-filetypes" style="display:flex; flex-wrap:wrap; gap:8px;" data-row-list="filetype-chip-list"></div>
-                  <div style="display:flex; gap:8px; margin-top:10px;">
-                    <input id="as-filetype-input" placeholder="Masalan: docx" style="max-width:160px;">
+                <div class="field mt-14"><label>Ruxsat etilgan fayl turlari</label>
+                  <div class="flex flex-wrap gap-8" id="as-filetypes" data-row-list="filetype-chip-list"></div>
+                  <div class="flex gap-8 mt-10">
+                    <input class="mw-160" id="as-filetype-input" placeholder="Masalan: docx">
                     <button type="button" class="btn btn-outline btn-sm" data-add-filetype><i class="bi bi-plus-lg"></i> Qo'shish</button>
                   </div>
                 </div>
 
-                <div class="field" style="max-width:200px; margin-bottom:0;"><label for="as-max-size">Maksimal fayl hajmi (MB)</label><input id="as-max-size" type="number" data-assignment-field="maxSizeMb" min="1"></div>
+                <div class="field mw-200 mb-0"><label for="as-max-size">Maksimal fayl hajmi (MB)</label><input id="as-max-size" type="number" data-assignment-field="maxSizeMb" min="1"></div>
               </div>
             </div>
 
@@ -164,22 +160,22 @@
                 <div class="settings-item-info"><div class="settings-item-label">Kechikkan topshirishga ruxsat</div><div class="settings-item-desc">O'chirilsa — muddat tugagach topshirish yopiladi</div></div>
                 <label class="switch settings-item-control"><input type="checkbox" data-assignment-check="allowLate" data-reveals="as-late-penalty-field"><span class="slider"></span></label>
               </div>
-              <div class="field" id="as-late-penalty-field" style="margin-top:12px; margin-bottom:0; max-width:200px;"><label for="as-late-penalty">Har kunlik jarima (%)</label><input id="as-late-penalty" type="number" data-assignment-field="latePenalty" min="0" max="100"></div>
+              <div class="field mt-12 mb-0 mw-200" id="as-late-penalty-field"><label for="as-late-penalty">Har kunlik jarima (%)</label><input id="as-late-penalty" type="number" data-assignment-field="latePenalty" min="0" max="100"></div>
             </div>
 
             <div class="card card-pad">
               <div class="settings-section-title">Urinishlar</div>
               <div class="settings-section-sub">Talaba necha marta qayta topshira olishini belgilang.</div>
-              <div class="field" style="max-width:200px; margin-bottom:0;"><label for="as-attempts">Maksimal urinishlar</label><input id="as-attempts" type="number" data-assignment-field="attempts" min="1"></div>
+              <div class="field mw-200 mb-0"><label for="as-attempts">Maksimal urinishlar</label><input id="as-attempts" type="number" data-assignment-field="attempts" min="1"></div>
             </div>
 
             <div class="card card-pad">
-              <div class="section-header"><h3>Baholash mezoni (Rubrika)</h3><span style="font-size:12.5px; color:var(--ink-500);">Jami: <b data-rubric-total>0</b> ball</span></div>
+              <div class="section-header"><h3>Baholash mezoni (Rubrika)</h3><span class="section-meta">Jami: <b data-rubric-total>0</b> ball</span></div>
               <!-- Qatorlar <template id="rubric-row-template"> dan
                    js/assignment-editor.js tomonidan do'kondagi rubrika
                    bo'yicha chiziladi. -->
               <div data-row-list="rubric-row-template"></div>
-              <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px;" data-add-row="rubric-row-template" data-marks-dirty><i class="bi bi-plus-lg"></i> Mezon qo'shish</button>
+              <button type="button" class="btn btn-outline btn-sm mt-10" data-add-row="rubric-row-template" data-marks-dirty><i class="bi bi-plus-lg"></i> Mezon qo'shish</button>
             </div>
 
             <div class="card card-pad">
@@ -191,15 +187,18 @@
         </div>
 
         <!-- RESOURCES TAB (mirrors lesson-editor.html's Resources tab) -->
-        <div data-tab-panel="resources" hidden style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="resources" hidden>
           <div class="card card-pad">
             <div class="section-header">
               <h3>Resurslar</h3>
-              <div style="display:flex; gap:8px;">
+              <div class="flex gap-8">
                 <a href="resource-library.html" class="btn btn-outline btn-sm"><i class="bi bi-collection"></i> Kutubxonadan tanlash</a>
                 <button type="button" class="btn btn-teach btn-sm" data-add-row="as-resource-card-template" data-marks-dirty><i class="bi bi-plus-lg"></i> Resurs qo'shish</button>
               </div>
             </div>
+            <!-- `.resource-icon` foni — resurs TURIDAN kelgan rang (PDF qizil,
+                 ZIP kulrang ...), ya'ni ma'lumot qiymati. Shuning uchun
+                 inline qoladi (CLAUDE.md §2). -->
             <div class="resource-grid" data-row-list="as-resource-card-template" data-sortable-list>
               <div class="card resource-card" draggable="true" data-sortable-item>
                 <i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Resursni tashish"></i>
@@ -218,13 +217,13 @@
         </div>
 
         <!-- SETTINGS TAB -->
-        <div data-tab-panel="settings" hidden style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="settings" hidden>
           <div class="wk-col">
             <div class="card card-pad">
               <div class="settings-section-title">Umumiy</div>
               <div class="settings-section-sub">Topshiriqning asosiy ma'lumotlari.</div>
               <div class="field"><label for="as-desc">Qisqa tavsif</label><input id="as-desc" data-assignment-field="desc"></div>
-              <div style="display:flex; gap:12px;">
+              <div class="flex gap-12">
                 <div class="field flex-1"><label for="as-max-score">Maksimal ball</label><input id="as-max-score" type="number" data-assignment-field="maxScore" min="0"></div>
                 <div class="field flex-1"><label for="as-est-time">Taxminiy vaqt (daqiqa)</label><input id="as-est-time" type="number" data-assignment-field="estimate" min="0"></div>
               </div>
@@ -233,7 +232,7 @@
             <div class="card card-pad">
               <div class="settings-section-title">Muddat</div>
               <div class="settings-section-sub">Topshirish uchun sana va vaqtni belgilang.</div>
-              <div style="display:flex; gap:12px;">
+              <div class="flex gap-12">
                 <div class="field flex-1"><label for="as-due-date">Sana</label><input id="as-due-date" type="date" data-assignment-field="dueDate"></div>
                 <div class="field flex-1"><label for="as-due-time">Vaqt</label><input id="as-due-time" type="time" data-assignment-field="dueTime"></div>
               </div>
@@ -242,7 +241,7 @@
             <div class="card card-pad">
               <div class="settings-section-title">Ko'rinish</div>
               <div class="settings-section-sub">Topshiriqni kim va qachon ko'ra olishini belgilang.</div>
-              <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="flex-col gap-8">
                 <label class="opt-row"><input type="radio" name="assignment-visibility" value="public" data-assignment-radio="visibility"> Ochiq — barcha ro'yxatdan o'tgan talabalar ko'ra oladi</label>
                 <label class="opt-row"><input type="radio" name="assignment-visibility" value="hidden" data-assignment-radio="visibility"> Yashirin — faqat instruktor ko'ra oladi</label>
                 <label class="opt-row"><input type="radio" name="assignment-visibility" value="scheduled" data-assignment-radio="visibility"> Rejalashtirilgan — belgilangan sanadan boshlab ochiladi</label>
@@ -260,25 +259,25 @@
         </div>
 
         <!-- PREVIEW TAB -->
-        <div data-tab-panel="preview" hidden style="margin-top:22px;">
+        <div class="mt-22" data-tab-panel="preview" hidden>
           <div class="lesson-preview-frame">
             <div class="lesson-preview-body">
-              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                <h2 style="font-size:19px;" data-assignment-out="title">—</h2>
+              <div class="flex items-center gap-10 flex-wrap">
+                <h2 data-assignment-out="title">—</h2>
                 <span class="badge badge-violet" data-assignment-out="scoreLine">—</span>
               </div>
-              <p style="font-size:13.5px; color:var(--ink-700); line-height:1.7; margin-top:12px;" data-assignment-out="instructions">—</p>
-              <div class="score-indicator" style="margin-top:14px;">
+              <p class="preview-lead mt-12" data-assignment-out="instructions">—</p>
+              <div class="score-indicator mt-14">
                 <span>Baholash mezoni</span>
-                <div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div>
+                <div class="progress-track"><div class="progress-fill w-100"></div></div>
                 <span data-assignment-out="rubricLine">—</span>
               </div>
-              <div class="section-header" style="margin-top:20px;"><h3 style="font-size:14px;">Resurslar</h3></div>
+              <div class="section-header mt-20"><h3>Resurslar</h3></div>
               <div class="resource-grid">
                 <div class="card resource-card"><div class="resource-icon" style="background:var(--ink-500);"><i class="bi bi-file-earmark-zip-fill"></i></div><div class="resource-body"><div class="resource-name">starter-models.zip</div><div class="resource-meta">ZIP · 220 KB</div></div></div>
                 <div class="card resource-card"><div class="resource-icon" style="background:#DC2626;"><i class="bi bi-file-earmark-pdf-fill"></i></div><div class="resource-body"><div class="resource-name">baholash-mezoni.pdf</div><div class="resource-meta">PDF · 90 KB</div></div></div>
               </div>
-              <p style="font-size:11.5px; color:var(--ink-300); margin-top:18px;"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan topshiriq sahifasining taxminiy ko'rinishi — faqat oldindan ko'rish rejimi.</p>
+              <p class="preview-note mt-18"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan topshiriq sahifasining taxminiy ko'rinishi — faqat oldindan ko'rish rejimi.</p>
             </div>
           </div>
         </div>
@@ -292,7 +291,7 @@
   <div class="link-row">
     <i class="bi bi-box-arrow-up-right text-muted"></i>
     <input placeholder="https://...">
-    <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+    <button class="icon-btn icon-btn-md" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
   </div>
 </template>
 
@@ -300,7 +299,7 @@
   <div class="download-row">
     <i class="bi bi-file-earmark-arrow-down-fill text-muted"></i>
     <input placeholder="fayl-nomi.zip">
-    <button class="icon-btn" style="width:32px;height:32px;" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
+    <button class="icon-btn icon-btn-md" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
   </div>
 </template>
 
@@ -315,8 +314,8 @@
 
 <template id="rubric-row-template">
   <div class="question-option-row">
-    <input type="text" placeholder="Yangi mezon" style="flex:2;">
-    <input type="number" value="10" min="0" style="width:80px;">
+    <input class="rubric-text" type="text" placeholder="Yangi mezon">
+    <input class="rubric-points" type="number" value="10" min="0">
     <button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button>
   </div>
 </template>
@@ -329,6 +328,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/sortable.js"></script>
 <script src="../../js/modal.js"></script>

@@ -57,7 +57,7 @@
             <div class="field"><label for="cs-level">Daraja</label>
               <select id="cs-level" data-course-field="level"><option>Boshlang'ich</option><option>O'rta daraja</option><option>Ilg'or</option></select>
             </div>
-            <div style="margin-top:8px;"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
+            <div class="mt-8"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
           </div>
 
           <!-- VISIBILITY -->
@@ -76,7 +76,7 @@
               <div class="settings-item-info"><div class="settings-item-label">Faqat havola orqali kirish</div><div class="settings-item-desc">Kurs faqat to'g'ridan-to'g'ri havola orqali ochiladi</div></div>
               <label class="switch settings-item-control"><input type="checkbox" data-course-visibility-unlisted><span class="slider"></span></label>
             </div>
-            <div style="margin-top:8px;"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
+            <div class="mt-8"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
           </div>
 
           <!-- PRICING -->
@@ -88,7 +88,7 @@
               <div class="settings-item-info"><div class="settings-item-label">Sertifikat berish</div><div class="settings-item-desc">Kursni yakunlagan talabalarga sertifikat beriladi</div></div>
               <label class="switch settings-item-control"><input type="checkbox" data-course-check="certificate"><span class="slider"></span></label>
             </div>
-            <div style="margin-top:8px;"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
+            <div class="mt-8"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
           </div>
 
           <!-- ENROLLMENT -->
@@ -103,7 +103,7 @@
               <div class="settings-item-info"><div class="settings-item-label">Talabalar sonini cheklash</div><div class="settings-item-desc">Maksimal ro'yxatga olish sonini belgilash</div></div>
               <label class="switch settings-item-control"><input type="checkbox"><span class="slider"></span></label>
             </div>
-            <div class="field" style="margin-top:16px;"><label>Kirish muddati</label>
+            <div class="field mt-16"><label>Kirish muddati</label>
               <select class="btn btn-outline select-block"><option selected>Cheksiz</option><option>6 oy</option><option>1 yil</option></select>
             </div>
           </div>
@@ -118,7 +118,7 @@
             </div>
             <div class="field"><label>Minimal yakunlash foizi</label><input value="100%"></div>
 
-            <div class="settings-item-info" style="margin-top:18px;"><div class="settings-item-label">O'quv markazi / Tashkilot biriktirish (Ixtiyoriy)</div><div class="settings-item-desc">Biriktirilsa, sertifikatda tashkilot logotipi va muhri instruktor imzosi bilan birga ko'rinadi.</div></div>
+            <div class="settings-item-info mt-18"><div class="settings-item-label">O'quv markazi / Tashkilot biriktirish (Ixtiyoriy)</div><div class="settings-item-desc">Biriktirilsa, sertifikatda tashkilot logotipi va muhri instruktor imzosi bilan birga ko'rinadi.</div></div>
             <div class="field"><label>Tashkilot nomi</label><input data-org-name placeholder="Masalan: Isloh IT Academy"></div>
             <div class="field"><label>Logotip havolasi (URL, ixtiyoriy)</label><input data-org-logo placeholder="https://..."></div>
             <div class="field"><label>Muhr havolasi (URL, ixtiyoriy)</label><input data-org-seal placeholder="https://..."></div>
@@ -129,7 +129,7 @@
                 <div class="cert-org-preview-name" data-org-preview-name></div>
               </div>
             </div>
-            <div style="margin-top:12px;"><button class="btn btn-teach btn-sm" data-org-save>Tashkilot ma'lumotlarini saqlash</button></div>
+            <div class="mt-12"><button class="btn btn-teach btn-sm" data-org-save>Tashkilot ma'lumotlarini saqlash</button></div>
           </div>
 
           <!-- NOTIFICATIONS -->
@@ -157,7 +157,7 @@
             <div class="field"><label for="cs-meta-title">Meta sarlavha</label><input id="cs-meta-title" data-course-field="metaTitle"></div>
             <div class="field"><label for="cs-meta-desc">Meta tavsif</label><input id="cs-meta-desc" data-course-field="metaDescription"></div>
             <div class="field"><label for="cs-slug">Slug</label><input id="cs-slug" data-course-field="slug"></div>
-            <div style="margin-top:8px;"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
+            <div class="mt-8"><button class="btn btn-teach btn-sm" data-course-save>O'zgarishlarni saqlash</button></div>
           </div>
 
           <!-- DANGER ZONE -->
@@ -170,7 +170,7 @@
             </div>
             <div class="settings-item">
               <div class="settings-item-info"><div class="settings-item-label text-danger">Kursni butunlay o'chirish</div><div class="settings-item-desc">Barcha darslar, talabalar ma'lumoti va sharhlar o'chiriladi</div></div>
-              <button class="btn btn-sm settings-item-control" style="background:var(--danger); color:#fff;" data-modal-open="delete-confirm-modal">O'chirish</button>
+              <button class="btn btn-sm settings-item-control btn-danger" data-modal-open="delete-confirm-modal">O'chirish</button>
             </div>
           </div>
         </div>
@@ -210,6 +210,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/settings.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/toast.js"></script>

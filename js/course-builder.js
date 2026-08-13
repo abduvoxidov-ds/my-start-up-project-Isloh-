@@ -201,6 +201,11 @@ function isloh_initBuilderHeader() {
   const title = document.querySelector('[data-course-heading]');
   if (title) title.textContent = course.title + ' — kurs tarkibi';
 
+  /* Breadcrumb'dagi kurs nomi ham do'kondan — ilgari u markupda qotib
+     qolgan edi va boshqa kursni ochganda ham "Python Backend Development"
+     deb turardi (9-bosqich auditi). */
+  document.querySelectorAll('[data-course-crumb]').forEach((el) => { el.textContent = course.title; });
+
   if (typeof isloh_applyCourseLinks === 'function') isloh_applyCourseLinks(courseId);
 }
 

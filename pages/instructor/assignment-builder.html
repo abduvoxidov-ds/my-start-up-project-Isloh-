@@ -27,13 +27,13 @@
     <main class="content" data-unsaved-scope data-filterable data-ai-context="assignment-builder">
       <div class="page-header">
         <div>
-          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div class="flex items-center gap-10 flex-wrap">
             <h1>Topshiriq loyihalari</h1>
             <span class="unsaved-badge" data-unsaved-indicator hidden><i class="bi bi-exclamation-circle-fill"></i> Saqlanmagan o'zgarishlar</span>
           </div>
           <p><span data-assignment-course>—</span> · Kurs topshiriqlarini yarating va boshqaring.</p>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="flex gap-8 flex-wrap">
           <a href="course-builder.html" data-course-link="course-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kurs tarkibiga qaytish</a>
           <a href="resource-manager.html" data-course-link="resource-manager.html" class="btn btn-outline btn-sm"><i class="bi bi-folder2-open"></i> Resurslar</a>
           <a href="discussions.html" class="btn btn-outline btn-sm"><i class="bi bi-chat-square-text"></i> Talaba savollari</a>
@@ -43,7 +43,7 @@
       </div>
 
       <!-- STATS — raqamlar ro'yxatdan hisoblanadi (js/assignment-store.js) -->
-      <div class="wk-grid-4" style="margin-top:20px;">
+      <div class="wk-grid-4 mt-20">
         <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-file-earmark-text-fill"></i></div><div class="stat-value" data-assignment-stat="total">0</div><div class="stat-label">Jami topshiriqlar</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-check2-circle"></i></div><div class="stat-value" data-assignment-stat="published">0</div><div class="stat-label">Nashr etilgan</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-pencil-square"></i></div><div class="stat-value" data-assignment-stat="draft">0</div><div class="stat-label">Qoralama</div></div>
@@ -51,15 +51,15 @@
       </div>
 
       <!-- TOOLBAR -->
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:22px;">
+      <div class="page-header mt-22">
         <div class="filter-bar" data-filter-group="status">
           <button class="filter-chip active" data-filter-value="all">Barchasi</button>
           <button class="filter-chip" data-filter-value="published">Nashr etilgan</button>
           <button class="filter-chip" data-filter-value="draft">Qoralama</button>
         </div>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-          <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Topshiriq qidirish..." aria-label="Topshiriq qidirish"></div>
-          <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Saralash"><option>Muddat bo'yicha</option><option>Nomi bo'yicha</option><option>Maksimal ball bo'yicha</option></select>
+        <div class="flex gap-10 items-center flex-wrap">
+          <div class="topbar-search sw-220"><i class="bi bi-search"></i><input data-filter-search placeholder="Topshiriq qidirish..." aria-label="Topshiriq qidirish"></div>
+          <select class="btn btn-outline select-btn" aria-label="Saralash"><option>Muddat bo'yicha</option><option>Nomi bo'yicha</option><option>Maksimal ball bo'yicha</option></select>
           <div class="view-switch" data-view-switch role="tablist" aria-label="Ko'rinishni tanlash">
             <button class="active" data-view="grid" aria-label="Katakcha ko'rinishi"><i class="bi bi-grid-3x3-gap-fill"></i></button>
             <button data-view="table" aria-label="Jadval ko'rinishi"><i class="bi bi-table"></i></button>
@@ -78,9 +78,9 @@
       </div>
 
       <!-- LOADING SKELETON -->
-      <div style="margin-top:16px;" data-list-skeleton>
-        <div class="card skeleton-card" style="margin-bottom:12px;"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
-        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
+      <div class="mt-16" data-list-skeleton>
+        <div class="card skeleton-card mb-12"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div></div>
+        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div></div>
       </div>
 
       <div data-list-content hidden data-bulk-scope>
@@ -88,14 +88,14 @@
         <!-- GRID VIEW — kartochkalar js/assignment-builder.js tomonidan
              `isloh_assignments` do'konidan chiziladi (markup takrorlanmaydi:
              jadval ko'rinishi ham ayni ro'yxatdan). -->
-        <div class="course-grid-instr" style="margin-top:16px;" data-assignment-grid data-course-grid></div>
+        <div class="course-grid-instr mt-16" data-assignment-grid data-course-grid></div>
 
         <!-- TABLE VIEW -->
-        <div class="card" style="margin-top:16px; overflow:hidden;" data-course-table hidden>
+        <div class="card mt-16 overflow-hidden" data-course-table hidden>
           <div class="itable-wrap">
             <table class="itable">
               <thead><tr>
-                <th style="width:36px;"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th>
+                <th class="col-select"><input type="checkbox" data-select-all aria-label="Barchasini tanlash"></th>
                 <th>Topshiriq</th><th>Holat</th><th>Ko'rinish</th><th>Muddat</th><th>Topshirish turi</th><th>Maks. ball</th><th>Amallar</th>
               </tr></thead>
               <tbody data-assignment-rows></tbody>
@@ -114,12 +114,12 @@
 
 <!-- CREATE ASSIGNMENT MODAL -->
 <div class="modal-overlay" id="add-assignment-modal" hidden>
-  <div class="modal" style="max-width:420px;">
+  <div class="modal mw-420">
     <form data-add-assignment-form>
       <div class="modal-head"><b>Yangi topshiriq yaratish</b><button type="button" class="icon-btn icon-btn-sm" data-modal-close="add-assignment-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
       <div class="modal-body">
         <div class="field"><label for="as-title">Topshiriq nomi</label><input id="as-title" name="title" placeholder="Masalan: 5-topshiriq: Testlash" required></div>
-        <div class="field" style="margin-bottom:0;"><label for="as-due">Topshirish muddati</label><input id="as-due" name="due" type="date"></div>
+        <div class="field mb-0"><label for="as-due">Topshirish muddati</label><input id="as-due" name="due" type="date"></div>
       </div>
       <div class="modal-foot">
         <button type="button" class="btn btn-outline btn-sm" data-modal-close="add-assignment-modal">Bekor qilish</button>
@@ -131,11 +131,11 @@
 
 <!-- PREVIEW ASSIGNMENT MODAL -->
 <div class="modal-overlay" id="preview-assignment-modal" hidden>
-  <div class="modal" style="max-width:460px;">
+  <div class="modal mw-460">
     <div class="modal-head"><b data-preview-assignment-title>Topshiriq</b><button class="icon-btn icon-btn-sm" data-modal-close="preview-assignment-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
-      <p style="color:var(--ink-500); margin-bottom:10px;" data-preview-assignment-meta>—</p>
-      <p style="font-size:12.5px; color:var(--ink-300);"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan topshiriq sahifasining taxminiy ko'rinishi.</p>
+      <p class="text-muted mb-10" data-preview-assignment-meta>—</p>
+      <p class="card-note"><i class="bi bi-info-circle"></i> Bu talaba ko'radigan topshiriq sahifasining taxminiy ko'rinishi.</p>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="preview-assignment-modal">Yopish</button>
@@ -150,7 +150,7 @@
     <div class="modal-body"><b data-delete-assignment-name></b> topshirig'i va unga bog'liq talaba topshirishlari o'chiriladi. Bu amalni qaytarib bo'lmaydi.</div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="delete-assignment-modal">Bekor qilish</button>
-      <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-assignment data-marks-dirty>Ha, o'chirish</button>
+      <button class="btn btn-sm btn-danger" data-confirm-delete-assignment data-marks-dirty>Ha, o'chirish</button>
     </div>
   </div>
 </div>
@@ -166,6 +166,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/modal.js"></script>

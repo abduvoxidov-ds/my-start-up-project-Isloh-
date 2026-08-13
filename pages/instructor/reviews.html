@@ -25,137 +25,58 @@
     </header>
 
     <main class="content" data-filterable>
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-        <div><h1 style="font-size:24px;">Sharhlar</h1><p style="color:var(--ink-500); margin-top:4px;">Talabalar sharhlarini ko'ring va javob bering.</p></div>
+      <div class="page-header">
+        <div><h1>Sharhlar</h1><p class="text-muted mt-4">Talabalar sharhlarini ko'ring va javob bering.</p></div>
       </div>
 
-      <!-- STATS -->
-      <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-star-fill"></i></div><div class="stat-value">4.8</div><div class="stat-label">O'rtacha reyting</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-chat-square-text-fill"></i></div><div class="stat-value">128</div><div class="stat-label">Jami sharhlar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-reply-fill"></i></div><div class="stat-value" data-review-rate>0%</div><div class="stat-label">Javob berish darajasi</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-hourglass-split"></i></div><div class="stat-value">6</div><div class="stat-label">Javobsiz qolgan</div></div>
+      <!-- STATS — raqamlar js/profile-stats.js dagi resolverlardan
+           (`isloh_reviews` + `isloh_review_replies` do'konlari). -->
+      <div class="wk-grid-4 mt-20">
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-star-fill"></i></div><div class="stat-value" data-stat="reviewAverage">—</div><div class="stat-label">Sharhlardan o'rtacha</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-chat-square-text-fill"></i></div><div class="stat-value" data-stat="reviewCount">—</div><div class="stat-label">Jami sharhlar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-reply-fill"></i></div><div class="stat-value" data-stat="replyRate">—</div><div class="stat-label">Javob berish darajasi</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-hourglass-split"></i></div><div class="stat-value" data-stat="pendingReplies">—</div><div class="stat-label">Javobsiz qolgan</div></div>
       </div>
 
-      <!-- RATING SUMMARY -->
-      <div class="card card-pad" style="margin-top:18px;">
+      <!-- RATING SUMMARY — o'rtacha ball, yulduzlar va taqsimot chiziqlari
+           js/instructor-reviews.js tomonidan sharhlardan hisoblanadi. -->
+      <div class="card card-pad mt-18">
         <div class="rating-summary">
           <div class="rating-summary-score">
-            <div class="val">4.8</div>
-            <div class="rating-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div>
-            <div class="cnt">128 ta sharh asosida</div>
+            <div class="val" data-review-average>—</div>
+            <div class="rating-stars" data-review-average-stars></div>
+            <div class="cnt"><span data-review-total>0</span> ta sharh asosida</div>
           </div>
-          <div class="rating-bars">
-            <div class="rating-bar-row"><span class="lbl">5 ★</span><div class="progress-track"><div class="progress-fill warning-fill" style="width:78%;"></div></div><span class="pct">78%</span></div>
-            <div class="rating-bar-row"><span class="lbl">4 ★</span><div class="progress-track"><div class="progress-fill warning-fill" style="width:15%;"></div></div><span class="pct">15%</span></div>
-            <div class="rating-bar-row"><span class="lbl">3 ★</span><div class="progress-track"><div class="progress-fill warning-fill" style="width:5%;"></div></div><span class="pct">5%</span></div>
-            <div class="rating-bar-row"><span class="lbl">2 ★</span><div class="progress-track"><div class="progress-fill warning-fill" style="width:1%;"></div></div><span class="pct">1%</span></div>
-            <div class="rating-bar-row"><span class="lbl">1 ★</span><div class="progress-track"><div class="progress-fill warning-fill" style="width:1%;"></div></div><span class="pct">1%</span></div>
-          </div>
+          <div class="rating-bars" data-review-bars></div>
         </div>
       </div>
 
-      <div class="split-aside" style="margin-top:18px;">
+      <div class="split-aside mt-18">
         <!-- FILTER RAIL -->
         <div class="card card-pad">
           <div class="section-header"><h3>Filtr</h3></div>
-          <div class="filter-bar" data-filter-group="rating" style="flex-direction:column; align-items:flex-start; gap:8px;">
+          <!-- Guruh kaliti `ratingBand`: "3 ★ va past" bitta qiymat bilan
+               ishlashi kerak, js/filterable.js esa aniq moslikni tekshiradi
+               (js/review-store.js — isloh_reviewRatingBand). -->
+          <div class="filter-bar is-stacked" data-filter-group="ratingBand">
             <button class="filter-chip active" data-filter-value="all">Barchasi</button>
             <button class="filter-chip" data-filter-value="5">5 ★</button>
             <button class="filter-chip" data-filter-value="4">4 ★</button>
-            <button class="filter-chip" data-filter-value="3">3 ★ va past</button>
+            <button class="filter-chip" data-filter-value="low">3 ★ va past</button>
           </div>
-          <div class="filter-bar" data-filter-group="reply" style="flex-direction:column; align-items:flex-start; gap:8px; margin-top:16px;">
+          <div class="filter-bar is-stacked mt-16" data-filter-group="reply">
             <button class="filter-chip active" data-filter-value="all">Holatidan qat'i nazar</button>
             <button class="filter-chip" data-filter-value="pending">Javobsiz</button>
             <button class="filter-chip" data-filter-value="replied">Javob berilgan</button>
           </div>
-          <div class="topbar-search" style="width:100%; margin-top:16px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Sharh matnidan qidirish..." aria-label="Sharh matnidan qidirish"></div>
+          <div class="topbar-search w-100 mt-16"><i class="bi bi-search"></i><input data-filter-search placeholder="Sharh matnidan qidirish..." aria-label="Sharh matnidan qidirish"></div>
         </div>
 
-        <!-- REVIEWS LIST -->
+        <!-- REVIEWS LIST — kartochkalar js/instructor-reviews.js tomonidan
+             `isloh_reviews` do'konidan chiziladi, javoblar esa
+             `isloh_review_replies` dan (shakli o'zgarmadi). -->
         <div class="card card-pad">
-          <div class="review-card" data-review-id="rev-1" data-filter-item data-rating="5" data-reply="pending" data-filter-text="Ajoyib kurs, hammasi tushunarli">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">BO</div>
-            <div style="flex:1; min-width:0;">
-              <div class="review-head">
-                <span class="review-name filter-title">Bekzod Odilov</span>
-                <span class="rating-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></span>
-                <span class="review-course">· Python Backend Development</span>
-                <span class="review-time">4 soat oldin</span>
-              </div>
-              <div class="review-text">Ajoyib kurs, hammasi tushunarli tushuntirilgan! Ayniqsa amaliy loyihalar juda foydali bo'ldi.</div>
-              <div class="review-actions">
-                <button class="btn btn-teach btn-sm" data-review-reply><i class="bi bi-reply-fill"></i> Javob berish</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="review-card" data-review-id="rev-2" data-filter-item data-rating="5" data-reply="replied" data-filter-text="Ustoz juda sabrli va aniq javob beradi">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#DB2777,#F472B6);">NY</div>
-            <div style="flex:1; min-width:0;">
-              <div class="review-head">
-                <span class="review-name filter-title">Nodira Yusupova</span>
-                <span class="rating-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></span>
-                <span class="review-course">· Django REST Masterclass</span>
-                <span class="review-time">Kecha</span>
-              </div>
-              <div class="review-text">Ustoz juda sabrli va savollarga aniq javob beradi. Xabarlar bo'limida tez javob oldim.</div>
-              <div class="review-reply">
-                <div class="lbl">Sizning javobingiz</div>
-                <div class="txt">Rahmat Nodira! Muvaffaqiyat tilayman 🙌</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="review-card" data-review-id="rev-3" data-filter-item data-rating="4" data-reply="pending" data-filter-text="Yaxshi kurs lekin ba'zi darslar uzun">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#059669,#10B981);">SA</div>
-            <div style="flex:1; min-width:0;">
-              <div class="review-head">
-                <span class="review-name filter-title">Sardor Aliyev</span>
-                <span class="rating-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></span>
-                <span class="review-course">· Python Backend Development</span>
-                <span class="review-time">2 kun oldin</span>
-              </div>
-              <div class="review-text">Yaxshi kurs, lekin ba'zi darslar biroz uzun. Qisqaroq video kesimlari bo'lsa yanada qulay bo'lardi.</div>
-              <div class="review-actions">
-                <button class="btn btn-teach btn-sm" data-review-reply><i class="bi bi-reply-fill"></i> Javob berish</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="review-card" data-review-id="rev-4" data-filter-item data-rating="3" data-reply="replied" data-filter-text="O'rtacha, ba'zi bo'limlar eskirgan">
-            <div class="avatar avatar-sm">SI</div>
-            <div style="flex:1; min-width:0;">
-              <div class="review-head">
-                <span class="review-name filter-title">Samarqand Islomov</span>
-                <span class="rating-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i></span>
-                <span class="review-course">· PostgreSQL Complete Guide</span>
-                <span class="review-time">5 kun oldin</span>
-              </div>
-              <div class="review-text">O'rtacha kurs, ba'zi bo'limlar biroz eskirgan versiyalarga asoslangan.</div>
-              <div class="review-reply">
-                <div class="lbl">Sizning javobingiz</div>
-                <div class="txt">Fikringiz uchun rahmat, kursni yangilash rejalashtirilgan.</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="review-card" data-review-id="rev-5" data-filter-item data-rating="5" data-reply="pending" data-filter-text="Sertifikat uchun rahmat, juda foydali bo'ldi">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">AK</div>
-            <div style="flex:1; min-width:0;">
-              <div class="review-head">
-                <span class="review-name filter-title">Alisher Karimov</span>
-                <span class="rating-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></span>
-                <span class="review-course">· PostgreSQL Complete Guide</span>
-                <span class="review-time">1 hafta oldin</span>
-              </div>
-              <div class="review-text">Sertifikat uchun rahmat, kurs juda foydali bo'ldi! Ishda darhol qo'llay boshladim.</div>
-              <div class="review-actions">
-                <button class="btn btn-teach btn-sm" data-review-reply><i class="bi bi-reply-fill"></i> Javob berish</button>
-              </div>
-            </div>
-          </div>
+          <div data-review-list></div>
 
           <div class="empty-state" data-filter-empty style="display:none;">
             <div class="empty-icon"><i class="bi bi-star"></i></div><div class="empty-title">Sharh topilmadi</div><div class="empty-sub">Bu filtr yoki qidiruv bo'yicha sharh yo'q.</div>
@@ -176,7 +97,7 @@
     </div>
     <div class="modal-body">
       <div class="review-quote" data-review-quote></div>
-      <div class="field" style="margin-top:14px; margin-bottom:0;">
+      <div class="field mt-14 mb-0">
         <label for="review-reply-input">Sizning javobingiz</label>
         <textarea id="review-reply-input" data-review-reply-input rows="4" placeholder="Talabaga javob yozing..."></textarea>
       </div>
@@ -197,9 +118,13 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<script src="../../js/course-store.js"></script>
+<script src="../../js/review-store.js"></script>
+<script src="../../js/profile-stats.js"></script>
+<script src="../../js/instructor-reviews.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/toast.js"></script>
-<script src="../../js/instructor-reviews.js"></script>
+<script src="../../js/notification-store.js"></script>
 </body>
 </html>

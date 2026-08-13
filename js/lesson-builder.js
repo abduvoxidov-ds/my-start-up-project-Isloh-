@@ -105,6 +105,16 @@ function isloh_renderLessonHeader(scope) {
   const crumb = document.querySelector('[data-module-crumb]');
   if (crumb && module) crumb.textContent = `${index + 1}-modul`;
 
+  /* Sarlavha ostidagi qator ham do'kondan: dars soni + modul tavsifi.
+     Ilgari u markupda qotib qolgan edi va boshqa kursning modulini
+     ta'riflab turardi ("6 ta dars · Docker, Git ..."). */
+  const sub = document.querySelector('[data-module-sub]');
+  if (sub && module) {
+    const count = (module.lessons || []).length;
+    sub.textContent = [count + ' ta dars', module.desc].filter(Boolean).join(' · ');
+  }
+  if (module) document.title = module.title + ' — Isloh';
+
   document.querySelectorAll('[data-builder-link]').forEach((link) => {
     link.href = `course-builder.html?id=${scope.courseId}`;
   });

@@ -26,31 +26,69 @@
     </header>
 
     <main class="content">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-        <div><h1 style="font-size:24px;">Analitika</h1><p style="color:var(--ink-500); margin-top:4px;">Umumiy ko'rsatkichlar sharhi.</p></div>
+      <div class="page-header">
+        <div><h1>Analitika</h1><p class="text-muted mt-4">Umumiy ko'rsatkichlar sharhi.</p></div>
         <select class="btn btn-outline period-select" data-period-select aria-label="Davr"><option value="30">Oxirgi 30 kun</option><option value="7">Oxirgi 7 kun</option><option value="365">Bu yil</option></select>
       </div>
 
-      <!-- OVERVIEW CARDS -->
-      <div class="wk-grid-3" style="margin-top:20px;">
+      <!-- DAVR KARTOCHKALARI — faqat SANALI do'konlardan hisoblanadi
+           (js/period-stats.js): ro'yxatga olish, topshirilgan ishlar va
+           sharhlar. Trend nishoni oldingi shuncha kunlik oyna bilan
+           solishtiriladi; solishtirish uchun ma'lumot bo'lmasa, nishon
+           umuman chizilmaydi. -->
+      <div class="wk-grid-3 mt-20">
         <div class="card card-pad stat-card">
-          <div class="stat-top"><div class="stat-label">Talabalar o'sishi</div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 8%</span></div>
-          <div class="stat-value" data-period-value='{"30":"+42","7":"+11","365":"+438"}'>+42</div>
+          <div class="stat-top"><div class="stat-label" data-i18n="an.newStudents">Yangi talabalar</div><span data-period-trend="newStudents"></span></div>
+          <div class="stat-value" data-period-stat="newStudents">—</div>
+          <div class="stat-sub" data-period-label></div>
         </div>
         <div class="card card-pad stat-card">
-          <div class="stat-top"><div class="stat-label">Yakunlash darajasi</div><span class="trend-pill trend-up"><i class="bi bi-arrow-up-short"></i> 3%</span></div>
-          <div class="stat-value" data-period-value='{"30":"78%","7":"81%","365":"74%"}'>78%</div>
+          <div class="stat-top"><div class="stat-label" data-i18n="an.newSubmissions">Topshirilgan ishlar</div><span data-period-trend="newSubmissions"></span></div>
+          <div class="stat-value" data-period-stat="newSubmissions">—</div>
+          <div class="stat-sub" data-period-label></div>
         </div>
         <div class="card card-pad stat-card">
-          <div class="stat-top"><div class="stat-label">Faollik</div><span class="trend-pill trend-down"><i class="bi bi-arrow-down-short"></i> 2%</span></div>
-          <div class="stat-value" data-period-value='{"30":"64%","7":"69%","365":"61%"}'>64%</div>
+          <div class="stat-top"><div class="stat-label" data-i18n="an.newReviews">Yangi sharhlar</div><span data-period-trend="newReviews"></span></div>
+          <div class="stat-value" data-period-stat="newReviews">—</div>
+          <div class="stat-sub" data-period-label></div>
         </div>
       </div>
 
-      <!-- CHARTS ROW -->
-      <div class="card card-pad chart-container" style="margin-top:18px;">
-        <div class="chart-head"><h3 style="font-size:16px;">Talabalar o'sishi</h3>
-          <div class="chart-legend"><span class="cl"><span class="cl-dot" style="background:var(--violet-600);"></span> Ro'yxatga olish</span></div>
+      <!-- UMUMIY KO'RSATKICHLAR — davrga bog'liq emas, do'konlardagi joriy
+           holatdan (js/profile-stats.js). Davr tanlovi bularga ta'sir
+           qilmaydi: kurs reytingi yoki yakunlash darajasi "oxirgi 7 kun"
+           kesimida saqlanmaydi. -->
+      <div class="section-header mt-20"><h3 data-i18n="an.overview">Umumiy ko'rsatkichlar</h3><a href="courses.html" class="section-action">Kurslarim</a></div>
+      <div class="wk-grid-4">
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-journal-bookmark-fill"></i></div><div class="stat-value" data-stat="publishedCourses">—</div><div class="stat-label" data-i18n="an.publishedCourses">Nashr etilgan kurslar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-play-btn-fill"></i></div><div class="stat-value" data-stat="totalLessons">—</div><div class="stat-label" data-i18n="an.totalLessons">Jami darslar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-graph-up"></i></div><div class="stat-value" data-stat="avgCompletion">—</div><div class="stat-label" data-i18n="an.avgCompletion">O'rtacha yakunlash</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-star-fill"></i></div><div class="stat-value" data-stat="rating">—</div><div class="stat-label"><span data-stat="ratedCourses">—</span> ta kurs bo'yicha reyting</div></div>
+      </div>
+
+      <!-- KONTENT VA NAVBAT — har bir raqam o'z do'konining statistikasidan -->
+      <div class="wk-grid-4 mt-16">
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-file-earmark-text-fill"></i></div><div class="stat-value" data-stat="totalAssignments">—</div><div class="stat-label" data-i18n="an.assignments">Topshiriqlar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-patch-question-fill"></i></div><div class="stat-value" data-stat="totalQuizzes">—</div><div class="stat-label" data-i18n="an.quizzes">Testlar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-folder-fill"></i></div><div class="stat-value" data-stat="totalResources">—</div><div class="stat-label" data-i18n="an.resources">Resurslar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-hourglass-split"></i></div><div class="stat-value" data-stat="pendingSubmissions">—</div><div class="stat-label" data-i18n="an.gradingQueue">Baholash navbati</div></div>
+      </div>
+
+      <!-- TALABALAR KESIMI — ro'yxatga olish do'konidan -->
+      <div class="wk-grid-4 mt-16">
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div><div class="stat-value" data-stat="enrolledStudents">—</div><div class="stat-label" data-i18n="an.enrolled">Ro'yxatdagi talabalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-lightning-fill"></i></div><div class="stat-value" data-stat="activeStudents">—</div><div class="stat-label" data-i18n="an.activeWeek">Bu hafta faol</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-bar-chart-fill"></i></div><div class="stat-value" data-stat="avgProgress">—</div><div class="stat-label" data-i18n="an.avgProgress">O'rtacha jarayon</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-person-dash"></i></div><div class="stat-value" data-stat="inactiveStudents">—</div><div class="stat-label" data-i18n="an.inactive">Faol emas</div></div>
+      </div>
+
+      <!-- O'SISH GRAFIGI — kunlik ro'yxatga olish tarixi hech qanday do'konda
+           saqlanmaydi (do'kon faqat "qachon yozilgan"ni biladi, kunlik
+           kesimni emas), shuning uchun chiziq dashboard'dagi kabi ochiq
+           "namuna" deb belgilangan. -->
+      <div class="card card-pad chart-container mt-16">
+        <div class="chart-head"><h3>Talabalar o'sishi</h3>
+          <div class="chart-legend"><span class="cl"><span class="cl-dot cl-dot-violet"></span> Ro'yxatga olish</span></div>
         </div>
         <div class="chart-body">
           <span class="chart-placeholder-note">Namuna ma'lumot</span>
@@ -63,12 +101,18 @@
           </svg>
         </div>
         <div class="chart-xaxis"><span>1-hafta</span><span>2-hafta</span><span>3-hafta</span><span>4-hafta</span></div>
+        <p class="placeholder-note mt-12"><i class="bi bi-info-circle"></i> Kunlik ro'yxatga olish tarixi hali saqlanmaydi — chiziq faqat namuna. Yuqoridagi "Yangi talabalar" raqami esa haqiqiy: u do'kondagi ro'yxatga olish sanalaridan hisoblanadi.</p>
       </div>
 
-      <!-- WEEKLY ACTIVITY BARS -->
-      <div class="card card-pad chart-container" style="margin-top:18px;">
-        <div class="chart-head"><h3 style="font-size:16px;">Haftalik faollik (o'quv soatlari)</h3></div>
-        <div class="chart-bars" style="margin-top:16px;">
+      <!-- HAFTALIK FAOLLIK — o'quv soatlari faqat talabaning O'Z qurilmasida
+           (js/progress-metrics.js, `isloh_analytics`) yig'iladi; instruktor
+           uchun bunday umumlashtirilgan manba yo'q. -->
+      <div class="card card-pad chart-container mt-16">
+        <div class="chart-head"><h3>Haftalik faollik (o'quv soatlari)</h3></div>
+        <!-- Ustun balandliklari — MA'LUMOT qiymati (progress-fill kengligi
+             kabi), shuning uchun inline qoladi; ular namuna ekani pastdagi
+             izohda ochiq aytilgan (CLAUDE.md §2). -->
+        <div class="chart-bars mt-16">
           <div class="cb"><div class="cb-fill" style="height:50%;"></div><div class="cb-lbl">Du</div></div>
           <div class="cb"><div class="cb-fill" style="height:75%;"></div><div class="cb-lbl">Se</div></div>
           <div class="cb"><div class="cb-fill light" style="height:35%;"></div><div class="cb-lbl">Ch</div></div>
@@ -77,54 +121,28 @@
           <div class="cb"><div class="cb-fill light" style="height:28%;"></div><div class="cb-lbl">Sh</div></div>
           <div class="cb"><div class="cb-fill" style="height:80%;"></div><div class="cb-lbl">Ya</div></div>
         </div>
+        <p class="placeholder-note mt-16"><i class="bi bi-info-circle"></i> Talabalarning kunlik o'quv soatlari serverda yig'ilmaydi — ustunlar faqat namuna. Haqiqiy faollik ko'rsatkichi "Bu hafta faol" kartochkasida.</p>
       </div>
 
-      <!-- TOP COURSES + TOP STUDENTS -->
-      <div class="wk-grid-2-even" style="margin-top:18px;">
+      <!-- TOP COURSES + TOP STUDENTS — ikkala ro'yxat ham do'konlardan
+           (js/instructor-analytics.js) -->
+      <div class="wk-grid-2-even mt-16">
         <div class="card card-pad">
-          <div class="section-header"><h3>Eng yaxshi kurslar</h3></div>
-          <div class="perf-row">
-            <div class="perf-cover" style="background:linear-gradient(135deg,#306998,#FFD43B);"><i class="bi bi-filetype-py"></i></div>
-            <div class="perf-info"><div class="perf-title">Python Backend</div><div class="perf-sub">248 talaba</div></div>
-            <div class="perf-metric"><div class="perf-metric-val">92%</div><div class="perf-metric-lbl">yakunlash</div></div>
-          </div>
-          <div class="perf-row">
-            <div class="perf-cover" style="background:linear-gradient(135deg,#0F766E,#14B8A6);"><i class="bi bi-database-fill"></i></div>
-            <div class="perf-info"><div class="perf-title">Django REST</div><div class="perf-sub">130 talaba</div></div>
-            <div class="perf-metric"><div class="perf-metric-val">85%</div><div class="perf-metric-lbl">yakunlash</div></div>
-          </div>
-          <div class="perf-row">
-            <div class="perf-cover" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);"><i class="bi bi-box-fill"></i></div>
-            <div class="perf-info"><div class="perf-title">PostgreSQL Guide</div><div class="perf-sub">60 talaba</div></div>
-            <div class="perf-metric"><div class="perf-metric-val">79%</div><div class="perf-metric-lbl">yakunlash</div></div>
-          </div>
+          <div class="section-header"><h3>Eng yaxshi kurslar</h3><a href="courses.html" class="section-action">Barchasi</a></div>
+          <div data-analytics-top-courses></div>
         </div>
 
         <div class="card card-pad">
-          <div class="section-header"><h3>Eng faol talabalar</h3></div>
-          <div class="roster-row">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">AK</div>
-            <div class="roster-info"><div class="roster-name">Alisher Karimov</div><div class="roster-sub">🔥 30 kunlik seriya</div></div>
-            <div class="roster-meta">95%</div>
-          </div>
-          <div class="roster-row">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#EA580C);">JR</div>
-            <div class="roster-info"><div class="roster-name">Javohir Rasimov</div><div class="roster-sub">🔥 21 kunlik seriya</div></div>
-            <div class="roster-meta">92%</div>
-          </div>
-          <div class="roster-row">
-            <div class="avatar avatar-sm">SI</div>
-            <div class="roster-info"><div class="roster-name">Samarqand Islomov</div><div class="roster-sub">🔥 12 kunlik seriya</div></div>
-            <div class="roster-meta">88%</div>
-          </div>
+          <div class="section-header"><h3>Eng faol talabalar</h3><a href="students.html" class="section-action">Barchasi</a></div>
+          <div data-analytics-top-students></div>
         </div>
       </div>
 
       <!-- FULL ANALYTICS LINK -->
-      <div class="card card-pad" style="margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-        <div style="display:flex; align-items:center; gap:12px;">
+      <div class="card card-pad mt-16 row-between">
+        <div class="flex items-center gap-12">
           <div class="stat-icon tint-green"><i class="bi bi-graph-up-arrow"></i></div>
-          <div><div style="font-weight:700; font-size:14px;">To'liq analitika</div><div style="font-size:12.5px; color:var(--ink-500);">Batafsil hisobotlar va segmentatsiya keyingi bosqichda qo'shiladi.</div></div>
+          <div><div class="tile-title">To'liq analitika</div><div class="section-meta">Batafsil hisobotlar va segmentatsiya keyingi bosqichda qo'shiladi.</div></div>
         </div>
         <span class="badge badge-neutral">Tez orada</span>
       </div>
@@ -140,6 +158,17 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
+<!-- Do'konlar: raqamlar va ro'yxatlar shulardan hisoblanadi -->
+<script src="../../js/course-store.js"></script>
+<script src="../../js/enrollment-store.js"></script>
+<script src="../../js/review-store.js"></script>
+<script src="../../js/assignment-store.js"></script>
+<script src="../../js/quiz-store.js"></script>
+<script src="../../js/resource-store.js"></script>
+<script src="../../js/profile-stats.js"></script>
 <script src="../../js/period-stats.js"></script>
+<script src="../../js/instructor-analytics.js"></script>
 </body>
 </html>

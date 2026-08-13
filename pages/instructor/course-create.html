@@ -32,7 +32,7 @@
 
       <!-- Maydonlar `data-course-field` shartnomasi orqali js/course-form.js
            ga ulanadi — tahrirlash sahifasi bilan bir xil. -->
-      <div class="wizard-shell" style="margin-top:22px;" data-wizard data-course-form>
+      <div class="wizard-shell mt-22" data-wizard data-course-form>
         <div class="card card-pad">
           <!-- STEPPER -->
           <div class="wizard-stepper">
@@ -116,7 +116,7 @@
 
               <div class="field">
                 <label>Narxlash</label>
-                <div class="opt-stack" style="margin-bottom:10px;">
+                <div class="opt-stack mb-10">
                   <label class="opt-row"><input type="radio" name="pricing" data-course-radio="pricing" value="free"> Bepul</label>
                   <label class="opt-row"><input type="radio" name="pricing" data-course-radio="pricing" value="paid" checked> Pullik</label>
                 </div>
@@ -128,7 +128,7 @@
                 <label class="switch settings-item-control"><input type="checkbox" data-course-check="certificate" checked><span class="slider"></span></label>
               </div>
 
-              <div class="field-row-2" style="margin-top:16px;">
+              <div class="field-row-2 mt-16">
                 <div class="field"><label for="c-duration">Kurs davomiyligi</label><input id="c-duration" data-course-field="duration" placeholder="Masalan: 8 hafta" value="8 hafta"></div>
                 <div class="field"><label for="c-estimate">Taxminiy vaqt (soat)</label><input id="c-estimate" data-course-field="estimate" placeholder="Masalan: 42 soat" value="42 soat"></div>
               </div>
@@ -183,7 +183,7 @@
                 <div class="review-summary-row"><span class="lbl">Slug</span><span class="val" data-review="slug">—</span></div>
               </div>
 
-              <div style="margin-top:18px;">
+              <div class="mt-18">
                 <div class="check-row"><i class="bi bi-check-circle-fill"></i> Kurs qoralama sifatida saqlanadi</div>
                 <div class="check-row"><i class="bi bi-check-circle-fill"></i> Keyin "Kurs tarkibi" bo'limida modul va darslar qo'shasiz</div>
                 <div class="check-row is-warning"><i class="bi bi-exclamation-triangle-fill"></i> Talabalarga ko'rinishi uchun kursni alohida nashr etish kerak</div>
@@ -210,6 +210,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/course-store.js"></script>
 <script src="../../js/course-wizard.js"></script>

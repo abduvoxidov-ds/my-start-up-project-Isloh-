@@ -28,7 +28,7 @@
       <div class="page-header">
         <!-- Sarlavha va meta qatori do'kondagi kursdan to'ldiriladi -->
         <div><h1 data-course-title-out>Kurs</h1><p data-course-meta-out></p></div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="flex gap-8 flex-wrap">
           <a href="course-builder.html" data-course-link="course-builder.html" class="btn btn-outline btn-sm" data-course-link="course-builder.html"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>
           <a href="course-publish.html" data-course-link="course-publish.html" class="btn btn-outline btn-sm" data-course-link="course-publish.html"><i class="bi bi-rocket-takeoff"></i> Nashr etish</a>
           <a href="courses.html" class="btn btn-outline btn-sm"><i class="bi bi-x-circle"></i> Bekor qilish</a>
@@ -37,7 +37,7 @@
 
       <!-- Yaratish sahifasi bilan BIR XIL shartnoma (js/course-form.js);
            farqi faqat shundaki, bu yerda ?id= bo'yicha kurs yuklanadi. -->
-      <div class="wizard-shell" style="margin-top:22px;" data-wizard data-course-form>
+      <div class="wizard-shell mt-22" data-wizard data-course-form>
         <div class="card card-pad">
           <!-- STEPPER -->
           <div class="wizard-stepper">
@@ -121,7 +121,7 @@
 
               <div class="field">
                 <label>Narxlash</label>
-                <div class="opt-stack" style="margin-bottom:10px;">
+                <div class="opt-stack mb-10">
                   <label class="opt-row"><input type="radio" name="e-pricing" data-course-radio="pricing" value="free"> Bepul</label>
                   <label class="opt-row"><input type="radio" name="e-pricing" data-course-radio="pricing" value="paid"> Pullik</label>
                 </div>
@@ -133,7 +133,7 @@
                 <label class="switch settings-item-control"><input type="checkbox" data-course-check="certificate"><span class="slider"></span></label>
               </div>
 
-              <div class="field-row-2" style="margin-top:16px;">
+              <div class="field-row-2 mt-16">
                 <div class="field"><label for="e-duration">Kurs davomiyligi</label><input id="e-duration" data-course-field="duration"></div>
                 <div class="field"><label for="e-estimate">Taxminiy vaqt (soat)</label><input id="e-estimate" data-course-field="estimate"></div>
               </div>
@@ -209,6 +209,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/course-store.js"></script>
 <script src="../../js/course-wizard.js"></script>

@@ -19,6 +19,7 @@
      [data-dash-top-courses]   → eng yaxshi kurslar ro'yxati
      [data-dash-drafts]        → qoralama kurslar ro'yxati
      [data-dash-activity]      → so'nggi o'zgarishlar tasmasi
+     [data-dash-recent-students] → so'nggi ro'yxatga olingan talabalar
      [data-dash-unread]        → o'qilmagan xabarlar soni (tezkor amal izohi)
 
    O'YLAB TOPILGAN RAQAM YO'Q: daromad dinamikasi, haftalik ro'yxatga olish
@@ -146,6 +147,46 @@ function isloh_renderDashActivity(courses) {
     : isloh_dashEmptyHtml("Hali o'zgarish yo'q — birinchi kursingizni yarating.");
 }
 
+/* --- So'nggi ro'yxatga olinganlar -----------------------------------------
+   Ilgari bu kartochkada faqat jami talabalar soni va "kim qachon ro'yxatga
+   olingani hali saqlanmaydi" degan izoh turardi. Endi ro'yxat
+   js/enrollment-store.js dagi `isloh_enrollments` do'konidan chiziladi —
+   eng oxirgi yozilganlar tepada. */
+
+const ISLOH_DASH_STUDENT_LIMIT = 3;
+
+function isloh_dashStudentHtml(enrollment) {
+  const course = isloh_getCourse(enrollment.courseId);
+  const initials = typeof isloh_getUserInitials === 'function'
+    ? isloh_getUserInitials(enrollment.studentName)
+    : enrollment.studentName.charAt(0);
+  const style = enrollment.avatar ? ` style="background:${enrollment.avatar};"` : '';
+
+  return `<div class="activity-row">
+    <div class="avatar avatar-sm"${style}>${initials}</div>
+    <div class="activity-main">
+      <div class="activity-text"><b>${enrollment.studentName}</b> — ${course ? course.title : enrollment.courseId}</div>
+      <div class="activity-time">${isloh_relativeDate(enrollment.enrolledAt)} ro'yxatga olindi</div>
+    </div>
+  </div>`;
+}
+
+function isloh_renderDashRecentStudents() {
+  const mount = document.querySelector('[data-dash-recent-students]');
+  if (!mount) return;
+
+  /* Modul ulanmagan sahifada kartochka jim qoladi — soxta ro'yxat yo'q. */
+  if (typeof isloh_recentEnrollments !== 'function') {
+    mount.innerHTML = isloh_dashEmptyHtml("Ro'yxatga olish do'koni bu sahifaga ulanmagan.");
+    return;
+  }
+
+  const recent = isloh_recentEnrollments(ISLOH_DASH_STUDENT_LIMIT);
+  mount.innerHTML = recent.length
+    ? recent.map(isloh_dashStudentHtml).join('')
+    : isloh_dashEmptyHtml("Hali ro'yxatga olingan talaba yo'q.");
+}
+
 /* --- Tezkor amallar izohi -------------------------------------------------
    O'qilmagan xabarlar soni js/chat-store.js dagi isloh_chatBadgeCount()
    orqali olinadi — u do'konni EKMAYDI. isloh_chatTotalUnread() chaqirilsa,
@@ -168,6 +209,7 @@ function isloh_renderInstructorDashboard() {
   isloh_renderDashTopCourses(courses);
   isloh_renderDashDrafts(courses);
   isloh_renderDashActivity(courses);
+  isloh_renderDashRecentStudents();
   isloh_renderDashUnread();
 }
 
@@ -175,4 +217,5 @@ function isloh_renderInstructorDashboard() {
    nashr etilsa) dashboard ham yangilanadi — js/instructor-courses.js
    bilan bir xil naqsh. Raqamlarni js/profile-stats.js o'zi qayta chizadi. */
 document.addEventListener('isloh:courses-updated', isloh_renderInstructorDashboard);
+document.addEventListener('isloh:enrollments-updated', isloh_renderDashRecentStudents);
 document.addEventListener('DOMContentLoaded', isloh_renderInstructorDashboard);

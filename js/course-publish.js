@@ -57,27 +57,82 @@ function isloh_initPublishCourse() {
   return course;
 }
 
-function isloh_initValidationSummary() {
+/* --- Nashrdan oldingi tekshiruv ---------------------------------------------
+   Bandlar DO'KONLARDAN hisoblanadi. Ilgari ular markupda qattiq yozilgan edi:
+   qaysi kurs ochilishidan qat'i nazar bir xil olti band ko'rinardi, ulardan
+   biri esa doim `fail` bo'lgani uchun "Kursni nashr etish" tugmasi hech qachon
+   ochilmasdi (9-bosqich auditi shuni topdi).
+
+   Uch daraja:
+     ok   — band bajarilgan
+     warn — bajarilmagan, lekin nashrga to'sqinlik qilmaydi
+     fail — nashr etib bo'lmaydi (tugma o'chiq qoladi)
+
+   Video fayllar yuklanganini tekshirib bo'lmaydi: real fayl yuklash hali
+   yo'q (CLAUDE.md §4), shuning uchun bunday band umuman ko'rsatilmaydi —
+   o'ylab topilgan ogohlantirish yozilmaydi. */
+function isloh_publishChecks(course) {
+  const modules = typeof isloh_getModules === 'function' ? isloh_getModules(course.id) : [];
+  const lessons = modules.reduce((sum, m) => sum + ((m.lessons || []).length), 0);
+  const quizzes = typeof isloh_getCourseQuizzes === 'function' ? isloh_getCourseQuizzes(course.id).length : 0;
+  const assignments = typeof isloh_getCourseAssignments === 'function' ? isloh_getCourseAssignments(course.id).length : 0;
+  const resources = typeof isloh_getCourseResources === 'function'
+    ? isloh_getCourseResources(course.id).filter((r) => r.status === 'active').length : 0;
+  const seo = Boolean((course.metaTitle || course.title) && (course.metaDescription || course.description));
+
+  return [
+    { level: course.title && (course.description || course.subtitle) ? 'ok' : 'fail',
+      label: "Asosiy ma'lumotlar to'ldirilgan", note: 'Kurs tahriri' },
+    { level: lessons > 0 ? 'ok' : 'fail',
+      label: lessons > 0 ? lessons + ' ta dars tayyor' : "Kamida 1 ta dars qo'shilishi shart", note: 'Kurs tarkibi' },
+    { level: course.free || course.price > 0 ? 'ok' : 'fail',
+      label: course.free ? 'Kurs bepul deb belgilangan' : (course.price > 0 ? 'Narx belgilangan' : "Narx belgilanmagan"), note: 'Sozlamalar' },
+    { level: seo ? 'ok' : 'warn',
+      label: seo ? "SEO ma'lumotlari to'ldirilgan" : "SEO tavsifi yozilmagan", note: 'SEO qadami' },
+    { level: quizzes > 0 ? 'ok' : 'warn',
+      label: quizzes > 0 ? quizzes + " ta test qo'shilgan" : "Test qo'shilmagan", note: 'Test yaratuvchi' },
+    { level: assignments > 0 ? 'ok' : 'warn',
+      label: assignments > 0 ? assignments + " ta topshiriq qo'shilgan" : "Topshiriq qo'shilmagan", note: 'Topshiriqlar' },
+    { level: resources > 0 ? 'ok' : 'warn',
+      label: resources > 0 ? resources + " ta resurs biriktirilgan" : "Resurs biriktirilmagan", note: 'Resurslar' }
+  ];
+}
+
+const ISLOH_PUBLISH_CHECK_ICON = { ok: 'bi-check-lg', warn: 'bi-exclamation', fail: 'bi-x-lg' };
+
+function isloh_initValidationSummary(course) {
   const list = document.querySelector('[data-publish-checklist]');
   if (!list) return;
-  const items = [...list.querySelectorAll('.publish-check-item')];
-  const counts = { ok: 0, warn: 0, fail: 0 };
-  items.forEach((i) => {
-    if (i.classList.contains('ok')) counts.ok++;
-    else if (i.classList.contains('warn')) counts.warn++;
-    else if (i.classList.contains('fail')) counts.fail++;
-  });
+
+  const target = course || (typeof isloh_getCourse === 'function' ? isloh_getCourse(isloh_publishCourseId()) : null);
   const setText = (sel, n) => { const el = document.querySelector(sel); if (el) el.textContent = n; };
+
+  if (!target) {
+    list.innerHTML = "<p class=\"placeholder-note\"><i class=\"bi bi-info-circle\"></i> Kurs tanlanmagan — tekshiruvni ko'rsatib bo'lmaydi.</p>";
+    setText('[data-validation-ok]', 0); setText('[data-validation-warn]', 0); setText('[data-validation-fail]', 0);
+    return;
+  }
+
+  const checks = isloh_publishChecks(target);
+  list.innerHTML = '<div class="publish-checklist">' + checks.map((c) =>
+    `<div class="publish-check-item ${c.level}"><span class="pci-ic"><i class="bi ${ISLOH_PUBLISH_CHECK_ICON[c.level]}"></i></span>` +
+    `<span class="pci-label">${c.label}</span><span class="pci-note">${c.note}</span></div>`).join('') + '</div>';
+
+  const counts = { ok: 0, warn: 0, fail: 0 };
+  checks.forEach((c) => { counts[c.level] += 1; });
   setText('[data-validation-ok]', counts.ok);
   setText('[data-validation-warn]', counts.warn);
   setText('[data-validation-fail]', counts.fail);
 
+  /* Talab qilingan band bajarilmagan bo'lsa tugma o'chiq — lekin endi bu
+     HAQIQIY holatdan kelib chiqadi va band bajarilishi bilan ochiladi. */
   const publishBtn = document.querySelector('[data-publish-btn]');
-  if (publishBtn && counts.fail > 0) {
-    publishBtn.disabled = true;
-    publishBtn.title = "Nashr etishdan oldin talab qilingan bandlarni yakunlang";
+  if (publishBtn) {
+    publishBtn.disabled = counts.fail > 0;
+    publishBtn.title = counts.fail > 0 ? "Nashr etishdan oldin talab qilingan bandlarni yakunlang" : '';
   }
 }
+
 
 function isloh_initScheduleToggle() {
   const radios = [...document.querySelectorAll('input[name="pub-visibility"]')];
@@ -132,7 +187,7 @@ function isloh_initPublishConfirm(course) {
 
 document.addEventListener('DOMContentLoaded', () => {
   const course = isloh_initPublishCourse();
-  isloh_initValidationSummary();
+  isloh_initValidationSummary(course);
   isloh_initScheduleToggle();
   isloh_initPublishConfirm(course);
 });

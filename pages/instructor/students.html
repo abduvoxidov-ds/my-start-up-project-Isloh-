@@ -25,88 +25,50 @@
     </header>
 
     <main class="content" data-filterable>
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-        <div><h1 style="font-size:24px;">Talabalar</h1><p style="color:var(--ink-500); margin-top:4px;">Talabalaringizning o'quv jarayonini kuzating.</p></div>
+      <div class="page-header">
+        <div><h1>Talabalar</h1><p class="text-muted mt-4">Talabalaringizning o'quv jarayonini kuzating.</p></div>
         <button class="btn btn-outline" data-export-csv="isloh-talabalar"><i class="bi bi-download"></i> Eksport</button>
       </div>
 
-      <!-- STATS -->
-      <div class="wk-grid-4" style="margin-top:20px;">
-        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div><div class="stat-value">245</div><div class="stat-label">Jami talabalar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-lightning-fill"></i></div><div class="stat-value">189</div><div class="stat-label">Bu hafta faol</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-graph-up"></i></div><div class="stat-value">72%</div><div class="stat-label">O'rtacha jarayon</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-person-dash"></i></div><div class="stat-value">5</div><div class="stat-label">Faol emas</div></div>
+      <!-- STATS — raqamlar js/profile-stats.js dagi resolverlardan
+           (`isloh_enrollments` do'koni), sahifa o'zi hech narsa sanamaydi. -->
+      <div class="wk-grid-4 mt-20">
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-people-fill"></i></div><div class="stat-value" data-stat="enrolledStudents">—</div><div class="stat-label">Ro'yxatdagi talabalar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-lightning-fill"></i></div><div class="stat-value" data-stat="activeStudents">—</div><div class="stat-label">Bu hafta faol</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-graph-up"></i></div><div class="stat-value" data-stat="avgProgress">—</div><div class="stat-label">O'rtacha jarayon</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-person-dash"></i></div><div class="stat-value" data-stat="inactiveStudents">—</div><div class="stat-label">Faol emas</div></div>
       </div>
 
-      <!-- FILTERS -->
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:22px;">
-        <div class="filter-bar" data-filter-group="course">
-          <button class="filter-chip active" data-filter-value="all">Barcha kurslar</button>
-          <button class="filter-chip" data-filter-value="python">Python Backend</button>
-          <button class="filter-chip" data-filter-value="django">Django REST</button>
-          <button class="filter-chip" data-filter-value="sql">PostgreSQL</button>
-        </div>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <div class="topbar-search" style="width:220px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Talaba qidirish..." aria-label="Talaba qidirish"></div>
-          <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Saralash"><option>Jarayon bo'yicha</option><option>Ism bo'yicha</option><option>Faollik bo'yicha</option></select>
+      <!-- FILTERS — kurs chiplari ham do'kondan chiziladi (qaysi kurslarda
+           talaba bor bo'lsa, o'shalar), shuning uchun kurs nomi o'zgarsa
+           chip ham o'zgaradi. -->
+      <div class="page-header mt-22">
+        <div class="filter-bar" data-filter-group="course" data-student-filters></div>
+        <div class="flex gap-10 items-center">
+          <div class="topbar-search sw-220"><i class="bi bi-search"></i><input data-filter-search placeholder="Talaba qidirish..." aria-label="Talaba qidirish"></div>
+          <select class="btn btn-outline select-btn" aria-label="Saralash"><option>Jarayon bo'yicha</option><option>Ism bo'yicha</option><option>Faollik bo'yicha</option></select>
         </div>
       </div>
 
       <!-- TABLE -->
-      <div class="card" style="margin-top:16px; overflow:hidden;">
+      <div class="card mt-16 overflow-hidden">
         <div class="itable-wrap">
           <table class="itable" data-export-table>
             <thead><tr><th>Talaba</th><th>Joriy kurs</th><th>Jarayon</th><th>O'rtacha ball</th><th>Seriya</th><th>Faollik</th><th data-export-skip>Amallar</th></tr></thead>
-            <tbody>
-              <tr data-filter-item data-course="python" data-student-id="std-001" data-filter-text="Samar Mirzayev">
-                <td><div class="cell-main"><div class="avatar avatar-sm">SM</div><div><div class="cell-title filter-title">Samar Mirzayev</div><div class="cell-sub">samar@example.com</div></div></div></td>
-                <td>Python Backend</td>
-                <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:66%;"></div></div></div></td>
-                <td>88%</td><td>🔥 12</td><td><span class="badge badge-green">Faol</span></td>
-                <td><div class="row-actions"><a href="messages.html?u=std-001" class="row-action" aria-label="Xabar yozish"><i class="bi bi-chat-dots"></i></a><button class="row-action" data-student-view aria-label="Talaba ma'lumotlari"><i class="bi bi-eye"></i></button></div></td>
-              </tr>
-              <tr data-filter-item data-course="django" data-student-id="s-javohir" data-filter-text="Javohir Rasimov">
-                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#EA580C);">JR</div><div><div class="cell-title filter-title">Javohir Rasimov</div><div class="cell-sub">javohir@example.com</div></div></div></td>
-                <td>Django REST</td>
-                <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:90%;"></div></div></div></td>
-                <td>92%</td><td>🔥 21</td><td><span class="badge badge-green">Faol</span></td>
-                <td><div class="row-actions"><a href="messages.html?u=s-javohir" class="row-action" aria-label="Xabar yozish"><i class="bi bi-chat-dots"></i></a><button class="row-action" data-student-view aria-label="Talaba ma'lumotlari"><i class="bi bi-eye"></i></button></div></td>
-              </tr>
-              <tr data-filter-item data-course="python" data-student-id="s-bekzod" data-filter-text="Bekzod Odilov">
-                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">BO</div><div><div class="cell-title filter-title">Bekzod Odilov</div><div class="cell-sub">bekzod@example.com</div></div></div></td>
-                <td>Python Backend</td>
-                <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:40%;"></div></div></div></td>
-                <td>74%</td><td>🔥 3</td><td><span class="badge badge-warning">Sust</span></td>
-                <td><div class="row-actions"><a href="messages.html?u=s-bekzod" class="row-action" aria-label="Xabar yozish"><i class="bi bi-chat-dots"></i></a><button class="row-action" data-student-view aria-label="Talaba ma'lumotlari"><i class="bi bi-eye"></i></button></div></td>
-              </tr>
-              <tr data-filter-item data-course="sql" data-student-id="s-alisher" data-filter-text="Alisher Karimov">
-                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#6C5DD3);">AK</div><div><div class="cell-title filter-title">Alisher Karimov</div><div class="cell-sub">alisher@example.com</div></div></div></td>
-                <td>PostgreSQL Guide</td>
-                <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:100%; background:var(--teach-green);"></div></div></div></td>
-                <td>95%</td><td>🔥 30</td><td><span class="badge badge-green">Yakunladi</span></td>
-                <td><div class="row-actions"><a href="messages.html?u=s-alisher" class="row-action" aria-label="Xabar yozish"><i class="bi bi-chat-dots"></i></a><button class="row-action" data-student-view aria-label="Talaba ma'lumotlari"><i class="bi bi-eye"></i></button></div></td>
-              </tr>
-              <tr data-filter-item data-course="django" data-student-id="s-nodira" data-filter-text="Nodira Yusupova">
-                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#DB2777,#F472B6);">NY</div><div><div class="cell-title filter-title">Nodira Yusupova</div><div class="cell-sub">nodira@example.com</div></div></div></td>
-                <td>Django REST</td>
-                <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:55%;"></div></div></div></td>
-                <td>81%</td><td>🔥 8</td><td><span class="badge badge-green">Faol</span></td>
-                <td><div class="row-actions"><a href="messages.html?u=s-nodira" class="row-action" aria-label="Xabar yozish"><i class="bi bi-chat-dots"></i></a><button class="row-action" data-student-view aria-label="Talaba ma'lumotlari"><i class="bi bi-eye"></i></button></div></td>
-              </tr>
-              <tr data-filter-item data-course="python" data-student-id="s-sardor" data-filter-text="Sardor Aliyev">
-                <td><div class="cell-main"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#059669,#10B981);">SA</div><div><div class="cell-title filter-title">Sardor Aliyev</div><div class="cell-sub">sardor@example.com</div></div></div></td>
-                <td>Python Backend</td>
-                <td><div class="cell-progress"><div class="progress-track"><div class="progress-fill" style="width:22%;"></div></div></div></td>
-                <td>68%</td><td>🔥 1</td><td><span class="badge badge-danger">Faol emas</span></td>
-                <td><div class="row-actions"><a href="messages.html?u=s-sardor" class="row-action" aria-label="Xabar yozish"><i class="bi bi-chat-dots"></i></a><button class="row-action" data-student-view aria-label="Talaba ma'lumotlari"><i class="bi bi-eye"></i></button></div></td>
-              </tr>
-            </tbody>
+            <!-- Qatorlar js/instructor-students.js tomonidan
+                 `isloh_enrollments` do'konidan chiziladi. -->
+            <tbody data-student-rows></tbody>
           </table>
         </div>
         <div class="empty-state" data-filter-empty style="display:none;">
           <div class="empty-icon"><i class="bi bi-person-x"></i></div><div class="empty-title">Talaba topilmadi</div><div class="empty-sub">Bu filtr yoki qidiruv bo'yicha talaba yo'q.</div>
         </div>
       </div>
+
+      <!-- Kurs yozuvidagi umumiy talaba soni bilan ro'yxatdagi talabalar
+           soni farqi shu yerda ochiq aytiladi (js/instructor-students.js) —
+           sahifa "6 talaba" deb turib, dashboard "2,330" demasin. -->
+      <div class="mt-12" data-student-coverage></div>
 
     </main>
   </div>
@@ -121,7 +83,7 @@
     </div>
     <div class="modal-body">
       <div class="text-sm text-muted" data-student-detail-email></div>
-      <div style="margin-top:12px;" data-student-detail-rows></div>
+      <div class="mt-12" data-student-detail-rows></div>
     </div>
     <div class="modal-foot">
       <button type="button" class="btn btn-outline btn-sm" data-modal-close="student-detail-modal">Yopish</button>
@@ -139,10 +101,17 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<script src="../../js/course-store.js"></script>
+<script src="../../js/enrollment-store.js"></script>
+<script src="../../js/profile-stats.js"></script>
+<!-- instructor-students.js filterable.js DAN OLDIN: kurs chiplari va
+     qatorlar avval chiziladi, keyin umumiy filtr moduli ularga ulanadi
+     (js/instructor-courses.js dagi bir xil sabab). -->
+<script src="../../js/instructor-students.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/table-export.js"></script>
-<script src="../../js/instructor-students.js"></script>
+<script src="../../js/notification-store.js"></script>
 </body>
 </html>

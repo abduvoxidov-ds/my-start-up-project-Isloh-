@@ -21,6 +21,12 @@
    tayyor, kalitlar vaqt o'tishi bilan qo'shiladi (sozlamalar sahifasidagi
    izoh ham shuni aytadi).
 
+   8-bosqichda instruktor tomonidagi YANGI matnlar ham belgilandi:
+   `an.*` (analitika), `rev.*` (daromad), `notif.*` (bildirishnomalar).
+   Lug'atda ular hali yo'q — bu ataylab: manba tili o'zbekcha, kalit
+   topilmasa markupdagi matn qoladi (yuqoridagi izohga qara). Tarjima
+   qo'shilganda faqat shu fayl to'ldiriladi, sahifalarga tegilmaydi.
+
    Markup shartnomasi:
      data-i18n="<kalit>"                  -> elementning matni
      data-i18n-placeholder="<kalit>"      -> placeholder atributi

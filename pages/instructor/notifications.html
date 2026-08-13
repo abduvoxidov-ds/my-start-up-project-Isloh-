@@ -25,54 +25,18 @@
     </header>
 
     <main class="content">
-      <div style="margin-bottom:18px;">
-        <h1 style="font-size:24px;">Bildirishnomalar</h1>
-        <p style="color:var(--ink-500); margin-top:4px;">So'nggi yangiliklar va xabarlar</p>
+      <!-- Sarlavhadagi raqam ham, ro'yxat ham js/notifications.js tomonidan
+           `isloh_notifications` do'konidan chiziladi (markupda bironta
+           bildirishnoma yozilmagan). Filtr, arxiv va qidiruv ataylab yo'q. -->
+      <div class="page-header items-end mb-18">
+        <div>
+          <h1>Bildirishnomalar</h1>
+          <p class="text-muted mt-4"><span data-notif-count="unread">0</span> ta o'qilmagan · jami <span data-notif-count="all">0</span></p>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" data-notif-mark-all data-i18n="notif.markAll"><i class="bi bi-check2-all"></i> Barchasini o'qilgan deb belgilash</button>
       </div>
 
-      <div class="card" style="max-width:640px;">
-        <!-- Faqat so'nggi yangiliklar/xabarlar ro'yxati — filtr, arxiv va qidiruv ataylab olib tashlangan -->
-        <div class="notif-row unread">
-          <div class="notif-icon tint-green"><i class="bi bi-person-plus-fill"></i></div>
-          <div>
-            <div class="notif-title">Yangi talaba ro'yxatga olindi</div>
-            <div class="notif-desc">Samarqand Islomov "Python Backend" kursiga yozildi</div>
-          </div>
-          <div class="notif-time">10 daqiqa</div>
-        </div>
-        <div class="notif-row unread">
-          <div class="notif-icon tint-violet"><i class="bi bi-file-earmark-check-fill"></i></div>
-          <div>
-            <div class="notif-title">Yangi topshiriq topshirildi</div>
-            <div class="notif-desc">Javohir Rasimov "REST API endpointlari" topshirig'ini yubordi</div>
-          </div>
-          <div class="notif-time">1 soat</div>
-        </div>
-        <div class="notif-row">
-          <div class="notif-icon tint-green"><i class="bi bi-cash-stack"></i></div>
-          <div>
-            <div class="notif-title">Yangi to'lov qabul qilindi</div>
-            <div class="notif-desc">"Python Backend" kursi sotildi — +$45.00</div>
-          </div>
-          <div class="notif-time">2 soat</div>
-        </div>
-        <div class="notif-row">
-          <div class="notif-icon tint-warning"><i class="bi bi-star-fill"></i></div>
-          <div>
-            <div class="notif-title">Yangi sharh qoldirildi</div>
-            <div class="notif-desc">Bekzod Odilov 5 ★ sharh qoldirdi: "Ajoyib kurs!"</div>
-          </div>
-          <div class="notif-time">4 soat</div>
-        </div>
-        <div class="notif-row">
-          <div class="notif-icon tint-green"><i class="bi bi-journal-check"></i></div>
-          <div>
-            <div class="notif-title">Kurs tekshiruvdan o'tdi</div>
-            <div class="notif-desc">"Django REST Masterclass" nashr etishga tayyor</div>
-          </div>
-          <div class="notif-time">2 kun</div>
-        </div>
-      </div>
+      <div class="card mw-640" data-notif-list></div>
     </main>
   </div>
 </div>
@@ -85,5 +49,11 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- course-store.js — faqat isloh_relativeDate() uchun: "2 kun oldin"
+     yorlig'ini js/datetime.js o'sha funksiyaga topshiradi. -->
+<script src="../../js/course-store.js"></script>
+<script src="../../js/toast.js"></script>
+<script src="../../js/notification-store.js"></script>
+<script src="../../js/notifications.js"></script>
 </body>
 </html>

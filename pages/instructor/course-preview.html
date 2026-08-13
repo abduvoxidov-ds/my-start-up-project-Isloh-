@@ -6,14 +6,6 @@
 <title>Kursni ko'rish (Preview) — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  .preview-bar { display:flex; align-items:center; gap:12px; padding:12px 22px; background:var(--ink-900); color:#fff; font-size:13.5px; }
-  .preview-bar .bi-eye-fill { color:#FEF3E2; }
-  .preview-bar-actions { margin-left:auto; display:flex; gap:8px; }
-  .preview-bar .btn-outline { background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.25); }
-  .preview-bar .btn-outline:hover { background:rgba(255,255,255,.2); }
-  .preview-body { max-width:1100px; margin:0 auto; padding:26px 24px 60px; }
-</style>
 </head>
 <body>
 <div class="preview-bar">
@@ -29,32 +21,32 @@
   <div class="landing-hero">
     <div>
       <span class="badge badge-neutral">DevOps · Boshlang'ich</span>
-      <h1 style="font-size:26px; margin-top:10px;" data-preview-course-title>Docker for Beginners</h1>
-      <p style="color:var(--ink-500); font-size:14px; margin-top:6px;">Konteynerlashtirish asoslarini noldan o'rganing — Docker, Dockerfile va Docker Compose.</p>
-      <div style="display:flex; gap:16px; align-items:center; margin-top:14px; font-size:13px; color:var(--ink-500); flex-wrap:wrap;">
-        <span><i class="bi bi-star-fill" style="color:var(--warning);"></i> Yangi kurs</span>
+      <h1 class="preview-course-title" data-preview-course-title>Docker for Beginners</h1>
+      <p class="preview-course-sub">Konteynerlashtirish asoslarini noldan o'rganing — Docker, Dockerfile va Docker Compose.</p>
+      <div class="preview-meta-row">
+        <span><i class="bi bi-star-fill text-warning"></i> Yangi kurs</span>
         <span><i class="bi bi-camera-reels"></i> 24 dars</span>
         <span><i class="bi bi-clock"></i> 18 soat</span>
         <span><i class="bi bi-translate"></i> O'zbek</span>
       </div>
 
-      <div class="card card-pad" style="margin-top:22px;">
-        <h3 style="font-size:15px;">Bu kursda o'rganasiz</h3>
-        <div class="outcome-row" style="border:none;"><i class="bi bi-check2"></i> Docker konteynerlarini yaratish va boshqarish</div>
-        <div class="outcome-row" style="border:none;"><i class="bi bi-check2"></i> Dockerfile yozish va image quratish</div>
+      <div class="card card-pad mt-22">
+        <h3 class="card-title-sm">Bu kursda o'rganasiz</h3>
+        <div class="outcome-row row-flat"><i class="bi bi-check2"></i> Docker konteynerlarini yaratish va boshqarish</div>
+        <div class="outcome-row row-flat"><i class="bi bi-check2"></i> Dockerfile yozish va image quratish</div>
         <div class="outcome-row"><i class="bi bi-check2"></i> Docker Compose bilan ko'p konteynerli ilovalar</div>
       </div>
 
-      <div class="card card-pad" style="margin-top:18px;">
-        <h3 style="font-size:15px;">Talab qilinadigan bilimlar</h3>
-        <div class="requirement-row" style="border:none;"><i class="bi bi-dot"></i> Linux terminali bilan asosiy tanishlik</div>
+      <div class="card card-pad mt-18">
+        <h3 class="card-title-sm">Talab qilinadigan bilimlar</h3>
+        <div class="requirement-row row-flat"><i class="bi bi-dot"></i> Linux terminali bilan asosiy tanishlik</div>
         <div class="requirement-row"><i class="bi bi-dot"></i> Har qanday matn muharriri (VS Code tavsiya etiladi)</div>
       </div>
 
-      <div class="card card-pad" style="margin-top:18px;">
+      <div class="card card-pad mt-18">
         <div class="section-header"><h3>Kurs dasturi</h3><span class="badge badge-neutral">4 modul · 24 dars</span></div>
-        <div class="module-card" style="border:none; box-shadow:none;">
-          <div class="module-header" style="padding:10px 0;">
+        <div class="module-card is-flat">
+          <div class="module-header">
             <div class="module-info">
               <div class="module-title-row"><span class="module-title">1-modul: Kirish va sozlash</span></div>
               <div class="module-desc">Docker, Git va muhitni sozlash</div>
@@ -62,8 +54,8 @@
             <div class="module-meta"><span><i class="bi bi-journal-text"></i> 6 dars</span><span><i class="bi bi-clock"></i> 2s 10d</span></div>
           </div>
         </div>
-        <div class="module-card" style="border:none; box-shadow:none;">
-          <div class="module-header" style="padding:10px 0;">
+        <div class="module-card is-flat">
+          <div class="module-header">
             <div class="module-info">
               <div class="module-title-row"><span class="module-title">2-modul: Docker asoslari</span></div>
               <div class="module-desc">Image, konteyner va registry tushunchalari</div>
@@ -76,14 +68,14 @@
 
     <div class="wk-col">
       <div class="card">
-        <div class="landing-cover" style="background:linear-gradient(135deg,#0EA5E9,#1E3A8A); border-radius:var(--r-lg) var(--r-lg) 0 0;"><i class="bi bi-box-seam"></i></div>
+        <div class="landing-cover cover-top" style="background:linear-gradient(135deg,#0EA5E9,#1E3A8A);"><i class="bi bi-box-seam"></i></div>
         <div class="card-pad">
-          <div class="enroll-price-box" style="padding:0;">
+          <div class="enroll-price-box p-0">
             <span class="enroll-price">$35.00</span>
           </div>
-          <button class="btn btn-teach btn-block" style="margin-top:14px;" disabled title="Preview rejimida faol emas"><i class="bi bi-cart-plus"></i> Kursga yozilish</button>
-          <div class="field-hint" style="text-align:center; margin-top:8px;">Preview rejimida yozilish tugmasi faol emas.</div>
-          <div style="margin-top:16px; display:flex; flex-direction:column; gap:8px; font-size:13px; color:var(--ink-700);">
+          <button class="btn btn-teach btn-block mt-14" disabled title="Preview rejimida faol emas"><i class="bi bi-cart-plus"></i> Kursga yozilish</button>
+          <div class="field-hint text-center mt-8">Preview rejimida yozilish tugmasi faol emas.</div>
+          <div class="enroll-perks">
             <span><i class="bi bi-infinity"></i> Umrbod kirish</span>
             <span><i class="bi bi-award"></i> Yakunlash sertifikati</span>
             <span><i class="bi bi-phone"></i> Mobil va desktopda mavjud</span>

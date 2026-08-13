@@ -37,11 +37,24 @@ function isloh_navI18nKey(item) {
   return key ? ' data-i18n="nav.' + key + '"' : '';
 }
 
-function isloh_renderNavItem(item, activeKey) {
+/* Havolalar `pages/<role>/` ichidan turib yozilgan (js/navigation.js
+   sarlavhasidagi izoh) — ya'ni papkasiz `dashboard.html` "shu papkadagi"
+   degani. Sahifa boshqa papkada tursa (masalan `pages/shared/`), bunday
+   havola mavjud bo'lmagan `pages/shared/dashboard.html` ga ketardi:
+   9-bosqich auditi shu tarzda 9 ta singan havolani topdi. Shuning uchun
+   papkasiz havolalarga rol papkasi qo'shiladi. */
+function isloh_navHref(href, role) {
+  if (!href || href.indexOf('/') !== -1) return href; // allaqachon to'liq yo'l
+  const folder = location.pathname.split('/').slice(-2, -1)[0] || '';
+  return folder === role ? href : '../' + role + '/' + href;
+}
+
+function isloh_renderNavItem(item, activeKey, role) {
   const isActive = item.key === activeKey;
   const cls = 'nav-item' + (isActive ? ' active' : '');
   const aria = isActive ? ' aria-current="page"' : '';
-  return `<a href="${item.href}" class="${cls}"${aria}${isloh_navI18nKey(item)}><i class="bi ${item.icon}"></i> ${item.label}</a>`;
+  const href = isloh_navHref(item.href, role);
+  return `<a href="${href}" class="${cls}"${aria}${isloh_navI18nKey(item)}><i class="bi ${item.icon}"></i> ${item.label}</a>`;
 }
 
 function isloh_renderSidebar() {
@@ -56,12 +69,12 @@ function isloh_renderSidebar() {
   if (navMount) {
     navMount.setAttribute('role', 'navigation');
     navMount.setAttribute('aria-label', role === 'instructor' ? "O'qituvchi menyusi" : (role === 'admin' ? 'Admin menyusi' : 'Talaba menyusi'));
-    navMount.innerHTML = items.map((item) => isloh_renderNavItem(item, activeKey)).join('');
+    navMount.innerHTML = items.map((item) => isloh_renderNavItem(item, activeKey, role)).join('');
   }
 
   const footerMount = aside.querySelector('#sidebar-footer-nav');
   if (footerMount && typeof NAV_CONFIG !== 'undefined') {
-    footerMount.innerHTML = NAV_CONFIG.footer.map((item) => isloh_renderNavItem(item, '')).join('');
+    footerMount.innerHTML = NAV_CONFIG.footer.map((item) => isloh_renderNavItem(item, '', role)).join('');
   }
 
   // Theme modifier: instructor sidebar uses the green accent (tokens already

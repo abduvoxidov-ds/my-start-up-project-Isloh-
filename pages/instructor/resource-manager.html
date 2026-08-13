@@ -27,7 +27,7 @@
     <main class="content" data-filterable>
       <div class="page-header">
         <div><h1>Resurslar</h1><p><span data-resource-course>—</span> · Kurs, dars, topshiriq va test resurslarini boshqaring.</p></div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="flex gap-8 flex-wrap">
           <a href="course-builder.html" data-course-link="course-builder.html" class="btn btn-outline btn-sm"><i class="bi bi-arrow-left"></i> Kurs tarkibiga qaytish</a>
           <a href="resource-library.html" class="btn btn-outline btn-sm"><i class="bi bi-collection"></i> Resurslar kutubxonasi</a>
           <button class="btn btn-teach" data-modal-open="upload-resource-modal"><i class="bi bi-upload"></i> Resurs yuklash</button>
@@ -35,7 +35,7 @@
       </div>
 
       <!-- STATS -->
-      <div class="wk-grid-4" style="margin-top:20px;">
+      <div class="wk-grid-4 mt-20">
         <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-folder-fill"></i></div><div class="stat-value" data-resource-stat="total">0</div><div class="stat-label">Jami resurslar</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-hdd-stack-fill"></i></div><div class="stat-value" data-resource-stat="size">—</div><div class="stat-label">Jami hajm</div></div>
         <div class="card card-pad stat-card"><div class="stat-icon tint-warning"><i class="bi bi-collection"></i></div><div class="stat-value" data-resource-stat="folders">0</div><div class="stat-label">Papkalar</div></div>
@@ -43,7 +43,7 @@
       </div>
 
       <!-- TOOLBAR -->
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:22px;">
+      <div class="page-header mt-22">
         <div class="filter-bar" data-filter-group="type">
           <button class="filter-chip active" data-filter-value="all">Barchasi</button>
           <button class="filter-chip" data-filter-value="pdf">PDF</button>
@@ -57,9 +57,9 @@
           <button class="filter-chip" data-filter-value="url">Tashqi havola</button>
           <button class="filter-chip" data-filter-value="code">Kod</button>
         </div>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-          <div class="topbar-search" style="width:200px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Resurs qidirish..." aria-label="Resurs qidirish"></div>
-          <select class="btn btn-outline" style="border-radius:var(--r-md);" aria-label="Saralash"><option>Eng yangi</option><option>Nomi bo'yicha</option><option>Hajmi bo'yicha</option></select>
+        <div class="flex gap-10 items-center flex-wrap">
+          <div class="topbar-search sw-200"><i class="bi bi-search"></i><input data-filter-search placeholder="Resurs qidirish..." aria-label="Resurs qidirish"></div>
+          <select class="btn btn-outline select-btn" aria-label="Saralash"><option>Eng yangi</option><option>Nomi bo'yicha</option><option>Hajmi bo'yicha</option></select>
           <div class="view-switch" data-view-switch role="tablist" aria-label="Ko'rinishni tanlash">
             <button class="active" data-view="folder" aria-label="Papka ko'rinishi"><i class="bi bi-folder"></i></button>
             <button data-view="grid" aria-label="Katakcha ko'rinishi"><i class="bi bi-grid-3x3-gap-fill"></i></button>
@@ -69,9 +69,9 @@
       </div>
 
       <!-- FOLDER BREADCRUMB (shown only after drilling into a folder) -->
-      <div style="display:flex; align-items:center; gap:8px; margin-top:14px; font-size:13px; color:var(--ink-500);" data-folder-crumb hidden>
+      <div class="flex items-center gap-8 mt-14 text-sm text-muted" data-folder-crumb hidden>
         <button class="btn btn-outline btn-sm" data-folder-back><i class="bi bi-arrow-left"></i> Papkalarga qaytish</button>
-        <span><i class="bi bi-folder-fill" style="color:var(--violet-600);"></i> <span data-folder-crumb-label></span></span>
+        <span><i class="bi bi-folder-fill text-violet"></i> <span data-folder-crumb-label></span></span>
       </div>
 
       <!-- BULK ACTION BAR -->
@@ -85,9 +85,9 @@
       </div>
 
       <!-- LOADING SKELETON -->
-      <div style="margin-top:16px;" data-list-skeleton>
-        <div class="card skeleton-card" style="margin-bottom:12px;"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
-        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40" style="margin-bottom:0;"></div></div></div></div>
+      <div class="mt-16" data-list-skeleton>
+        <div class="card skeleton-card mb-12"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-60"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div></div>
+        <div class="card skeleton-card"><div class="skeleton-row"><div class="skeleton skeleton-circle"></div><div class="flex-1"><div class="skeleton skeleton-line sk-80"></div><div class="skeleton skeleton-line sk-40 mb-0"></div></div></div></div>
       </div>
 
       <div data-list-content hidden data-bulk-scope>
@@ -102,11 +102,11 @@
         <div class="resource-grid mt-16" data-view-panel="grid" data-resource-grid hidden></div>
 
                 <!-- LIST VIEW -->
-        <div class="card" style="margin-top:16px; overflow:hidden;" data-view-panel="list" hidden>
+        <div class="card mt-16 overflow-hidden" data-view-panel="list" hidden>
           <div class="itable-wrap">
             <table class="itable">
               <thead><tr>
-                <th style="width:36px;"></th><th>Resurs</th><th>Turi</th><th>Papka</th><th>Hajm</th><th>Yuklangan</th><th>Amallar</th>
+                <th class="col-select"></th><th>Resurs</th><th>Turi</th><th>Papka</th><th>Hajm</th><th>Yuklangan</th><th>Amallar</th>
               </tr></thead>
               <tbody data-resource-rows></tbody>
             </table>
@@ -124,7 +124,7 @@
 
 <!-- UPLOAD RESOURCE MODAL -->
 <div class="modal-overlay" id="upload-resource-modal" hidden>
-  <div class="modal" style="max-width:440px;">
+  <div class="modal mw-440">
     <form data-upload-resource-form>
       <div class="modal-head"><b>Resurs qo'shish</b><button type="button" class="icon-btn icon-btn-sm" data-modal-close="upload-resource-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
       <div class="modal-body">
@@ -153,11 +153,11 @@
 
 <!-- MOVE RESOURCE MODAL -->
 <div class="modal-overlay" id="move-resource-modal" hidden>
-  <div class="modal" style="max-width:400px;">
+  <div class="modal mw-400">
     <div class="modal-head"><b>Resursni ko'chirish</b><button class="icon-btn icon-btn-sm" data-modal-close="move-resource-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
       <p class="text-muted"><b data-move-resource-name></b></p>
-      <div class="field" style="margin-bottom:0;"><label for="move-folder">Qaysi papkaga ko'chirish</label>
+      <div class="field mb-0"><label for="move-folder">Qaysi papkaga ko'chirish</label>
         <select id="move-folder" data-move-resource-folder class="btn btn-outline select-block"><option value="general">Umumiy kurs resurslari</option><option value="lessons">Dars resurslari</option><option value="assignments">Topshiriq resurslari</option><option value="quizzes">Test resurslari</option></select>
       </div>
     </div>
@@ -170,12 +170,12 @@
 
 <!-- PREVIEW RESOURCE MODAL -->
 <div class="modal-overlay" id="preview-resource-modal" hidden>
-  <div class="modal modal-lg resource-preview-card" style="max-width:560px;">
+  <div class="modal modal-lg resource-preview-card mw-560">
     <div class="modal-head"><b data-preview-resource-name>Resurs</b><button class="icon-btn icon-btn-sm" data-modal-close="preview-resource-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="lesson-preview-video"><div class="play-btn"><i class="bi bi-file-earmark-fill"></i></div></div>
     <div class="modal-body resource-preview-body-pad">
       <p class="text-muted" data-preview-resource-meta>—</p>
-      <p style="font-size:12.5px; color:var(--ink-300);"><i class="bi bi-info-circle"></i> Bu haqiqiy fayl ko'rinishining taxminiy ko'rinishi.</p>
+      <p class="card-note"><i class="bi bi-info-circle"></i> Bu haqiqiy fayl ko'rinishining taxminiy ko'rinishi.</p>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="preview-resource-modal">Yopish</button>
@@ -191,7 +191,7 @@
     <div class="modal-body"><b data-delete-resource-name></b> butunlay o'chiriladi. Undan foydalangan darslar/topshiriqlarga ta'sir qilishi mumkin. Bu amalni qaytarib bo'lmaydi.</div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="delete-resource-modal">Bekor qilish</button>
-      <button class="btn btn-sm" style="background:var(--danger); color:#fff;" data-confirm-delete-resource>Ha, o'chirish</button>
+      <button class="btn btn-sm btn-danger" data-confirm-delete-resource>Ha, o'chirish</button>
     </div>
   </div>
 </div>
@@ -204,6 +204,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/filterable.js"></script>
 <script src="../../js/dropdown.js"></script>
 <script src="../../js/modal.js"></script>

@@ -35,10 +35,10 @@
 
       <!-- KATEGORIYA CHIPLARI — js/market-insights.js chizadi, filtrni
            js/filterable.js bajaradi. Benchmark raqamlari ham shu tanlovga ergashadi. -->
-      <div class="filter-bar" data-filter-group="category" data-market-categories style="margin-top:20px;"></div>
+      <div class="filter-bar mt-20" data-filter-group="category" data-market-categories></div>
 
       <!-- 1. KATEGORIYA BENCHMARKI -->
-      <div class="wk-grid-4" style="margin-top:18px;">
+      <div class="wk-grid-4 mt-18">
         <div class="card card-pad stat-card">
           <div class="stat-icon tint-violet"><i class="bi bi-collection-fill"></i></div>
           <div class="stat-value" data-market-stat="courses">0</div>
@@ -62,7 +62,7 @@
       </div>
 
       <!-- 2. SIZNING O'RNINGIZ -->
-      <div class="card card-pad" style="margin-top:18px;">
+      <div class="card card-pad mt-18">
         <div class="section-header">
           <h3>Sizning o'rningiz</h3>
           <span class="badge badge-neutral">O'z kategoriyasi bo'yicha</span>
@@ -71,9 +71,9 @@
       </div>
 
       <!-- 3. RAQOBATCHILAR JADVALI -->
-      <div class="card" style="margin-top:18px; overflow:hidden;">
+      <div class="card mt-18 overflow-hidden">
         <div class="mk-table-head">
-          <div class="section-header" style="margin-bottom:0;">
+          <div class="section-header mb-0">
             <h3><span data-market-scope>Butun katalog</span> bo'yicha kurslar</h3>
           </div>
           <div class="topbar-search list-toolbar-search">
@@ -110,6 +110,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/course-store.js"></script>
 <script src="../../js/marketplace.js"></script>
 <!-- market-insights.js chiplarni va qatorlarni chizadi, filterable.js esa

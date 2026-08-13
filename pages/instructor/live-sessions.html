@@ -33,7 +33,7 @@
         <button class="btn btn-teach btn-sm" data-modal-open="schedule-session-modal"><i class="bi bi-calendar-plus"></i> Sessiya rejalashtirish</button>
       </div>
 
-      <div data-filter-group="status" style="display:flex; gap:6px; margin-top:16px;">
+      <div class="flex gap-6 mt-16" data-filter-group="status">
         <button class="category-chip active" data-filter-value="all">Barchasi</button>
         <button class="category-chip" data-filter-value="live">Jonli</button>
         <button class="category-chip" data-filter-value="upcoming">Rejalashtirilgan</button>
@@ -41,7 +41,7 @@
       </div>
 
       <div class="ls-list" data-session-list>
-        <div class="card live-session-card" data-filter-item data-status="live" data-filter-text="Q&A sessiyasi" style="border:1.5px solid var(--danger);">
+        <div class="card live-session-card is-live" data-filter-item data-status="live" data-filter-text="Q&A sessiyasi">
           <div class="flex-1">
             <span class="ls-status live"><span class="dot-blink"></span> Jonli efirda</span>
             <div class="ls-title">Haftalik Q&A sessiyasi — 2-modul savollari</div>
@@ -56,13 +56,13 @@
             <div class="ls-title">Amaliyot: Docker Compose bilan ko'p konteynerli ilova</div>
             <div class="ls-meta"><span><i class="bi bi-calendar-event"></i> 26-iyul, 18:00</span><span><i class="bi bi-people-fill"></i> 18 ro'yxatdan o'tgan</span></div>
           </div>
-          <div style="text-align:center;">
+          <div class="text-center">
             <div class="ls-countdown" data-countdown="2026-07-26T18:00:00">--:--:--</div>
-            <button class="btn btn-outline btn-sm" style="margin-top:8px;">Tahrirlash</button>
+            <button class="btn btn-outline btn-sm mt-8">Tahrirlash</button>
           </div>
         </div>
 
-        <div class="card live-session-card" data-filter-item data-status="ended" data-filter-text="Kirish sessiyasi" style="opacity:.85;">
+        <div class="card live-session-card is-ended" data-filter-item data-status="ended" data-filter-text="Kirish sessiyasi">
           <div class="flex-1">
             <span class="ls-status ended">Tugagan</span>
             <div class="ls-title">Kursga kirish sessiyasi</div>
@@ -84,14 +84,14 @@
 <!-- SCHEDULE SESSION MODAL -->
 <div class="modal-overlay" id="schedule-session-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3 style="font-size:15px;">Yangi sessiya rejalashtirish</h3><button class="icon-btn" data-modal-close="schedule-session-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+    <div class="modal-head"><h3>Yangi sessiya rejalashtirish</h3><button class="icon-btn" data-modal-close="schedule-session-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
     <div class="modal-body">
       <div class="field"><label for="ls-title-input">Sarlavha</label><input id="ls-title-input" placeholder="Masalan: Haftalik Q&A sessiyasi"></div>
       <div class="field-row-2">
         <div class="field"><label for="ls-date-input">Sana va vaqt</label><input id="ls-date-input" type="datetime-local"></div>
         <div class="field"><label for="ls-duration-input">Davomiyligi</label><select id="ls-duration-input"><option>30 daqiqa</option><option selected>60 daqiqa</option><option>90 daqiqa</option></select></div>
       </div>
-      <div class="field" style="margin-bottom:0;"><label for="ls-agenda-input">Kun tartibi</label><textarea id="ls-agenda-input" class="editor-textarea" style="min-height:80px;" placeholder="Har bir bandni yangi qatorda yozing"></textarea></div>
+      <div class="field mb-0"><label for="ls-agenda-input">Kun tartibi</label><textarea id="ls-agenda-input" class="editor-textarea is-short" placeholder="Har bir bandni yangi qatorda yozing"></textarea></div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="schedule-session-modal">Bekor qilish</button>
@@ -109,6 +109,8 @@
 <script src="../../js/datetime.js"></script>
 <script src="../../js/i18n.js"></script>
 <script src="../../js/theme.js"></script>
+<!-- Topbar bildirishnoma nuqtasi do'kondan hisoblanadi (js/notification-store.js) -->
+<script src="../../js/notification-store.js"></script>
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/filterable.js"></script>
