@@ -137,15 +137,19 @@ const ISLOH_COURSE_SEED = [
   }
 ];
 
-/* --- Do'kon --------------------------------------------------------------- */
+/* --- Do'kon: Sync-over-Async kesh -----------------------------------------
+   Sahifalar `isloh_getCourses()` ni SINXRON chaqiradi (16 ta joyda). API esa
+   async. Yechim: kesh birinchi chaqiruvda darhol javob beradi (localStorage
+   yoki demo), yuklash fonda ketadi, tugagach `isloh:courses-updated`
+   yuboriladi va sahifalar o'zini qayta chizadi — chaqiruv joylariga
+   tegilmaydi.
 
-/* Faqat o'qiydi. `stored` null bo'lishi do'konda yozuv yo'qligini bildiradi. */
-function isloh_readCourses() {
-  let stored = null;
-  try { stored = JSON.parse(localStorage.getItem(ISLOH_COURSES_KEY)); } catch (e) { stored = null; }
-  if (!Array.isArray(stored)) return { stored: null, courses: ISLOH_COURSE_SEED.map(isloh_normalizeCourse) };
-  return { stored: stored, courses: stored.map(isloh_normalizeCourse) };
-}
+   localStorage endi MANBA emas, offline NUSXA: file:// ostida (CLAUDE.md §3)
+   va tarmoq uzilganda shu nusxa ishlaydi. */
+
+let _coursesCache = [];
+let _isCoursesLoaded = false;
+let _coursesLoadPromise = null;
 
 function isloh_normalizeCourse(course) {
   const merged = Object.assign({}, ISLOH_COURSE_DEFAULTS, course || {});
@@ -153,12 +157,43 @@ function isloh_normalizeCourse(course) {
   return merged;
 }
 
-/* Joriy ro'yxatni qaytaradi. Birinchi chaqiruvda demo kurslar ekiladi,
-   shunda provider sahifalari hech qachon bo'sh ko'rinmaydi. */
+/* Offline nusxa. Yo'q bo'lsa — demo. Bu yerda localStorage'ga YOZILMAYDI:
+   seed yozilsa bo'sh holat hech qachon ko'rinmasdi va backend ulanganda
+   demo ma'lumot serverga ketib qolardi. */
+function isloh_coursesFallback() {
+  let stored = null;
+  try { stored = JSON.parse(localStorage.getItem(ISLOH_COURSES_KEY)); } catch (e) { stored = null; }
+  const list = Array.isArray(stored) ? stored : ISLOH_COURSE_SEED;
+  return list.map(isloh_normalizeCourse);
+}
+
+function isloh_cacheCoursesLocally() {
+  try { localStorage.setItem(ISLOH_COURSES_KEY, JSON.stringify(_coursesCache)); } catch (e) { /* kvota */ }
+}
+
+function isloh_emitCourses() {
+  document.dispatchEvent(new CustomEvent('isloh:courses-updated', { detail: _coursesCache }));
+}
+
+/* Bir marta yuklaydi (takroriy chaqiruv o'sha promise'ni qaytaradi). */
+async function isloh_loadCourses() {
+  if (_coursesLoadPromise) return _coursesLoadPromise;
+
+  _coursesLoadPromise = islohApi.get('/courses')
+    .then((data) => { _coursesCache = (data || []).map(isloh_normalizeCourse); isloh_cacheCoursesLocally(); })
+    .catch(() => { _coursesCache = isloh_coursesFallback(); })   // file:// / tarmoq
+    .then(() => { _isCoursesLoaded = true; isloh_emitCourses(); return _coursesCache; });
+
+  return _coursesLoadPromise;
+}
+
+/* SINXRON. Kesh bo'sh bo'lsa zaxira qaytaradi va yuklashni fonda boshlaydi. */
 function isloh_getCourses() {
-  const result = isloh_readCourses();
-  if (!result.stored) isloh_persistCourses(result.courses);
-  return result.courses;
+  if (!_isCoursesLoaded) {
+    if (!_coursesCache.length) _coursesCache = isloh_coursesFallback();
+    isloh_loadCourses();
+  }
+  return _coursesCache;
 }
 
 function isloh_getCourse(id) {
@@ -166,22 +201,39 @@ function isloh_getCourse(id) {
   return isloh_getCourses().find((c) => c.id === id) || null;
 }
 
-/* Yozishning o'zi. Kvota to'lgan bo'lsa false qaytaradi — chaqiruvchi
-   foydalanuvchiga xabar beradi, jim yiqilmaydi (js/profile.js bilan bir xil). */
-function isloh_persistCourses(courses) {
-  try {
-    localStorage.setItem(ISLOH_COURSES_KEY, JSON.stringify(courses));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
+/* Optimistik yozish: kesh darhol yangilanadi (UI kutmaydi), so'ng server.
+   Server rad etsa — ORQAGA QAYTARILADI, aks holda ekranda "saqlandi" turib
+   ma'lumot yo'qolardi. */
+function isloh_persistCourse(course) {
+  const index = _coursesCache.findIndex((c) => c.id === course.id);
+  const isNew = index === -1;
+  const previous = isNew ? null : _coursesCache[index];
 
-/* Ro'yxatni yozadi va sahifalarni xabardor qiladi. */
-function isloh_commitCourses(courses) {
-  if (!isloh_persistCourses(courses)) return false;
-  document.dispatchEvent(new CustomEvent('isloh:courses-updated', { detail: courses }));
-  return true;
+  if (isNew) _coursesCache.push(course); else _coursesCache[index] = course;
+  isloh_cacheCoursesLocally();
+  isloh_emitCourses();
+
+  const request = isNew
+    ? islohApi.post('/courses', course)
+    : islohApi.put('/courses/' + course.id, course);
+
+  return request
+    .then((saved) => {
+      /* Server o'z id'sini beradi — vaqtinchalik id almashtiriladi */
+      const at = _coursesCache.findIndex((c) => c.id === course.id);
+      if (at !== -1 && saved) _coursesCache[at] = isloh_normalizeCourse(saved);
+      isloh_cacheCoursesLocally();
+      isloh_emitCourses();
+      return _coursesCache[at] || course;
+    })
+    .catch((err) => {
+      const at = _coursesCache.findIndex((c) => c.id === course.id);
+      if (at !== -1) { if (isNew) _coursesCache.splice(at, 1); else _coursesCache[at] = previous; }
+      isloh_cacheCoursesLocally();
+      isloh_emitCourses();
+      if (typeof isloh_showToast === 'function') isloh_showToast(err.error || "Saqlab bo'lmadi", 'error');
+      throw err;
+    });
 }
 
 /* --- Yordamchilar --------------------------------------------------------- */
@@ -244,8 +296,11 @@ function isloh_relativeDate(value) {
 
 /* --- Yozish amallari ------------------------------------------------------ */
 
-/* Yaratadi yoki yangilaydi. `patch.id` bo'lsa — yangilanadi, bo'lmasa yangi
-   kurs qo'shiladi. Muvaffaqiyatda kursni, kvota xatosida null qaytaradi. */
+/* Bu uchtasi SINXRON qoladi — chaqiruvchilar (js/course-form.js,
+   js/instructor-courses.js) natijani darhol kutadi. Tarmoq qismi fonda;
+   xato bo'lsa isloh_persistCourse o'zi orqaga qaytaradi va toast chiqaradi,
+   shuning uchun bu yerda promise yutiladi. */
+
 function isloh_saveCourse(patch) {
   const courses = isloh_getCourses();
   const data = patch || {};
@@ -253,18 +308,19 @@ function isloh_saveCourse(patch) {
 
   if (index === -1) {
     const course = isloh_normalizeCourse(data);
+    // Vaqtinchalik id — server javobida o'z id'siga almashadi
     course.id = isloh_uniqueCourseId(data.id || data.slug || data.title, courses);
     course.slug = course.slug || course.id;
     course.createdAt = isloh_todayISO();
     course.updatedAt = course.createdAt;
-    courses.push(course);
-    return isloh_commitCourses(courses) ? course : null;
+    isloh_persistCourse(course).catch(() => {});
+    return course;
   }
 
   const updated = isloh_normalizeCourse(Object.assign({}, courses[index], data));
   updated.updatedAt = isloh_todayISO();
-  courses[index] = updated;
-  return isloh_commitCourses(courses) ? updated : null;
+  isloh_persistCourse(updated).catch(() => {});
+  return updated;
 }
 
 function isloh_setCourseStatus(id, status) {
@@ -272,9 +328,22 @@ function isloh_setCourseStatus(id, status) {
   return isloh_saveCourse({ id: id, status: status });
 }
 
+/* Optimistik o'chirish: qator darhol ketadi, server rad etsa qaytariladi. */
 function isloh_deleteCourse(id) {
-  const courses = isloh_getCourses().filter((c) => c.id !== id);
-  return isloh_commitCourses(courses);
+  const index = _coursesCache.findIndex((c) => c.id === id);
+  if (index === -1) return false;
+
+  const removed = _coursesCache.splice(index, 1)[0];
+  isloh_cacheCoursesLocally();
+  isloh_emitCourses();
+
+  islohApi.delete('/courses/' + id).catch((err) => {
+    _coursesCache.splice(index, 0, removed);
+    isloh_cacheCoursesLocally();
+    isloh_emitCourses();
+    if (typeof isloh_showToast === 'function') isloh_showToast(err.error || "O'chirib bo'lmadi", 'error');
+  });
+  return true;
 }
 
 function isloh_duplicateCourse(id) {
@@ -292,8 +361,8 @@ function isloh_duplicateCourse(id) {
   copy.revenue = 0;
   copy.createdAt = isloh_todayISO();
   copy.updatedAt = copy.createdAt;
-  courses.push(copy);
-  return isloh_commitCourses(courses) ? copy : null;
+  isloh_persistCourse(copy).catch(() => {});
+  return copy;
 }
 
 /* Sahifadagi `[data-course-link="<sahifa>"]` havolalariga joriy kurs ID'sini
