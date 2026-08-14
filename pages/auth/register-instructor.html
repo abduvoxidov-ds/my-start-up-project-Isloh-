@@ -24,31 +24,38 @@
     <div class="auth-form-side">
       <div class="auth-form-inner">
         <form onsubmit="event.preventDefault(); window.location.href='../instructor/dashboard.html';">
+          <div class="field-error" data-error-for="form" hidden></div>
           <div class="field">
             <label for="fname">To'liq ism</label>
             <input id="fname" type="text" placeholder="Ismingizni kiriting">
+            <div class="field-error" data-error-for="full_name" hidden></div>
           </div>
           <div class="field">
             <label for="org">Tashkilot / Kompaniya nomi</label>
             <input id="org" type="text" placeholder="Masalan: Isloh Academy">
+            <div class="field-error" data-error-for="organization" hidden></div>
           </div>
           <div class="field">
             <label for="email2">Email manzil</label>
             <input id="email2" type="email" placeholder="email@gmail.com">
+            <div class="field-error" data-error-for="email" hidden></div>
           </div>
           <div class="field">
             <label for="pass2">Parol</label>
             <input id="pass2" type="password" placeholder="••••••••••••">
+            <div class="field-error" data-error-for="password" hidden></div>
           </div>
           <div class="field">
             <label for="pass3">Parolni tasdiqlang</label>
             <input id="pass3" type="password" placeholder="••••••••••••">
             <div class="field-hint">Kamida 8 ta belgi</div>
+            <div class="field-error" data-error-for="password_confirm" hidden></div>
           </div>
 
           <div class="checkbox-row">
             <input type="checkbox" id="agree">
             <label for="agree">Men <a href="#" style="color:var(--teach-green,#2ecc71); font-weight:600;">Foydalanish shartlari</a> va <a href="#" style="color:var(--teach-green,#2ecc71); font-weight:600;">Maxfiylik siyosati</a>ga roziman</label>
+            <div class="field-error" data-error-for="agree" hidden></div>
           </div>
 
           <button type="submit" class="btn btn-teach btn-block" style="background:var(--teach-green,#2ecc71); color:#fff; border:none;">Davom etish</button>
@@ -60,5 +67,8 @@
       </div>
     </div>
   </div>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/toast.js"></script>
+  <script src="../../js/auth-guard.js"></script>
 </body>
 </html>
