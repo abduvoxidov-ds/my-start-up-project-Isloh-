@@ -255,3 +255,8 @@ document.addEventListener('DOMContentLoaded', () => {
   isloh_initCourseRowActions();
   isloh_initCourseBulkActions();
 });
+
+/* Do'kon API'dan yuklab bo'lgach qayta chizamiz — aks holda sahifada
+   zaxira (demo) ro'yxat qolib ketardi. Amal tugmalari delegatsiya orqali
+   ulangani uchun innerHTML almashishi ularni buzmaydi. */
+document.addEventListener('isloh:courses-updated', isloh_renderInstructorCourses);

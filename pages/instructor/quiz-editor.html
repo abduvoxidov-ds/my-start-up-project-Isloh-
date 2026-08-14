@@ -424,6 +424,9 @@
 <template id="qopt-match-template"><div class="question-option-row match-row"><input type="text" placeholder="Element"><span class="qo-sep"><i class="bi bi-arrow-right"></i></span><input type="text" placeholder="Mos javob"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
 <template id="qopt-order-template"><div class="question-option-row" data-sortable-item draggable="true"><i class="bi bi-grip-vertical drag-handle" data-drag-handle tabindex="0" role="button" aria-label="Tashish"></i><input type="text" placeholder="Yangi element"><button class="icon-btn icon-btn-sm" data-remove-row aria-label="O'chirish"><i class="bi bi-x-lg"></i></button></div></template>
 
+<script src="../../js/api.js"></script>
+<script src="../../js/ui-feedback.js"></script>
+<script src="../../js/auth-guard.js"></script>
 <script src="../../js/navigation.js"></script>
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/chat-store.js"></script>
@@ -448,7 +451,6 @@
      ataylab yo'q: bu sahifa `isloh_quizzes` ga yozadi
      (data-unsaved-store="quiz"), qoralama do'koni esa kalitni sahifa nomi
      bo'yicha yuritadi va bir test matnini boshqasiga o'tkazib yuborardi. -->
-<script src="../../js/api.js"></script>
 <script src="../../js/course-store.js"></script>
 <script src="../../js/question-store.js"></script>
 <script src="../../js/quiz-store.js"></script>

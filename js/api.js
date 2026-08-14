@@ -89,6 +89,10 @@ async function islohFetch(endpoint, options = {}) {
       method: options.method || 'GET',
       headers: headers,
       credentials: 'include', // refresh token — httpOnly cookie
+      /* API javoblari brauzer keshiga tushmasin: aks holda sahifa eskirgan
+         ma'lumotni ko'rsatib turaveradi va eng yomoni "Qayta urinish"
+         serverga bormay, o'sha keshdan o'qib "tuzaldi" deb ko'rsatadi. */
+      cache: 'no-store',
       signal: options.signal || controller.signal,
       body: options.data === undefined ? undefined : (isForm ? options.data : JSON.stringify(options.data))
     });

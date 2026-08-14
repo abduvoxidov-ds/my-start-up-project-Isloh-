@@ -286,3 +286,7 @@ function isloh_initMarketInsights() {
 }
 
 document.addEventListener('DOMContentLoaded', isloh_initMarketInsights);
+
+/* Do'kon API'dan yuklangach qayta hisoblaymiz. Bu funksiya faqat chizadi
+   (listener ulamaydi), shuning uchun takroriy chaqiruv xavfsiz. */
+document.addEventListener('isloh:courses-updated', isloh_initMarketInsights);

@@ -379,3 +379,7 @@ function isloh_renderProfileSections() {
 /* Profil tahrirlanganda (ko'nikma qo'shildi, maqsad o'zgardi) qayta chiziladi. */
 document.addEventListener('isloh:user-updated', isloh_renderProfileSections);
 document.addEventListener('DOMContentLoaded', isloh_renderProfileSections);
+
+/* "Mening kurslarim" bo'limi kurs do'konidan chiziladi — API yuklangach
+   qayta chizilmasa zaxira ro'yxat qolib ketardi. */
+document.addEventListener('isloh:courses-updated', isloh_renderProfileSections);

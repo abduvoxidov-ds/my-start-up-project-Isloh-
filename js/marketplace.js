@@ -581,10 +581,23 @@ function isloh_renderRecentOrders(selector, limit) {
   }).join('');
 }
 
-function isloh_initMarketplace() {
+/* Katalogga bog'liq bo'lgan qism — ALOHIDA, chunki u qayta chaqiriladi.
+   `isloh_initMarketplace` ni butunlay qayta ishga tushirib bo'lmaydi: u
+   listener ham ulaydi (saralash, kupon, solishtirish), takror chaqirilsa
+   ular ikkilanib, bitta bosishga ikki marta javob berardi.
+
+   Saralash tanlovi saqlanadi — aks holda API yuklangach ro'yxat jimgina
+   standart tartibga qaytib qolardi. */
+function isloh_renderMarketplaceCatalog() {
+  const sort = document.getElementById('mkt-sort');
+  const catalog = isloh_getCatalog();
   isloh_renderMarketplaceCategories(isloh_catalogCategories());
-  isloh_renderMarketplaceCourses(isloh_getCatalog());
+  isloh_renderMarketplaceCourses(sort ? isloh_sortCourses(catalog, sort.value) : catalog);
   isloh_renderMarketplaceStrips();
+}
+
+function isloh_initMarketplace() {
+  isloh_renderMarketplaceCatalog();
   isloh_updateCartBadge();
   isloh_renderRecentOrders('[data-mkt-recent-orders]', 2);
   isloh_initMarketplaceSort();
@@ -594,3 +607,8 @@ function isloh_initMarketplace() {
 }
 
 document.addEventListener('DOMContentLoaded', isloh_initMarketplace);
+
+/* O'qituvchi nashr etgan kurslar katalogga do'kon orqali qo'shiladi
+   (isloh_getCatalog), shuning uchun do'kon yangilanishi katalogga ham
+   ta'sir qiladi. */
+document.addEventListener('isloh:courses-updated', isloh_renderMarketplaceCatalog);
