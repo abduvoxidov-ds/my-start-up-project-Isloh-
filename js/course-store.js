@@ -144,26 +144,12 @@ const ISLOH_COURSE_SEED = [
    yuboriladi va sahifalar o'zini qayta chizadi — chaqiruv joylariga
    tegilmaydi.
 
-   localStorage endi MANBA emas, offline NUSXA: file:// ostida (CLAUDE.md §3)
-   va tarmoq uzilganda shu nusxa ishlaydi. */
+   Mexanizmning o'zi js/api.js dagi `isloh_createStoreCache` da (kesh,
+   qayta urinish, optimistik yozish, rollback) — bu yerda faqat kurslarga
+   XOS qism qoladi: sxema, demo ma'lumot va yozish qoidalari.
 
-let _coursesCache = [];
-let _isCoursesLoaded = false;
-let _coursesLoadPromise = null;
-let _coursesLoadFailed = false;
-
-/* Qayta urinish (tarmoq xatosi bannerining tugmasi). Ikki nozik joy:
-   1) settled promise keshda qolsa yangi so'rov umuman ketmasdi — tozalanadi;
-   2) isloh_loadCourses xatoni o'zi yutadi va hech qachon reject qilmaydi,
-      shu sababli banner "muvaffaqiyat" deb yopilib ketardi — nosozlik shu
-      yerda qayta otiladi va banner joyida qoladi. */
-function isloh_retryLoadCourses() {
-  _coursesLoadPromise = null;
-  _isCoursesLoaded = false;
-  return isloh_loadCourses().then(() => {
-    if (_coursesLoadFailed) throw new Error('courses reload failed');
-  });
-}
+   localStorage endi MANBA emas, offline NUSXA: file:// ostida
+   (CLAUDE.md §3) va tarmoq uzilganda shu nusxa ishlaydi. */
 
 function isloh_normalizeCourse(course) {
   const merged = Object.assign({}, ISLOH_COURSE_DEFAULTS, course || {});
@@ -171,104 +157,22 @@ function isloh_normalizeCourse(course) {
   return merged;
 }
 
-/* Offline nusxa. Yo'q bo'lsa — demo. Bu yerda localStorage'ga YOZILMAYDI:
-   seed yozilsa bo'sh holat hech qachon ko'rinmasdi va backend ulanganda
-   demo ma'lumot serverga ketib qolardi. */
-function isloh_coursesFallback() {
-  let stored = null;
-  try { stored = JSON.parse(localStorage.getItem(ISLOH_COURSES_KEY)); } catch (e) { stored = null; }
-  const list = Array.isArray(stored) ? stored : ISLOH_COURSE_SEED;
-  return list.map(isloh_normalizeCourse);
-}
+const ISLOH_COURSE_CACHE = isloh_createStoreCache({
+  key: ISLOH_COURSES_KEY,
+  endpoint: '/courses',
+  event: 'isloh:courses-updated',
+  normalize: isloh_normalizeCourse,
+  seed: ISLOH_COURSE_SEED
+});
 
-function isloh_cacheCoursesLocally() {
-  try { localStorage.setItem(ISLOH_COURSES_KEY, JSON.stringify(_coursesCache)); } catch (e) { /* kvota */ }
-}
-
-function isloh_emitCourses() {
-  document.dispatchEvent(new CustomEvent('isloh:courses-updated', { detail: _coursesCache }));
-}
-
-/* Bir marta yuklaydi (takroriy chaqiruv o'sha promise'ni qaytaradi). */
-async function isloh_loadCourses() {
-  // Guard: API ulanganigacha UI buzilmasligi uchun
-  if (typeof islohApi === 'undefined') {
-    _coursesCache = isloh_coursesFallback();
-    _isCoursesLoaded = true;
-    isloh_emitCourses();
-    return Promise.resolve(_coursesCache);
-  }
-
-  if (_coursesLoadPromise) return _coursesLoadPromise;
-
-  _coursesLoadPromise = islohApi.get('/courses')
-    .then((data) => {
-      _coursesCache = (data || []).map(isloh_normalizeCourse);
-      _coursesLoadFailed = false;
-      isloh_cacheCoursesLocally();
-    })
-    .catch((err) => {
-      _coursesCache = isloh_coursesFallback();
-      _coursesLoadFailed = true;
-      /* file:// da API umuman yo'q (CLAUDE.md §3) — kutilgan holat, banner
-         shovqin bo'lardi. Faqat haqiqiy tarmoq/server xatosida qayta
-         urinish taklif qilinadi. */
-      if (err && err.code !== 'file_protocol' && typeof islohUI !== 'undefined') {
-        islohUI.showNetworkError(isloh_retryLoadCourses, err.error);
-      }
-    })
-    .then(() => { _isCoursesLoaded = true; isloh_emitCourses(); return _coursesCache; });
-
-  return _coursesLoadPromise;
-}
-
-/* SINXRON. Kesh bo'sh bo'lsa zaxira qaytaradi va yuklashni fonda boshlaydi. */
-function isloh_getCourses() {
-  if (!_isCoursesLoaded) {
-    if (!_coursesCache.length) _coursesCache = isloh_coursesFallback();
-    isloh_loadCourses();
-  }
-  return _coursesCache;
-}
+function isloh_loadCourses()      { return ISLOH_COURSE_CACHE.load(); }
+function isloh_retryLoadCourses() { return ISLOH_COURSE_CACHE.retry(); }
+function isloh_getCourses()       { return ISLOH_COURSE_CACHE.get(); }
+function isloh_persistCourse(c)   { return ISLOH_COURSE_CACHE.persist(c); }
 
 function isloh_getCourse(id) {
   if (!id) return null;
   return isloh_getCourses().find((c) => c.id === id) || null;
-}
-
-/* Optimistik yozish: kesh darhol yangilanadi (UI kutmaydi), so'ng server.
-   Server rad etsa — ORQAGA QAYTARILADI, aks holda ekranda "saqlandi" turib
-   ma'lumot yo'qolardi. */
-function isloh_persistCourse(course) {
-  const index = _coursesCache.findIndex((c) => c.id === course.id);
-  const isNew = index === -1;
-  const previous = isNew ? null : _coursesCache[index];
-
-  if (isNew) _coursesCache.push(course); else _coursesCache[index] = course;
-  isloh_cacheCoursesLocally();
-  isloh_emitCourses();
-
-  const request = isNew
-    ? islohApi.post('/courses', course)
-    : islohApi.put('/courses/' + course.id, course);
-
-  return request
-    .then((saved) => {
-      /* Server o'z id'sini beradi — vaqtinchalik id almashtiriladi */
-      const at = _coursesCache.findIndex((c) => c.id === course.id);
-      if (at !== -1 && saved) _coursesCache[at] = isloh_normalizeCourse(saved);
-      isloh_cacheCoursesLocally();
-      isloh_emitCourses();
-      return _coursesCache[at] || course;
-    })
-    .catch((err) => {
-      const at = _coursesCache.findIndex((c) => c.id === course.id);
-      if (at !== -1) { if (isNew) _coursesCache.splice(at, 1); else _coursesCache[at] = previous; }
-      isloh_cacheCoursesLocally();
-      isloh_emitCourses();
-      if (typeof isloh_showToast === 'function') isloh_showToast(err.error || "Saqlab bo'lmadi", 'error');
-      throw err;
-    });
 }
 
 /* --- Yordamchilar --------------------------------------------------------- */
@@ -363,22 +267,9 @@ function isloh_setCourseStatus(id, status) {
   return isloh_saveCourse({ id: id, status: status });
 }
 
-/* Optimistik o'chirish: qator darhol ketadi, server rad etsa qaytariladi. */
+/* Optimistik o'chirish (fabrikada: rollback o'sha o'ringa qaytaradi). */
 function isloh_deleteCourse(id) {
-  const index = _coursesCache.findIndex((c) => c.id === id);
-  if (index === -1) return false;
-
-  const removed = _coursesCache.splice(index, 1)[0];
-  isloh_cacheCoursesLocally();
-  isloh_emitCourses();
-
-  islohApi.delete('/courses/' + id).catch((err) => {
-    _coursesCache.splice(index, 0, removed);
-    isloh_cacheCoursesLocally();
-    isloh_emitCourses();
-    if (typeof isloh_showToast === 'function') isloh_showToast(err.error || "O'chirib bo'lmadi", 'error');
-  });
-  return true;
+  return ISLOH_COURSE_CACHE.remove(id);
 }
 
 function isloh_duplicateCourse(id) {

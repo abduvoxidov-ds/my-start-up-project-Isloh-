@@ -145,3 +145,160 @@ const islohApi = {
 };
 
 window.islohApi = islohApi;
+
+/* --- Universal Sync-over-Async do'kon fabrikasi ---------------------------
+   js/course-store.js va js/enrollment-store.js da bir xil ~70 qator kod
+   takrorlangan edi (kesh, yuklash, qayta urinish, optimistik yozish,
+   rollback). Yana 21 ta do'kon oldinda — shuning uchun naqsh shu yerga
+   ko'chirildi (CLAUDE.md §2).
+
+   NEGA AYNAN api.js: loyihada ES modul yo'q, skript tartibi muhim. api.js
+   62+ sahifada BIRINCHI yuklanadi, ya'ni fabrika har qanday do'kon
+   faylidan oldin tayyor — alohida fayl bo'lsa yana 62 ta teg kerak bo'lardi.
+
+   config:
+     key       — localStorage kaliti (offline nusxa)
+     endpoint  — '/courses' kabi
+     event     — 'isloh:courses-updated'
+     normalize — yozuvni standart sxemaga keltiruvchi funksiya (ixtiyoriy)
+     seed      — demo ma'lumot: massiv YOKI massiv qaytaruvchi funksiya
+                 (sanalari bugunga nisbatan ekiladigan do'konlar uchun)
+
+   Qaytaradi: { get, load, retry, persist, remove, fallback } */
+function isloh_createStoreCache(config) {
+  const normalize = config.normalize || ((x) => x);
+
+  let _cache = [];
+  let _isLoaded = false;
+  let _loadPromise = null;
+  let _loadFailed = false;
+
+  /* Offline nusxa; yo'q bo'lsa demo. Bu yerda localStorage'ga YOZILMAYDI:
+     seed o'qishda yozilsa bo'sh holat hech qachon ko'rinmasdi va backend
+     ulanganda demo yozuvlar serverga ketib qolardi. */
+  function fallback() {
+    let stored = null;
+    try { stored = JSON.parse(localStorage.getItem(config.key)); } catch (e) { stored = null; }
+    if (Array.isArray(stored)) return stored.map(normalize);
+    const seed = typeof config.seed === 'function' ? config.seed() : (config.seed || []);
+    return seed.map(normalize);
+  }
+
+  function cacheLocally() {
+    try { localStorage.setItem(config.key, JSON.stringify(_cache)); } catch (e) { /* kvota */ }
+  }
+
+  /* DIQQAT — `document`, `window` emas: loyihadagi barcha obunachilar
+     `document.addEventListener('isloh:...')` yozadi. `window`ga yuborilsa
+     hodisa hech kimga bormasdi va sahifalar jimgina eskirgan ma'lumot
+     bilan qolib ketardi. `detail` ham saqlanadi — mavjud shartnoma. */
+  function emit() {
+    if (!config.event) return;
+    document.dispatchEvent(new CustomEvent(config.event, { detail: _cache }));
+  }
+
+  async function load() {
+    if (_loadPromise) return _loadPromise;
+
+    _loadPromise = islohApi.get(config.endpoint)
+      .then((data) => {
+        _cache = (data || []).map(normalize);
+        _loadFailed = false;
+        cacheLocally();
+      })
+      .catch((err) => {
+        _cache = fallback();
+        _loadFailed = true;
+        /* file:// da API umuman yo'q (CLAUDE.md §3) — kutilgan holat,
+           banner shovqin bo'lardi. */
+        if (err && err.code !== 'file_protocol' && typeof islohUI !== 'undefined') {
+          islohUI.showNetworkError(retry, err.error);
+        }
+      })
+      .then(() => { _isLoaded = true; emit(); return _cache; });
+
+    return _loadPromise;
+  }
+
+  /* Ikki nozik joy:
+     1) settled promise tozalanmasa yangi so'rov umuman ketmasdi;
+     2) load() xatoni o'zi yutadi va hech qachon reject qilmaydi, shuning
+        uchun banner "tuzaldi" deb yopilib ketardi — nosozlik shu yerda
+        qayta otiladi va banner joyida qoladi. */
+  function retry() {
+    _loadPromise = null;
+    _isLoaded = false;
+    return load().then(() => {
+      if (_loadFailed) throw new Error(config.endpoint + ' reload failed');
+    });
+  }
+
+  /* SINXRON — sahifalar shuni chaqiradi. Kesh bo'sh bo'lsa zaxira
+     qaytariladi va yuklash fonda boshlanadi. */
+  function get() {
+    if (!_isLoaded) {
+      if (!_cache.length) _cache = fallback();
+      load();
+    }
+    return _cache;
+  }
+
+  /* Optimistik qo'shish/yangilash. `isNew` keshdagi id bo'yicha
+     ANIQLANADI, tashqaridan berilmaydi: ikki manba bir-biriga zid
+     bo'lsa (masalan "yangi" deyilgan yozuv keshda turgan bo'lsa)
+     ro'yxatda ikki nusxa paydo bo'lardi. */
+  function persist(item) {
+    const index = _cache.findIndex((c) => c.id === item.id);
+    const isNew = index === -1;
+    const previous = isNew ? null : _cache[index];
+
+    if (isNew) _cache.push(item); else _cache[index] = item;
+    cacheLocally();
+    emit();
+
+    const request = isNew
+      ? islohApi.post(config.endpoint, item)
+      : islohApi.put(config.endpoint + '/' + item.id, item);
+
+    return request
+      .then((saved) => {
+        // Server o'z id'sini beradi — vaqtinchalik id almashadi
+        const at = _cache.findIndex((c) => c.id === item.id);
+        if (at !== -1 && saved) _cache[at] = normalize(saved);
+        cacheLocally();
+        emit();
+        return (at !== -1 ? _cache[at] : item);
+      })
+      .catch((err) => {
+        const at = _cache.findIndex((c) => c.id === item.id);
+        if (at !== -1) { if (isNew) _cache.splice(at, 1); else _cache[at] = previous; }
+        cacheLocally();
+        emit();
+        if (typeof islohUI !== 'undefined') islohUI.toast(err.error || "Saqlab bo'lmadi", 'error');
+        throw err;
+      });
+  }
+
+  /* Optimistik o'chirish: qator darhol ketadi, server rad etsa
+     O'SHA O'RNIGA qaytariladi (tartib buzilmasin). */
+  function remove(id) {
+    const index = _cache.findIndex((c) => c.id === id);
+    if (index === -1) return false;
+
+    const removed = _cache.splice(index, 1)[0];
+    cacheLocally();
+    emit();
+
+    islohApi.delete(config.endpoint + '/' + id).catch((err) => {
+      _cache.splice(index, 0, removed);
+      cacheLocally();
+      emit();
+      if (typeof islohUI !== 'undefined') islohUI.toast(err.error || "O'chirib bo'lmadi", 'error');
+    });
+    return true;
+  }
+
+  return { get: get, load: load, retry: retry, persist: persist, remove: remove, fallback: fallback };
+}
+
+window.isloh_createStoreCache = isloh_createStoreCache;

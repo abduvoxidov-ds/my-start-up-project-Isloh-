@@ -120,31 +120,33 @@ function isloh_enrollmentSeed() {
 
 /* --- Do'kon --------------------------------------------------------------- */
 
-function isloh_enReadJson(key) {
-  try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; }
-}
-
-function isloh_enWriteJson(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
 function isloh_normalizeEnrollment(enrollment) {
   return Object.assign({}, ISLOH_ENROLLMENT_DEFAULTS, enrollment || {});
 }
 
-function isloh_getEnrollments() {
-  const stored = isloh_enReadJson(ISLOH_ENROLLMENTS_KEY);
-  if (Array.isArray(stored)) return stored.map(isloh_normalizeEnrollment);
+/* --- Sync-over-Async kesh -------------------------------------------------
+   Mexanizm js/api.js dagi `isloh_createStoreCache` da (kesh, qayta urinish,
+   optimistik yozish, rollback). Bu yerda faqat ro'yxatga olishga XOS qism.
 
-  const seed = isloh_enrollmentSeed().map(isloh_normalizeEnrollment);
-  isloh_enWriteJson(ISLOH_ENROLLMENTS_KEY, seed);
-  return seed;
-}
+   Beshala iste'molchi (students, dashboard, analytics, period-stats,
+   profile-stats) `isloh:enrollments-updated` ga allaqachon obuna.
+
+   Demo ma'lumot FUNKSIYA sifatida beriladi: sanalar bugunga nisbatan
+   ekiladi (qat'iy sana yozilsa bir oydan keyin hamma talaba "faol emas"
+   bo'lib qolardi). */
+
+const ISLOH_ENROLLMENT_CACHE = isloh_createStoreCache({
+  key: ISLOH_ENROLLMENTS_KEY,
+  endpoint: '/enrollments',
+  event: 'isloh:enrollments-updated',
+  normalize: isloh_normalizeEnrollment,
+  seed: isloh_enrollmentSeed
+});
+
+function isloh_loadEnrollments()      { return ISLOH_ENROLLMENT_CACHE.load(); }
+function isloh_retryLoadEnrollments() { return ISLOH_ENROLLMENT_CACHE.retry(); }
+function isloh_getEnrollments()       { return ISLOH_ENROLLMENT_CACHE.get(); }
+function isloh_persistEnrollment(e)   { return ISLOH_ENROLLMENT_CACHE.persist(e); }
 
 function isloh_getEnrollment(id) {
   if (!id) return null;
@@ -158,16 +160,12 @@ function isloh_getCourseEnrollments(courseId) {
   return isloh_getEnrollments().filter((e) => e.courseId === courseId);
 }
 
-function isloh_commitEnrollments(list) {
-  if (!isloh_enWriteJson(ISLOH_ENROLLMENTS_KEY, list)) return false;
-  document.dispatchEvent(new CustomEvent('isloh:enrollments-updated', { detail: list }));
-  return true;
-}
-
 /* Yozish API'si: talaba kursga yozilganda yoki jarayoni o'zgarganda
-   chaqiriladi. Hozircha yozuvlar faqat demo ma'lumotdan keladi — talaba
-   tomonidagi "Kursga yozilish" oqimi (js/enrollment.js) va real jarayon
-   backend ulangach shu funksiyaga bog'lanadi (CLAUDE.md §4). */
+   chaqiriladi. Talaba tomonidagi "Kursga yozilish" oqimi (js/enrollment.js)
+   backend ulangach shu funksiyaga bog'lanadi.
+
+   SINXRON qoladi — chaqiruvchilar natijani darhol kutadi; tarmoq qismi
+   fonda, xatoni isloh_persistEnrollment o'zi orqaga qaytaradi. */
 function isloh_saveEnrollment(patch) {
   const list = isloh_getEnrollments();
   const data = patch || {};
@@ -175,19 +173,21 @@ function isloh_saveEnrollment(patch) {
 
   if (index === -1) {
     const enrollment = isloh_normalizeEnrollment(data);
-    enrollment.id = 'en-' + Date.now();
+    enrollment.id = 'en-' + Date.now();   // vaqtinchalik, server almashtiradi
     enrollment.enrolledAt = enrollment.enrolledAt || new Date().toISOString();
     enrollment.lastActiveAt = enrollment.lastActiveAt || enrollment.enrolledAt;
-    list.push(enrollment);
-    return isloh_commitEnrollments(list) ? enrollment : null;
+    isloh_persistEnrollment(enrollment).catch(() => {});
+    return enrollment;
   }
 
-  list[index] = isloh_normalizeEnrollment(Object.assign({}, list[index], data));
-  return isloh_commitEnrollments(list) ? list[index] : null;
+  const updated = isloh_normalizeEnrollment(Object.assign({}, list[index], data));
+  isloh_persistEnrollment(updated).catch(() => {});
+  return updated;
 }
 
+/* Optimistik o'chirish (fabrikada: rollback o'sha o'ringa qaytaradi). */
 function isloh_deleteEnrollment(id) {
-  return isloh_commitEnrollments(isloh_getEnrollments().filter((e) => e.id !== id));
+  return ISLOH_ENROLLMENT_CACHE.remove(id);
 }
 
 /* --- Hisoblanadigan qiymatlar --------------------------------------------- */
