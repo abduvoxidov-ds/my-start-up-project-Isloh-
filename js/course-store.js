@@ -177,6 +177,14 @@ function isloh_emitCourses() {
 
 /* Bir marta yuklaydi (takroriy chaqiruv o'sha promise'ni qaytaradi). */
 async function isloh_loadCourses() {
+  // Guard: API ulanganigacha UI buzilmasligi uchun
+  if (typeof islohApi === 'undefined') {
+    _coursesCache = isloh_coursesFallback();
+    _isCoursesLoaded = true;
+    isloh_emitCourses();
+    return Promise.resolve(_coursesCache);
+  }
+
   if (_coursesLoadPromise) return _coursesLoadPromise;
 
   _coursesLoadPromise = islohApi.get('/courses')
