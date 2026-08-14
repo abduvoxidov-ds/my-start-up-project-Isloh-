@@ -2422,3 +2422,26 @@ a.note-source:hover { color:var(--violet-600); }
    inline style bilan yozilgan edi. */
 .live-session-card.is-live { border:1.5px solid var(--danger); }
 .live-session-card.is-ended { opacity:.85; }
+
+/* --- Tarmoq xatosi banneri (js/ui-feedback.js) ---------------------------
+   Toast'dan farqi: o'zi yo'qolmaydi va ichida "Qayta urinish" bor —
+   foydalanuvchi harakat qilmaguncha turadi. */
+.net-error {
+  position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
+  z-index:var(--z-toast);
+  display:flex; align-items:center; gap:12px;
+  max-width:min(560px, calc(100vw - 32px));
+  padding:12px 14px;
+  background:var(--bg-card); color:var(--ink-900);
+  border:1px solid var(--danger-300); border-left:3px solid var(--danger);
+  border-radius:var(--r-md); box-shadow:var(--shadow-lg);
+}
+.net-error-icon { color:var(--danger); font-size:18px; flex-shrink:0; }
+.net-error-text { font-size:13px; flex:1; min-width:0; }
+.net-error .btn { flex-shrink:0; }
+.net-error-close { width:28px; height:28px; flex-shrink:0; }
+
+@media (max-width: 700px) {
+  .net-error { flex-wrap:wrap; bottom:12px; }
+  .net-error-text { flex-basis:100%; order:-1; }
+}

@@ -27,16 +27,16 @@
         <h2 style="font-size:26px;">Xush kelibsiz 👋</h2>
         <p style="color:var(--ink-500); font-size:14px; margin: 8px 0 28px;">Hisobingizga kirish uchun davom eting</p>
 
-        <form onsubmit="event.preventDefault(); window.location.href='../student/dashboard.html';">
+        <form novalidate onsubmit="event.preventDefault(); window.location.href='../student/dashboard.html';">
           <div class="field-error" data-error-for="form" hidden></div>
           <div class="field">
             <label for="email">Email manzil</label>
-            <input id="email" type="email" placeholder="email@gmail.com">
+            <input id="email" type="email" required data-auth-field="email" placeholder="email@gmail.com">
             <div class="field-error" data-error-for="email" hidden></div>
           </div>
           <div class="field" style="margin-bottom:8px;">
             <label for="pass">Parol</label>
-            <input id="pass" type="password" placeholder="••••••••">
+            <input id="pass" type="password" required data-auth-field="password" placeholder="••••••••">
             <div class="field-error" data-error-for="password" hidden></div>
           </div>
           <div class="remember-row">
@@ -61,6 +61,7 @@
   </div>
   <script src="../../js/api.js"></script>
   <script src="../../js/toast.js"></script>
+  <script src="../../js/ui-feedback.js"></script>
   <script src="../../js/auth-guard.js"></script>
 </body>
 

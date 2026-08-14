@@ -42,18 +42,10 @@ isloh_runAuthGuard();
 
 /* --- 2. Xato ko'rsatish --------------------------------------------------- */
 
-function isloh_clearAuthErrors(form) {
-  form.querySelectorAll('[data-error-for]').forEach((el) => { el.textContent = ''; el.hidden = true; });
-}
-
+/* Tozalash va maydon xatosi — islohUI dan (js/ui-feedback.js). Bu yerda
+   o'z nusxasi bor edi, endi yagona joyda (CLAUDE.md §2). */
 function isloh_showFieldError(form, field, message) {
-  const el = form.querySelector('[data-error-for="' + field + '"]');
-  if (!el) {
-    if (typeof isloh_showToast === 'function') isloh_showToast(message, 'error');
-    return;
-  }
-  el.textContent = message;
-  el.hidden = false;
+  islohUI.setFieldError(form, field, message);
 }
 
 /* Server javobidagi `fields` — maydonlarga, `error` — umumiy qatorga */
@@ -121,23 +113,15 @@ function isloh_authPayload(form) {
   return { endpoint: '/auth/register', body: body, confirm: isloh_authValue(form, 'pass3'), agree: isloh_authChecked(form, 'agree') };
 }
 
-/* Serverga bormasdan oldin tutiladigan xatolar */
+/* Bo'sh maydonlarni endi islohUI.validateForm tekshiradi (`required` +
+   `data-auth-field`). Bu yerda faqat SEMANTIK qoidalar qoladi — bittasi
+   ham "bo'shmi?" degan savol emas. */
 function isloh_authLocalError(form, req) {
-  if (req.endpoint === '/auth/forgot-password') {
-    if (!req.body.email) return ['email', 'Email manzilni kiriting'];
-    return null;
+  if (req.endpoint === '/auth/reset-password' && req.body.password !== req.body.password_confirm) {
+    return ['password_confirm', 'Parollar mos kelmadi'];
   }
-  if (req.endpoint === '/auth/reset-password') {
-    if (!req.body.password) return ['password', 'Yangi parolni kiriting'];
-    if (req.body.password !== req.body.password_confirm) return ['password_confirm', 'Parollar mos kelmadi'];
-    return null;
-  }
-  if (!req.body.email) return ['email', 'Email manzilni kiriting'];
-  if (!req.body.password) return ['password', 'Parolni kiriting'];
-  if (req.endpoint === '/auth/register') {
-    if (!req.body.full_name) return ['full_name', 'Ismingizni kiriting'];
-    if (req.body.password !== req.confirm) return ['password_confirm', 'Parollar mos kelmadi'];
-    if (!req.agree) return ['agree', 'Shartlarni qabul qiling'];
+  if (req.endpoint === '/auth/register' && req.body.password !== req.confirm) {
+    return ['password_confirm', 'Parollar mos kelmadi'];
   }
   return null;
 }
@@ -151,17 +135,20 @@ function isloh_initAuthForm() {
   form.removeAttribute('onsubmit');
 
   const submitBtn = form.querySelector('button[type="submit"]');
-  const label = submitBtn ? submitBtn.textContent : '';
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    isloh_clearAuthErrors(form);
+
+    /* Bo'sh majburiy maydonlar — serverga bormasdan. validateForm o'zi
+       eski xatolarni tozalaydi, `.is-invalid` qo'yadi va birinchi bo'sh
+       maydonga fokus beradi. */
+    if (!islohUI.validateForm(form).valid) return;
 
     const req = isloh_authPayload(form);
     const local = isloh_authLocalError(form, req);
     if (local) { isloh_showFieldError(form, local[0], local[1]); return; }
 
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Kuting…'; }
+    islohUI.setButtonLoading(submitBtn, true, 'Kuting…');
     try {
       // 401 = noto'g'ri parol, sessiya tugashi emas — login'ga otilmasin
       const res = await islohApi.post(req.endpoint, req.body, { skipAuthRedirect: true });
@@ -171,7 +158,7 @@ function isloh_initAuthForm() {
     } catch (err) {
       isloh_showAuthError(form, err);
     } finally {
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = label; }
+      islohUI.setButtonLoading(submitBtn, false);
     }
   });
 }

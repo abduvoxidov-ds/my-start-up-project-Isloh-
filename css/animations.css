@@ -36,3 +36,13 @@
    DOM'dan animatsiya tugagach o'chiriladi */
 @keyframes isloh-row-out { to { opacity: 0; transform: translateX(-14px); } }
 .anim-row-out { animation: isloh-row-out var(--t-slow) var(--ease-standard) forwards; pointer-events: none; }
+
+/* Tugma ichidagi kichik spinner (js/ui-feedback.js — isloh_setButtonLoading).
+   Rangi tugma matnidan olinadi, shuning uchun primary/outline'da ham
+   ko'rinadi — qattiq kodlangan oq yoki binafsha yaramaydi. */
+.spinner-sm {
+  width:14px; height:14px; border-width:2px;
+  border-color: currentColor transparent transparent transparent;
+  display:inline-block; vertical-align:middle;
+}
+.btn .spinner-sm { margin-right:6px; }

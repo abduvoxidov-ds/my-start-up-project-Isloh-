@@ -150,6 +150,20 @@ const ISLOH_COURSE_SEED = [
 let _coursesCache = [];
 let _isCoursesLoaded = false;
 let _coursesLoadPromise = null;
+let _coursesLoadFailed = false;
+
+/* Qayta urinish (tarmoq xatosi bannerining tugmasi). Ikki nozik joy:
+   1) settled promise keshda qolsa yangi so'rov umuman ketmasdi — tozalanadi;
+   2) isloh_loadCourses xatoni o'zi yutadi va hech qachon reject qilmaydi,
+      shu sababli banner "muvaffaqiyat" deb yopilib ketardi — nosozlik shu
+      yerda qayta otiladi va banner joyida qoladi. */
+function isloh_retryLoadCourses() {
+  _coursesLoadPromise = null;
+  _isCoursesLoaded = false;
+  return isloh_loadCourses().then(() => {
+    if (_coursesLoadFailed) throw new Error('courses reload failed');
+  });
+}
 
 function isloh_normalizeCourse(course) {
   const merged = Object.assign({}, ISLOH_COURSE_DEFAULTS, course || {});
@@ -188,8 +202,21 @@ async function isloh_loadCourses() {
   if (_coursesLoadPromise) return _coursesLoadPromise;
 
   _coursesLoadPromise = islohApi.get('/courses')
-    .then((data) => { _coursesCache = (data || []).map(isloh_normalizeCourse); isloh_cacheCoursesLocally(); })
-    .catch(() => { _coursesCache = isloh_coursesFallback(); })   // file:// / tarmoq
+    .then((data) => {
+      _coursesCache = (data || []).map(isloh_normalizeCourse);
+      _coursesLoadFailed = false;
+      isloh_cacheCoursesLocally();
+    })
+    .catch((err) => {
+      _coursesCache = isloh_coursesFallback();
+      _coursesLoadFailed = true;
+      /* file:// da API umuman yo'q (CLAUDE.md §3) — kutilgan holat, banner
+         shovqin bo'lardi. Faqat haqiqiy tarmoq/server xatosida qayta
+         urinish taklif qilinadi. */
+      if (err && err.code !== 'file_protocol' && typeof islohUI !== 'undefined') {
+        islohUI.showNetworkError(isloh_retryLoadCourses, err.error);
+      }
+    })
     .then(() => { _isCoursesLoaded = true; isloh_emitCourses(); return _coursesCache; });
 
   return _coursesLoadPromise;
