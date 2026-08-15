@@ -18,7 +18,7 @@ Ishlab chiqarishda bu yo'llarni nginx yoki WhiteNoise oldindan ushlaydi;
 """
 
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from django.views.static import serve
 
@@ -29,8 +29,7 @@ ISLOH_PUBLIC_DIRS = ("pages", "js", "css", "assets", "media")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # /api/v1/... — sprint 1 dan boshlab to'ldiriladi:
-    #   path("api/v1/auth/", include("apps.accounts.urls")),
+    path("api/v1/", include("apps.accounts.urls")),
 ]
 
 urlpatterns += [

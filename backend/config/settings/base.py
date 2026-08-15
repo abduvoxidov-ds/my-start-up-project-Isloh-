@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     # Isloh ilovalari — docs/BACKEND-PLAN.md §1
     "apps.core",
+    "apps.accounts",
 ]
 
 MIDDLEWARE = [
@@ -94,6 +95,9 @@ if DATABASES["default"]["ENGINE"].endswith("sqlite3"):
     _name = DATABASES["default"]["NAME"]
     if _name and not Path(_name).is_absolute():
         DATABASES["default"]["NAME"] = str(BASE_DIR / _name)
+
+# Email bilan kirish; `username` maydoni umuman yo'q
+AUTH_USER_MODEL = "accounts.User"
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
