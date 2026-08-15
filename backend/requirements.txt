@@ -1,0 +1,21 @@
+# ISLOH backend — 1-sprint bog'liqliklari
+# docs/BACKEND-PLAN.md §1
+
+Django==5.1.5
+djangorestframework==3.15.2
+
+# Auth: access token javob tanasida, refresh — httpOnly cookie
+# (js/api.js: Authorization: Bearer + credentials: 'include')
+djangorestframework-simplejwt==5.3.1
+
+# PostgreSQL 16 drayveri
+psycopg[binary]==3.2.3
+
+# .env orqali sozlash (SECRET_KEY, DATABASE_URL, ...)
+django-environ==0.11.2
+
+# Statik fayllarni Django o'zi beradi — frontend bilan BIR XIL origin
+# bo'lishi shart (httpOnly refresh cookie shuni talab qiladi).
+# /js/* va /css/* ga Cache-Control: no-cache shu yerdan qo'yiladi
+# (docs/BACKEND-AUDIT.md §5.1).
+whitenoise==6.8.2

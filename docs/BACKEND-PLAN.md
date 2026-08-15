@@ -290,13 +290,22 @@ Backend sprintlariga bog'liq, lekin alohida bajariladi:
 
 ## 5. Boshlashdan oldin
 
-1. **PostgreSQL 16** o'rnatilishi (yoki Docker Compose bilan ko'tarilishi).
-2. **pip mavjud emas** — bu muhitda `python -m ensurepip` yoki `uv` kerak
-   bo'ladi (Python 3.12.0 bor).
-3. `backend/.env.example` — `SECRET_KEY`, `DATABASE_URL`, `ALLOWED_HOSTS`,
+1. ✅ **Python muhiti** — `backend/.venv` (Python 3.12.0). `pip` PATH'da
+   ko'rinmaydi, lekin `python -m pip` ishlaydi (23.2.1), shuning uchun
+   `ensurepip`/`uv` kerak bo'lmadi.
+2. ✅ **Bog'liqliklar** — `backend/requirements.txt`: Django 5.1.5,
+   DRF 3.15.2, SimpleJWT 5.3.1, psycopg 3.2.3, django-environ, WhiteNoise.
+3. ⬜ **PostgreSQL 16** — o'rnatilishi yoki Docker Compose bilan ko'tarilishi.
+4. ⬜ `backend/.env.example` — `SECRET_KEY`, `DATABASE_URL`, `ALLOWED_HOSTS`,
    `JWT_*`, keyinroq `S3_*` va `PAYMENT_*`.
-4. CLAUDE.md ga **backend bo'limi** qo'shiladi: `/backend` tuzilishi, ilova
+5. ⬜ CLAUDE.md ga **backend bo'limi**: `/backend` tuzilishi, ilova
    chegaralari, migratsiya va test buyruqlari.
+
+Buyruqlar Windows'da (Git Bash):
+
+```bash
+backend/.venv/Scripts/python.exe -m pip install -r backend/requirements.txt
+```
 
 Birinchi qadam — 1-sprint: `core` + `accounts`. U tugaganda `pages/auth/`
 haqiqiy serverga ulanadi va route guard demo emas, chinakam himoyaga aylanadi.

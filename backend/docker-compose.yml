@@ -1,0 +1,42 @@
+# ISLOH — mahalliy ishlab chiqish uchun ma'lumotlar bazasi
+# docs/BACKEND-PLAN.md §5
+#
+# Ko'tarish:   docker compose -f backend/docker-compose.yml up -d
+# Tekshirish:  docker compose -f backend/docker-compose.yml ps
+# To'xtatish:  docker compose -f backend/docker-compose.yml down
+# Bazani BUTUNLAY tozalash (volume bilan birga):
+#              docker compose -f backend/docker-compose.yml down -v
+#
+# Faqat Django ishlaydi, ilovaning o'zi konteynerda emas: frontend `file://`
+# ostida ham ochilishi kerak (CLAUDE.md §3) va statik fayllarni Django
+# beradi, shuning uchun uni mahalliy venv'dan yurgizgan qulay.
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: isloh-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-isloh}
+      POSTGRES_USER: ${POSTGRES_USER:-isloh}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-isloh}
+      # O'zbekcha saralash uchun — kurs nomlari lotin va kirill aralash
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    ports:
+      # Mahalliy PostgreSQL o'rnatilgan bo'lsa 5432 band bo'lishi mumkin —
+      # u holda chap tomondagi raqamni (masalan 5433) o'zgartiring va
+      # .env dagi DATABASE_URL ni ham moslang.
+      - "5432:5432"
+    volumes:
+      - isloh_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # Django migratsiyani baza tayyor bo'lguncha kutishi uchun
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-isloh} -d ${POSTGRES_DB:-isloh}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  isloh_pgdata:
+    name: isloh_pgdata
