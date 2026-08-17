@@ -270,3 +270,45 @@ class SessionListTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(len(self.client.get(SESSIONS).data), 0)
+
+
+class StaleTokenTests(TestCase):
+    """Eskirgan token ochiq endpoint'larni bloklamasligi kerak.
+
+    Brauzerda o'lchandi (M2 tekshiruvi paytida): `localStorage` da eski
+    access token qolgan foydalanuvchi ro'yxatdan o'ta olmadi — DRF
+    autentifikatsiyani ruxsatdan OLDIN bajaradi va `AllowAny` ga yetib
+    bormasdan 401 qaytardi. js/api.js 401 ni ko'rib login sahifasiga
+    otardi, u yerda ham xuddi shu 401 — chiqib bo'lmaydigan halqa.
+    """
+
+    def setUp(self):
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer buzilgan.token.qiymati")
+
+    def test_eskirgan_token_bilan_royxatdan_otish_mumkin(self):
+        response = self.client.post(
+            REGISTER,
+            {
+                "full_name": "Yangi",
+                "email": "yangi@isloh.uz",
+                "password": "TestParol2026!",
+                "role": "student",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_eskirgan_token_bilan_kirish_mumkin(self):
+        User.objects.create_user(
+            email="bor@isloh.uz", password="TestParol2026!", full_name="Bor"
+        )
+
+        response = self.client.post(
+            LOGIN,
+            {"email": "bor@isloh.uz", "password": "TestParol2026!"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -160,13 +160,19 @@ window.islohApi = islohApi;
      key       — localStorage kaliti (offline nusxa)
      endpoint  — '/courses' kabi
      event     — 'isloh:courses-updated'
-     normalize — yozuvni standart sxemaga keltiruvchi funksiya (ixtiyoriy)
+     normalize — SERVERDAN kelgan yozuvni frontend sxemasiga keltiradi
+     serialize — SERVERGA ketayotgan yozuvni API sxemasiga o'giradi
+                 (ixtiyoriy; berilmasa yozuv o'zgarishsiz yuboriladi).
+                 Ikkalasi juft: API o'z toza shaklida (snake_case,
+                 `price_cents`) qoladi, frontend esa o'z ichki shaklida —
+                 va bu ikkisi FAQAT shu ikki funksiyada uchrashadi.
      seed      — demo ma'lumot: massiv YOKI massiv qaytaruvchi funksiya
                  (sanalari bugunga nisbatan ekiladigan do'konlar uchun)
 
    Qaytaradi: { get, load, retry, persist, remove, fallback } */
 function isloh_createStoreCache(config) {
   const normalize = config.normalize || ((x) => x);
+  const serialize = config.serialize || ((x) => x);
 
   let _cache = [];
   let _isLoaded = false;
@@ -243,6 +249,33 @@ function isloh_createStoreCache(config) {
     return _cache;
   }
 
+  /* --- Yozuv navbati -------------------------------------------------------
+     Yozish so'rovlari BIRIN-KETIN yuboriladi, parallel emas.
+
+     NEGA (o'lchangan): sahifa bir amalda bir nechta yozuvni o'zgartirishi
+     mumkin — masalan vazifalar ro'yxatiga uchta band qo'shilsa, do'kon
+     uchta alohida so'rov yuboradi. Ular parallel ketganda ikki muammo
+     chiqdi:
+
+       1) SQLite'da bitta yozuvchi bo'ladi — biri `database is locked`
+          bilan 500 oldi va yozuv jimgina yo'qoldi;
+       2) tartib kafolatlanmadi — "hammasini o'chir, keyin yangisini
+          qo'sh" amalida DELETE va POST aralashib ketdi.
+
+     Navbat ikkalasini ham hal qiladi va u bazadan MUSTAQIL: PostgreSQL'ga
+     o'tilganda ham amallar tartibi saqlanishi kerak.
+
+     Optimistik yangilanish navbatda TURMAYDI — u sinxron bajariladi,
+     shuning uchun interfeys darhol javob beradi. */
+  let _writeQueue = Promise.resolve();
+
+  function enqueue(task) {
+    const run = _writeQueue.then(task, task);
+    // Navbat xato tufayli uzilib qolmasin
+    _writeQueue = run.then(() => {}, () => {});
+    return run;
+  }
+
   /* Optimistik qo'shish/yangilash. `isNew` keshdagi id bo'yicha
      ANIQLANADI, tashqaridan berilmaydi: ikki manba bir-biriga zid
      bo'lsa (masalan "yangi" deyilgan yozuv keshda turgan bo'lsa)
@@ -256,9 +289,10 @@ function isloh_createStoreCache(config) {
     cacheLocally();
     emit();
 
-    const request = isNew
-      ? islohApi.post(config.endpoint, item)
-      : islohApi.put(config.endpoint + '/' + item.id, item);
+    const body = serialize(item);
+    const request = enqueue(() => (isNew
+      ? islohApi.post(config.endpoint, body)
+      : islohApi.put(config.endpoint + '/' + item.id, body)));
 
     return request
       .then((saved) => {
@@ -289,7 +323,7 @@ function isloh_createStoreCache(config) {
     cacheLocally();
     emit();
 
-    islohApi.delete(config.endpoint + '/' + id).catch((err) => {
+    enqueue(() => islohApi.delete(config.endpoint + '/' + id)).catch((err) => {
       _cache.splice(index, 0, removed);
       cacheLocally();
       emit();

@@ -22,7 +22,8 @@ docs/BACKEND-PLAN.md §0.2
 import logging
 
 from django.core.exceptions import PermissionDenied
-from django.http import Http404
+from django.http import Http404, JsonResponse
+from django.views import defaults as django_defaults
 from rest_framework import exceptions, status
 from rest_framework.response import Response
 from rest_framework.views import exception_handler as drf_exception_handler
@@ -146,3 +147,75 @@ def isloh_exception_handler(exc, context):
 
     response.data = {"error": {"code": code, "message": message, "fields": fields}}
     return response
+
+
+# ==========================================================================
+# Django darajasidagi xatolar (DRF ga umuman yetib bormaydiganlari)
+#
+# Yuqoridagi `isloh_exception_handler` faqat DRF ko'rinishi ICHIDA otilgan
+# istisnolarni ushlaydi. Lekin mavjud bo'lmagan manzilga so'rov yuborilsa
+# (masalan hali yozilmagan `/api/v1/auth/forgot-password`), Django URL
+# hal qiluvchisi 404 ni ko'rinishga yetib bormasdan qaytaradi va javob
+# HTML sahifa bo'ladi.
+#
+# Frontend uchun bu jim nosozlik: `js/api.js` javobni JSON deb o'qishga
+# urinadi, `SyntaxError` oladi va uni `parse_error` deb ko'rsatadi —
+# foydalanuvchi "So'ralgan ma'lumot topilmadi" o'rniga tushunarsiz xato
+# ko'radi. O'lchangan: 404 -> `code=parse_error`.
+#
+# Shuning uchun `/api/` ostidagi barcha xatolar shu yerda ham §0.2
+# shartnomasiga keltiriladi. Boshqa yo'llar (frontend sahifalari) Django
+# ning o'z HTML javobida qoladi — u yerda brauzer sahifa kutadi.
+# ==========================================================================
+
+ISLOH_API_PREFIX = "/api/"
+
+
+def _is_api_request(request):
+    return request.path.startswith(ISLOH_API_PREFIX)
+
+
+def isloh_json_error(status_code, code=None, message=None):
+    return JsonResponse(
+        {
+            "error": {
+                "code": code or ISLOH_ERROR_CODES.get(status_code, "error"),
+                "message": message or ISLOH_DEFAULT_MESSAGES.get(status_code, ISLOH_DEFAULT_MESSAGES[400]),
+                "fields": {},
+            }
+        },
+        status=status_code,
+    )
+
+
+def isloh_404(request, exception=None):
+    """`handler404` — config/urls.py."""
+    if _is_api_request(request):
+        return isloh_json_error(404)
+    return django_defaults.page_not_found(request, exception)
+
+
+def isloh_400(request, exception=None):
+    """`handler400` — SuspiciousOperation (masalan noto'g'ri Host)."""
+    if _is_api_request(request):
+        return isloh_json_error(400)
+    return django_defaults.bad_request(request, exception)
+
+
+def isloh_403(request, exception=None):
+    """`handler403` — Django darajasidagi PermissionDenied."""
+    if _is_api_request(request):
+        return isloh_json_error(403)
+    return django_defaults.permission_denied(request, exception)
+
+
+def isloh_500(request):
+    """`handler500` — ushlanmagan istisno.
+
+    DEBUG=True bo'lganda Django o'zining texnik sahifasini beradi va bu
+    handler umuman chaqirilmaydi; shuning uchun bu faqat prod yo'li.
+    """
+    if _is_api_request(request):
+        logger.error("Ushlanmagan istisno (Django darajasi): %s", request.path)
+        return isloh_json_error(500, code="server_error")
+    return django_defaults.server_error(request)

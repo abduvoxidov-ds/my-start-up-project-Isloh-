@@ -30,7 +30,19 @@ ISLOH_PUBLIC_DIRS = ("pages", "js", "css", "assets", "media")
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", include("apps.accounts.urls")),
+    path("api/v1/", include("apps.courses.urls")),
+    path("api/v1/", include("apps.learning.urls")),
+    path("api/v1/", include("apps.assessment.urls")),
 ]
+
+# `/api/` ostidagi 404/500 lar ham JSON shartnomasida chiqsin.
+# Sababi apps/core/exceptions.py oxirida — qisqasi: DRF ning xato
+# ishlovchisi ko'rinishga yetib bormagan so'rovlarni ushlay olmaydi va
+# frontend HTML javobni JSON deb o'qishga urinib `parse_error` beradi.
+handler400 = "apps.core.exceptions.isloh_400"
+handler403 = "apps.core.exceptions.isloh_403"
+handler404 = "apps.core.exceptions.isloh_404"
+handler500 = "apps.core.exceptions.isloh_500"
 
 urlpatterns += [
     re_path(

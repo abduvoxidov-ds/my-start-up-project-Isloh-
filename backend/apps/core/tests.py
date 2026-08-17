@@ -165,3 +165,68 @@ class CacheControlTests(SimpleTestCase):
 
     def test_api_javobiga_tegilmaydi(self):
         self.assertIsNone(self._header("/api/v1/courses"))
+
+
+class DjangoLevelErrorTests(TestCase):
+    """Ko'rinishga yetib bormaydigan xatolar ham §0.2 shakliga bo'ysunadi.
+
+    Bu holat brauzerda o'lchandi: hali yozilmagan `/api/v1/auth/forgot-password`
+    ga so'rov yuborilganda Django HTML 404 sahifasini qaytarardi, `js/api.js`
+    esa uni JSON deb o'qib `code=parse_error` berardi — foydalanuvchi
+    tushunarsiz xato ko'rardi. Bu test shu regressiyani qulflaydi.
+    """
+
+    def test_api_ostidagi_404_json_qaytaradi(self):
+        response = self.client.get("/api/v1/bunday-manzil-yoq")
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response["Content-Type"], "application/json")
+
+        error = response.json()["error"]
+        self.assertEqual(error["code"], "not_found")
+        self.assertTrue(error["message"])
+        self.assertEqual(error["fields"], {})
+
+    def test_hali_yozilmagan_auth_endpointi_ham_json(self):
+        """M13 da qo'shiladigan endpoint'lar hozircha 404 — lekin JSON 404."""
+        response = self.client.post(
+            "/api/v1/auth/forgot-password",
+            {"email": "a@b.com"},
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json()["error"]["code"], "not_found")
+
+    def test_frontend_yollari_html_qoladi(self):
+        """`/api/` dan tashqarida brauzer sahifa kutadi — JSON berilmasin."""
+        response = self.client.get("/pages/bunday-sahifa-yoq.html")
+
+        self.assertEqual(response.status_code, 404)
+        self.assertNotEqual(response["Content-Type"], "application/json")
+
+
+@override_settings(DEBUG=True)
+class DebugRejimidaHamJsonTests(TestCase):
+    """`DEBUG=True` da handler404 chaqirilmaydi — middleware qutqaradi.
+
+    Bu aynan ishlab chiquvchi ko'radigan holat: testlar DEBUG=False bilan
+    yurgani uchun handler'lar o'tib ketardi, mahalliy serverda esa frontend
+    baribir HTML olib `parse_error` ko'rsatardi.
+    """
+
+    def test_debug_rejimida_ham_api_404_json(self):
+        response = self.client.get("/api/v1/bunday-manzil-yoq")
+
+        self.assertEqual(response.status_code, 404)
+        self.assertTrue(
+            response["Content-Type"].startswith("application/json"),
+            f"DEBUG=True da ham JSON kutilardi, keldi: {response['Content-Type']}",
+        )
+        self.assertEqual(response.json()["error"]["code"], "not_found")
+
+    def test_debug_rejimida_frontend_yoli_html_qoladi(self):
+        response = self.client.get("/pages/yoq.html")
+
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(response["Content-Type"].startswith("application/json"))

@@ -50,6 +50,19 @@ def auth_response(user, request, status_code=status.HTTP_200_OK):
 
 
 class RegisterView(APIView):
+    # `authentication_classes = []` — ATAYLAB.
+    #
+    # Bu ochiq endpoint, lekin DRF avval AUTENTIFIKATSIYAni bajaradi va
+    # faqat keyin ruxsatni tekshiradi. Brauzerda eskirgan yoki buzilgan
+    # access token qolgan bo'lsa (`localStorage.isloh_access_token`),
+    # js/api.js uni har so'rovga `Authorization: Bearer ...` deb qo'shadi
+    # va JWT autentifikatsiyasi `AllowAny` ga yetib bormasdan 401 beradi.
+    #
+    # Natija o'lchangan: eskirgan tokenli foydalanuvchi na kira olardi, na
+    # ro'yxatdan o'ta olardi — 401 ni ko'rgan js/api.js uni login sahifasiga
+    # otardi, u yerda ham xuddi shu 401. Chiqib bo'lmaydigan halqa; yagona
+    # yechim brauzer ma'lumotlarini qo'lda tozalash edi.
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -62,6 +75,19 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+    # `authentication_classes = []` — ATAYLAB.
+    #
+    # Bu ochiq endpoint, lekin DRF avval AUTENTIFIKATSIYAni bajaradi va
+    # faqat keyin ruxsatni tekshiradi. Brauzerda eskirgan yoki buzilgan
+    # access token qolgan bo'lsa (`localStorage.isloh_access_token`),
+    # js/api.js uni har so'rovga `Authorization: Bearer ...` deb qo'shadi
+    # va JWT autentifikatsiyasi `AllowAny` ga yetib bormasdan 401 beradi.
+    #
+    # Natija o'lchangan: eskirgan tokenli foydalanuvchi na kira olardi, na
+    # ro'yxatdan o'ta olardi — 401 ni ko'rgan js/api.js uni login sahifasiga
+    # otardi, u yerda ham xuddi shu 401. Chiqib bo'lmaydigan halqa; yagona
+    # yechim brauzer ma'lumotlarini qo'lda tozalash edi.
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -77,6 +103,10 @@ class RefreshView(APIView):
     ya'ni JS uni umuman ko'rmaydi.
     """
 
+    # Sarlavhadagi access token bu yerda ahamiyatsiz — amal httpOnly
+    # cookie bilan bajariladi. Eskirgan token 401 bermasin
+    # (RegisterView dagi izohga qarang).
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -122,6 +152,10 @@ class RefreshView(APIView):
 
 
 class LogoutView(APIView):
+    # Sarlavhadagi access token bu yerda ahamiyatsiz — amal httpOnly
+    # cookie bilan bajariladi. Eskirgan token 401 bermasin
+    # (RegisterView dagi izohga qarang).
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def post(self, request):
