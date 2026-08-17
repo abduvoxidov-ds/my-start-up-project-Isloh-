@@ -1,18 +1,20 @@
 /* ==========================================================================
    ISLOH — Izohlar do'koni  (pages/student/notes.html + course/lesson player)
 
-   Ikki vazifasi bor — js/bookmarks.js bilan bir xil naqsh:
-     1) ISLOH_NOTES_KEY do'koni: course-player.html darsga izoh yozadi,
-        notes.html esa hammasini ro'yxat qilib ko'rsatadi. Shu sababli bu
-        fayl faqat helper sifatida ham yuklanishi mumkin.
-     2) notes.html gridini to'liq do'kondan chizish — sahifada statik demo
-        kartochka qolmaydi.
+   M3 da SERVERGA ulandi (`/student/notes`). Ilgari manba `isloh_notes`
+   kaliti edi; endi u offline nusxa (CLAUDE.md §3 — `file://` da API yo'q).
 
-   NEGA YASSI RO'YXAT: dastlab dars izohlari {courseId: {lessonId: {...}}}
-   ko'rinishida edi, lekin notes.html da darsga bog'lanmagan shaxsiy
-   izohlar ham bor. Yassi map ikkalasini ham bir xil saqlaydi; dars izohi
-   uchun id deterministik (`courseId::lessonId`), shuning uchun pleer uni
-   to'g'ridan-to'g'ri topa oladi.
+   TASHQI API O'ZGARMADI: `isloh_getNotes()` hamon MAP qaytaradi va
+   `isloh_upsertNote` qisman yamoqni qabul qiladi — js/notes.js va
+   js/lesson-viewer.js ga tegilmadi. Ichkarida esa do'kon fabrikasining
+   massivi turadi (js/api.js), map har chaqiruvda undan yasaladi.
+
+   DARS IZOHI ID'SI O'ZGARDI: ilgari u deterministik edi
+   (`courseId::lessonId`) va pleer izohni to'g'ridan-to'g'ri topardi. Endi
+   id — serverning UUID'i, izoh esa `courseId` + `lessonId` MAYDONLARI
+   bo'yicha topiladi. Serverda buni `UNIQUE(user, lesson)` cheklovi
+   qo'riqlaydi (source='lesson' bo'lganda), ya'ni bitta darsga ikkita izoh
+   yozib bo'lmaydi.
 
    Yozuv:
      { id, title, text, source: 'lesson' | 'personal',
@@ -29,7 +31,7 @@ function isloh_lessonNoteId(courseId, lessonId) {
 
 /* Bo'sh maydonlarni to'ldiradi, shunda render har doim bir xil shakl bilan
    ishlaydi (do'konga qo'lda yozilgan yoki eski yozuvlar ham buzilmaydi) */
-function isloh_normalizeNote(note) {
+function isloh_noteDefaults(note) {
   return Object.assign({
     id: '', title: '', text: '', source: 'personal',
     courseId: '', lessonId: '', courseTitle: '', lessonTitle: '',
@@ -38,78 +40,150 @@ function isloh_normalizeNote(note) {
   }, note || {});
 }
 
-/* Eski ichma-ich sxemani ({courseId: {lessonId: {text, updatedAt}}}) yassi
-   ro'yxatga o'tkazadi — bir marta, birinchi o'qishda. */
-function isloh_migrateNotes(raw) {
-  const map = {};
-  let changed = false;
+/* --- Shakl o'girish (API <-> frontend) ------------------------------------ */
 
-  Object.keys(raw || {}).forEach((key) => {
+function isloh_isServerNote(row) {
+  return row && (('updated_at' in row) || ('lesson_title' in row));
+}
+
+function isloh_fromServerNote(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    text: row.text,
+    source: row.source,
+    courseId: row.course || '',
+    lessonId: row.lesson || '',
+    courseTitle: row.course_title || '',
+    lessonTitle: row.lesson_title || '',
+    tags: row.tags || [],
+    scope: row.scope,
+    favorite: row.favorite,
+    pinned: row.pinned,
+    updatedAt: row.updated_at
+  };
+}
+
+/* Faqat serverga tegishli maydonlar. `courseId`/`lessonId` UUID bo'lmasa
+   (demo ma'lumot: `py-101`) umuman yuborilmaydi — aks holda server
+   validatsiya xatosi berardi. */
+function isloh_isUuid(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || ''));
+}
+
+function isloh_serializeNote(note) {
+  const body = {
+    title: note.title,
+    text: note.text,
+    source: note.source,
+    scope: note.scope,
+    favorite: !!note.favorite,
+    pinned: !!note.pinned,
+    tags: note.tags || []
+  };
+  if (isloh_isUuid(note.courseId)) body.course = note.courseId;
+  if (isloh_isUuid(note.lessonId)) body.lesson = note.lessonId;
+  return body;
+}
+
+function isloh_normalizeNote(note) {
+  const source = isloh_isServerNote(note) ? isloh_fromServerNote(note) : (note || {});
+  const merged = isloh_noteDefaults(source);
+  merged.tags = Array.isArray(merged.tags) ? merged.tags : [];
+  return merged;
+}
+
+/* --- Eski shakldan ko'chirish ---------------------------------------------
+   Do'kon fabrikasi `isloh_notes` kalitida MASSIV kutadi, eski nusxa esa
+   MAP edi ({id: izoh}) — hatto undan ham eskisi ikki qavatli
+   ({courseId: {lessonId: {...}}}). Massiv bo'lmasa fabrika `seed` ni
+   chaqiradi, shuning uchun ko'chirish aynan shu yerda: foydalanuvchining
+   mavjud izohlari offline nusxada yo'qolib ketmasin. */
+function isloh_migrateStoredNotes() {
+  let raw = null;
+  try { raw = JSON.parse(localStorage.getItem(ISLOH_NOTES_KEY)); } catch (e) { raw = null; }
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return [];
+
+  const list = [];
+  Object.keys(raw).forEach((key) => {
     const value = raw[key];
     if (!value || typeof value !== 'object') return;
 
-    if (typeof value.id === 'string' && value.id) { map[key] = value; return; }
+    // Yassi map: { "<id>": {id, text, ...} }
+    if (typeof value.id === 'string' && value.id) {
+      list.push(isloh_normalizeNote(value));
+      return;
+    }
 
+    // Ikki qavatli: { "<courseId>": { "<lessonId>": {text, updatedAt} } }
     Object.keys(value).forEach((lessonId) => {
       const old = value[lessonId];
       if (!old || typeof old.text !== 'string') return;
-      const id = isloh_lessonNoteId(key, lessonId);
-      map[id] = isloh_normalizeNote({
-        id, title: lessonId, text: old.text, source: 'lesson',
-        courseId: key, lessonId, updatedAt: old.updatedAt
-      });
-      changed = true;
+      list.push(isloh_normalizeNote({
+        id: isloh_lessonNoteId(key, lessonId),
+        title: lessonId,
+        text: old.text,
+        source: 'lesson',
+        courseId: key,
+        lessonId: lessonId,
+        updatedAt: old.updatedAt
+      }));
     });
   });
 
-  return { map, changed };
+  return list;
 }
 
+/* --- Do'kon --------------------------------------------------------------- */
+
+const ISLOH_NOTE_CACHE = isloh_createStoreCache({
+  key: ISLOH_NOTES_KEY,
+  endpoint: '/student/notes',
+  event: 'isloh:notes-updated',
+  normalize: isloh_normalizeNote,
+  serialize: isloh_serializeNote,
+  seed: isloh_migrateStoredNotes
+});
+
+function isloh_loadNotes()      { return ISLOH_NOTE_CACHE.load(); }
+function isloh_getNotesList()   { return ISLOH_NOTE_CACHE.get(); }
+
+/* Tashqi API o'zgarmadi — MAP qaytaradi (js/notes.js shunga tayanadi) */
 function isloh_getNotes() {
-  let raw = null;
-  try { raw = JSON.parse(localStorage.getItem(ISLOH_NOTES_KEY)); } catch (e) { raw = null; }
-  if (!raw || typeof raw !== 'object') return {};
-
-  const result = isloh_migrateNotes(raw);
-  if (result.changed) isloh_setNotes(result.map);
-  return result.map;
-}
-
-function isloh_setNotes(map) {
-  try {
-    localStorage.setItem(ISLOH_NOTES_KEY, JSON.stringify(map));
-    return true;
-  } catch (e) {
-    return false; // kvota to'lgan
-  }
+  const map = {};
+  isloh_getNotesList().forEach((note) => { map[note.id] = note; });
+  return map;
 }
 
 function isloh_getNote(id) {
   if (!id) return null;
-  return isloh_getNotes()[id] || null;
+  return isloh_getNotesList().find((n) => n.id === id) || null;
 }
 
 /* Yozuvni qo'shadi yoki yangilaydi. Mavjud yozuv ustiga birlashtiriladi,
-   shuning uchun sevimli/qadalgan holati matn tahrirlanganda yo'qolmaydi. */
-function isloh_upsertNote(note) {
-  if (!note || !note.id) return false;
-  const map = isloh_getNotes();
-  const merged = isloh_normalizeNote(Object.assign({}, map[note.id], note));
+   shuning uchun sevimli/qadalgan holati matn tahrirlanganda yo'qolmaydi —
+   js/notes.js `{ id, favorite: true }` kabi QISMAN yamoq yuboradi. */
+function isloh_upsertNote(patch) {
+  if (!patch) return false;
+
+  const existing = patch.id ? isloh_getNote(patch.id) : null;
+  const merged = isloh_normalizeNote(Object.assign({}, existing, patch));
   merged.updatedAt = new Date().toISOString();
-  map[note.id] = merged;
-  return isloh_setNotes(map);
+
+  // Yangi yozuv: vaqtinchalik id, server javobida o'z id'siga almashadi
+  if (!existing) merged.id = merged.id || ('note-yangi-' + Date.now().toString(36));
+
+  ISLOH_NOTE_CACHE.persist(merged).catch(() => {});
+  return true;
 }
 
 function isloh_removeNote(id) {
-  const map = isloh_getNotes();
-  if (!map[id]) return true;
-  delete map[id];
-  return isloh_setNotes(map);
+  return ISLOH_NOTE_CACHE.remove(id);
 }
 
 /* Qadalganlar tepada, keyin yangilanish vaqti bo'yicha yangidan eskiga */
 function isloh_notesNewestFirst() {
-  return Object.values(isloh_getNotes()).sort((a, b) => {
+  return isloh_getNotesList().slice().sort((a, b) => {
     if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
     return String(b.updatedAt).localeCompare(String(a.updatedAt));
   });
@@ -134,21 +208,32 @@ function isloh_parseNoteTags(value) {
     .filter(Boolean);
 }
 
-/* --- Dars izohlari uchun qulaylik ---------------------------------------- */
+/* --- Dars izohlari uchun qulaylik ----------------------------------------
+   Endi id bo'yicha emas, MAYDONLAR bo'yicha topiladi (yuqoridagi izohga
+   qarang): serverdagi id — UUID va uni pleer oldindan bila olmaydi. */
 
 function isloh_getLessonNote(courseId, lessonId) {
   if (!courseId || !lessonId) return null;
-  return isloh_getNote(isloh_lessonNoteId(courseId, lessonId));
+  return isloh_getNotesList().find(
+    (n) => n.source === 'lesson' && n.lessonId === lessonId && n.courseId === courseId
+  ) || null;
 }
 
 /* Bo'sh matn yozuvni o'chiradi — do'kon bo'sh izohlar bilan to'lmasin */
 function isloh_setLessonNote(courseId, lessonId, text, meta) {
   if (!courseId || !lessonId) return false;
-  const id = isloh_lessonNoteId(courseId, lessonId);
+
+  const existing = isloh_getLessonNote(courseId, lessonId);
   const trimmed = String(text || '').trim();
-  if (!trimmed) return isloh_removeNote(id);
+
+  if (!trimmed) return existing ? isloh_removeNote(existing.id) : true;
 
   return isloh_upsertNote(Object.assign({
-    id, text: trimmed, source: 'lesson', courseId, lessonId, scope: 'personal'
+    id: existing ? existing.id : '',
+    text: trimmed,
+    source: 'lesson',
+    courseId: courseId,
+    lessonId: lessonId,
+    scope: 'personal'
   }, meta || {}));
 }

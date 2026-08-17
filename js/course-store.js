@@ -25,9 +25,25 @@
 const ISLOH_COURSES_KEY = 'isloh_courses';
 
 /* Provider interfeysi narxni USD'da so'raydi ($49.00), talaba katalogi esa
-   so'mda ishlaydi. Backend ulangunga qadar konvertatsiya shu yagona
-   koeffitsient orqali — sahifalarga tarqalgan sehrli raqamlar bo'lmasin. */
+   so'mda ishlaydi. Konvertatsiya shu yagona koeffitsient orqali —
+   sahifalarga tarqalgan sehrli raqamlar bo'lmasin.
+
+   M2 da o'chirilmadi (reja shuni ko'zlagan edi): server endi narxni
+   `price_cents` + `currency` da saqlaydi va kurs valyutasi USD (forma
+   shuni so'raydi), lekin HAQIQIY kurs bo'yicha o'girish — to'lov ishi.
+   Shuning uchun koeffitsient M9 (savdo) gacha shu yerda, FAQAT katalogga
+   ko'prikda ishlatiladi; boshqa hech qayerda emas. */
 const ISLOH_USD_TO_UZS = 12600;
+
+/* Narx: serverda butun sent, frontendda USD kasr son. Yaxlitlash xatosi
+   to'planmasin uchun o'girish faqat shu ikki funksiyada. */
+function isloh_centsToPrice(cents) {
+  return (Number(cents) || 0) / 100;
+}
+
+function isloh_priceToCents(price) {
+  return Math.round((Number(price) || 0) * 100);
+}
 
 const ISLOH_COURSE_STATUSES = {
   draft:     { label: 'Qoralama',      badge: 'badge-warning' },
@@ -151,21 +167,109 @@ const ISLOH_COURSE_SEED = [
    localStorage endi MANBA emas, offline NUSXA: file:// ostida
    (CLAUDE.md §3) va tarmoq uzilganda shu nusxa ishlaydi. */
 
+/* Serverdan kelgan yozuvni frontend sxemasiga o'giradi (M2).
+
+   API snake_case va `price_cents` bilan gapiradi, frontend esa camelCase
+   va USD bilan — 16 ta chaqiruv joyi shunga tayanadi. Ikkalasi FAQAT shu
+   yerda va `isloh_serializeCourse` da uchrashadi.
+
+   Bir funksiya ikkala shaklni ham qabul qiladi: kesh localStorage'dan
+   (frontend shakli) yoki serverdan (API shakli) kelishi mumkin.
+   Ajratish belgisi — `price_cents` maydonining borligi. */
+function isloh_isServerCourse(course) {
+  return course && (('price_cents' in course) || ('created_at' in course));
+}
+
+function isloh_fromServerCourse(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    subtitle: row.subtitle,
+    description: row.description,
+    category: row.category,
+    level: row.level,
+    language: row.language,
+    tags: row.tags,
+    free: row.free,
+    price: isloh_centsToPrice(row.price_cents),
+    duration: row.duration,
+    estimate: row.estimate,
+    prerequisites: row.prerequisites,
+    certificate: row.certificate,
+    visibility: row.visibility,
+    metaTitle: row.meta_title,
+    metaDescription: row.meta_description,
+    slug: row.slug,
+    status: row.status,
+    cover: row.cover,
+    icon: row.icon,
+    lessons: row.lessons_count,
+    students: row.students_count,
+    // DRF DecimalField'ni SATR sifatida beradi ("4.90") — raqamga o'giriladi,
+    // aks holda reyting bo'yicha saralash matn sifatida ishlardi
+    rating: Number(row.rating) || 0,
+    revenue: isloh_centsToPrice(row.revenue_cents),
+    completion: row.completion,
+    createdAt: (row.created_at || '').slice(0, 10),
+    updatedAt: (row.updated_at || '').slice(0, 10)
+  };
+}
+
 function isloh_normalizeCourse(course) {
-  const merged = Object.assign({}, ISLOH_COURSE_DEFAULTS, course || {});
+  const source = isloh_isServerCourse(course) ? isloh_fromServerCourse(course) : (course || {});
+  const merged = Object.assign({}, ISLOH_COURSE_DEFAULTS, source);
   merged.tags = Array.isArray(merged.tags) ? merged.tags : [];
   return merged;
 }
 
+/* Frontend yozuvini API shakliga. Statistik maydonlar (students, rating,
+   revenue, completion, lessons) ATAYLAB yuborilmaydi — ularni server
+   o'zi yuritadi va serializer ularni baribir rad etadi (read-only). */
+function isloh_serializeCourse(course) {
+  return {
+    title: course.title,
+    subtitle: course.subtitle,
+    description: course.description,
+    category: course.category,
+    level: course.level,
+    language: course.language,
+    tags: course.tags,
+    free: course.free,
+    price_cents: isloh_priceToCents(course.price),
+    duration: course.duration,
+    estimate: course.estimate,
+    prerequisites: course.prerequisites,
+    certificate: course.certificate,
+    visibility: course.visibility,
+    meta_title: course.metaTitle,
+    meta_description: course.metaDescription,
+    slug: course.slug,
+    status: course.status,
+    cover: course.cover,
+    icon: course.icon
+  };
+}
+
 const ISLOH_COURSE_CACHE = isloh_createStoreCache({
   key: ISLOH_COURSES_KEY,
-  endpoint: '/courses',
+  /* `/courses` EMAS: bu o'qituvchining O'Z kurslari. Talaba katalogi
+     alohida endpoint (`/catalog`) va u sahifalanadi — ikkalasi bitta
+     manzilda bo'lsa javob shakli ham, ruxsat qoidasi ham ziddiyatga
+     tushardi (docs/BACKEND-PLAN.md §M2). */
+  endpoint: '/instructor/courses',
   event: 'isloh:courses-updated',
   normalize: isloh_normalizeCourse,
+  serialize: isloh_serializeCourse,
   seed: ISLOH_COURSE_SEED
 });
 
 function isloh_loadCourses()      { return ISLOH_COURSE_CACHE.load(); }
+/* Kurs tarkibi o'zgargach chaqiriladi (js/content-store.js): dars soni
+   endi SERVERDA hisoblanadi (`lessons_count`), shuning uchun uni frontend
+   qo'lda yozib qo'ymaydi — kurs yozuvi qaytadan o'qiladi. Xato yutiladi:
+   tarkib allaqachon saqlangan, kartochkadagi raqam esa keyingi yuklashda
+   baribir to'g'rilanadi. */
+function isloh_refreshCourses()   { return ISLOH_COURSE_CACHE.retry().catch(() => {}); }
 function isloh_retryLoadCourses() { return ISLOH_COURSE_CACHE.retry(); }
 function isloh_getCourses()       { return ISLOH_COURSE_CACHE.get(); }
 function isloh_persistCourse(c)   { return ISLOH_COURSE_CACHE.persist(c); }
@@ -313,53 +417,21 @@ document.addEventListener('DOMContentLoaded', () => {
   isloh_applyCourseLinks(new URLSearchParams(window.location.search).get('course') || '');
 });
 
-/* --- Talaba katalogiga ko'prik -------------------------------------------- */
+/* --- Talaba katalogiga ko'prik -------------------------------------------
 
-/* Provider kursini katalog sxemasiga o'giradi (js/marketplace.js dagi
-   `featured_courses` elementi bilan bir xil maydonlar).
+   M2 da OLIB TASHLANDI. Ilgari bu yerda uchta funksiya bor edi
+   (`isloh_courseOwnedFields`, `isloh_courseToCatalogEntry`,
+   `isloh_courseCatalogPatch`) va ular o'qituvchining kurslarini talaba
+   katalogi sxemasiga o'girib, demo ro'yxat ustiga qo'yardi.
 
-   Ikkiga bo'lingani bejiz emas: bir xil ID'li kurs katalogda ham bo'lsa,
-   faqat o'qituvchi EGALIK QILADIGAN maydonlar ustiga yoziladi. Aks holda
-   demo yozuvdagi chegirma yoki ko'rishlar soni jimgina yo'qolib ketardi. */
-function isloh_courseOwnedFields(course) {
-  return {
-    id: course.id,
-    title: course.title,
-    price: Math.round(course.price * ISLOH_USD_TO_UZS),
-    category: course.category,
-    level: course.level,
-    lessons: course.lessons || 0,
-    duration: course.estimate || course.duration || '',
-    cover: course.cover,
-    icon: 'bi ' + course.icon
-  };
-}
+   Endi katalogning manbasi — server (`/catalog`, js/marketplace.js dagi
+   `isloh_loadCatalog`). Bu do'kon esa faqat O'QITUVCHINING o'z kurslarini
+   biladi (`/instructor/courses`), ya'ni u talaba katalogini yasay olmaydi
+   ham: boshqa o'qituvchilarning kurslari bu yerda umuman yo'q. */
 
-/* Katalogda hali bo'lmagan (yangi) kurs uchun to'liq yozuv. */
-function isloh_courseToCatalogEntry(course) {
-  return Object.assign(isloh_courseOwnedFields(course), {
-    instructor: 'Akmal Yuldashev',
-    discount_price: null,
-    rating: course.rating || 0,
-    views: 0,
-    students: course.students || 0,
-    summary: course.description || course.subtitle || ''
-  });
-}
-
-/* Mavjud katalog yozuvi ustiga qo'yiladigan qism. Bo'sh qiymatlar
-   yozilmaydi — reyting/talaba soni hali yo'q kurs demo raqamlarni
-   o'chirib yubormasin. */
-function isloh_courseCatalogPatch(course) {
-  const patch = isloh_courseOwnedFields(course);
-  if (course.rating) patch.rating = course.rating;
-  if (course.students) patch.students = course.students;
-  const summary = course.description || course.subtitle;
-  if (summary) patch.summary = summary;
-  return patch;
-}
-
-/* Talaba katalogiga chiqadigan kurslar — faqat nashr etilgan va ochiq. */
+/* Talaba katalogiga chiqadigan kurslar — faqat nashr etilgan va ochiq.
+   O'qituvchi tomonidagi statistika (profil, analitika, bozor) shu
+   filtrdan foydalanadi. */
 function isloh_getPublishedCourses() {
   return isloh_getCourses().filter((c) => c.status === 'published' && c.visibility !== 'private');
 }

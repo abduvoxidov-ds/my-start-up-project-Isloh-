@@ -50,11 +50,15 @@ const ISLOH_ENROLLMENT_DEFAULTS = {
   email: '',
   avatar: '',          // CSS gradienti; bo'sh bo'lsa .avatar sinfining o'z rangi
   courseId: '',
+  courseTitle: '',
   enrolledAt: '',      // ISO
   progress: 0,         // %
   avgScore: 0,         // %
   streak: 0,           // kunlik seriya
-  lastActiveAt: ''     // ISO
+  lastActiveAt: '',    // ISO
+  /* Serverdan keladi (M3). Bo'sh bo'lsa — offline nusxa yoki demo, u
+     holda `isloh_enrollmentState` uni mahalliy hisoblaydi. */
+  state: ''
 };
 
 /* --- Demo ma'lumot --------------------------------------------------------
@@ -120,8 +124,38 @@ function isloh_enrollmentSeed() {
 
 /* --- Do'kon --------------------------------------------------------------- */
 
+/* Serverdan kelgan yozuvni frontend sxemasiga o'giradi (M3).
+   API snake_case, do'kon camelCase — ajratish belgisi `student_id`.
+   Naqsh js/course-store.js dagi bilan bir xil. */
+function isloh_isServerEnrollment(row) {
+  return row && (('student_id' in row) || ('last_active_at' in row));
+}
+
+function isloh_fromServerEnrollment(row) {
+  return {
+    id: row.id,
+    studentId: row.student_id,
+    studentName: row.student_name,
+    email: row.email,
+    avatar: row.avatar,
+    courseId: row.course,
+    courseTitle: row.course_title,
+    enrolledAt: row.enrolled_at,
+    progress: row.progress,
+    avgScore: row.avg_score,
+    streak: row.streak,
+    lastActiveAt: row.last_active_at,
+    /* Holat endi SERVERDA hisoblanadi (docs/BACKEND-PLAN.md §M3).
+       Chegaralar ikki tomonda ikki xil bo'lib qolmasin. */
+    state: row.state
+  };
+}
+
 function isloh_normalizeEnrollment(enrollment) {
-  return Object.assign({}, ISLOH_ENROLLMENT_DEFAULTS, enrollment || {});
+  const source = isloh_isServerEnrollment(enrollment)
+    ? isloh_fromServerEnrollment(enrollment)
+    : (enrollment || {});
+  return Object.assign({}, ISLOH_ENROLLMENT_DEFAULTS, source);
 }
 
 /* --- Sync-over-Async kesh -------------------------------------------------
@@ -137,7 +171,11 @@ function isloh_normalizeEnrollment(enrollment) {
 
 const ISLOH_ENROLLMENT_CACHE = isloh_createStoreCache({
   key: ISLOH_ENROLLMENTS_KEY,
-  endpoint: '/enrollments',
+  /* O'qituvchi ko'radigan ro'yxat — o'z kurslaridagi talabalar.
+     Talabaning O'Z kurslari boshqa endpoint (`/student/enrollments`) va
+     boshqa shakl: ikkalasi bitta manzilda bo'lsa ruxsat qoidasi ham,
+     javob maydonlari ham ziddiyatga tushardi. */
+  endpoint: '/instructor/enrollments',
   event: 'isloh:enrollments-updated',
   normalize: isloh_normalizeEnrollment,
   seed: isloh_enrollmentSeed
@@ -201,9 +239,15 @@ function isloh_enrollmentIdleDays(enrollment) {
   return Math.floor((Date.now() - at) / 86400000);
 }
 
-/* Yagona holat manbai — sahifalar o'z shartini yozmasin. */
+/* Yagona holat manbai — sahifalar o'z shartini yozmasin.
+
+   M3 dan boshlab holatni SERVER hisoblaydi va yozuv bilan birga yuboradi
+   (`state`). Quyidagi mahalliy hisob faqat zaxira: `file://` ostida,
+   tarmoq uzilganda va demo ma'lumotda. Chegaralar ikkala tomonda bir xil
+   (backend: apps/learning/models.py dagi ACTIVE_MAX_IDLE_DAYS). */
 function isloh_enrollmentState(enrollment) {
   if (!enrollment) return 'inactive';
+  if (enrollment.state) return enrollment.state;
   if ((enrollment.progress || 0) >= 100) return 'completed';
 
   const idle = isloh_enrollmentIdleDays(enrollment);

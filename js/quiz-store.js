@@ -125,20 +125,87 @@ function isloh_quizSeed() {
 /* --- Do'kon --------------------------------------------------------------- */
 
 function isloh_normalizeQuiz(quiz) {
-  const merged = Object.assign({}, ISLOH_QUIZ_DEFAULTS, quiz || {});
+  const source = isloh_isServerQuiz(quiz) ? isloh_fromServerQuiz(quiz) : (quiz || {});
+  const merged = Object.assign({}, ISLOH_QUIZ_DEFAULTS, source);
   merged.questionIds = Array.isArray(merged.questionIds) ? merged.questionIds : [];
   return merged;
 }
 
-function isloh_getQuizzes() {
-  let stored = null;
-  try { stored = JSON.parse(localStorage.getItem(ISLOH_QUIZZES_KEY)); } catch (e) { stored = null; }
-  if (Array.isArray(stored)) return stored.map(isloh_normalizeQuiz);
+/* --- Do'kon: server (M4) --------------------------------------------------
+   Ilgari manba `isloh_quizzes` kaliti edi; endi u offline nusxa.
+   API snake_case, do'kon camelCase — ular faqat quyidagi ikki funksiyada
+   uchrashadi (naqsh js/course-store.js bilan bir xil). */
 
-  const seed = isloh_quizSeed().map(isloh_normalizeQuiz);
-  isloh_persistQuizzes(seed);
-  return seed;
+function isloh_isServerQuiz(row) {
+  return row && (('passing_score' in row) || ('question_ids' in row));
 }
+
+function isloh_fromServerQuiz(row) {
+  return {
+    id: row.id,
+    courseId: row.course,
+    title: row.title,
+    desc: row.description,
+    instructions: row.instructions,
+    difficulty: row.difficulty,
+    status: row.status,
+    timeLimit: row.time_limit,
+    duration: row.duration,
+    limitAttempts: row.limit_attempts,
+    attempts: row.attempts,
+    scoringMode: row.scoring_mode,
+    passingScore: row.passing_score,
+    showAnswers: row.show_answers,
+    shuffleQuestions: row.shuffle_questions,
+    shuffleOptions: row.shuffle_options,
+    randomSubset: row.random_subset,
+    subsetSize: row.subset_size,
+    certificate: row.certificate,
+    certName: row.cert_name,
+    questionIds: row.question_ids || []
+  };
+}
+
+function isloh_serializeQuiz(quiz) {
+  const body = {
+    title: quiz.title,
+    description: quiz.desc,
+    instructions: quiz.instructions,
+    difficulty: quiz.difficulty,
+    status: quiz.status,
+    time_limit: !!quiz.timeLimit,
+    duration: quiz.duration,
+    limit_attempts: !!quiz.limitAttempts,
+    attempts: quiz.attempts,
+    scoring_mode: quiz.scoringMode,
+    passing_score: quiz.passingScore,
+    show_answers: !!quiz.showAnswers,
+    shuffle_questions: !!quiz.shuffleQuestions,
+    shuffle_options: !!quiz.shuffleOptions,
+    random_subset: !!quiz.randomSubset,
+    subset_size: quiz.subsetSize,
+    certificate: !!quiz.certificate,
+    cert_name: quiz.certName || '',
+    question_ids: quiz.questionIds || []
+  };
+  // Kurs UUID bo'lmasa (demo ma'lumot) yuborilmaydi — server rad etardi
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(quiz.courseId || ''))) {
+    body.course = quiz.courseId;
+  }
+  return body;
+}
+
+const ISLOH_QUIZ_CACHE = isloh_createStoreCache({
+  key: ISLOH_QUIZZES_KEY,
+  endpoint: '/instructor/quizzes',
+  event: 'isloh:quizzes-updated',
+  normalize: isloh_normalizeQuiz,
+  serialize: isloh_serializeQuiz,
+  seed: isloh_quizSeed
+});
+
+function isloh_loadQuizzes() { return ISLOH_QUIZ_CACHE.load(); }
+function isloh_getQuizzes()  { return ISLOH_QUIZ_CACHE.get(); }
 
 function isloh_getQuiz(id) {
   if (!id) return null;
@@ -148,21 +215,6 @@ function isloh_getQuiz(id) {
 function isloh_getCourseQuizzes(courseId) {
   if (!courseId) return isloh_getQuizzes();
   return isloh_getQuizzes().filter((q) => q.courseId === courseId);
-}
-
-function isloh_persistQuizzes(list) {
-  try {
-    localStorage.setItem(ISLOH_QUIZZES_KEY, JSON.stringify(list));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function isloh_commitQuizzes(list) {
-  if (!isloh_persistQuizzes(list)) return false;
-  document.dispatchEvent(new CustomEvent('isloh:quizzes-updated', { detail: list }));
-  return true;
 }
 
 function isloh_uniqueQuizId(base, list) {
@@ -187,21 +239,21 @@ function isloh_saveQuiz(patch) {
     quiz.id = isloh_uniqueQuizId(data.title || 'test', list);
     quiz.createdAt = today;
     quiz.updatedAt = today;
-    list.push(quiz);
-    return isloh_commitQuizzes(list) ? quiz : null;
+    ISLOH_QUIZ_CACHE.persist(quiz).catch(() => {});
+    return quiz;
   }
 
   const updated = isloh_normalizeQuiz(Object.assign({}, list[index], data));
   updated.updatedAt = today;
-  list[index] = updated;
-  return isloh_commitQuizzes(list) ? updated : null;
+  ISLOH_QUIZ_CACHE.persist(updated).catch(() => {});
+  return updated;
 }
 
 /* Test o'chirilganda savollar BANKDA QOLADI — ular boshqa testlarda ham
    ishlatilgan bo'lishi mumkin. Shuning uchun tasdiq oynasi matni ham
    "test o'chiriladi" deydi, "savollar bilan birga" emas. */
 function isloh_deleteQuiz(id) {
-  return isloh_commitQuizzes(isloh_getQuizzes().filter((q) => q.id !== id));
+  return ISLOH_QUIZ_CACHE.remove(id);
 }
 
 function isloh_duplicateQuiz(id) {
@@ -216,8 +268,8 @@ function isloh_duplicateQuiz(id) {
   copy.createdAt = new Date().toISOString().slice(0, 10);
   copy.updatedAt = copy.createdAt;
 
-  list.splice(list.indexOf(source) + 1, 0, copy);
-  return isloh_commitQuizzes(list) ? copy : null;
+  ISLOH_QUIZ_CACHE.persist(copy).catch(() => {});
+  return copy;
 }
 
 function isloh_setQuizStatus(id, status) {
@@ -243,11 +295,15 @@ function isloh_removeQuestionFromQuiz(quizId, questionId) {
 /* Savol bankdan butunlay o'chirilganda chaqiriladi (js/question-store.js) —
    uni ishlatgan barcha testlardan havola olib tashlanadi. */
 function isloh_removeQuestionFromQuizzes(questionId) {
-  const list = isloh_getQuizzes().map((quiz) => {
-    if (quiz.questionIds.indexOf(questionId) === -1) return quiz;
-    return Object.assign({}, quiz, { questionIds: quiz.questionIds.filter((id) => id !== questionId) });
-  });
-  return isloh_commitQuizzes(list);
+  /* Faqat TEGISHLI testlar yangilanadi: ilgari butun ro'yxat qayta
+     yozilardi, endi esa har o'zgargan test alohida so'rov bo'ladi va
+     ortiqcha yozuvlar serverga bormasin. */
+  isloh_getQuizzes()
+    .filter((quiz) => quiz.questionIds.indexOf(questionId) !== -1)
+    .forEach((quiz) => {
+      isloh_saveQuiz({ id: quiz.id, questionIds: quiz.questionIds.filter((id) => id !== questionId) });
+    });
+  return true;
 }
 
 function isloh_reorderQuizQuestions(quizId, ids) {

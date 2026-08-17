@@ -93,39 +93,73 @@ const ISLOH_QUESTION_SEED = [
 /* --- Do'kon --------------------------------------------------------------- */
 
 function isloh_normalizeQuestion(question) {
-  const merged = Object.assign({}, ISLOH_QUESTION_DEFAULTS, question || {});
+  const source = isloh_isServerQuestion(question) ? isloh_fromServerQuestion(question) : (question || {});
+  const merged = Object.assign({}, ISLOH_QUESTION_DEFAULTS, source);
   merged.tags = Array.isArray(merged.tags) ? merged.tags : [];
   return merged;
 }
 
-function isloh_getQuestions() {
-  let stored = null;
-  try { stored = JSON.parse(localStorage.getItem(ISLOH_QUESTIONS_KEY)); } catch (e) { stored = null; }
-  if (Array.isArray(stored)) return stored.map(isloh_normalizeQuestion);
+/* --- Do'kon: server (M4) --------------------------------------------------
+   Ilgari manba `isloh_questions` kaliti edi; endi u offline nusxa.
 
-  const seed = ISLOH_QUESTION_SEED.map(isloh_normalizeQuestion);
-  isloh_persistQuestions(seed);
-  return seed;
+   API va frontend shakli deyarli bir xil — farq faqat sana maydonlarida
+   (`created_at` / `createdAt`). Variantlar (`options`) frontendda umuman
+   saqlanmaydi: ular faqat savol muharriri DOM'ida yashaydi. Shuning uchun
+   ular SERVERGA YUBORILMAYDI ham — serializer `options` kelmasa mavjud
+   variantlarga tegmaydi, ya'ni savol tahrirlanganda javoblar yo'qolmaydi. */
+
+function isloh_isServerQuestion(row) {
+  return row && (('created_at' in row) || ('explanation' in row && 'options' in row));
 }
+
+function isloh_fromServerQuestion(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    type: row.type,
+    points: row.points,
+    difficulty: row.difficulty,
+    category: row.category,
+    tags: row.tags || [],
+    instructions: row.instructions,
+    explanation: row.explanation,
+    hint: row.hint,
+    status: row.status,
+    createdAt: (row.created_at || '').slice(0, 10),
+    updatedAt: (row.updated_at || '').slice(0, 10)
+  };
+}
+
+function isloh_serializeQuestion(question) {
+  return {
+    title: question.title,
+    type: question.type,
+    points: question.points,
+    difficulty: question.difficulty,
+    category: question.category,
+    tags: question.tags || [],
+    instructions: question.instructions,
+    explanation: question.explanation,
+    hint: question.hint,
+    status: question.status
+  };
+}
+
+const ISLOH_QUESTION_CACHE = isloh_createStoreCache({
+  key: ISLOH_QUESTIONS_KEY,
+  endpoint: '/instructor/questions',
+  event: 'isloh:questions-updated',
+  normalize: isloh_normalizeQuestion,
+  serialize: isloh_serializeQuestion,
+  seed: ISLOH_QUESTION_SEED
+});
+
+function isloh_loadQuestions() { return ISLOH_QUESTION_CACHE.load(); }
+function isloh_getQuestions()  { return ISLOH_QUESTION_CACHE.get(); }
 
 function isloh_getQuestion(id) {
   if (!id) return null;
   return isloh_getQuestions().find((q) => q.id === id) || null;
-}
-
-function isloh_persistQuestions(list) {
-  try {
-    localStorage.setItem(ISLOH_QUESTIONS_KEY, JSON.stringify(list));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function isloh_commitQuestions(list) {
-  if (!isloh_persistQuestions(list)) return false;
-  document.dispatchEvent(new CustomEvent('isloh:questions-updated', { detail: list }));
-  return true;
 }
 
 function isloh_uniqueQuestionId(base, list) {
@@ -151,22 +185,21 @@ function isloh_saveQuestion(patch) {
     question.id = isloh_uniqueQuestionId(data.title || 'savol', list);
     question.createdAt = today;
     question.updatedAt = today;
-    list.push(question);
-    return isloh_commitQuestions(list) ? question : null;
+    ISLOH_QUESTION_CACHE.persist(question).catch(() => {});
+    return question;
   }
 
   const updated = isloh_normalizeQuestion(Object.assign({}, list[index], data));
   updated.updatedAt = today;
-  list[index] = updated;
-  return isloh_commitQuestions(list) ? updated : null;
+  ISLOH_QUESTION_CACHE.persist(updated).catch(() => {});
+  return updated;
 }
 
 /* Savol o'chirilsa, uni ishlatgan testlardan ham chiqarib tashlanadi —
    aks holda testda mavjud bo'lmagan savolga havola qolib ketardi. */
 function isloh_deleteQuestion(id) {
-  const list = isloh_getQuestions().filter((q) => q.id !== id);
   if (typeof isloh_removeQuestionFromQuizzes === 'function') isloh_removeQuestionFromQuizzes(id);
-  return isloh_commitQuestions(list);
+  return ISLOH_QUESTION_CACHE.remove(id);
 }
 
 function isloh_duplicateQuestion(id) {
@@ -176,10 +209,15 @@ function isloh_duplicateQuestion(id) {
 
   const copy = isloh_normalizeQuestion(JSON.parse(JSON.stringify(source)));
   copy.title = source.title + ' (nusxa)';
+  // Vaqtinchalik id — server javobida o'z id'siga almashadi
   copy.id = isloh_uniqueQuestionId(copy.title, list);
   copy.status = 'active';
-  list.splice(list.indexOf(source) + 1, 0, copy);
-  return isloh_commitQuestions(list) ? copy : null;
+  /* Nusxa serverda VARIANTLARSIZ yaratiladi: frontend ularni umuman
+     bilmaydi (savol muharriri DOM'ida yashaydi), shuning uchun ularni
+     nusxalash serverdagi alohida endpoint ishi bo'ladi — M4 doirasida
+     savol nusxasi metama'lumot darajasida qoladi. */
+  ISLOH_QUESTION_CACHE.persist(copy).catch(() => {});
+  return copy;
 }
 
 function isloh_setQuestionStatus(id, status) {

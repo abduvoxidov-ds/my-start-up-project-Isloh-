@@ -115,34 +115,85 @@ function isloh_categorySlug(name) {
   return name === 'Barchasi' ? 'all' : name.toLowerCase();
 }
 
-/* Katalogning yagona kirish nuqtasi: yuqoridagi demo kurslar + o'qituvchi
-   nashr etgan kurslar (js/course-store.js). Ilgari sahifalar to'g'ridan-
-   to'g'ri `ISLOH_MARKETPLACE_DATA.featured_courses` ni o'qirdi, shuning
-   uchun provider nashr etgan kurs talabaga umuman ko'rinmasdi.
+/* --- Katalog: server manbasi (M2) -----------------------------------------
+   Ilgari katalog demo ro'yxat + O'QITUVCHINING O'Z kurslari edi
+   (js/course-store.js). Bu talaba uchun noto'g'ri: `course-store` endi
+   `/instructor/courses` ga boradi, ya'ni talabada u bo'sh va boshqa
+   o'qituvchilarning kurslari umuman ko'rinmasdi.
 
-   Bir xil ID uchrasa o'qituvchi tahriri ustun turadi, lekin faqat u
-   egalik qiladigan maydonlar bo'yicha (isloh_courseCatalogPatch) —
-   chegirma va ko'rishlar soni kabi demo maydonlar joyida qoladi.
-   course-store.js ulanmagan sahifalarda shunchaki demo ro'yxat qaytadi. */
+   Endi manba — `/catalog`: barcha nashr etilgan va ochiq kurslar.
+
+   NEGA DO'KON FABRIKASI EMAS: `/catalog` SAHIFALANADI va `{data, meta}`
+   qaytaradi (§0.1) — fabrika esa bevosita massiv kutadi. Shuning uchun
+   shu yerda o'z keshi: sinxron o'qish + fonda yuklash + hodisa. */
+
+const ISLOH_CATALOG_PER_PAGE = 60;
+
+let _islohCatalog = null;      // serverdan kelgan ro'yxat
+let _islohCatalogLoading = null;
+
+/* Server kursini katalog sxemasiga o'giradi. Narx serverda USD sentda,
+   katalog esa so'mda ko'rsatadi — koeffitsient js/course-store.js da va
+   M9 (savdo) da haqiqiy kursga almashadi. */
+function isloh_catalogFromServer(row) {
+  const usd = (Number(row.price_cents) || 0) / 100;
+  const rate = typeof ISLOH_USD_TO_UZS === 'number' ? ISLOH_USD_TO_UZS : 1;
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    instructor: (row.instructor && row.instructor.full_name) || '',
+    price: row.free ? 0 : Math.round(usd * rate),
+    discount_price: null,
+    category: row.category || '',
+    rating: Number(row.rating) || 0,
+    // Ko'rishlar hisoblagichi M11 (analitika) da paydo bo'ladi
+    views: 0,
+    lessons: row.lessons_count || 0,
+    students: row.students_count || 0,
+    duration: row.estimate || row.duration || '',
+    level: row.level || '',
+    summary: row.description || row.subtitle || '',
+    cover: row.cover,
+    icon: 'bi ' + (row.icon || 'bi-journal-bookmark-fill')
+  };
+}
+
+function isloh_loadCatalog() {
+  if (_islohCatalogLoading) return _islohCatalogLoading;
+
+  _islohCatalogLoading = islohApi
+    .get('/catalog', { per_page: ISLOH_CATALOG_PER_PAGE })
+    .then((body) => {
+      // Sahifalangan javob: massiv `data` ichida
+      const rows = (body && body.data) || [];
+      _islohCatalog = rows.map(isloh_catalogFromServer);
+    })
+    .catch((err) => {
+      _islohCatalog = ISLOH_MARKETPLACE_DATA.featured_courses;
+      if (err && err.code !== 'file_protocol' && typeof islohUI !== 'undefined') {
+        islohUI.showNetworkError(() => {
+          _islohCatalogLoading = null;
+          return isloh_loadCatalog();
+        }, err.error);
+      }
+    })
+    .then(() => {
+      document.dispatchEvent(new CustomEvent('isloh:catalog-updated', { detail: _islohCatalog }));
+      return _islohCatalog;
+    });
+
+  return _islohCatalogLoading;
+}
+
+/* Katalogning yagona kirish nuqtasi. SINXRON — 8 ta joy shuni chaqiradi;
+   kesh bo'sh bo'lsa demo ro'yxat qaytadi va yuklash fonda boshlanadi. */
 function isloh_getCatalog() {
-  const base = ISLOH_MARKETPLACE_DATA.featured_courses;
-  if (typeof isloh_getPublishedCourses !== 'function') return base;
-
-  const merged = base.map((entry) => Object.assign({}, entry));
-  const byId = {};
-  merged.forEach((entry) => { byId[entry.id] = entry; });
-
-  isloh_getPublishedCourses().forEach((course) => {
-    if (byId[course.id]) {
-      Object.assign(byId[course.id], isloh_courseCatalogPatch(course));
-      return;
-    }
-    const entry = isloh_courseToCatalogEntry(course);
-    byId[entry.id] = entry;
-    merged.push(entry);
-  });
-
-  return merged;
+  if (_islohCatalog === null) {
+    isloh_loadCatalog();
+    return ISLOH_MARKETPLACE_DATA.featured_courses;
+  }
+  return _islohCatalog;
 }
 
 // Kurs ma'lumotini ID bo'yicha yagona manbadan oladi — savat/xohishlar
@@ -608,7 +659,9 @@ function isloh_initMarketplace() {
 
 document.addEventListener('DOMContentLoaded', isloh_initMarketplace);
 
-/* O'qituvchi nashr etgan kurslar katalogga do'kon orqali qo'shiladi
-   (isloh_getCatalog), shuning uchun do'kon yangilanishi katalogga ham
-   ta'sir qiladi. */
+/* Katalog serverdan fonda keladi (isloh_loadCatalog) — kelgach sahifa
+   o'zini qayta chizadi. `courses-updated` ham tinglanadi: o'qituvchi o'z
+   kursini nashr etsa, u ham katalogga tushishi kerak (server javobi esa
+   keyingi yuklashda aniq raqamlarni beradi). */
+document.addEventListener('isloh:catalog-updated', isloh_renderMarketplaceCatalog);
 document.addEventListener('isloh:courses-updated', isloh_renderMarketplaceCatalog);

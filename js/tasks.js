@@ -89,30 +89,114 @@ function isloh_seedTasks() {
   ];
 }
 
-function isloh_getTasks() {
-  try {
-    const raw = localStorage.getItem(ISLOH_TASKS_KEY);
-    if (raw === null) {
-      const seeded = isloh_seedTasks();
-      isloh_saveTasks(seeded);
-      return seeded;
-    }
-    return JSON.parse(raw) || [];
-  } catch (e) { return []; }
+/* --- Do'kon: server (M3) --------------------------------------------------
+   Ilgari manba `isloh_tasks` kaliti edi; endi u offline nusxa
+   (CLAUDE.md §3 — `file://` da API yo'q).
+
+   TASHQI API O'ZGARMADI: `isloh_getTasks()` massiv qaytaradi,
+   `isloh_saveTasks(tasks)` esa BUTUN massivni qabul qiladi — 4 ta chaqiruv
+   joyi (o'zgartirish, o'chirish, forma, AI tavsiyasi) shu naqshda yozilgan
+   va ularga tegilmadi. Ichkarida `saveTasks` massivni keshdagi holat bilan
+   SOLISHTIRADI va faqat farqni serverga yuboradi (qo'shildi / o'zgardi /
+   o'chirildi).
+
+   NEGA `getTasks` NUSXA qaytaradi: chaqiruvchilar massivni JOYIDA
+   o'zgartiradi (`task.isCompleted = !task.isCompleted`). Kesh massivining
+   o'zi berilsa, `saveTasks` ga kelganda "oldingi holat" allaqachon
+   o'zgargan bo'lardi va farqni topib bo'lmasdi. */
+
+function isloh_isServerTask(row) {
+  return row && (('due_date' in row) || ('is_completed' in row));
 }
-/* Kvota to'lganda istisno chiqmasin — chaqiruvchi false qaytganini ko'rib
-   foydalanuvchini ogohlantiradi (notes-store.js / ai-store.js bilan bir xil
-   naqsh). Ilgari setItem qo'riqlanmasdi va amal yarim yo'lda uzilardi. */
-function isloh_saveTasks(tasks) {
-  try {
-    localStorage.setItem(ISLOH_TASKS_KEY, JSON.stringify(tasks));
-    return true;
-  } catch (e) {
-    if (typeof isloh_showToast === 'function') {
-      isloh_showToast("Saqlab bo'lmadi — xotira to'lgan", 'error');
-    }
-    return false;
-  }
+
+function isloh_fromServerTask(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    dueDate: row.due_date || null,
+    // Server "16:00:00" beradi, forma esa "16:00" kutadi
+    dueTime: row.due_time ? String(row.due_time).slice(0, 5) : null,
+    category: row.category || '',
+    priority: row.priority,
+    type: row.type,
+    courseId: row.course || '',
+    lessonId: row.lesson || '',
+    isCompleted: row.is_completed
+  };
+}
+
+/* `courseId`/`lessonId` UUID bo'lmasa (demo ma'lumot: `docker-for-beginners`)
+   yuborilmaydi — aks holda server validatsiya xatosi berardi. */
+function isloh_taskIsUuid(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || ''));
+}
+
+function isloh_serializeTask(task) {
+  const body = {
+    title: task.title,
+    due_date: task.dueDate || null,
+    due_time: task.dueTime || null,
+    category: task.category || '',
+    priority: task.priority,
+    type: task.type,
+    is_completed: !!task.isCompleted
+  };
+  if (isloh_taskIsUuid(task.courseId)) body.course = task.courseId;
+  if (isloh_taskIsUuid(task.lessonId)) body.lesson = task.lessonId;
+  return body;
+}
+
+function isloh_normalizeTask(task) {
+  const source = isloh_isServerTask(task) ? isloh_fromServerTask(task) : (task || {});
+  return Object.assign({
+    id: '', title: '', dueDate: null, dueTime: null, category: '',
+    priority: 'medium', type: 'personal', courseId: '', lessonId: '',
+    isCompleted: false
+  }, source);
+}
+
+const ISLOH_TASK_CACHE = isloh_createStoreCache({
+  key: ISLOH_TASKS_KEY,
+  endpoint: '/student/tasks',
+  event: 'isloh:tasks-updated',
+  normalize: isloh_normalizeTask,
+  serialize: isloh_serializeTask,
+  seed: isloh_seedTasks
+});
+
+function isloh_loadTasks() { return ISLOH_TASK_CACHE.load(); }
+
+function isloh_getTasks() {
+  // Chuqur nusxa — yuqoridagi izohga qarang
+  return JSON.parse(JSON.stringify(ISLOH_TASK_CACHE.get()));
+}
+
+/* Massivni keshdagi holat bilan solishtiradi va farqni serverga yuboradi.
+   `true` qaytaradi: tarmoq qismi fonda ketadi va xatoni fabrikaning o'zi
+   orqaga qaytaradi (chaqiruvchilar `false` ni kvota xatosi deb biladi). */
+function isloh_saveTasks(next) {
+  const previous = ISLOH_TASK_CACHE.get();
+  const before = {};
+  previous.forEach((t) => { before[t.id] = t; });
+
+  const keptIds = {};
+
+  (next || []).forEach((task) => {
+    const row = isloh_normalizeTask(task);
+    if (!row.id) row.id = 'task-yangi-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);
+    keptIds[row.id] = true;
+
+    const old = before[row.id];
+    // O'zgarmagan yozuv uchun so'rov yuborilmaydi
+    if (old && JSON.stringify(old) === JSON.stringify(row)) return;
+    ISLOH_TASK_CACHE.persist(row).catch(() => {});
+  });
+
+  previous.slice().forEach((task) => {
+    if (!keptIds[task.id]) ISLOH_TASK_CACHE.remove(task.id);
+  });
+
+  return true;
 }
 
 function isloh_taskStatus(task) {
@@ -821,3 +905,12 @@ function isloh_initTasks() {
 }
 
 document.addEventListener('DOMContentLoaded', isloh_initTasks);
+
+/* Do'kon serverdan yangilangach ro'yxat qayta chiziladi — vaqtinchalik
+   id'lar server id'lariga almashgani uchun bu shart (aks holda kartochka
+   `data-task-id` si eskirib qolardi). */
+document.addEventListener('isloh:tasks-updated', () => {
+  if (!document.querySelector('[data-task-list]')) return;
+  isloh_renderTasks();
+  isloh_renderKanban();
+});

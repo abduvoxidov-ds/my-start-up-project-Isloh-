@@ -193,20 +193,96 @@ function isloh_asWriteJson(key, value) {
 }
 
 function isloh_normalizeAssignment(assignment) {
-  const merged = Object.assign({}, ISLOH_ASSIGNMENT_DEFAULTS, assignment || {});
+  const source = isloh_isServerAssignment(assignment)
+    ? isloh_fromServerAssignment(assignment)
+    : (assignment || {});
+  const merged = Object.assign({}, ISLOH_ASSIGNMENT_DEFAULTS, source);
   merged.rubric = Array.isArray(merged.rubric) ? merged.rubric : [];
   merged.fileTypes = Array.isArray(merged.fileTypes) ? merged.fileTypes : [];
   return merged;
 }
 
-function isloh_getAssignments() {
-  const stored = isloh_asReadJson(ISLOH_ASSIGNMENTS_KEY);
-  if (Array.isArray(stored)) return stored.map(isloh_normalizeAssignment);
+/* --- Do'kon: server (M4) --------------------------------------------------
+   Ilgari manba `isloh_assignments` kaliti edi; endi u offline nusxa.
+   `rubric` va `fileTypes` — serverda mos ravishda alohida jadval
+   (`AssignmentRubric`) va `JSONField`; ikkalasi ham quyidagi ikki
+   funksiyada o'giriladi. */
 
-  const seed = isloh_assignmentSeed().map(isloh_normalizeAssignment);
-  isloh_asWriteJson(ISLOH_ASSIGNMENTS_KEY, seed);
-  return seed;
+function isloh_isServerAssignment(row) {
+  return row && (('submit_type' in row) || ('max_score' in row));
 }
+
+function isloh_fromServerAssignment(row) {
+  return {
+    id: row.id,
+    courseId: row.course,
+    title: row.title,
+    desc: row.description,
+    instructions: row.instructions,
+    submitType: row.submit_type,
+    maxFiles: row.max_files,
+    fileTypes: row.file_types || [],
+    maxSizeMb: row.max_size_mb,
+    maxScore: row.max_score,
+    estimate: row.estimate,
+    dueDate: row.due_date || '',
+    dueTime: row.due_time ? String(row.due_time).slice(0, 5) : '',
+    status: row.status,
+    visibility: row.visibility,
+    attempts: row.attempts,
+    allowLate: row.allow_late,
+    latePenalty: row.late_penalty,
+    rubric: (row.rubric || []).map((r) => ({ text: r.text, points: r.points })),
+    notes: row.notes,
+    cover: row.cover,
+    icon: row.icon,
+    createdAt: (row.created_at || '').slice(0, 10),
+    updatedAt: (row.updated_at || '').slice(0, 10)
+  };
+}
+
+function isloh_serializeAssignment(assignment) {
+  const body = {
+    title: assignment.title,
+    description: assignment.desc,
+    instructions: assignment.instructions,
+    submit_type: assignment.submitType,
+    max_files: assignment.maxFiles,
+    file_types: assignment.fileTypes || [],
+    max_size_mb: assignment.maxSizeMb,
+    max_score: assignment.maxScore,
+    estimate: assignment.estimate,
+    due_date: assignment.dueDate || null,
+    due_time: assignment.dueTime || null,
+    status: assignment.status,
+    visibility: assignment.visibility,
+    attempts: assignment.attempts,
+    allow_late: !!assignment.allowLate,
+    late_penalty: assignment.latePenalty,
+    notes: assignment.notes || '',
+    cover: assignment.cover,
+    icon: assignment.icon,
+    rubric: (assignment.rubric || []).map((r, i) => ({
+      text: r.text, points: r.points || 0, position: i
+    }))
+  };
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(assignment.courseId || ''))) {
+    body.course = assignment.courseId;
+  }
+  return body;
+}
+
+const ISLOH_ASSIGNMENT_CACHE = isloh_createStoreCache({
+  key: ISLOH_ASSIGNMENTS_KEY,
+  endpoint: '/instructor/assignments',
+  event: 'isloh:assignments-updated',
+  normalize: isloh_normalizeAssignment,
+  serialize: isloh_serializeAssignment,
+  seed: isloh_assignmentSeed
+});
+
+function isloh_loadAssignments() { return ISLOH_ASSIGNMENT_CACHE.load(); }
+function isloh_getAssignments()  { return ISLOH_ASSIGNMENT_CACHE.get(); }
 
 function isloh_getAssignment(id) {
   if (!id) return null;
@@ -217,12 +293,6 @@ function isloh_getAssignment(id) {
 function isloh_getCourseAssignments(courseId) {
   if (!courseId) return isloh_getAssignments();
   return isloh_getAssignments().filter((a) => a.courseId === courseId);
-}
-
-function isloh_commitAssignments(list) {
-  if (!isloh_asWriteJson(ISLOH_ASSIGNMENTS_KEY, list)) return false;
-  document.dispatchEvent(new CustomEvent('isloh:assignments-updated', { detail: list }));
-  return true;
 }
 
 /* Noyob ID — js/course-store.js dagi isloh_uniqueCourseId bilan bir xil
@@ -254,24 +324,25 @@ function isloh_saveAssignment(patch) {
     assignment.id = isloh_uniqueAssignmentId(data.title || 'topshiriq', list);
     assignment.createdAt = isloh_asToday();
     assignment.updatedAt = assignment.createdAt;
-    list.push(assignment);
-    return isloh_commitAssignments(list) ? assignment : null;
+    ISLOH_ASSIGNMENT_CACHE.persist(assignment).catch(() => {});
+    return assignment;
   }
 
   const updated = isloh_normalizeAssignment(Object.assign({}, list[index], data));
   updated.updatedAt = isloh_asToday();
-  list[index] = updated;
-  return isloh_commitAssignments(list) ? updated : null;
+  ISLOH_ASSIGNMENT_CACHE.persist(updated).catch(() => {});
+  return updated;
 }
 
 /* Topshiriq o'chirilsa unga tegishli ishlar ham ketadi — aks holda baholash
    navbatida egasi yo'q qatorlar qolib ketardi (o'chirish oynasi ham aynan
    shuni va'da qiladi). */
 function isloh_deleteAssignment(id) {
-  const list = isloh_getAssignments().filter((a) => a.id !== id);
+  /* Serverda bog'langan ishlar CASCADE bilan ketadi (`Submission` ->
+     `Assignment`); bu yerdagi tozalash mahalliy nusxa uchun qoladi. */
   const kept = isloh_getSubmissions().filter((s) => s.assignmentId !== id);
   isloh_commitSubmissions(kept);
-  return isloh_commitAssignments(list);
+  return ISLOH_ASSIGNMENT_CACHE.remove(id);
 }
 
 function isloh_duplicateAssignment(id) {
@@ -287,8 +358,8 @@ function isloh_duplicateAssignment(id) {
   copy.createdAt = isloh_asToday();
   copy.updatedAt = copy.createdAt;
 
-  list.splice(list.indexOf(source) + 1, 0, copy);
-  return isloh_commitAssignments(list) ? copy : null;
+  ISLOH_ASSIGNMENT_CACHE.persist(copy).catch(() => {});
+  return copy;
 }
 
 function isloh_setAssignmentStatus(id, status) {

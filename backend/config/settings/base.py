@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     # Isloh ilovalari — docs/BACKEND-PLAN.md §1
     "apps.core",
     "apps.accounts",
+    "apps.courses",
+    "apps.learning",
+    "apps.assessment",
 ]
 
 MIDDLEWARE = [
@@ -58,6 +61,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # Frontend JS/CSS keshini boshqaradi — docs/BACKEND-AUDIT.md §5.1
     "apps.core.middleware.FrontendCacheControlMiddleware",
+    # `/api/` ostidagi HTML xato sahifalarini JSON o'ramiga keltiradi.
+    # Eng oxirida turadi: yuqoridagilarning javobini ham qamrab olsin.
+    "apps.core.middleware.ApiJsonErrorMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -95,6 +101,25 @@ if DATABASES["default"]["ENGINE"].endswith("sqlite3"):
     _name = DATABASES["default"]["NAME"]
     if _name and not Path(_name).is_absolute():
         DATABASES["default"]["NAME"] = str(BASE_DIR / _name)
+
+    # SQLite'da BITTA yozuvchi bo'ladi. Frontend do'koni esa o'zgargan har
+    # bir yozuvni ALOHIDA so'rov bilan yuboradi va ular parallel ketadi
+    # (js/api.js dagi fabrika). Uchta vazifa birdan qo'shilganda o'lchandi:
+    # ikkitasi saqlandi, uchinchisi `database is locked` bilan 500 berdi va
+    # foydalanuvchi buni yo'qolgan yozuv sifatida ko'rardi.
+    #
+    #   timeout       — yozuvchi darhol yiqilmasin, navbat kutsin
+    #   WAL           — o'qish yozishni bloklamaydi
+    #
+    # Bu VAQTINCHALIK chora: reja M4 dan PostgreSQL'ni talab qiladi
+    # (docs/BACKEND-PLAN.md "Muhit holati") va u yerda bunday cheklov yo'q.
+    DATABASES["default"].setdefault("OPTIONS", {})
+    DATABASES["default"]["OPTIONS"].update(
+        {
+            "timeout": 20,
+            "init_command": "PRAGMA journal_mode=WAL;",
+        }
+    )
 
 # Email bilan kirish; `username` maydoni umuman yo'q
 AUTH_USER_MODEL = "accounts.User"
