@@ -41,10 +41,10 @@
       <!-- DISCUSSION TAB -->
       <div data-tab-panel="tab-discussion" style="margin-top:16px;">
         <div class="card card-pad" data-filterable>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
-            <div class="topbar-search" style="width:260px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Mavzularni qidirish..." aria-label="Mavzularni qidirish"></div>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <div data-filter-group="mtype" style="display:flex; gap:6px;">
+          <div class="discussion-toolbar">
+            <div class="topbar-search sw-260"><i class="bi bi-search"></i><input data-filter-search placeholder="Mavzularni qidirish..." aria-label="Mavzularni qidirish"></div>
+            <div class="filter-bar">
+              <div class="filter-chip-row" data-filter-group="mtype">
                 <button class="category-chip active" data-filter-value="all">Barchasi</button>
                 <button class="category-chip" data-filter-value="pinned">Qadalgan</button>
                 <button class="category-chip" data-filter-value="solved">Hal qilingan</button>
@@ -57,7 +57,7 @@
             </div>
           </div>
 
-          <div data-thread-list="discussion" style="margin-top:16px; display:flex; flex-direction:column; gap:12px;">
+          <div class="thread-list" data-thread-list="discussion">
             <!-- Thread 1: pinned -->
             <div class="card discussion-thread dt-pinned" data-thread data-comment-thread data-filter-item data-mtype="pinned" data-filter-text="Modul 1 uchun eslatma" data-sort-date="5" data-sort-likes="18" data-sort-replies="6">
               <div class="dt-head">
@@ -210,9 +210,9 @@
       <!-- Q&A TAB -->
       <div data-tab-panel="tab-qa" hidden style="margin-top:16px;">
         <div class="card card-pad" data-filterable>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
-            <div class="topbar-search" style="width:260px;"><i class="bi bi-search"></i><input data-filter-search placeholder="Savollarni qidirish..." aria-label="Savollarni qidirish"></div>
-            <div data-filter-group="qcat" style="display:flex; gap:6px; flex-wrap:wrap;">
+          <div class="discussion-toolbar">
+            <div class="topbar-search sw-260"><i class="bi bi-search"></i><input data-filter-search placeholder="Savollarni qidirish..." aria-label="Savollarni qidirish"></div>
+            <div class="filter-chip-row" data-filter-group="qcat">
               <button class="category-chip active" data-filter-value="all">Barchasi</button>
               <button class="category-chip" data-filter-value="docker">Docker</button>
               <button class="category-chip" data-filter-value="compose">Compose</button>

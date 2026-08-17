@@ -4,19 +4,29 @@
    invent new ones — see Sprint 1 §8):
      1100px  → multi-column grids collapse (e.g. course-grid 3→2 cols)
      900px   → topbar/sidebar density adjustments (see layout.css)
+     820px   → auth split (login/register) stacks into one column
      700px   → grids collapse to a single column
-   Page-specific grid breakpoints (course-grid, mkt-grid, grid-3, etc.)
-   remain in their page's own <style> block for now, per the incremental
-   migration plan in Sprint 1 — moving them here is a Sprint 3+ task done
-   page-by-page as each page is touched, not a one-shot rewrite.
+   Mobil bosqichida sahifalarning o'z <style> bloklaridagi grid
+   breakpoint'lari (grid-4, mkt-grid, cart-layout, detail-grid, wl-grid,
+   ad-2col, am-grid-2, role-grid) shu faylning oxirgi bo'limiga ko'chirildi;
+   qoidalarning o'zi css/widgets.css "SAHIFA TARTIBLARI" bo'limida.
    ========================================================================== */
 
 @media (max-width: 700px) {
   .content { padding: 18px; }
   .topbar { padding: 0 16px; }
   /* Tor ekranda qidiruv maydoni topbar'ni sindiradi (tugma + qidiruv +
-     amallar sig'maydi) — mobil konvensiyasiga ko'ra yashiriladi */
-  .topbar-search { display: none; }
+     amallar sig'maydi) — mobil konvensiyasiga ko'ra yashiriladi.
+     DIQQAT: faqat sarlavha satridagisi. `.topbar-search` klassi 20 dan ortiq
+     sahifada sahifa ICHIDAGI filtr qidiruvi uchun ham qayta ishlatiladi
+     (bookmarks, discussions, admin-users, instructor/students ...) — o'ram
+     ko'rsatilmaganda ular ham yo'qolib, telefonda qidiruv umuman
+     ishlamay qolardi. */
+  .topbar .topbar-search { display: none; }
+
+  /* Sahifa ichidagi qidiruv qoladi va butun kenglikni oladi — qat'iy
+     200-280px kengliklar yonidagi tugmalar bilan bir qatorga sig'masdi */
+  .content .topbar-search { width: 100%; }
 
   /* Breadcrumb ham xuddi shu sababdan: 375px da nav-toggle (40) +
      breadcrumb (127) + amallar (225) + padding (32) = 424px, ya'ni sahifa
@@ -35,7 +45,7 @@
    ========================================================================== */
 
 @media (max-width: 1100px) {
-  .player-shell { grid-template-columns: 1fr; }
+  .player-shell { grid-template-columns: minmax(0,1fr); }
 
   .course-player-sidebar {
     position: static;        /* sticky mobilda skroll tuzog'i yaratadi */
@@ -108,7 +118,7 @@
 @media (max-width: 1100px) {
   .ai-history-col { width: 220px; }
   /* Shablon kartochkalari 2 ustunda tiqilib qolmasin */
-  .ai-prompt-grid { grid-template-columns: 1fr; }
+  .ai-prompt-grid { grid-template-columns: minmax(0,1fr); }
 }
 
 @media (max-width: 900px) {
@@ -143,4 +153,203 @@ body.no-animations .ai-history-col { transition: none; }
    ustunga aylanadi. Ilgari sahifaning o'z <style> blokida edi (8-bosqich). */
 @media (max-width: 700px) {
   .validation-summary { flex-direction: column; }
+}
+
+/* ==========================================================================
+   SAHIFA TARTIBLARI — tor ekran breakpoint'lari (mobil bosqichi)
+   Qoidalarning o'zi css/widgets.css "SAHIFA TARTIBLARI" bo'limida.
+   Ilgari bu media so'rovlari sahifalarning o'z <style> bloklarida edi.
+   ========================================================================== */
+
+@media (max-width: 1100px) {
+  .grid-4 { grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .grid-2 { grid-template-columns:minmax(0,1fr); }
+  .mkt-grid { grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .wl-grid { grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .ad-2col { grid-template-columns:minmax(0,1fr); }
+}
+
+@media (max-width: 1000px) {
+  .detail-grid { grid-template-columns:minmax(0,1fr); }
+}
+
+@media (max-width: 900px) {
+  .cart-layout,
+  .co-layout,
+  .am-grid-2 { grid-template-columns:minmax(0,1fr); }
+}
+
+@media (max-width: 640px) {
+  .role-grid { grid-template-columns:minmax(0,1fr); }
+}
+
+/* --- Telefon (≤700px) ------------------------------------------------------
+   Ikki ustunli kurs/istaklar to'ri 375px da har bir kartochkaga ~170px
+   qoldirardi: muqova, sarlavha va narx qatori bir-biriga tiqilib qolardi. */
+@media (max-width: 700px) {
+  .grid-4,
+  .mkt-grid,
+  .wl-grid { grid-template-columns:minmax(0,1fr); }
+
+  /* Marketplace banneri: matn va narx yorlig'i yonma-yon sig'maydi */
+  .hero-banner { flex-direction:column; align-items:flex-start; padding:24px 20px; }
+  .hero-banner .price-tag { align-self:stretch; text-align:center; }
+
+  /* Bo'lim sarlavhasi + "Barchasi" havolasi — sarlavha uzun bo'lsa o'ralsin */
+  .section-head { flex-wrap:wrap; }
+
+  /* Kupon: kiritish maydoni butun qatorni oladi, tugma va kod yorlig'i
+     pastdagi qatorga tushadi. Ilgari uchalasi bitta qatorda turib, qatorni
+     466px ga cho'zar va sahifani gorizontal skrollga majbur qilardi. */
+  .coupon-row .coupon-input { flex:1 1 100%; }
+  .coupon-row .coupon-code { order:2; }
+}
+
+/* ==========================================================================
+   AUTH SAHIFALARI (mobil bosqichi)
+   `.auth-split` faqat `display:flex` edi — tor ekranda ham ikki ustun bo'lib
+   qolardi. 375px da chapdagi indigo panel 232px ni olib, formaga ~140px
+   qoldirar, natijada shior kesilib ("Aql…"), sahifa gorizontal skroll bilan
+   qolardi. Endi panel formadan yuqoridagi ixcham sarlavha blokiga aylanadi.
+   ========================================================================== */
+
+@media (max-width: 820px) {
+  .auth-split { flex-direction: column; min-height: 100dvh; }
+
+  .auth-panel {
+    flex: none;
+    max-width: none;
+    padding: 22px 20px 26px;
+  }
+  /* Bezak doirasi kichrayadi — ixcham panelda u butun blokni bosib ketardi */
+  .auth-panel::before { width: 200px; height: 200px; top: -90px; right: -80px; }
+
+  /* Mualliflik satri: telefonda forma ustidagi joyni behuda egallaydi,
+     baribir sahifaning pastida emas — ustida chiqardi */
+  .auth-legal { display: none; }
+
+  .auth-tagline { font-size: 22px; margin-top: 22px; }
+  .auth-sub { font-size: 13px; margin-top: 8px; }
+  .auth-panel-title { font-size: 20px; }
+  .auth-step-label { margin-bottom: 18px; }
+
+  .auth-form-side { padding: 26px 20px 40px; align-items: flex-start; }
+}
+
+/* Juda tor ekranlar (≤380px) — ijtimoiy tugmalar yonma-yon sig'maydi */
+@media (max-width: 380px) {
+  .social-row { flex-direction: column; }
+  /* "Meni eslab qol" va "Parolni unutdingizmi?" bir qatorda tiqilib qoladi */
+  .remember-row { flex-wrap: wrap; gap: 10px; }
+}
+
+/* ==========================================================================
+   TUGMA VA AMAL QATORLARI (mobil bosqichi)
+   Quyidagi qatorlar `flex-shrink:0` yoki `margin-left:auto` bilan yozilgan
+   edi — ya'ni ular tor ekranda kichrayolmasdi va o'ralmasdi ham, natijada
+   butun sahifani gorizontal skrollga majbur qilardi (375px da o'lchandi).
+   ========================================================================== */
+
+@media (max-width: 700px) {
+  /* Moderatsiya kartochkasi (admin-courses): 3 ta tugma 336px joy talab
+     qilardi. Endi ular muqova/matn qatoridan pastga tushib, kenglikni
+     teng bo'lishadi. */
+  .approval-card { flex-wrap: wrap; }
+  .approval-card .ac-actions { flex-basis: 100%; flex-wrap: wrap; }
+  .approval-card .ac-actions .btn { flex: 1; justify-content: center; }
+
+  /* To'liq ekran darsi (lesson-player) — 3 ta amal sarlavha yonida
+     sig'masdi */
+  .fs-topbar { flex-wrap: wrap; padding: 12px 16px; gap: 10px; }
+  .fs-topbar-actions { margin-left: 0; flex-basis: 100%; justify-content: flex-end; }
+
+  /* Kursni ko'rib chiqish satri (instructor/course-preview) */
+  .preview-bar { flex-wrap: wrap; padding: 12px 16px; }
+  .preview-bar-actions { margin-left: 0; flex-basis: 100%; }
+  .preview-bar-actions .btn { flex: 1; justify-content: center; }
+
+  /* Muhokama mavzusi ostidagi hisoblagichlar (yoqtirish / javob / ulashish) */
+  .dt-stats { flex-wrap: wrap; gap: 12px; }
+
+  /* Filtr chiplari va qidiruv — har biri butun kenglikda alohida qator */
+  .discussion-toolbar > * { flex: 1 1 100%; }
+  .filter-chip-row { flex-wrap: wrap; }
+}
+
+/* ==========================================================================
+   MOBIL ERGONOMIKA (mobil bosqichi)
+   Bu bo'lim tartibni emas, telefonda ishlatish qulayligini hal qiladi.
+   ========================================================================== */
+
+@media (max-width: 700px) {
+  /* --- iOS'da fokusda sahifa kattalashib ketishi -------------------------
+     Safari (iOS) 16px dan kichik shriftli maydonga bosilganda sahifani
+     avtomatik kattalashtiradi va uni qaytarmaydi — foydalanuvchi qo'lda
+     kichraytirishga majbur bo'ladi. Loyihadagi maydonlar 13.5-14px edi,
+     ya'ni HAR BIR forma shu xatoni berardi. 16px bu xulqni to'xtatadi. */
+  .field input,
+  .field select,
+  .field textarea,
+  .coupon-input,
+  .topbar-search input,
+  .editor-textarea,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="number"],
+  textarea,
+  select { font-size: 16px; }
+
+  /* --- Teginish maydonlari ---------------------------------------------
+     WCAG 2.5.8 (AA) eng kami 24x24px. Quyidagilar undan kichik edi:
+     `.dt-stat-btn` padding'i 2px, `.category-chip` esa 4px/11px. Ko'rinish
+     o'zgarmaydi — faqat bosiladigan maydon kengayadi. */
+  .dt-stat-btn { padding: 8px 4px; }
+  .category-chip { padding: 7px 12px; font-size: 12px; }
+  .filter-chip { padding: 9px 14px; }
+  .icon-btn-sm { width: 32px; height: 32px; }
+  /* Jadval ichidagi amal havolalari qo'shni qatorlarga tegib ketmasin */
+  .itable tbody td { padding: 14px 12px; }
+
+  /* --- Gorizontal skrolli jadvallar ------------------------------------
+     `.itable` ning `min-width:660px` i saqlanadi (ustunlar siqilib
+     o'qilmas bo'lib qolmasligi uchun), lekin skroll inertsiyasi qo'shiladi
+     va o'ram sahifa chetigacha cho'ziladi — shunda "yana bor" ekani
+     ko'rinib turadi. */
+  .itable-wrap {
+    -webkit-overflow-scrolling: touch;
+    margin-left: -18px;
+    margin-right: -18px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  /* --- O'quv faolligi xaritasi (dashboard) ------------------------------
+     26 ustun x 12px + oraliqlar = 387px, ya'ni 375px ekranga sig'masdi.
+     Gorizontal skroll o'rniga katakchalar suyuq qilinadi (~10px) — xarita
+     bir qarashda to'liq ko'rinishi uning butun ma'nosi. */
+  .heatmap { grid-template-columns: repeat(26, minmax(0,1fr)); grid-auto-rows: auto; }
+  .heatmap .cell { aspect-ratio: 1; }
+
+  /* --- Modal ------------------------------------------------------------
+     `max-width:340px` 375px ekranda chetigacha 17px joy qoldirardi;
+     ko'proq bo'sh joy bilan chiroyliroq va bosish osonroq. */
+  .modal, .modal-demo { max-width: min(340px, calc(100vw - 32px)); }
+
+  /* --- Chat va AI ekrani ------------------------------------------------
+     `calc(100vh - 68px)` ikki jihatdan noto'g'ri edi: (1) mobil'da yuqorida
+     68px lik topbar emas, 58px lik `.mobile-nav-bar` turadi; (2) 100vh
+     brauzer panelini ham qo'shib hisoblaydi, shuning uchun yozish maydoni
+     ekran ostida qolib ketardi. */
+  .chat-shell, .ai-shell { height: calc(100dvh - 58px); }
+}
+
+/* Zaxira to'siq: telefonda sahifa hech qachon gorizontal skroll bilan
+   qolmasin — keyin qo'shiladigan markup e'tibordan chetda qolsa ham.
+   Ichki skroll kerak joylar (`.itable-wrap`, `.mkt-strip`, `.tab-strip`)
+   o'z `overflow-x:auto` iga ega, shuning uchun ular buzilmaydi.
+   Faqat ≤900px da — desktopda haqiqiy xatoni yashirib qo'ymasin. */
+@media (max-width: 900px) {
+  body { overflow-x: hidden; }
 }

@@ -6,10 +6,7 @@
 <title>Savat — Isloh</title>
 <link rel="stylesheet" href="../../css/vendor/bootstrap-icons.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style>
-  .cart-layout { display:grid; grid-template-columns:1.7fr 1fr; gap:20px; align-items:start; margin-top:20px; }
-  @media (max-width:900px){ .cart-layout{ grid-template-columns:1fr; } }
-</style>
+<!-- Sahifa tartibi (.cart-layout) css/widgets.css ga ko'chirildi (mobil bosqichi) -->
 </head>
 <body>
 <div class="app-shell">
@@ -41,8 +38,8 @@
             <div data-saved-list></div>
           </div>
 
-          <div class="card card-pad coupon-row" style="margin-top:18px; display:flex; align-items:center; gap:10px;">
-            <input type="text" id="coupon-input" placeholder="Kupon kodini kiriting" style="flex:1; border:1.5px solid var(--border-soft); border-radius:var(--r-md); padding:11px 14px; font-size:14px; outline:none;">
+          <div class="card card-pad coupon-row mt-18">
+            <input type="text" id="coupon-input" class="coupon-input" placeholder="Kupon kodini kiriting">
             <button class="btn btn-primary" id="coupon-apply">Qo'llash</button>
             <span class="coupon-code">ISLOH2026</span>
           </div>

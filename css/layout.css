@@ -7,7 +7,10 @@
 
 .app-shell {
   display: flex;
+  /* dvh — mobil brauzer paneli hisobga olinadi; qo'llab-quvvatlamaydigan
+     brauzer ikkinchi qatorni e'tiborsiz qoldiradi va 100vh da qoladi */
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* --- Sidebar ---
@@ -25,6 +28,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100dvh;
   z-index: var(--z-sidebar);
 }
 .sidebar .brand { color: #fff; padding: 6px 10px 22px; }
@@ -140,6 +144,7 @@
 /* --- Auth split layout (login / register) --- */
 .auth-split {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
 }
 .auth-panel {
@@ -179,7 +184,26 @@
   font-size: 30px;
   font-weight: 800;
   line-height: 1.25;
+  margin-top: 60px; /* ilgari har sahifada `style="margin-top:60px"` edi */
 }
+/* Instruktor ro'yxatdan o'tishi — xuddi shu panel, yashil variant.
+   Ilgari `style="background: linear-gradient(...)"` sifatida yozilardi. */
+.auth-panel-teach { background: linear-gradient(160deg, #0f5132 0%, #1a7a4a 100%); }
+.auth-panel-teach::before { background: radial-gradient(circle, rgba(26,122,74,0.55), transparent 70%); }
+
+/* Qadam ko'rsatkichi ostidagi "1-qadam / 3" satri */
+.auth-step-label { font-size: 12px; color: var(--on-indigo-muted); margin-bottom: 40px; }
+.auth-panel-teach .auth-step-label { color: #98d4b0; }
+
+/* Panel etagidagi mualliflik satri */
+.auth-legal { font-size: 12px; color: #807CB0; }
+.auth-panel-teach .auth-legal { color: #6aad8a; }
+
+/* Panel ichidagi sarlavha va tavsif (ro'yxatdan o'tish qadamlari) —
+   forma tomonida sarlavha yo'q, shuning uchun bular sahifa sarlavhasi. */
+.auth-panel-title { font-family: var(--font-display); font-size: 26px; font-weight: 800; color: #fff; }
+.auth-panel-text { color: var(--on-indigo-muted); font-size: 14px; margin-top: 10px; }
+.auth-panel-teach .auth-panel-text { color: #b8dfc8; }
 .auth-sub {
   color: var(--on-indigo-muted);
   font-size: 14px;
@@ -262,7 +286,7 @@
 
   .sidebar {
     position: fixed; top: 0; left: 0;
-    width: 264px; max-width: 82vw; height: 100vh;
+    width: 264px; max-width: 82vw; height: 100vh; height: 100dvh;
     overflow-y: auto;
     transform: translateX(-100%);
     /* Yopiq holatda tab bilan ham topilmasin */

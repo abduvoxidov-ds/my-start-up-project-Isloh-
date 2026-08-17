@@ -182,8 +182,8 @@
 }
 .form-row input:focus,
 .form-row select:focus { border-color: var(--violet-500); }
-.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-@media (max-width: 700px) { .form-grid-2 { grid-template-columns: 1fr; } }
+.form-grid-2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 14px; }
+@media (max-width: 700px) { .form-grid-2 { grid-template-columns: minmax(0,1fr); } }
 .field-hint { font-size: 12px; color: var(--ink-500); margin-top: 5px; }
 /* Validatsiya holati — maydon ostidagi xato matni va qizil hoshiya */
 .field input.is-invalid,
