@@ -17,6 +17,7 @@ from rest_framework.views import APIView
 
 from apps.courses.views import IsInstructor
 from apps.learning.models import Enrollment
+from apps.notifications.events import isloh_notify_graded, isloh_notify_submission
 
 from .grading import isloh_grade_attempt
 from .models import (
@@ -138,6 +139,8 @@ class GradeSubmissionView(APIView):
         submission.graded_by = request.user
         submission.save()
 
+        # M7 — talabaga xabar; ball xabar matnida ko'rsatiladi
+        isloh_notify_graded(submission)
         return Response(SubmissionSerializer(submission).data)
 
 
@@ -341,6 +344,8 @@ class SubmitAssignmentView(APIView):
         )
 
         isloh_attach_submission_files(request, submission, assignment)
+        # M7 — topshiriq egasiga (o'qituvchi) xabar
+        isloh_notify_submission(submission)
         return Response(SubmissionSerializer(submission).data, status=status.HTTP_201_CREATED)
 
 

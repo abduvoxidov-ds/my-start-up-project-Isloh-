@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "apps.assessment",
     "apps.resources",
     "apps.social",
+    "apps.notifications",
 ]
 
 MIDDLEWARE = [

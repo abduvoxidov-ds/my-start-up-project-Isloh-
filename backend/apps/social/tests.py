@@ -24,7 +24,7 @@ from apps.social.models import (
     Review,
     ReviewReply,
 )
-from apps.social.sanitize import isloh_clean_text
+from apps.core.sanitize import isloh_clean_text
 
 DISCUSSIONS = "/api/v1/discussions"
 INSTRUCTOR_REVIEWS = "/api/v1/instructor/reviews"

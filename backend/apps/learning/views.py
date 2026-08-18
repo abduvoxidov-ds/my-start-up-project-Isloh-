@@ -25,6 +25,7 @@ from rest_framework.views import APIView
 
 from apps.courses.models import Course, Lesson
 from apps.courses.views import IsInstructor
+from apps.notifications.events import isloh_notify_enrollment
 
 from .models import Certificate, Enrollment, LessonProgress, Note, Task
 from .serializers import (
@@ -62,6 +63,9 @@ class StudentEnrollmentView(APIView):
         enrollment, created = Enrollment.objects.get_or_create(user=request.user, course=course)
         if created:
             enrollment.recalculate_progress()
+            # M7 — o'qituvchiga xabar. FAQAT `created` ichida: tugma ikki
+            # marta bosilsa ikkita bir xil xabar kelardi.
+            isloh_notify_enrollment(enrollment)
 
         return Response(
             StudentEnrollmentSerializer(enrollment).data,

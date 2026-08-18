@@ -33,6 +33,11 @@ from rest_framework.views import APIView
 from apps.courses.models import Course
 from apps.courses.views import IsInstructor
 from apps.learning.models import Enrollment
+from apps.notifications.events import (
+    isloh_notify_discussion_reply,
+    isloh_notify_review,
+    isloh_notify_review_reply,
+)
 
 from .models import (
     DiscussionReply,
@@ -161,6 +166,8 @@ class CourseReviewView(APIView):
         review = serializer.save(course=course, user=request.user)
 
         isloh_refresh_course_rating(course)
+        # M7 — kurs egasiga xabar
+        isloh_notify_review(review)
         return Response(ReviewSerializer(review).data, status=status.HTTP_201_CREATED)
 
 
@@ -241,6 +248,8 @@ class InstructorReviewReplyView(APIView):
             defaults={"author": request.user, "text": serializer.validated_data["text"]},
         )
         review.refresh_from_db()
+        # M7 — sharh egasiga (talaba) xabar
+        isloh_notify_review_reply(review, request.user)
         return Response(ReviewSerializer(review).data)
 
     def delete(self, request, review_id):
@@ -387,7 +396,9 @@ class DiscussionThreadViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         parent = isloh_resolve_parent(thread, request.data.get("parent"))
-        serializer.save(thread=thread, author=request.user, parent=parent)
+        reply = serializer.save(thread=thread, author=request.user, parent=parent)
+        # M7 — mavzu muallifiga xabar (o'ziga yozsa yuborilmaydi)
+        isloh_notify_discussion_reply(reply)
         return Response(self._annotated(thread.pk), status=status.HTTP_201_CREATED)
 
 

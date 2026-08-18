@@ -1,10 +1,6 @@
 /* ==========================================================================
    ISLOH — Bildirishnomalar do'koni
 
-   `isloh_notifications` — bildirishnomalar ro'yxati va ularning o'qildi /
-   o'qilmadi holati. Sahifasi: pages/instructor/notifications.html
-   (ro'yxatni js/notifications.js chizadi).
-
    NEGA BU FAYL BOR: bildirishnomalar sahifasidagi qatorlar HTML ichida
    qo'lda yozilgan edi va sahifada bironta hodisa yo'q edi — qatorni bosish
    ham, o'qilgan deb belgilash ham ishlamasdi (js/notifications.js mavjud,
@@ -13,17 +9,19 @@
    o'chmasdi: hamma narsani o'qib chiqsangiz ham "yangilik bor" deb
    turaverardi.
 
-   Endi holat do'konda: o'qilgan deb belgilash F5 dan keyin ham qoladi va
-   nuqta o'qilmaganlar sonidan HISOBLANADI.
+   M7 (backend): manba endi `/notifications`, `isloh_notifications` esa
+   OFFLINE NUSXA. Do'kon umumiy fabrikaga (`isloh_createStoreCache`)
+   o'tkazildi.
 
-   Naqsh js/assignment-store.js bilan bir xil: sxema + demo seed + qisman
-   yangilash + `isloh:notifications-updated` hodisasi. fetch() ishlatilmaydi
-   (CLAUDE.md §3).
+   ROL BO'YICHA AJRATISH SAQLANDI. Serverda ham `role` maydoni bor va sabab
+   bir xil: bitta odam ham talaba, ham o'qituvchi bo'lishi mumkin, ikkala
+   oqim aralashmasligi kerak. Filtrlash MIJOZDA bo'ladi — ro'yxat baribir
+   yuklanadi va serverga rol bo'yicha ikkinchi so'rov yuborish keraksiz.
 
-   Do'kon ROL bo'yicha ajratilgan (`role` maydoni): bitta kalitda uchala
-   rolning bildirishnomalari yashaydi, sahifa esa faqat o'zinikini so'raydi.
-   Hozircha demo ma'lumot faqat o'qituvchi uchun ekilgan — talaba va admin
-   sahifalari o'z bosqichida ulanadi.
+   O'QILMAGANLAR SONI ALOHIDA ENDPOINT'DAN. Qizil nuqta HAR BIR sahifada
+   ko'rinadi, ro'yxat esa faqat ikkitasida kerak. Butun ro'yxatni bitta son
+   uchun yuklash isrof bo'lardi, shuning uchun nuqta
+   `/notifications/unread-count` ga boradi va do'kon YUKLANMAYDI.
    ========================================================================== */
 
 const ISLOH_NOTIFICATIONS_KEY = 'isloh_notifications';
@@ -102,19 +100,6 @@ function isloh_notificationSeed() {
 
 /* --- Do'kon --------------------------------------------------------------- */
 
-function isloh_ntReadJson(key) {
-  try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; }
-}
-
-function isloh_ntWriteJson(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
 /* Sahifa roli sidebar'dan (js/chat-store.js va js/profile.js dagi bir xil
    naqsh) — bu modul profile.js siz sahifalarda ham ishlashi kerak. */
 function isloh_notifRole() {
@@ -123,72 +108,119 @@ function isloh_notifRole() {
   return role || 'student';
 }
 
+/* Serverdagi shakl snake_case va `read` — mantiqiy qiymat (u yerda
+   `read_at` vaqt belgisidan hisoblanadi, sabab apps/notifications/models.py
+   da). Ikkalasi FAQAT shu funksiyada uchrashadi. */
+function isloh_isServerNotification(row) {
+  return row && (('created_at' in row) || ('actor_name' in row));
+}
+
+function isloh_fromServerNotification(row) {
+  return {
+    id: row.id,
+    role: row.role,
+    type: row.type,
+    title: row.title || '',
+    desc: row.body || '',
+    href: row.href || '',
+    read: !!row.read,
+    createdAt: row.created_at || ''
+  };
+}
+
 function isloh_normalizeNotification(notification) {
-  return Object.assign({}, ISLOH_NOTIFICATION_DEFAULTS, notification || {});
+  const source = isloh_isServerNotification(notification)
+    ? isloh_fromServerNotification(notification)
+    : (notification || {});
+  return Object.assign({}, ISLOH_NOTIFICATION_DEFAULTS, source);
 }
 
 function isloh_notifTypeMeta(type) {
   return ISLOH_NOTIF_TYPES[type] || ISLOH_NOTIF_TYPES.system;
 }
 
+const ISLOH_NOTIFICATION_CACHE = isloh_createStoreCache({
+  key: ISLOH_NOTIFICATIONS_KEY,
+  endpoint: '/notifications',
+  event: 'isloh:notifications-updated',
+  normalize: isloh_normalizeNotification,
+  seed: isloh_notificationSeed
+});
+
+function isloh_loadNotifications() { return ISLOH_NOTIFICATION_CACHE.load(); }
+
 /* Butun do'kon (barcha rollar). Sahifalar odatda isloh_getNotifications()
    ni ishlatadi — u faqat joriy rolnikini beradi. */
-function isloh_getAllNotifications() {
-  const stored = isloh_ntReadJson(ISLOH_NOTIFICATIONS_KEY);
-  if (Array.isArray(stored)) return stored.map(isloh_normalizeNotification);
-
-  const seed = isloh_notificationSeed().map(isloh_normalizeNotification);
-  isloh_ntWriteJson(ISLOH_NOTIFICATIONS_KEY, seed);
-  return seed;
-}
+function isloh_getAllNotifications() { return ISLOH_NOTIFICATION_CACHE.get(); }
 
 /* Joriy rolning bildirishnomalari, eng yangisi tepada. */
 function isloh_getNotifications(role) {
   const target = role || isloh_notifRole();
   return isloh_getAllNotifications()
     .filter((n) => n.role === target)
+    .slice()
     .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
 }
 
-function isloh_commitNotifications(list) {
-  if (!isloh_ntWriteJson(ISLOH_NOTIFICATIONS_KEY, list)) return false;
+function isloh_emitNotifications(list) {
   document.dispatchEvent(new CustomEvent('isloh:notifications-updated', { detail: list }));
-  return true;
 }
 
-/* --- Amallar -------------------------------------------------------------- */
+/* --- Amallar --------------------------------------------------------------
+   "O'qilgan" do'kon fabrikasining `PUT` yo'li bilan YUBORILMAYDI: fabrika
+   butun obyektni yuborardi, serverda esa bildirishnomaning hamma maydoni
+   `read_only` (uni voqealar yasaydi, mijoz emas). Shuning uchun bu amal
+   o'z endpoint'iga boradi — js/review-store.js dagi javob bilan bir xil
+   naqsh: optimistik o'zgarish + xatoda ortga qaytarish.                    */
 
 function isloh_markNotificationRead(id, read) {
   const list = isloh_getAllNotifications();
   const index = list.findIndex((n) => n.id === id);
   if (index === -1) return false;
 
-  list[index] = Object.assign({}, list[index], { read: read === undefined ? true : Boolean(read) });
-  return isloh_commitNotifications(list);
+  // Faqat o'qilmagandan o'qilganga; serverda teskari amal yo'q
+  if (read === false || list[index].read) return true;
+
+  list[index] = Object.assign({}, list[index], { read: true });
+  isloh_emitNotifications(list);
+
+  islohApi.post('/notifications/' + id + '/read', {}).catch((err) => {
+    const at = isloh_getAllNotifications().findIndex((n) => n.id === id);
+    if (at !== -1) isloh_getAllNotifications()[at].read = false;
+    isloh_emitNotifications(isloh_getAllNotifications());
+    if (typeof islohUI !== 'undefined') islohUI.toast(err.error || "Saqlab bo'lmadi", 'error');
+  });
+  return true;
 }
 
 /* Faqat JORIY rolning yozuvlari belgilanadi — o'qituvchi "barchasini
-   o'qildi" desa, talabaning bildirishnomalari tegilmasin. */
+   o'qildi" desa, o'sha odamning TALABA oqimidagi xabarlari tegilmasin
+   (serverda ham xuddi shu qoida). */
 function isloh_markAllNotificationsRead(role) {
   const target = role || isloh_notifRole();
-  const list = isloh_getAllNotifications()
-    .map((n) => (n.role === target ? Object.assign({}, n, { read: true }) : n));
-  return isloh_commitNotifications(list);
-}
-
-function isloh_deleteNotification(id) {
-  return isloh_commitNotifications(isloh_getAllNotifications().filter((n) => n.id !== id));
-}
-
-/* Do'konga yangi bildirishnoma qo'shish — voqealarni backend yuboradi
-   (CLAUDE.md §4), shu sababli hozircha faqat API sifatida turadi. */
-function isloh_addNotification(patch) {
   const list = isloh_getAllNotifications();
-  const notification = isloh_normalizeNotification(patch);
-  notification.id = notification.id || 'nt-' + Date.now();
-  notification.createdAt = notification.createdAt || new Date().toISOString();
-  list.push(notification);
-  return isloh_commitNotifications(list) ? notification : null;
+  const previous = list.filter((n) => n.role === target && !n.read).map((n) => n.id);
+  if (!previous.length) return true;
+
+  list.forEach((n) => { if (n.role === target) n.read = true; });
+  isloh_emitNotifications(list);
+
+  islohApi.post('/notifications/read-all', {}, { params: { role: target } }).catch((err) => {
+    const current = isloh_getAllNotifications();
+    previous.forEach((id) => {
+      const at = current.findIndex((n) => n.id === id);
+      if (at !== -1) current[at].read = false;
+    });
+    isloh_emitNotifications(current);
+    if (typeof islohUI !== 'undefined') islohUI.toast(err.error || "Saqlab bo'lmadi", 'error');
+  });
+  return true;
+}
+
+/* O'chirish fabrikaning o'z yo'li bilan (`DELETE /notifications/{id}`) —
+   u optimistik o'chirish va rollback'ni allaqachon bajaradi. */
+function isloh_deleteNotification(id) {
+  return ISLOH_NOTIFICATION_CACHE.remove(id);
 }
 
 /* --- Hisoblanadigan qiymatlar --------------------------------------------- */
@@ -210,12 +242,30 @@ function isloh_notifTimeLabel(notification) {
    endi do'kondan hisoblanadi. Shu sababli bu modul barcha o'qituvchi
    sahifalariga ulanadi: nuqta faqat bildirishnomalar sahifasida emas,
    hamma joyda to'g'ri ko'rinsin.                                           */
+function isloh_showNotifBadge(unread) {
+  document.querySelectorAll('.topbar-actions .icon-btn .dot')
+    .forEach((dot) => { dot.style.display = unread ? '' : 'none'; });
+}
+
+/* Do'kon YUKLANGAN bo'lsa undan, aks holda alohida endpoint'dan.
+
+   Nuqta 60+ sahifada turadi, ro'yxat esa faqat ikkitasida kerak —
+   `isloh_getNotifications()` chaqirilsa fabrika butun ro'yxatni tortib
+   olardi. `unread-count` bitta son qaytaradi va zaxirasi ham oddiy: xato
+   bo'lsa nuqta shunchaki ko'rinmaydi (yolg'on "yangilik bor" dan ko'ra
+   yaxshiroq). */
 function isloh_renderNotifBadge() {
   const dots = document.querySelectorAll('.topbar-actions .icon-btn .dot');
   if (!dots.length) return;
 
-  const unread = isloh_notifUnreadCount();
-  dots.forEach((dot) => { dot.style.display = unread ? '' : 'none'; });
+  if (ISLOH_NOTIFICATION_CACHE.isLoaded()) {
+    isloh_showNotifBadge(isloh_notifUnreadCount());
+    return;
+  }
+
+  islohApi.get('/notifications/unread-count')
+    .then((data) => isloh_showNotifBadge((data && data.unread) || 0))
+    .catch(() => isloh_showNotifBadge(0));
 }
 
 document.addEventListener('isloh:notifications-updated', isloh_renderNotifBadge);

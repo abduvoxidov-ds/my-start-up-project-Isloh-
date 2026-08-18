@@ -359,7 +359,18 @@ function isloh_createStoreCache(config) {
     return true;
   }
 
-  return { get: get, load: load, retry: retry, persist: persist, remove: remove, fallback: fallback };
+  /* `isLoaded` — "ro'yxat allaqachon qo'lda turibdimi?".
+     `get()` dan farqi: u chaqirilsa YUKLASH BOSHLANADI, bu esa faqat
+     so'raydi. Kerak bo'lgan joyi (M7): topbar'dagi qizil nuqta 60+
+     sahifada turadi va butun ro'yxatni bitta son uchun tortib olmasligi
+     kerak — ro'yxat allaqachon yuklangan bo'lsa undan sanaydi, aks holda
+     yengil `unread-count` endpoint'iga boradi. */
+  function isLoaded() { return _isLoaded; }
+
+  return {
+    get: get, load: load, retry: retry, persist: persist,
+    remove: remove, fallback: fallback, isLoaded: isLoaded
+  };
 }
 
 window.isloh_createStoreCache = isloh_createStoreCache;

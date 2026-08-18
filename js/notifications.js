@@ -34,20 +34,43 @@
 /* Bitta qator. Sarlavha havola bo'ladi (bildirishnoma qayerga olib
    borishini do'kondagi `href` aytadi) — ilgari qatorlar hech qayerga
    bog'lanmagan edi. */
+
+/* Havola FAQAT shu rol papkasidagi sahifaga borishi mumkin.
+
+   Ekranlashning o'zi yetarli emas: `javascript:...` yoki `//boshqa-sayt`
+   qiymati ekranlangandan keyin ham ishlaydi. `href` serverdan keladi va
+   hozir uni voqealar yozadi, lekin bu qiymat baza orqali o'tadi — ya'ni
+   kelajakda uni boshqa yo'l bilan to'ldirish mumkin bo'lsa, tekshiruv shu
+   yerda turgani ma'qul. Ruxsat etilgani — oddiy fayl nomi. */
+const ISLOH_NOTIF_HREF = /^[a-z0-9._-]+\.html(\?[a-z0-9=&_.%-]*)?$/i;
+
+function isloh_notifHref(href) {
+  const value = String(href || '').trim();
+  return ISLOH_NOTIF_HREF.test(value) ? value : '';
+}
+/* M7 — MATN EKRANLANADI (js/escape.js).
+
+   Bildirishnoma matnini server yozadi, LEKIN uning ichida boshqa
+   foydalanuvchining ismi va kurs nomi bor ("Sardor Aliyev ... kursiga
+   yozildi"). Ya'ni bu ham begona matn va M6 dagi qoida shu yerga ham
+   tegishli. `href` alohida: u ATRIBUT ichiga tushadi va faqat mahalliy
+   sahifaga ishora qilishi kerak — `isloh_notifHref` shuni tekshiradi. */
 function isloh_notifRowHtml(notification) {
   const meta = isloh_notifTypeMeta(notification.type);
-  const title = notification.href
-    ? `<a class="text-inherit" href="${notification.href}">${notification.title}</a>`
-    : notification.title;
+  const href = isloh_notifHref(notification.href);
+  const safeTitle = isloh_escapeHtml(notification.title);
+  const title = href
+    ? `<a class="text-inherit" href="${isloh_escapeAttr(href)}">${safeTitle}</a>`
+    : safeTitle;
 
   return `<div class="notif-row${notification.read ? '' : ' unread'}" data-notif-item
-       data-notif-id="${notification.id}" data-read="${notification.read}">
+       data-notif-id="${isloh_escapeAttr(notification.id)}" data-read="${notification.read}">
     <div class="notif-icon ${meta.tint}"><i class="bi ${meta.icon}"></i></div>
     <div>
       <div class="notif-title">${title}</div>
-      <div class="notif-desc">${notification.desc}</div>
+      <div class="notif-desc">${isloh_escapeHtml(notification.desc)}</div>
     </div>
-    <div class="notif-time">${isloh_notifTimeLabel(notification)}</div>
+    <div class="notif-time">${isloh_escapeHtml(isloh_notifTimeLabel(notification))}</div>
     <div class="notif-actions">
       ${notification.read ? '' : '<button type="button" class="notif-action-btn" data-notif-read aria-label="O\'qilgan deb belgilash"><i class="bi bi-check2"></i></button>'}
       <button type="button" class="notif-action-btn del" data-notif-delete aria-label="O'chirish"><i class="bi bi-trash"></i></button>

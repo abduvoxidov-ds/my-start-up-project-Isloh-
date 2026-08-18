@@ -18,7 +18,7 @@ qoldirilmaydi — keyingisiga o'tishdan oldin oldingisi to'liq yopiladi.
 | **M4** | Baholash (`assessment`) | ✅ **tayyor** | `quiz-store`, `question-store`, `assignment-store` |
 | **M5** | Fayllar (`resources`) | ✅ **tayyor** | `resource-store`, avatar, video, topshiriq fayli |
 | **M6** | Ijtimoiy (`social`) | ✅ **tayyor** | `review-store` + `discussion-store` |
-| **M7** | Bildirishnomalar | ⬜ | `notification-store` |
+| **M7** | Bildirishnomalar | ✅ **tayyor** | `notification-store` |
 | **M8** | Xabarlar (`messaging`) | ⬜ | `chat-store` (4 kalit) + WebSocket |
 | **M9** | Savdo (`commerce`) | ⬜ | savat/buyurtma zanjiri, `data-backend-pending` tugmalari |
 | **M10** | AI (`assistant`) | ⬜ | `ai-store` + oqim (SSE) |
@@ -686,6 +686,64 @@ topshirildi (M4), sharh yozildi (M6), to'lov o'tdi (M9).
 `isloh_addNotification` frontendda shu uchun tayyor.
 
 **Yetkazish:** REST + (M8 dan keyin) WebSocket.
+
+---
+
+### M7 holati (2026-08-19)
+
+**Backend yozildi va testlar bilan qulflandi (272 ta test, `check` toza.)**
+
+| Qism | Holat |
+|---|---|
+| Model: `Notification` (rol bo'yicha ajratilgan) | ✅ |
+| `GET /notifications?role=`, `/notifications/unread-count` | ✅ |
+| `POST /notifications/{id}/read`, `/notifications/read-all`, `DELETE` | ✅ |
+| Voqealar: yozilish (M3), topshirish va baholash (M4), sharh, sharhga javob, muhokama javobi (M6) | ✅ |
+| `js/notification-store.js` fabrikaga va serverga | ✅ |
+| `pages/shared/notifications.html` do'kondan chiziladi | ✅ |
+
+**Qabul qilingan qarorlar:**
+
+1. **Voqealar OSHKORA chaqiriladi, signal bilan emas.** `post_save`
+   ishlatilsa bildirishnoma yashirin yon ta'sir bo'lib qolardi:
+   `Enrollment.objects.create(...)` yozgan odam uni ko'rmaydi va testlarda
+   har bir yozuv kutilmagan qatorlar yasardi. Butun mantiq
+   `apps/notifications/events.py` da — "qaysi voqea kimga boradi" savoli
+   BITTA joyda.
+2. **O'zingga bildirishnoma kelmaydi.** Tekshiruv `isloh_notify` ning
+   ichida, har chaqiruv joyida emas — o'qituvchi o'z mavzusiga javob
+   yozsa yoki o'z kursiga o'zi yozilsa ro'yxat shovqinga to'lmaydi.
+3. **Bildirishnoma hech qachon so'rovni yiqitmaydi.** U yon ta'sir: xabar
+   yozilmasa ham talabaning topshirig'i topshirilishi kerak. Har chaqiruv
+   `try/except` ichida va jurnalga yoziladi (test bilan qulflangan).
+4. **`read_at`, `read` EMAS.** "Qachon o'qidi" keyin kerak bo'ladi (M11),
+   bayroqdan esa vaqtni tiklab bo'lmaydi. Ikkinchi marta belgilash vaqtni
+   O'ZGARTIRMAYDI — birinchi o'qish vaqti saqlanadi.
+5. **Xabarni mijoz YARATA OLMAYDI** — `POST /notifications` umuman yo'q va
+   serializerdagi hamma maydon `read_only`. Aks holda istalgan odam o'ziga
+   yolg'on xabar yozib qo'yardi.
+6. **O'qilmaganlar soni ALOHIDA endpoint'da.** Qizil nuqta 60+ sahifada
+   turadi, ro'yxat esa faqat ikkitasida kerak. Do'kon fabrikasiga
+   `isLoaded()` qo'shildi: ro'yxat allaqachon yuklangan bo'lsa nuqta
+   undan sanaydi, aks holda yengil `unread-count` ga boradi.
+7. **`isloh_addNotification` OLIB TASHLANDI.** U mahalliy yolg'on xabar
+   yasardi; endi xabarni faqat server yozadi.
+
+**Matn bu yerda ham ekranlanadi.** Xabar matnini server yozadi, lekin
+ichida boshqa foydalanuvchining ismi va kurs nomi bor — ya'ni M6 qoidasi
+shu yerga ham tegishli. `href` esa atributga tushadi va u oddiy ekranlash
+bilan yetarli emas (`javascript:` ekranlangandan keyin ham ishlaydi),
+shuning uchun u OQ RO'YXATdan o'tadi: faqat `*.html` fayl nomi.
+
+**M7 dan keyin ham qoladigan joylar:**
+
+- **`js/notif-panel.js` — o'lik kod.** Qo'ng'iroq menyusi bironta sahifaga
+  ULANMAGAN (0 ta sahifa) va ichida rol bo'yicha o'z namunaviy ma'lumoti
+  bor. Uni do'konga ko'chirish yoki butunlay olib tashlash — alohida
+  qaror; hozircha tegilmadi, chunki u hech qayerda ishlamaydi va zarar
+  keltirmaydi.
+- **WebSocket** M8 dan keyin: hozir xabar sahifa yangilanganda keladi.
+- **To'lov voqeasi (`payment`)** M9 da ulanadi — tur allaqachon bor.
 
 ---
 

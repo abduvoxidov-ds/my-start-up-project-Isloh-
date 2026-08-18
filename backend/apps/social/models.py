@@ -22,7 +22,7 @@ so'rovda chizadi va har biri uchun sharhlarni sanash N+1 so'rov berardi.
 
 --- MATN ---------------------------------------------------------------------
 
-Foydalanuvchi matni `apps/social/sanitize.py` orqali o'tadi (teglarsiz
+Foydalanuvchi matni `apps/core/sanitize.py` orqali o'tadi (teglarsiz
 saqlanadi), chizishda esa frontend uni `isloh_escapeHtml` bilan ekranlaydi.
 Qaysi qatlam nima uchun javob berishi o'sha faylda yozilgan.
 """

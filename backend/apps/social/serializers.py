@@ -2,7 +2,7 @@
 ISLOH — sharh va muhokama serializerlari (M6).
 
 MATN IKKI JOYDA TOZALANADI, lekin BU YERDA — saqlashdan oldin
-(`apps/social/sanitize.py` dagi izohga qarang: bu ikkinchi qatlam, asosiy
+(`apps/core/sanitize.py` dagi izohga qarang: bu ikkinchi qatlam, asosiy
 himoya chizishdagi ekranlash).
 
 MUALLIF HAR DOIM BIR XIL SHAKLDA qaytadi (`isloh_author_payload`): id, ism,
@@ -13,6 +13,7 @@ kursda talaba bo'lishi mumkin (M1 dagi "rol alohida jadvalda" qarori).
 
 from rest_framework import serializers
 
+from apps.core.sanitize import isloh_clean_text
 from apps.courses.models import Course
 
 from .models import (
@@ -21,7 +22,6 @@ from .models import (
     Review,
     ReviewReply,
 )
-from .sanitize import isloh_clean_text
 
 ISLOH_TEXT_MAX = 5000
 ISLOH_TITLE_MAX = 200

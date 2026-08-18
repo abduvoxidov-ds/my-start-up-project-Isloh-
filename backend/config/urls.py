@@ -35,6 +35,7 @@ urlpatterns = [
     path("api/v1/", include("apps.assessment.urls")),
     path("api/v1/", include("apps.resources.urls")),
     path("api/v1/", include("apps.social.urls")),
+    path("api/v1/", include("apps.notifications.urls")),
 ]
 
 # `/api/` ostidagi 404/500 lar ham JSON shartnomasida chiqsin.
