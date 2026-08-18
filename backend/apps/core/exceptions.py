@@ -99,6 +99,19 @@ def _build(code, message, fields=None, status_code=status.HTTP_400_BAD_REQUEST):
     )
 
 
+def isloh_validation_response(exc):
+    """`ValidationError` ni §0.2 shakliga keltiradi — LEKIN OTMASDAN.
+
+    NEGA KERAK: DRF istisnoni ushlaganda `set_rollback()` ni chaqiradi va
+    `ATOMIC_REQUESTS` ostida butun so'rovni orqaga qaytaradi. Ba'zi joyda
+    esa xatodan OLDIN bajarilgan tozalash SAQLANISHI kerak — masalan
+    chegaradan oshgan yuklashni yakunlashda baytlar ham, `pending` yozuvi
+    ham o'chiriladi (apps/resources/views.py). Otilgan xato o'sha
+    o'chirishni ham bekor qilardi.
+    """
+    return _build("validation_error", ISLOH_DEFAULT_MESSAGES[400], _collect_fields(exc.detail))
+
+
 def isloh_exception_handler(exc, context):
     """DRF ning EXCEPTION_HANDLER'i (settings.REST_FRAMEWORK)."""
     # Django darajasidagi ikki istisnoni DRF ekvivalentiga o'giramiz,

@@ -68,9 +68,10 @@ function isloh_initPublishCourse() {
      warn — bajarilmagan, lekin nashrga to'sqinlik qilmaydi
      fail — nashr etib bo'lmaydi (tugma o'chiq qoladi)
 
-   Video fayllar yuklanganini tekshirib bo'lmaydi: real fayl yuklash hali
-   yo'q (CLAUDE.md §4), shuning uchun bunday band umuman ko'rsatilmaydi —
-   o'ylab topilgan ogohlantirish yozilmaydi. */
+   M5 dan boshlab fayl yuklash haqiqiy, lekin "video yuklanganmi" bandi
+   hamon yo'q: darsga video biriktirish (`Lesson.video_file`) serverda bor,
+   frontenddagi dars muharriri esa unga hali ulanmagan. O'ylab topilgan
+   ogohlantirish yozilmaydi. */
 function isloh_publishChecks(course) {
   const modules = typeof isloh_getModules === 'function' ? isloh_getModules(course.id) : [];
   const lessons = modules.reduce((sum, m) => sum + ((m.lessons || []).length), 0);
@@ -184,6 +185,12 @@ function isloh_initPublishConfirm(course) {
     }
   });
 }
+
+/* Ro'yxatdagi "N ta resurs biriktirilgan" bandi resurslar do'konidan
+   hisoblanadi va u M5 da serverga o'tdi — javob kelganda qayta chiziladi,
+   aks holda o'qituvchi "Resurs biriktirilmagan" ogohlantirishini noto'g'ri
+   ko'rardi. */
+document.addEventListener('isloh:resources-updated', () => isloh_initValidationSummary(null));
 
 document.addEventListener('DOMContentLoaded', () => {
   const course = isloh_initPublishCourse();

@@ -16,8 +16,8 @@ qoldirilmaydi — keyingisiga o'tishdan oldin oldingisi to'liq yopiladi.
 | **M2** | Kurslar va tarkib (`courses`) | ✅ **tayyor** | `course-store`, `content-store`, katalog |
 | **M3** | O'qish oqimi (`learning`) | ✅ **tayyor** | `enrollment-store`, `notes`, `tasks`, progress, sertifikatlar |
 | **M4** | Baholash (`assessment`) | ✅ **tayyor** | `quiz-store`, `question-store`, `assignment-store` |
-| **M5** | Fayllar (`resources`) | ⬜ | `resource-store`, avatar, video, topshiriq fayli |
-| **M6** | Ijtimoiy (`social`) | ⬜ | `review-store` + muhokamalar (do'kon yo'q) |
+| **M5** | Fayllar (`resources`) | ✅ **tayyor** | `resource-store`, avatar, video, topshiriq fayli |
+| **M6** | Ijtimoiy (`social`) | ✅ **tayyor** | `review-store` + `discussion-store` |
 | **M7** | Bildirishnomalar | ⬜ | `notification-store` |
 | **M8** | Xabarlar (`messaging`) | ⬜ | `chat-store` (4 kalit) + WebSocket |
 | **M9** | Savdo (`commerce`) | ⬜ | savat/buyurtma zanjiri, `data-backend-pending` tugmalari |
@@ -117,8 +117,8 @@ kutadi). 4 ta test qulfladi. **Jami 37 ta test.**
 
 **M1 ga qaytib qo'shiladigan (M13 bilan):** parol tiklash (email talab
 qiladi), OAuth (`/auth/oauth/{google|apple}` — tugmalar frontendda bor),
-email tasdiqlash, `/users/me/settings`, `/users/me/avatar` (M5 dan keyin),
-`DELETE /users/me`, `/users/me/export`.
+email tasdiqlash, `/users/me/settings`, `DELETE /users/me`,
+`/users/me/export`. (`/users/me/avatar` M5 da yozildi.)
 
 > **Diqqat:** `pages/auth/forgot-password.html` va `reset-password.html`
 > hozir 404 oladi (endpoint'lar yo'q). Xato endi to'g'ri ko'rsatiladi,
@@ -409,6 +409,128 @@ yuklab olishda ruxsat (kursga yozilmagan talaba resursni ololmasin).
 
 ---
 
+### M5 holati (2026-08-17)
+
+**Backend yozildi va testlar bilan qulflandi (200 ta test, `check` toza,
+oqim brauzerda o'tkazildi).**
+
+| Qism | Holat |
+|---|---|
+| Modellar: `File`, `Resource` | ✅ |
+| Saqlash qatlami `storage.py` — imzolangan URL, backend almashtiriladi | ✅ |
+| `POST /uploads/presign` → `PUT <upload_url>` → `POST /uploads/{id}/complete` | ✅ |
+| `GET /files/{id}/download` — ruxsat tekshiruvi bilan | ✅ |
+| `/instructor/resources` (CRUD + `duplicate`), `/student/courses/{id}/resources` | ✅ |
+| `PUT/DELETE /users/me/avatar` (M1 dan qolgan) | ✅ |
+| `PUT /instructor/lessons/{id}/video` + `Lesson.video_file` | ✅ |
+| `SubmissionFile.file` — topshiriq fayli endi haqiqiy | ✅ |
+| `js/upload.js` (umumiy yordamchi), `js/resource-store.js` serverdan | ✅ brauzerda tekshirildi |
+
+**Brauzerda o'tkazilgan oqim:** o'qituvchi ro'yxatdan o'tdi → kurs yaratdi →
+resurs yukladi (`presign` → `PUT` → `complete`, jarayon ko'rsatkichi bilan)
+→ kutubxonada `PDF · 4 KB` bo'lib chiqdi → nusxaladi va aslini arxivladi →
+tashqi havola qo'shdi → `localStorage` tozalanib sahifa yangilanganda uchala
+yozuv ham SERVERDAN qaytadi → avatar yukladi va u `<img>` da ko'rindi →
+darsga video biriktirdi → talaba kursga yozilmasdan faylni so'radi (**404**)
+→ yozilgach o'sha manzil **200** qaytardi va ro'yxatda faqat FAOL resurslar
+ko'rindi.
+
+**Qabul qilingan qarorlar:**
+
+1. **Uch qadamli yuklash, S3 shartnomasi bilan.** Reja imzolangan URL
+   orqali to'g'ridan-to'g'ri yuklashni talab qilgan edi; muhitda S3 yo'q
+   (Docker/PostgreSQL bilan bir xil vaziyat). Shu sababli SHARTNOMA
+   qoldirildi, backend esa almashtiriladigan qilindi
+   (`ISLOH_STORAGE_BACKEND`). Mahalliy backend `upload_url` sifatida o'z
+   endpoint'ini beradi va uni `TimestampSigner` bilan imzolaydi — URL ning
+   O'ZI vaqtinchalik kalit, xuddi S3 presigned PUT dagidek. S3 ga o'tish
+   bitta sozlama: endpoint'lar ham, frontend ham o'zgarmaydi.
+2. **`File` va `Resource` ajratildi.** `File` — baytlar haqidagi yozuv va
+   u hech qayerga tegishli emas (avatar ham, video ham, topshiriq fayli
+   ham bir xil). `Resource` — kutubxona yozuvi (papka, turkum, sevimli,
+   arxiv) va unda fayl BO'LMASLIGI ham mumkin (`type="url"`). Birlashtirilsa
+   avatar ham "resurs" bo'lib, papka/turkum maydonlarini ko'tarib yurardi.
+3. **`pending` → `ready`.** Presign yozuv yaratadi, baytlar esa keyin
+   keladi. Tugallanmagan fayl hech qayerda ko'rinmaydi va yuklab olinmaydi
+   — aks holda kutubxonada ochib bo'lmaydigan qator paydo bo'lardi.
+4. **Chegara IKKI marta tekshiriladi.** `presign` da — mijoz E'LON QILGAN
+   hajm bo'yicha (2 GB ni yuklab bo'lgandan keyin rad etish behuda);
+   `complete` da — DISKDAGI haqiqiy hajm bo'yicha (e'lon qilingani
+   shunchaki mijoz aytgan son). Yuklash paytida ham oqim bo'lak-bo'lak
+   sanaladi, ya'ni yolg'on `Content-Length` bilan diskni to'ldirib
+   bo'lmaydi.
+5. **Qaror MIME bo'yicha emas, KENGAYTMA bo'yicha.** `Content-Type` ni
+   mijoz o'zi yozadi; kengaytma esa faylning qanday ochilishini belgilaydi.
+   Oq ro'yxatda bajariladigan formatlar (`.exe`, `.bat`, `.msi`) va `.html`
+   YO'Q — `.html` yuklab olinganda emas, ochilganda va BIZNING domenimizda
+   ishga tushadi.
+6. **`.svg` avatar sifatida qabul qilinmaydi.** SVG — XML va ichida
+   `<script>` bo'lishi mumkin; avatar esa yagona INLINE ko'rsatiladigan
+   tur (qolgan hammasi `Content-Disposition: attachment` +
+   `X-Content-Type-Options: nosniff` bilan ketadi). Boshqa odamning
+   profilini ochgan foydalanuvchi o'sha skriptni o'z sessiyasida ishga
+   tushirardi. Resurs sifatida `.svg` mumkin — u ilova bo'lib yuklanadi.
+7. **`type` va `size_kb` ni SERVER qo'yadi**, mijozdan qabul qilinmaydi.
+   Aks holda 4 KB lik matn fayli "PDF · 2 GB" bo'lib ko'rinishi va
+   kutubxona statistikasi yolg'on ko'rsatishi mumkin edi.
+8. **Nusxa BAYTLARNI ko'chirmaydi** — ikkala yozuv bitta `File` ga ishora
+   qiladi. Fayl o'zgarmas (tayyor faylni qayta yozib bo'lmaydi), shuning
+   uchun ulashish xavfsiz va 200 MB lik arxiv ikki marta saqlanmaydi.
+9. **Rad etish 404, 403 emas** — 403 javobning o'zi "bunday fayl bor" deb
+   aytardi (M2 dagi "begona kurs 404" qarori bilan bir xil sabab).
+10. **Topshiriq fayli endi haqiqiy.** M4 da `{name, size_bytes}` shunchaki
+    metama'lumot edi va o'qituvchi baholash navbatida ochib bo'lmaydigan
+    "ish.zip" ni ko'rardi. Endi fayl YO yuklangan (`{file: "<id>"}`), YO
+    tashqi havola. Nom va hajm MIJOZDAN olinmaydi — ular `File` yozuvidan
+    ko'chiriladi, aks holda talaba 2 GB lik faylni "12 KB" deb ko'rsatib
+    topshiriq chegarasidan o'tib ketardi.
+
+### Brauzerda topilgan xato — avatar hech qachon ko'rinmasdi
+
+Birinchi yozilishida `/files/{id}/download` HAR DOIM token talab qilardi.
+Avatar esa `<img src>` orqali ko'rsatiladi (js/profile.js →
+`isloh_renderUserAvatar`), rasm so'rovi bo'lsa `Authorization` sarlavhasini
+YUBORA OLMAYDI. Natijada rasm `error` bilan tugab, profil doim bosh
+harflarga tushib qolardi: avatar yuklanardi, saqlanardi, lekin hech qachon
+ekranga chiqmasdi.
+
+Yechim: avatar — YAGONA ochiq tur (`isloh_is_public_file`). Yo'qotish
+kichik, chunki avatar baribir har bir kirgan foydalanuvchiga ochiq edi
+(sharhlar, chat, katalogdagi o'qituvchi), manzilda esa taxmin qilib
+bo'lmaydigan UUID turadi — S3 dagi `public-read` avatar bilan bir xil
+model. Qolgan hamma tur kirishni talab qiladi va ruxsat oldingidek
+hisoblanadi; kirmagan foydalanuvchi ular uchun **401** oladi, 404 emas —
+sessiya tugagani "topilmadi" degani emas.
+
+### Shu modulda topilgan `ATOMIC_REQUESTS` tuzog'i
+
+Chegaradan o'tmagan yuklashni yakunlashda baytlar ham, `pending` yozuvi ham
+o'chiriladi. Lekin DRF istisnoni ushlaganda `set_rollback()` ni chaqiradi
+va `ATOMIC_REQUESTS = True` ostida BUTUN so'rovni orqaga qaytaradi: baytlar
+diskdan ketgan, bazadagi qator esa qolgan bo'lardi.
+
+Ikki chora: `CompleteUploadView` va `LocalUploadView` ga
+`transaction.non_atomic_requests` (ikkinchisida yana bir sabab bor —
+200 MB ni diskka yozish davomida tranzaksiya ochiq turmasin), hamda
+`apps/core/exceptions.py` da `isloh_validation_response` — xatoni OTMASDAN
+§0.2 shakliga keltiradi.
+
+### M5 dan keyin ham qoladigan joylar
+
+- **Dars muharriri videoni yuklamaydi.** Serverda `Lesson.video_file` va
+  `PUT /instructor/lessons/{id}/video` bor va ishlaydi, lekin frontenddagi
+  dars formasi ularga ulanmagan; pleer hamon `js/course-data.js` dagi
+  namuna faylni ko'rsatadi. Bu M5 emas, pleerni serverga o'tkazish ishi.
+- **Topshiriq topshirish formasi** ham `js/upload.js` ga ulanmagan —
+  endpoint tayyor, sahifa hali eski.
+- **Tashlab ketilgan `pending` yuklashlar** yig'ilib boradi (mijoz
+  presign qilib, keyin voz kechsa). Ularni tozalash fon vazifasi — M13
+  dagi Celery. O'sha yerda `/uploads/presign` ga **rate limit** ham
+  qo'yiladi: hozir bir foydalanuvchi cheksiz bo'sh yozuv yarata oladi
+  (baytlarsiz, ya'ni disk to'lmaydi, lekin jadval o'sadi).
+
+---
+
 ## M6 — Ijtimoiy
 
 **Modellar:** `Review`, `ReviewReply`, `DiscussionThread`,
@@ -427,6 +549,131 @@ serverda sanitizatsiya + frontendda yagona `isloh_escapeHtml`.
 
 **Qoida:** sharh faqat kursga **yozilgan** talabadan qabul qilinadi, bir
 kursga bir sharh (`UNIQUE(course, user)`).
+
+---
+
+### M6 holati (2026-08-17)
+
+**Backend yozildi va testlar bilan qulflandi (253 ta test, `check` toza,
+oqim brauzerda o'tkazildi).**
+
+| Qism | Holat |
+|---|---|
+| Modellar: `Review`, `ReviewReply`, `DiscussionThread`, `DiscussionReply`, `Reaction` | ✅ |
+| `/courses/{id}/reviews` (o'qish ochiq, yozish yozilganlarga), `/reviews/{id}` | ✅ |
+| `/instructor/reviews` + `/instructor/reviews/{id}/reply` | ✅ |
+| `/discussions` CRUD + `like`, `pin`, `solve`, `replies` | ✅ |
+| `/discussion-replies/{id}` + `like`, `accept`, `pin` | ✅ |
+| Kurs reytingi sharhlardan (`Course.rating`, `reviews_count`) | ✅ |
+| Serverda sanitizatsiya (`apps/social/sanitize.py`) | ✅ |
+| Frontendda yagona `isloh_escapeHtml` (`js/escape.js`, 72 sahifa) | ✅ |
+| `js/review-store.js`, YANGI `js/discussion-store.js` serverdan | ✅ brauzerda tekshirildi |
+
+**Brauzerda o'tkazilgan oqim:** talaba mavzu ochdi (sarlavhada `<script>`
+bo'lgan — server uni **tegsiz** saqladi) → yoqtirdi → o'z mavzusiga javob
+yozdi → "hal qilindi" deb belgiladi → kursga sharh qoldirdi → **ikkinchi
+sharh rad etildi** va kurs reytingi `5.00 / 1` bo'ldi → o'qituvchi sifatida
+kirilganda mavzu qadaldi, e'lon joylandi (u ham oddiy mavzu) va sharhga
+javob yozildi → `localStorage` tozalanib sahifa yangilanganda hammasi
+SERVERDAN qaytdi.
+
+**Qabul qilingan qarorlar:**
+
+1. **Sharh va mavzu — ikki alohida model.** Qoidalari qarama-qarshi: sharh
+   YAGONA (`UNIQUE(course, user)`) va reytingga ta'sir qiladi, mavzu esa
+   cheksiz va reytingga umuman aloqasi yo'q. Bitta jadvalda ikkalasining
+   ham qoidasi buzilardi.
+2. **Kurs reytingi DENORMALIZATSIYA qilinadi** (`rating` + `reviews_count`)
+   va har sharh amalida qayta hisoblanadi. Sabab M3 dagi `progress` bilan
+   bir xil: katalog o'nlab kursni bir so'rovda chizadi.
+3. **`Reaction` da `GenericForeignKey` EMAS.** Ikkita nullable FK
+   (`thread`, `reply`) + baza darajasidagi `CheckConstraint`: `contenttypes`
+   har sanoqqa qo'shimcha JOIN qo'shardi, ikkita FK esa oddiy indeksga
+   tushadi. "Aynan bittasi to'ldirilgan" shartini BAZA qo'riqlaydi, ya'ni
+   uni ko'rinishda unutib bo'lmaydi.
+4. **Sanoqlar so'rovda (`annotate`), mijozda emas.** Ilgari like soni
+   `textContent` dan o'qilib bittaga oshirilardi (js/discussion.js) — hech
+   qayerda saqlanmasdi va tugmani ikki marta bosish uni ikki marta
+   oshirardi. Endi `UNIQUE(user, thread)` bir odamni bir marta sanaydi.
+5. **Javoblar mavzu bilan BIRGA keladi** (`replies[]`). Har mavzu uchun
+   alohida so'rov ro'yxatda o'nlab so'rov bo'lardi.
+6. **Ichma-ich javob IKKI daraja bilan cheklangan.** Frontendda faqat
+   `.comment-card` va `.comment-card.nested` sinflari bor — uchinchi daraja
+   sahifadan chiqib ketardi. Nevara javob RAD ETILMAYDI, u bobosiga
+   biriktiriladi: foydalanuvchi yozganini yo'qotmasligi kerak.
+7. **Moderatsiya kurs egasida, tahrir esa muallifda.** O'qituvchi o'z
+   kursidagi istalgan mavzu/javobni o'chiradi, qadaydi va "hal qilindi"
+   deb belgilaydi; muallif faqat O'ZINIKINI tahrirlaydi. "Hal qilindi" ni
+   mavzu muallifi ham qo'ya oladi — javobni olganini u o'zi biladi.
+8. **E'lon alohida tushuncha emas.** U `isloh_announcements` kalitida
+   yashardi, ya'ni FAQAT o'qituvchining brauzerida ko'rinardi — talabalar
+   e'lonni umuman ko'rmasdi. Endi u oddiy mavzu va "Qadash" bilan tepaga
+   chiqariladi.
+
+### XSS — ikki qatlam va ularning rollari HAR XIL
+
+M6 dan boshlab ekranda BOSHQA foydalanuvchining matni chiziladi. Shu
+paytgacha frontenddagi deyarli barcha matn o'z egasining ma'lumoti edi:
+eng yomon holatda odam o'z sahifasini buzardi.
+
+| Qatlam | Qayerda | Nima uchun javob beradi |
+|---|---|---|
+| **Chizishda ekranlash** | `js/escape.js` | ASOSIY himoya — har qanday manbadagi matn uchun ishlaydi |
+| **Saqlashda tozalash** | `apps/social/sanitize.py` | bazaga teg tushmasin: matnni ekranlashni unutgan KELAJAKDAGI ko'rinish ham zarar bermasin |
+
+`strip_tags` ni yagona himoya deb hisoblash mumkin emas va Django hujjati
+buni ochiq aytadi — aynan shuning uchun u ikkinchi qatlam.
+
+**Ekranlash ilgari IKKI JOYDA alohida yozilgan va ular BIR XIL
+ISHLAMASDI:** `js/chat.js` faqat `<` va `>` ni almashtirardi (atribut
+ichida yetarli emas), `js/profile-sections.js` esa `'` ni qoldirardi (bir
+tirnoqli atributda yetarli). Endi qoida bitta joyda va `js/escape.js` 72
+sahifaga qo'shildi. Uchta funksiya bor: `isloh_escapeHtml` (matn),
+`isloh_escapeAttr` (atribut) va `isloh_safeCssValue`.
+
+**`isloh_safeCssValue` — bu ekranlash EMAS, OQ RO'YXAT.** Avatar rangi va
+kurs muqovasi do'kondan keladigan MATN maydoni, ya'ni unga istalgan narsa
+yozilishi mumkin. CSS ichida ekranlash yetarli emas: `url(javascript:...)`
+va `expression(...)` umuman teg ochmasdan ish bajaradi. Shuning uchun
+faqat kutilgan belgilar qoldiriladi.
+
+### Brauzerda topilgan xato — "meniki" ISM bo'yicha aniqlanardi
+
+Tahrirlash va o'chirish tugmalari faqat muallifga chiziladi. Birinchi
+yozilishida muallif `isloh_getUserProfile().name` bilan solishtirilardi va
+brauzerda yiqildi: mahalliy profildagi ism serverdagi ism bilan mos
+kelmasa, muallif O'Z mavzusida hech qanday tugma ko'rmasdi. Ikki xil
+odamning ismi bir xil bo'lishi ham mumkin.
+
+Yechim: `islohApi.currentUserId()` — id access token ichida yotadi
+(SimpleJWT `user_id`), ya'ni qo'shimcha so'rov kerak emas. Bu tekshiruv
+XAVFSIZLIK emas, KO'RINISH uchun; ruxsatni server baribir qayta tekshiradi.
+
+### Testda topilgan xato — `annotate()` YANA `Meta.ordering` ni yo'q qildi
+
+`DiscussionThread.Meta.ordering = ["-is_pinned", "-created_at"]` yozilgan
+edi, lekin so'rovda `annotate()` bor (`like_count`, `reply_count`) va
+Django shunda modelning tartibini SQL'ga umuman chiqarmaydi. Natija:
+o'qituvchi mavzuni qadab qo'yardi, lekin u ro'yxat tepasiga chiqmasdi.
+
+**Bu AYNAN M2 dagi katalog sahifalash xatosining ikkinchi ko'rinishi**
+(§"O'tishda topilgan XATO"). Tuzatildi: `.order_by("-is_pinned",
+"-created_at", "id")` oshkora. Qoida: `annotate()` bo'lgan har bir so'rovda
+`order_by` OSHKORA yoziladi.
+
+### M6 dan keyin ham qoladigan joylar
+
+- **Dars ichidagi izohlar** (`course-player.html`) hamon `js/comments.js`
+  bilan, ya'ni faqat DOM'da. U ham muhokama, lekin boshqa kontekstda
+  (dars bo'yicha) — uni serverga o'tkazish pleerni serverga ko'chirish
+  bilan birga bo'ladi.
+- **Sharh YOZISH formasi** talaba tomonida hali yo'q: endpoint va do'kon
+  funksiyalari (`isloh_submitCourseReview`) tayyor, lekin kurs sahifasida
+  forma chizilmagan.
+- **158 ta `innerHTML`** ning hammasi tekshirilmadi. M6 da boshqa
+  foydalanuvchi matni chiziladigan joylar (sharh, muhokama, javob, avatar)
+  yopildi; qolganlari o'z egasining ma'lumoti bilan ishlaydi va M13 dagi
+  umumiy audit paytida ko'rib chiqiladi.
 
 ---
 
@@ -540,7 +787,7 @@ qiladi.
 | Ish | Nega |
 |---|---|
 | **Email yuborish** | Parol tiklash M1 da yozilmagan — u email'siz ishlamaydi. SMTP yoki provayder + shablonlar |
-| **Rate limiting** | `/auth/login`, `/auth/register`, `/auth/forgot-password` — brute force'ga qarshi (DRF throttling) |
+| **Rate limiting** | `/auth/login`, `/auth/register`, `/auth/forgot-password` — brute force'ga qarshi; `/uploads/presign` — bo'sh yozuv toshqiniga qarshi (DRF throttling) |
 | **XSS himoyasi** | Serverda sanitizatsiya + frontendda yagona `isloh_escapeHtml` (158 ta `innerHTML`) |
 | **CSP sarlavhalari** | inline `style` loyihada ataylab ishlatiladi — siyosat shunga moslanadi |
 | **OpenAPI hujjati** | `drf-spectacular` — 110 ta endpoint qo'lda hujjatlanmaydi |
@@ -560,10 +807,10 @@ Backend modullariga bog'liq, lekin alohida bajariladi:
 
 | Ish | Qachon |
 |---|---|
-| Qolgan **21 do'konni** fabrikaga o'tkazish | har modul bilan birga |
+| Qolgan **19 do'konni** fabrikaga o'tkazish | har modul bilan birga |
 | **Obunachilarni tekshirish** — har do'kon uchun majburiy | har modul bilan |
-| `isloh_escapeHtml` birlashtirish | M6 dan oldin |
-| Muhokama / jonli sessiya / admin do'konlari | M6, M12 |
+| ~~`isloh_escapeHtml` birlashtirish~~ | ✅ M6 da bajarildi (`js/escape.js`) |
+| ~~Muhokama do'koni~~ / jonli sessiya / admin do'konlari | ✅ M6 (`js/discussion-store.js`); jonli sessiya va admin — M12 |
 | `id` va `slug` ajratish | M2 bilan |
 
 > Obunachilar haqida: kurslar do'konida to'rtta modul

@@ -22,6 +22,32 @@ function isloh_getToken() { return localStorage.getItem(ISLOH_TOKEN_KEY) || ''; 
 function isloh_setToken(token) { localStorage.setItem(ISLOH_TOKEN_KEY, token); }
 function isloh_clearToken() { localStorage.removeItem(ISLOH_TOKEN_KEY); }
 
+/* --- Joriy foydalanuvchi id'si (M6) ---------------------------------------
+   "Bu yozuv meniki emasmi?" savoli M6 dan boshlab paydo bo'ldi: o'z
+   mavzusini tahrirlash va o'chirish tugmalari faqat muallifga chiziladi.
+
+   ISM BO'YICHA SOLISHTIRISH ISHLAMAYDI — o'lchandi: `isloh_profiles`
+   dagi ism mahalliy demo qiymat bo'lishi mumkin va serverdagi ism bilan
+   mos kelmasdi, natijada muallif o'z mavzusida hech qanday tugma
+   ko'rmasdi. Ikki xil odamning ismi bir xil bo'lishi ham mumkin.
+
+   Id access token ichida yotadi (SimpleJWT `user_id` da'vosi), ya'ni uni
+   olish uchun QO'SHIMCHA SO'ROV KERAK EMAS. Bu tekshiruv XAVFSIZLIK
+   emas, KO'RINISH uchun: ishlamaydigan tugma chizilmasin. Haqiqiy
+   ruxsatni server qayta tekshiradi. */
+function isloh_currentUserId() {
+  const token = isloh_getToken();
+  if (!token) return '';
+  try {
+    const payload = token.split('.')[1];
+    // JWT — base64url; atob standart base64 kutadi
+    const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+    return String(JSON.parse(json).user_id || '');
+  } catch (e) {
+    return '';
+  }
+}
+
 /* --- Xato obyekti --------------------------------------------------------- */
 
 function isloh_apiError(message, status, code, fields) {
@@ -141,7 +167,8 @@ const islohApi = {
   setToken: isloh_setToken,
   clearToken: isloh_clearToken,
   getToken: isloh_getToken,
-  setBaseUrl: isloh_setApiBaseUrl
+  setBaseUrl: isloh_setApiBaseUrl,
+  currentUserId: isloh_currentUserId
 };
 
 window.islohApi = islohApi;

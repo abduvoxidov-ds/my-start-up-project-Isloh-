@@ -111,21 +111,22 @@ function isloh_renderCourseMaterials(course) {
 
 const ISLOH_COURSE_REVIEW_LIMIT = 3;
 
+/* M6 — matn talabadan keladi, ya'ni ekranlanadi (js/escape.js). */
 function isloh_courseReviewHtml(review) {
   const reply = isloh_getReviewReply(review.id);
   const replyBlock = reply
-    ? `<div class="review-reply"><div class="lbl">Sizning javobingiz</div><div class="txt">${reply}</div></div>`
+    ? `<div class="review-reply"><div class="lbl">Sizning javobingiz</div><div class="txt">${isloh_escapeHtml(reply)}</div></div>`
     : '';
 
   return `<div class="review-card">
-    <div class="avatar avatar-sm"${review.avatar ? ` style="background:${review.avatar};"` : ''}>${isloh_getUserInitials(review.studentName)}</div>
+    ${isloh_reviewAvatarHtml(review)}
     <div class="flex-1 min-w-0">
       <div class="review-head">
-        <span class="review-name">${review.studentName}</span>
+        <span class="review-name">${isloh_escapeHtml(review.studentName)}</span>
         <span class="rating-stars">${isloh_reviewStarsHtml(review.rating)}</span>
-        <span class="review-time">${isloh_reviewTimeLabel(review)}</span>
+        <span class="review-time">${isloh_escapeHtml(isloh_reviewTimeLabel(review))}</span>
       </div>
-      <div class="review-text">${review.text}</div>
+      <div class="review-text">${isloh_escapeHtml(review.text)}</div>
       ${replyBlock}
     </div>
   </div>`;
@@ -230,4 +231,7 @@ function isloh_renderCourseDetails() {
 }
 
 document.addEventListener('isloh:courses-updated', isloh_renderCourseDetails);
+/* "Resurslar" ko'rsatkichi resurslar do'konidan hisoblanadi va u M5 da
+   serverga o'tdi — javob kelganda son qayta chiziladi. */
+document.addEventListener('isloh:resources-updated', isloh_renderCourseDetails);
 document.addEventListener('DOMContentLoaded', isloh_renderCourseDetails);

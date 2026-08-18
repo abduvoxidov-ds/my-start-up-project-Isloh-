@@ -431,13 +431,32 @@ class AssignmentTests(APITestCase):
 
         response = self.client.post(
             f"/api/v1/student/assignments/{self.assignment.pk}/submissions",
-            {"text": "Ishim", "files": [{"name": "ish.zip", "size_bytes": 1024}]},
+            {"text": "Ishim", "files": [{"name": "ish.zip", "url": "https://github.com/ish"}]},
             format="json",
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.json()["status"], Submission.STATUS_PENDING)
         self.assertEqual(len(response.json()["files"]), 1)
+
+    def test_baytsiz_fayl_metamalumoti_qabul_qilinmaydi(self):
+        """M5 da o'zgardi: `{name, size_bytes}` endi yetarli emas.
+
+        M4 da bu yozuv shunchaki metama'lumot edi — o'qituvchi baholash
+        navbatida "ish.zip" ni ko'rardi, lekin ochib bo'lmasdi (baytlar
+        hech qayerda saqlanmagan). Endi fayl YO yuklangan bo'ladi
+        (`{file: "<id>"}`), YO tashqi havola (`{url}`).
+        """
+        self.client.force_authenticate(self.student)
+
+        response = self.client.post(
+            f"/api/v1/student/assignments/{self.assignment.pk}/submissions",
+            {"text": "Ishim", "files": [{"name": "ish.zip", "size_bytes": 1024}]},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(len(response.json()["files"]), 0)
 
     def test_topshirishlar_chegarasi(self):
         self.client.force_authenticate(self.student)

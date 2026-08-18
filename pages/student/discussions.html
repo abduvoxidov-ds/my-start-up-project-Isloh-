@@ -58,146 +58,9 @@
           </div>
 
           <div class="thread-list" data-thread-list="discussion">
-            <!-- Thread 1: pinned -->
-            <div class="card discussion-thread dt-pinned" data-thread data-comment-thread data-filter-item data-mtype="pinned" data-filter-text="Modul 1 uchun eslatma" data-sort-date="5" data-sort-likes="18" data-sort-replies="6">
-              <div class="dt-head">
-                <div class="avatar-sm avatar-teach">AY</div>
-                <div class="dt-head-main">
-                  <div class="dt-title-row">
-                    <i class="bi bi-pin-angle-fill pin-thread-ic" title="Qadalgan mavzu"></i>
-                    <div class="dt-title"><a href="#">📌 1-modul uchun umumiy eslatma va qo'shimcha materiallar</a></div>
-                    <span class="role-badge instructor">O'qituvchi</span>
-                  </div>
-                  <div class="dt-meta-row"><span>Akmal Yuldashev</span><span>&middot;</span><span>2 kun oldin</span><span>&middot;</span><span>1-modul: Kirish</span></div>
-                  <div class="dt-excerpt">Assalomu alaykum! 1-modul bo'yicha barcha qo'shimcha o'qish materiallari va foydali havolalar shu yerda to'planadi...</div>
-                  <div class="dt-attachment"><i class="bi bi-paperclip"></i> qoshimcha-material.pdf</div>
-                  <div class="dt-stats">
-                    <button class="dt-stat-btn like-btn" data-thread-like><i class="bi bi-hand-thumbs-up"></i> <span data-like-count>18</span></button>
-                    <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 6 ta javobni ko'rish</button>
-                    <button class="dt-stat-btn" data-thread-bookmark aria-label="Saqlash"><i class="bi bi-bookmark"></i> Saqlash</button>
-                    <button class="dt-stat-btn" data-reply-box-toggle style="margin-left:auto;"><i class="bi bi-reply"></i> Javob berish</button>
-                  </div>
-
-                  <form class="comment-composer comment-composer-reply" data-comment-composer data-reply-box hidden>
-                    <input data-comment-input placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing">
-                    <button type="submit" class="btn btn-teach btn-sm">Yuborish</button>
-                  </form>
-
-                  <div class="reply-list" data-reply-list data-comment-list hidden>
-                    <div class="comment-card pinned">
-                      <div class="avatar-sm">SM</div>
-                      <div class="comment-body">
-                        <div class="comment-head"><span class="comment-name">Siz</span><span class="role-badge student">Talaba</span><span class="comment-time">1 kun oldin</span></div>
-                        <div class="comment-text" data-comment-text>Rahmat, materiallar juda foydali bo'ldi!</div>
-                        <div class="comment-actions">
-                          <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>3</span></button>
-                          <button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="comment-card">
-                      <div class="avatar-sm avatar-teach">AY</div>
-                      <div class="comment-body">
-                        <div class="comment-head"><span class="comment-name">Akmal Yuldashev</span><span class="role-badge instructor">O'qituvchi</span><span class="comment-time">20 soat oldin</span></div>
-                        <div class="comment-text" data-comment-text>Arzimaydi! Savollaringiz bo'lsa shu yerga yozavering.</div>
-                        <div class="comment-actions">
-                          <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>5</span></button>
-                          <button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>
-                        </div>
-                        <div class="comment-card nested" style="margin-top:8px;">
-                          <div class="avatar-sm">BR</div>
-                          <div class="comment-body">
-                            <div class="comment-head"><span class="comment-name">Bekzod Rahimov</span><span class="role-badge student">Talaba</span><span class="comment-time">10 soat oldin</span></div>
-                            <div class="comment-text" data-comment-text>Menda ham savol bor edi, endi tushunarli bo'ldi 🙌</div>
-                            <div class="comment-actions">
-                              <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>1</span></button>
-                              <button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Thread 2: solved -->
-            <div class="card discussion-thread" data-thread data-comment-thread data-filter-item data-mtype="solved" data-filter-text="Docker compose xatosi" data-sort-date="3" data-sort-likes="9" data-sort-replies="2">
-              <div class="dt-head">
-                <div class="avatar-sm">SM</div>
-                <div class="dt-head-main">
-                  <div class="dt-title-row">
-                    <div class="dt-title"><a href="#">Docker Compose ishga tushmayapti, "port already in use" xatosi</a></div>
-                    <span class="role-badge student">Talaba</span>
-                    <span class="solved-badge" data-solved-badge><i class="bi bi-check-circle-fill"></i> Hal qilindi</span>
-                  </div>
-                  <div class="dt-meta-row"><span>Siz</span><span>&middot;</span><span>Kecha</span><span>&middot;</span><span>2-modul: Docker asoslari</span></div>
-                  <div class="dt-excerpt">docker-compose up buyrug'ini ishlatganimda 5432 porti band deb xato chiqyapti. Nima qilishim kerak?</div>
-                  <div class="dt-stats">
-                    <button class="dt-stat-btn like-btn" data-thread-like><i class="bi bi-hand-thumbs-up"></i> <span data-like-count>9</span></button>
-                    <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 2 ta javobni ko'rish</button>
-                    <button class="dt-stat-btn" data-thread-bookmark aria-label="Saqlash"><i class="bi bi-bookmark"></i> Saqlash</button>
-                    <button class="dt-stat-btn" data-reply-box-toggle style="margin-left:auto;"><i class="bi bi-reply"></i> Javob berish</button>
-                  </div>
-                  <form class="comment-composer comment-composer-reply" data-comment-composer data-reply-box hidden>
-                    <input data-comment-input placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing">
-                    <button type="submit" class="btn btn-teach btn-sm">Yuborish</button>
-                  </form>
-                  <div class="reply-list" data-reply-list data-comment-list hidden>
-                    <div class="comment-card">
-                      <div class="avatar-sm avatar-teach">AY</div>
-                      <div class="comment-body">
-                        <div class="comment-head"><span class="comment-name">Akmal Yuldashev</span><span class="role-badge instructor">O'qituvchi</span><span class="comment-time">20 soat oldin</span></div>
-                        <div class="comment-text" data-comment-text>5432 portini boshqa PostgreSQL jarayoni band qilib turgan bo'lishi mumkin — <code>docker ps</code> orqali tekshiring.</div>
-                        <div class="comment-actions">
-                          <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>4</span></button>
-                          <button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Thread 3: plain -->
-            <div class="card discussion-thread" data-thread data-comment-thread data-filter-item data-mtype="open" data-filter-text="Volumes haqida" data-sort-date="1" data-sort-likes="4" data-sort-replies="1">
-              <div class="dt-head">
-                <div class="avatar-sm">FR</div>
-                <div class="dt-head-main">
-                  <div class="dt-title-row">
-                    <div class="dt-title"><a href="#">Docker Volumes va Bind Mounts o'rtasidagi farq</a></div>
-                    <span class="role-badge student">Talaba</span>
-                  </div>
-                  <div class="dt-meta-row"><span>Farrux Rustamov</span><span>&middot;</span><span>3 soat oldin</span><span>&middot;</span><span>2-modul: Docker asoslari</span></div>
-                  <div class="dt-excerpt">Ikkalasi ham amalda bir xilga o'xshaydi, lekin qachon qaysi birini ishlatish kerak?</div>
-                  <div class="dt-stats">
-                    <button class="dt-stat-btn like-btn" data-thread-like><i class="bi bi-hand-thumbs-up"></i> <span data-like-count>4</span></button>
-                    <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 1 ta javobni ko'rish</button>
-                    <button class="dt-stat-btn" data-thread-bookmark aria-label="Saqlash"><i class="bi bi-bookmark"></i> Saqlash</button>
-                    <button class="dt-stat-btn" data-reply-box-toggle style="margin-left:auto;"><i class="bi bi-reply"></i> Javob berish</button>
-                  </div>
-                  <form class="comment-composer comment-composer-reply" data-comment-composer data-reply-box hidden>
-                    <input data-comment-input placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing">
-                    <button type="submit" class="btn btn-teach btn-sm">Yuborish</button>
-                  </form>
-                  <div class="reply-list" data-reply-list data-comment-list hidden>
-                    <div class="comment-card">
-                      <div class="avatar-sm">SM</div>
-                      <div class="comment-body">
-                        <div class="comment-head"><span class="comment-name">Siz</span><span class="role-badge student">Talaba</span><span class="comment-time">2 soat oldin</span></div>
-                        <div class="comment-text" data-comment-text>Men ham shuni bilmoqchi edim, kuzatib boraman.</div>
-                        <div class="comment-actions">
-                          <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>1</span></button>
-                          <button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!-- Mavzular js/discussion.js tomonidan js/discussion-store.js
+                 do'konidan chiziladi (M6). Ilgari bu yerda 3 ta kartochka
+                 qo'lda yozilgan edi va ular hech qayerda saqlanmasdi. -->
           </div>
           <div class="empty-state" data-filter-empty style="display:none;">
             <div class="empty-icon"><i class="bi bi-chat-square-text"></i></div>
@@ -220,53 +83,8 @@
             </div>
           </div>
 
-          <div style="margin-top:16px; display:flex; flex-direction:column; gap:12px;">
-            <div class="card qa-card answered" data-thread data-comment-thread data-filter-item data-qcat="compose" data-filter-text="Compose fayl versiyasi">
-              <div class="dt-head">
-                <div class="avatar-sm">SM</div>
-                <div class="dt-head-main">
-                  <div class="dt-title-row"><div class="dt-title"><a href="#">docker-compose.yml faylida "version" maydoni kerakmi?</a></div><span class="category-chip">Compose</span></div>
-                  <div class="dt-meta-row"><span>Siz so'radingiz</span><span>&middot;</span><span>1 kun oldin</span></div>
-                  <div class="qa-accepted-banner"><i class="bi bi-patch-check-fill"></i> Qabul qilingan javob mavjud</div>
-                  <div class="dt-stats" style="margin-top:10px;">
-                    <button class="dt-stat-btn like-btn" data-thread-like><i class="bi bi-hand-thumbs-up"></i> <span data-like-count>7</span> Foydali</button>
-                    <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 1 ta javob</button>
-                  </div>
-                  <div class="reply-list" data-reply-list data-comment-list hidden>
-                    <div class="comment-card">
-                      <div class="avatar-sm avatar-teach">AY</div>
-                      <div class="comment-body">
-                        <div class="comment-head"><span class="comment-name">Akmal Yuldashev</span><span class="role-badge instructor">O'qituvchi</span><span class="comment-time">22 soat oldin</span><span class="comment-resolved-tag"><i class="bi bi-check-circle-fill"></i> Qabul qilingan</span></div>
-                        <div class="comment-text" data-comment-text>Yangi Compose versiyalarida <code>version</code> maydoni ixtiyoriy — uni olib tashlashingiz mumkin.</div>
-                        <div class="comment-actions">
-                          <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>6</span> Foydali</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card qa-card" data-thread data-comment-thread data-filter-item data-qcat="deploy" data-filter-text="Production joylashtirish">
-              <div class="dt-head">
-                <div class="avatar-sm">FR</div>
-                <div class="dt-head-main">
-                  <div class="dt-title-row"><div class="dt-title"><a href="#">Production serverga Docker orqali joylashtirish uchun eng yaxshi amaliyot qaysi?</a></div><span class="category-chip">Joylashtirish</span></div>
-                  <div class="dt-meta-row"><span>Farrux Rustamov so'radi</span><span>&middot;</span><span>4 soat oldin</span></div>
-                  <div class="dt-stats" style="margin-top:10px;">
-                    <button class="dt-stat-btn like-btn" data-thread-like><i class="bi bi-hand-thumbs-up"></i> <span data-like-count>2</span> Foydali</button>
-                    <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 0 ta javob</button>
-                    <button class="dt-stat-btn" data-reply-box-toggle style="margin-left:auto;"><i class="bi bi-reply"></i> Javob berish</button>
-                  </div>
-                  <form class="comment-composer comment-composer-reply" data-comment-composer data-reply-box hidden>
-                    <input data-comment-input placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing">
-                    <button type="submit" class="btn btn-teach btn-sm">Yuborish</button>
-                  </form>
-                  <div class="reply-list" data-reply-list data-comment-list hidden></div>
-                </div>
-              </div>
-            </div>
+          <div class="thread-list" data-thread-list="qa" style="margin-top:16px;">
+            <!-- Savol-Javob ham AYNI do'kondan, faqat `kind="qa"` bo'yicha. -->
           </div>
           <div class="empty-state" data-filter-empty style="display:none;">
             <div class="empty-icon"><i class="bi bi-patch-question"></i></div>
@@ -280,21 +98,32 @@
 </div>
 
 <!-- NEW THREAD MODAL -->
+<!-- M6: oyna endi FORMA. Ilgari "Joylash" tugmasi shunchaki oynani
+     yopardi va mavzu hech qayerda paydo bo'lmasdi. -->
 <div class="modal-overlay" id="new-thread-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3 style="font-size:15px;">Yangi mavzu</h3><button class="icon-btn" data-modal-close="new-thread-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
-    <div class="modal-body">
-      <div class="field"><label for="new-thread-title">Sarlavha</label><input id="new-thread-title" placeholder="Savolingiz yoki mavzu sarlavhasi"></div>
-      <div class="field" style="margin-bottom:0;"><label for="new-thread-body">Tavsif</label><textarea id="new-thread-body" class="editor-textarea" style="min-height:100px;" placeholder="Batafsil yozing..."></textarea></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" data-modal-close="new-thread-modal">Bekor qilish</button>
-      <button class="btn btn-teach btn-sm" data-modal-close="new-thread-modal"><i class="bi bi-send"></i> Joylash</button>
-    </div>
+    <form data-new-thread-form="new-thread-modal">
+      <div class="modal-head"><h3 style="font-size:15px;">Yangi mavzu</h3><button type="button" class="icon-btn" data-modal-close="new-thread-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+      <div class="modal-body">
+        <div class="field"><label for="new-thread-title">Sarlavha</label><input id="new-thread-title" data-thread-title placeholder="Savolingiz yoki mavzu sarlavhasi"></div>
+        <div class="field"><label for="new-thread-kind">Turi</label>
+          <select id="new-thread-kind" data-thread-kind class="btn btn-outline select-block">
+            <option value="discussion">Muhokama</option>
+            <option value="qa">Savol-Javob</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;"><label for="new-thread-body">Tavsif</label><textarea id="new-thread-body" data-thread-body class="editor-textarea" style="min-height:100px;" placeholder="Batafsil yozing..."></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline btn-sm" data-modal-close="new-thread-modal">Bekor qilish</button>
+        <button type="submit" class="btn btn-teach btn-sm"><i class="bi bi-send"></i> Joylash</button>
+      </div>
+    </form>
   </div>
 </div>
 
 <script src="../../js/api.js"></script>
+<script src="../../js/escape.js"></script>
 <script src="../../js/ui-feedback.js"></script>
 <script src="../../js/auth-guard.js"></script>
 <script src="../../js/navigation.js"></script>
@@ -310,7 +139,10 @@
 <script src="../../js/modal.js"></script>
 <script src="../../js/tabs.js"></script>
 <script src="../../js/filterable.js"></script>
+<!-- M6: js/comments.js OLIB TASHLANDI. U izohlarni faqat DOM'da yasardi
+     va endi mavzu ham, javoblar ham do'kondan chiziladi — ikkalasi bir
+     vaqtda ishlaganda javob ikki marta paydo bo'lardi. -->
+<script src="../../js/discussion-store.js"></script>
 <script src="../../js/discussion.js"></script>
-<script src="../../js/comments.js"></script>
 </body>
 </html>

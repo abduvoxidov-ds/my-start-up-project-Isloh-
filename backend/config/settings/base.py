@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "apps.courses",
     "apps.learning",
     "apps.assessment",
+    "apps.resources",
+    "apps.social",
 ]
 
 MIDDLEWARE = [
@@ -154,6 +156,24 @@ STORAGES = {
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# --- Yuklangan fayllar (M5) ------------------------------------------------
+# DIQQAT: yuklangan fayllar `MEDIA_ROOT` (= backend/media/) ostida yotadi va
+# u OQ RO'YXATDA EMAS. config/urls.py dagi `media` — repo ILDIZIDAGI boshqa
+# papka (namunaviy video). Yuklangan faylga yagona yo'l —
+# `/api/v1/files/{id}/download`, chunki u ruxsatni tekshiradi: kursga
+# yozilmagan talaba resursni ololmasligi kerak (docs/BACKEND-PLAN.md §M5).
+ISLOH_UPLOAD_ROOT = "uploads"
+
+# Saqlash backendi. S3 ga o'tish SHU QATORNI almashtirish bilan cheklanadi —
+# endpoint'lar ham, frontend ham o'zgarmaydi (apps/resources/storage.py).
+ISLOH_STORAGE_BACKEND = env(
+    "ISLOH_STORAGE_BACKEND", default="apps.resources.storage.LocalSignedStorage"
+)
+
+# Imzolangan yuklash havolasining umri (soniya). Qisqa bo'lgani ma'qul:
+# havola — vaqtinchalik kalit, sarlavhada token yo'q.
+ISLOH_UPLOAD_URL_TTL = env.int("ISLOH_UPLOAD_URL_TTL", default=900)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

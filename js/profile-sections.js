@@ -25,10 +25,13 @@ const ISLOH_SECTION_MAX_COURSES = 3;
 const ISLOH_SECTION_MAX_TIMELINE = 4;
 
 /* Do'kondagi matn foydalanuvchi tahrirlashi mumkin bo'lgan qiymat —
-   shablonga qo'yishdan oldin himoyalanadi. */
+   shablonga qo'yishdan oldin himoyalanadi.
+
+   M6: ish js/escape.js ga ko'chirildi (bu yerdagi nusxa `'` ni
+   qoldirardi). Nom saqlandi — uni shu faylda 20 dan ortiq chaqiruv joyi
+   ishlatadi. */
 function isloh_escapeSectionText(str) {
-  return String(str === null || str === undefined ? '' : str)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return isloh_escapeHtml(str);
 }
 
 /* Katalogda ikon "bi bi-x", kurs do'konida esa "bi-x" ko'rinishida yotadi. */

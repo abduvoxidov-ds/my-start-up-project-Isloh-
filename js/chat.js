@@ -52,8 +52,14 @@ function isloh_chatToast(key, uz, type, vars) {
   if (typeof isloh_showToast === 'function') isloh_showToast(isloh_chatText(key, uz, vars), type || 'success');
 }
 
+/* M6: ekranlash endi js/escape.js da, YAGONA joyda.
+
+   Bu yerdagi eski nusxa faqat `<` va `>` ni almashtirardi — atribut ichida
+   yetarli emas edi (`"` qolib ketardi). Nom saqlandi, chunki uni shu
+   faylda 5 ta chaqiruv joyi ishlatadi va ular xabar matni uchun ataylab
+   o'qiladi; ish esa endi umumiy funksiyaga topshiriladi. */
 function isloh_escapeChatText(str) {
-  return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return isloh_escapeHtml(str);
 }
 
 function isloh_chatRelativeTime(ts) {

@@ -1,26 +1,25 @@
 /* ==========================================================================
-   ISLOH — Provider tomonidagi ikkita "yaratish" oynasi
-     1) E'lon joylash        (pages/instructor/discussions.html)
-     2) Sessiya rejalashtirish (pages/instructor/live-sessions.html)
+   ISLOH — Sessiya rejalashtirish oynasi
+     (pages/instructor/live-sessions.html)
 
-   NEGA BIR FAYLDA: ikkalasi ham bir xil naqsh — modaldagi formani o'qish,
-   localStorage'ga yozish, ro'yxat boshiga kartochka qo'yish. Ilgari ikkala
-   "yuborish" tugmasi ham faqat `isloh_closeModal(...)` chaqirardi: forma
-   to'ldirilardi-yu, hech qayerga bormasdi.
+   Ilgari bu faylda ikkita oyna bor edi — e'lon va sessiya — chunki
+   ikkalasi bir xil naqshda ishlardi: modaldagi formani o'qish,
+   localStorage'ga yozish, ro'yxat boshiga kartochka qo'yish. Ikkala
+   "yuborish" tugmasi ham dastlab faqat `isloh_closeModal(...)` chaqirardi:
+   forma to'ldirilardi-yu, hech qayerga bormasdi.
+
+   E'lon qismi M6 da olib tashlandi (pastdagi izohga qarang) — u endi
+   haqiqiy muhokama mavzusi.
 
    Do'konlar:
-     isloh_announcements    — [{ id, title, body, createdAt }]
      isloh_live_sessions    — [{ id, title, startsAt, duration, agenda }]
 
    Markup shartnomasi (har bir sahifada faqat o'ziniki bo'ladi):
-     [data-announce-submit] + #announce-title / #announce-body
-       [data-thread-list]   → e'lon qo'shiladigan ro'yxat
      [data-session-submit]  + #ls-title-input / #ls-date-input /
                               #ls-duration-input / #ls-agenda-input
        [data-session-list]  → sessiya qo'shiladigan ro'yxat
    ========================================================================== */
 
-const ISLOH_ANNOUNCEMENTS_KEY = 'isloh_announcements';
 const ISLOH_SESSIONS_KEY = 'isloh_live_sessions';
 
 function isloh_readList(key) {
@@ -50,68 +49,15 @@ function isloh_composeValue(id) {
   return el ? el.value.trim() : '';
 }
 
-/* --- 1) E'lonlar ---------------------------------------------------------- */
+/* --- 1) E'lonlar — M6 DA OLIB TASHLANDI ------------------------------------
+   E'lon shu yerda `isloh_announcements` kalitiga yozilardi va kartochka
+   DOM'ga qo'shilardi. Ikki muammo bor edi: (1) e'lon faqat SHU brauzerda
+   ko'rinardi, ya'ni talabalar uni umuman ko'rmasdi; (2) sarlavha va matn
+   `innerHTML` ga ekranlanmasdan tushardi.
 
-/* E'lon oddiy mavzu kabi ko'rinadi, lekin "qadalgan" holatda — muhokamalar
-   ro'yxatidagi mavjud .dt-pinned naqshi qayta ishlatiladi. */
-function isloh_announcementHtml(item) {
-  return `<div class="card discussion-thread dt-pinned" data-thread data-filter-item data-mtype="pinned" data-filter-text="${item.title}">
-    <div class="dt-head">
-      <div class="avatar-sm avatar-teach">AY</div>
-      <div class="dt-head-main">
-        <div class="dt-title-row">
-          <div class="dt-title">${item.title}</div>
-          <span class="role-badge teacher">O'qituvchi</span>
-        </div>
-        <div class="dt-meta-row"><span>Akmal Yuldashev</span><span>&middot;</span><span>Hozir</span><span>&middot;</span><span>E'lon</span></div>
-        <div class="dt-excerpt">${item.body}</div>
-      </div>
-    </div>
-  </div>`;
-}
-
-function isloh_renderAnnouncements() {
-  const list = document.querySelector('[data-thread-list]');
-  if (!list) return;
-  // Eng yangi e'lon tepada tursin
-  isloh_readList(ISLOH_ANNOUNCEMENTS_KEY).forEach((item) => {
-    list.insertAdjacentHTML('afterbegin', isloh_announcementHtml(item));
-  });
-}
-
-function isloh_initAnnounceForm() {
-  const submit = document.querySelector('[data-announce-submit]');
-  if (!submit) return;
-
-  isloh_renderAnnouncements();
-
-  submit.addEventListener('click', () => {
-    const title = isloh_composeValue('announce-title');
-    const body = isloh_composeValue('announce-body');
-
-    if (!title || !body) {
-      isloh_composeToast("Sarlavha va matn to'ldirilishi kerak", 'error');
-      return;
-    }
-
-    const item = { id: 'ann-' + Date.now(), title: title, body: body, createdAt: new Date().toISOString() };
-    const list = isloh_readList(ISLOH_ANNOUNCEMENTS_KEY);
-    list.push(item);
-
-    if (!isloh_writeList(ISLOH_ANNOUNCEMENTS_KEY, list)) {
-      isloh_composeToast("Saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
-      return;
-    }
-
-    const mount = document.querySelector('[data-thread-list]');
-    if (mount) mount.insertAdjacentHTML('afterbegin', isloh_announcementHtml(item));
-
-    document.getElementById('announce-title').value = '';
-    document.getElementById('announce-body').value = '';
-    if (typeof isloh_closeModal === 'function') isloh_closeModal('announce-modal');
-    isloh_composeToast("E'lon joylandi");
-  });
-}
+   Endi e'lon — oddiy muhokama mavzusi (js/discussion-store.js). Oyna
+   `data-new-thread-form` ga aylandi va uni js/discussion.js boshqaradi;
+   o'qituvchi mavzuni "Qadash" tugmasi bilan tepaga chiqaradi. */
 
 /* --- 2) Jonli sessiyalar -------------------------------------------------- */
 
@@ -193,6 +139,5 @@ function isloh_initSessionForm() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  isloh_initAnnounceForm();
   isloh_initSessionForm();
 });

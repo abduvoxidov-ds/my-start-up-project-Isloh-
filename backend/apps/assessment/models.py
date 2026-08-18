@@ -377,9 +377,26 @@ class Submission(BaseModel):
 
 
 class SubmissionFile(BaseModel):
-    """Fayl metama'lumoti. Haqiqiy yuklash M5 (fayllar) da."""
+    """Topshirilgan ishning fayli.
+
+    M4 da bu faqat metama'lumot edi (`name`, `size_bytes`, `url`) va baytlar
+    hech qayerda saqlanmasdi. M5 da `file` qo'shildi; eski uchta maydon
+    QOLDI, chunki ular yozuvning NUSXASI: fayl o'chirilsa ham ishning
+    tarkibida nima topshirilgani ko'rinib turishi kerak.
+
+    Satrli havola (`"resources.File"`) ATAYLAB: `apps.resources`
+    `apps.assessment` ga tayanadi (yuklash chegarasi topshiriqdan olinadi),
+    teskari import aylanma bo'lardi.
+    """
 
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE, related_name="files")
+    file = models.ForeignKey(
+        "resources.File",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="submission_files",
+    )
     name = models.CharField(max_length=200)
     size_bytes = models.PositiveBigIntegerField(default=0)
     url = models.URLField(blank=True, default="")

@@ -134,20 +134,25 @@ function isloh_initLibraryActions() {
       return;
     }
 
-    /* "Tanlash" — resursni dars/topshiriq muharririga qo'shish backend
-       ishi (CLAUDE.md §4). Frontendda halol bajarish mumkin bo'lgani —
-       ishlatilgan vaqtini belgilash, shuning uchun "Oxirgi ishlatilgan"
-       ro'yxati haqiqiy bo'lib qoladi. */
+    /* "Tanlash" — resursni dars/topshiriq muharririga qo'shish. M5 da fayl
+       qatlami tayyor bo'ldi, lekin BOG'LANISH hali yo'q: dars muharriri
+       resurs do'koniga ulanmagan. Shu sababli bu yerda halol bajarish
+       mumkin bo'lgani — ishlatilgan vaqtini belgilash, ya'ni "Oxirgi
+       ishlatilgan" ro'yxati haqiqiy bo'lib qoladi. */
     const pick = e.target.closest('[data-library-pick]');
     if (pick) {
       const resource = isloh_markResourceUsed(pick.dataset.libraryPick);
       isloh_renderResourceLibrary();
       if (typeof isloh_showToast === 'function' && resource) {
-        isloh_showToast(`"${resource.name}" tanlandi — muharrirga qo'shish backend ulangach ishlaydi`);
+        isloh_showToast(`"${resource.name}" tanlandi — muharrirga qo'shish dars muharriri ulangach ishlaydi`);
       }
     }
   });
 }
+
+/* M5: do'kon serverdan asinxron to'ladi — javob kelganda kutubxona qayta
+   chiziladi, aks holda ekranda zaxira ma'lumot qolib ketardi. */
+document.addEventListener('isloh:resources-updated', isloh_renderResourceLibrary);
 
 document.addEventListener('DOMContentLoaded', () => {
   isloh_renderResourceLibrary();

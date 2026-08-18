@@ -384,4 +384,7 @@ document.addEventListener('isloh:courses-updated', isloh_renderProfileStats);
    sharhga javob yozilsa, kartochkalardagi raqamlar darhol yangilanadi. */
 document.addEventListener('isloh:enrollments-updated', isloh_renderProfileStats);
 document.addEventListener('isloh:reviews-updated', isloh_renderProfileStats);
+/* Resurslar do'koni M5 da serverga o'tdi — "kutubxonadagi resurslar" soni
+   endi birinchi chizishda emas, javob kelganda to'g'ri bo'ladi. */
+document.addEventListener('isloh:resources-updated', isloh_renderProfileStats);
 document.addEventListener('DOMContentLoaded', isloh_renderProfileStats);

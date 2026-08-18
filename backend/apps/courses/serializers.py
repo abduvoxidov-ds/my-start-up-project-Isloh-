@@ -51,6 +51,16 @@ def isloh_unique_slug(base, ignore_pk=None):
 
 
 class LessonSerializer(serializers.ModelSerializer):
+    """`video_url` M5 da qo'shildi.
+
+    U `read_only`: videoni bu yerdan emas, `PUT /instructor/lessons/{id}/video`
+    orqali biriktiriladi — u yerda fayl egasi va tayyorligi tekshiriladi.
+    Havolaning o'zi ham baytlarga bevosita yo'l emas, u ruxsat tekshiradigan
+    endpoint'ga ishora qiladi (apps/resources/views.py).
+    """
+
+    video_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Lesson
         fields = [
@@ -61,8 +71,14 @@ class LessonSerializer(serializers.ModelSerializer):
             "visibility",
             "status",
             "position",
+            "video_url",
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "video_url"]
+
+    def get_video_url(self, obj):
+        from apps.resources.serializers import isloh_download_url
+
+        return isloh_download_url(obj.video_file)
 
 
 class CourseModuleSerializer(serializers.ModelSerializer):
@@ -140,6 +156,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "instructor",
             "students_count",
             "rating",
+            "reviews_count",
             "revenue_cents",
             "completion",
             "published_at",
@@ -153,6 +170,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "lessons_count",
             "students_count",
             "rating",
+            "reviews_count",
             "revenue_cents",
             "completion",
             "published_at",

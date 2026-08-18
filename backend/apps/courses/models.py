@@ -138,9 +138,14 @@ class Course(SluggedModel):
     cover = models.CharField(max_length=200, blank=True, default="linear-gradient(135deg,#4ED88A,#1FAE5E)")
     icon = models.CharField(max_length=60, blank=True, default="bi-journal-bookmark-fill")
 
-    # QAROR 4 — keyingi modullar yuritadi
+    # QAROR 4 — keyingi modullar yuritadi.
+    # `rating` va `reviews_count` ni M6 yuritadi: sharh yozilgan/o'zgargan/
+    # o'chgan har safar `isloh_refresh_course_rating` qayta hisoblaydi.
+    # Denormalizatsiya ataylab — katalog o'nlab kursni bir so'rovda chizadi
+    # va har biri uchun sharhlarni sanash N+1 so'rov berardi.
     students_count = models.PositiveIntegerField(default=0)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    reviews_count = models.PositiveIntegerField(default=0)
     revenue_cents = models.PositiveBigIntegerField(default=0)
     completion = models.PositiveSmallIntegerField(default=0)
 
@@ -239,13 +244,24 @@ class CourseModule(BaseModel):
 
 
 class Lesson(BaseModel):
-    """Dars. Mazmuni (video, matn) M5 da qo'shiladi — hozir metama'lumot."""
+    """Dars. Videosi M5 da qo'shildi; matnli mazmun hali metama'lumot."""
 
     module = models.ForeignKey(CourseModule, on_delete=models.CASCADE, related_name="lessons")
     title = models.CharField(max_length=200, default="Yangi dars")
     type = models.CharField(max_length=16, choices=LESSON_TYPE_CHOICES, default=LESSON_VIDEO)
-    # "8 daq", "—" — ko'rinish matni; haqiqiy davomiylik M5 da videodan keladi
+    # "8 daq", "—" — ko'rinish matni; haqiqiy davomiylik videodan keladi
     duration = models.CharField(max_length=40, blank=True, default="—")
+
+    # M5 — dars videosi. Satrli havola ATAYLAB: `apps.resources`
+    # `apps.courses` ga tayanadi (Resource -> Course), teskari import
+    # aylanma bo'lardi. Fayl o'chirilsa dars qolsin — `SET_NULL`.
+    video_file = models.ForeignKey(
+        "resources.File",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="lessons",
+    )
     visibility = models.CharField(max_length=16, choices=LESSON_VISIBILITY_CHOICES, default="public")
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default=STATUS_DRAFT)
     position = models.PositiveIntegerField(default=0)

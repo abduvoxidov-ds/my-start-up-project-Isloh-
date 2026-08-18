@@ -33,14 +33,17 @@
         <button class="btn btn-teach btn-sm" data-modal-open="announce-modal"><i class="bi bi-megaphone-fill"></i> E'lon joylash</button>
       </div>
 
+      <!-- M6: raqamlar do'kondan (js/discussion-store.js). Ilgari ular
+           markupda qotib turardi (34 / 3 / 28 / 1.4 soat) va ro'yxat bilan
+           hech qanday aloqasi yo'q edi. -->
       <div class="wk-grid-4 mt-20">
-        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-chat-square-text-fill"></i></div><div class="stat-value">34</div><div class="stat-label">Faol mavzular</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-exclamation-circle-fill"></i></div><div class="stat-value">3</div><div class="stat-label">Javobsiz savollar</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-check2-circle"></i></div><div class="stat-value">28</div><div class="stat-label">Hal qilingan</div></div>
-        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-clock-history"></i></div><div class="stat-value">1.4 soat</div><div class="stat-label">O'rtacha javob vaqti</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-violet"><i class="bi bi-chat-square-text-fill"></i></div><div class="stat-value" data-discussion-stat="total">0</div><div class="stat-label">Faol mavzular</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-danger"><i class="bi bi-exclamation-circle-fill"></i></div><div class="stat-value" data-discussion-stat="unanswered">0</div><div class="stat-label">Javobsiz savollar</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-green"><i class="bi bi-check2-circle"></i></div><div class="stat-value" data-discussion-stat="solved">0</div><div class="stat-label">Hal qilingan</div></div>
+        <div class="card card-pad stat-card"><div class="stat-icon tint-muted"><i class="bi bi-clock-history"></i></div><div class="stat-value" data-discussion-stat="avgResponse">—</div><div class="stat-label">O'rtacha javob vaqti</div></div>
       </div>
 
-      <div class="card card-pad mt-18" data-filterable data-thread-list>
+      <div class="card card-pad mt-18" data-filterable>
         <div class="discussion-toolbar">
           <div class="topbar-search sw-260"><i class="bi bi-search"></i><input data-filter-search placeholder="Mavzularni qidirish..." aria-label="Mavzularni qidirish"></div>
           <div class="filter-chip-row" data-filter-group="mtype">
@@ -50,72 +53,10 @@
           </div>
         </div>
 
-        <div class="thread-list">
-          <div class="card discussion-thread" data-thread data-filter-item data-mtype="unanswered" data-filter-text="Celery worker ishga tushmayapti">
-            <div class="dt-head">
-              <div class="avatar-sm">JR</div>
-              <div class="dt-head-main">
-                <div class="dt-title-row">
-                  <div class="dt-title"><a href="#">Celery worker Docker konteynerida ishga tushmayapti</a></div>
-                  <span class="role-badge student">Talaba</span>
-                </div>
-                <div class="dt-meta-row"><span>Javohir Rasimov</span><span>&middot;</span><span>2 soat oldin</span><span>&middot;</span><span>4-modul: Joylashtirish</span></div>
-                <div class="dt-excerpt">Celery workerni docker-compose orqali ishga tushirmoqchi bo'lganimda "ModuleNotFoundError" xatosi chiqyapti.</div>
-                <div class="dt-stats">
-                  <button class="dt-stat-btn like-btn" data-thread-like><i class="bi bi-hand-thumbs-up"></i> <span data-like-count>2</span></button>
-                  <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 0 ta javob</button>
-                  <button class="dt-stat-btn" data-thread-pin><i class="bi bi-pin-angle"></i> Qadash</button>
-                  <button class="dt-stat-btn" data-thread-solve><i class="bi bi-check2-circle"></i> Hal qilindi deb belgilash</button>
-                  <button class="dt-stat-btn ml-auto" data-reply-box-toggle><i class="bi bi-reply"></i> Javob berish</button>
-                </div>
-                <span class="solved-badge" data-solved-badge hidden><i class="bi bi-check-circle-fill"></i> Hal qilindi</span>
-                <div class="reply-box" data-reply-box hidden>
-                  <input class="reply-input" placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing">
-                  <button class="btn btn-teach btn-sm">Yuborish</button>
-                </div>
-                <div data-reply-list hidden></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card discussion-thread dt-pinned" data-thread data-filter-item data-mtype="pinned" data-filter-text="1-modul uchun umumiy eslatma">
-            <div class="dt-head">
-              <div class="avatar-sm avatar-teach">AY</div>
-              <div class="dt-head-main">
-                <div class="dt-title-row">
-                  <i class="bi bi-pin-angle-fill pin-thread-ic"></i>
-                  <div class="dt-title"><a href="#">📌 1-modul uchun umumiy eslatma va qo'shimcha materiallar</a></div>
-                  <span class="role-badge instructor">Siz</span>
-                </div>
-                <div class="dt-meta-row"><span>Siz</span><span>&middot;</span><span>2 kun oldin</span><span>&middot;</span><span>1-modul: Kirish</span></div>
-                <div class="dt-stats">
-                  <button class="dt-stat-btn like-btn" data-thread-like><i class="bi bi-hand-thumbs-up"></i> <span data-like-count>18</span></button>
-                  <button class="dt-stat-btn" data-thread-replies-toggle><i class="bi bi-chevron-down"></i> 6 ta javobni ko'rish</button>
-                  <button class="dt-stat-btn active" data-thread-pin><i class="bi bi-pin-fill"></i> Qadalgan</button>
-                  <button class="dt-stat-btn ml-auto" data-reply-box-toggle><i class="bi bi-reply"></i> Javob berish</button>
-                </div>
-                <div class="reply-box" data-reply-box hidden>
-                  <input class="reply-input" placeholder="Javobingizni yozing..." aria-label="Javobingizni yozing">
-                  <button class="btn btn-teach btn-sm">Yuborish</button>
-                </div>
-                <div data-reply-list hidden>
-                  <div class="comment-card pinned">
-                    <div class="avatar-sm">SM</div>
-                    <div class="comment-body">
-                      <div class="comment-head"><span class="comment-name">Samar Mirzayev</span><span class="role-badge student">Talaba</span><span class="comment-time">1 kun oldin</span><button data-comment-pin class="icon-btn icon-btn-xs ml-auto" aria-label="Izohni qadash"><i class="bi bi-pin-angle"></i></button></div>
-                      <div class="comment-text" data-comment-text>Rahmat, materiallar juda foydali bo'ldi!</div>
-                      <div class="comment-actions">
-                        <button data-comment-react><i class="bi bi-hand-thumbs-up"></i> <span data-react-count>3</span></button>
-                        <button data-comment-reply><i class="bi bi-reply"></i> Javob berish</button>
-                        <button data-comment-edit><i class="bi bi-pencil"></i> Tahrirlash</button>
-                        <button data-comment-delete><i class="bi bi-trash3"></i> O'chirish</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="thread-list" data-thread-list>
+          <!-- Mavzular js/discussion.js tomonidan js/discussion-store.js
+               do'konidan chiziladi (M6). Ilgari bu yerda 2 ta kartochka
+               qo'lda yozilgan edi; "Qadash" faqat sinf qo'shardi. -->
         </div>
         <div class="empty-state" data-filter-empty style="display:none;">
           <div class="empty-icon"><i class="bi bi-chat-square-text"></i></div>
@@ -128,21 +69,28 @@
 </div>
 
 <!-- ANNOUNCEMENT MODAL -->
+<!-- M6: e'lon endi HAQIQIY MAVZU. Ilgari u alohida `isloh_announcements`
+     kalitida yashardi va faqat shu brauzerda ko'rinardi — ya'ni talabalar
+     e'lonni umuman ko'rmasdi. Endi u oddiy mavzu bo'lib serverga boradi va
+     o'qituvchi uni "Qadash" tugmasi bilan tepaga chiqaradi. -->
 <div class="modal-overlay" id="announce-modal" hidden>
   <div class="modal">
-    <div class="modal-head"><h3>Yangi e'lon joylash</h3><button class="icon-btn" data-modal-close="announce-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
-    <div class="modal-body">
-      <div class="field"><label for="announce-title">Sarlavha</label><input id="announce-title" placeholder="E'lon sarlavhasi"></div>
-      <div class="field mb-0"><label for="announce-body">Matn</label><textarea id="announce-body" class="editor-textarea is-tall" placeholder="E'lon matnini yozing..."></textarea></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline btn-sm" data-modal-close="announce-modal">Bekor qilish</button>
-      <button class="btn btn-teach btn-sm" data-announce-submit><i class="bi bi-send"></i> Joylash</button>
-    </div>
+    <form data-new-thread-form="announce-modal">
+      <div class="modal-head"><h3>Yangi e'lon joylash</h3><button type="button" class="icon-btn" data-modal-close="announce-modal" aria-label="Yopish"><i class="bi bi-x-lg"></i></button></div>
+      <div class="modal-body">
+        <div class="field"><label for="announce-title">Sarlavha</label><input id="announce-title" data-thread-title placeholder="E'lon sarlavhasi"></div>
+        <div class="field mb-0"><label for="announce-body">Matn</label><textarea id="announce-body" data-thread-body class="editor-textarea is-tall" placeholder="E'lon matnini yozing..."></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline btn-sm" data-modal-close="announce-modal">Bekor qilish</button>
+        <button type="submit" class="btn btn-teach btn-sm"><i class="bi bi-send"></i> Joylash</button>
+      </div>
+    </form>
   </div>
 </div>
 
 <script src="../../js/api.js"></script>
+<script src="../../js/escape.js"></script>
 <script src="../../js/ui-feedback.js"></script>
 <script src="../../js/auth-guard.js"></script>
 <script src="../../js/navigation.js"></script>
@@ -159,8 +107,9 @@
 <script src="../../js/toast.js"></script>
 <script src="../../js/modal.js"></script>
 <script src="../../js/filterable.js"></script>
+<!-- M6: js/comments.js OLIB TASHLANDI — sabab talaba sahifasidagi izohda. -->
+<script src="../../js/discussion-store.js"></script>
 <script src="../../js/discussion.js"></script>
-<script src="../../js/comments.js"></script>
 <script src="../../js/instructor-compose.js"></script>
 </body>
 </html>

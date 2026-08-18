@@ -345,7 +345,15 @@ function isloh_syncUserUI(options) {
      [data-user-avatar]   -> jonli ko'rinish (yuqoridagi sinxron orqali)
      [data-avatar-reset]  -> rasmni olib tashlash (ixtiyoriy)               */
 
-/* Rasmni markazidan kvadrat qilib kesib, ISLOH_AVATAR_MAX_PX ga kichraytiradi. */
+/* Rasmni markazidan kvadrat qilib kesib, ISLOH_AVATAR_MAX_PX ga kichraytiradi.
+
+   KICHRAYTIRISH M5 DAN KEYIN HAM QOLDI: 4 MB lik telefon surati profil
+   doirachasida 96px bo'lib ko'rinadi, ya'ni asl faylni yuklash tarmoqni
+   ham, diskni ham behuda band qilardi. Kichraytirilgandan keyin u ~50 KB.
+
+   Natija IKKI shaklda qaytadi:
+     dataUrl — offline nusxa (localStorage), server yo'q bo'lgan holat
+     blob    — serverga ketadigan baytlar                                  */
 function isloh_downscaleAvatar(dataUrl, done) {
   const img = new Image();
   img.addEventListener('load', () => {
@@ -363,17 +371,46 @@ function isloh_downscaleAvatar(dataUrl, done) {
        toDataURL'ni bloklaydi — bunday holda asl rasm o'zi saqlanadi. */
     let out;
     try { out = canvas.toDataURL('image/jpeg', 0.85); } catch (e) { out = dataUrl; }
-    done(out);
+
+    if (!canvas.toBlob) { done(out, null); return; }
+    try {
+      canvas.toBlob((blob) => done(out, blob), 'image/jpeg', 0.85);
+    } catch (e) {
+      done(out, null);
+    }
   });
-  img.addEventListener('error', () => done(null));
+  img.addEventListener('error', () => done(null, null));
   img.src = dataUrl;
 }
 
 function isloh_readAvatarFile(file, done) {
   const reader = new FileReader();
   reader.addEventListener('load', () => isloh_downscaleAvatar(reader.result, done));
-  reader.addEventListener('error', () => done(null));
+  reader.addEventListener('error', () => done(null, null));
   reader.readAsDataURL(file);
+}
+
+/* --- Serverga yuklash (M5) ------------------------------------------------
+   Ikki qadam: baytlar `js/upload.js` orqali saqlanadi, so'ng fayl
+   `PUT /users/me/avatar` bilan hisobga bog'lanadi. Faqat ikkinchisidan
+   keyin `user.avatar` haqiqiy manzilga aylanadi.
+
+   XATOLIKDA MAHALLIY NUSXAGA TUSHADI: `file://` ostida server umuman yo'q
+   (CLAUDE.md §3) va tarmoq uzilishi ham bo'lishi mumkin. Bunday holda
+   rasm avvalgidek localStorage'da saqlanadi va profil bo'sh qolmaydi —
+   faqat u shu brauzerdagina ko'rinadi. */
+function isloh_saveAvatarToServer(blob) {
+  const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
+  return isloh_uploadFile(file, { purpose: ISLOH_UPLOAD_PURPOSES.avatar })
+    .then((uploaded) => islohApi.put('/users/me/avatar', { file: uploaded.id }));
+}
+
+function isloh_applyAvatar(value, message) {
+  if (!isloh_updateUserProfile({ avatar: value })) {
+    isloh_toast("Rasm saqlanmadi — brauzer xotirasi to'lgan", 'error');
+    return;
+  }
+  isloh_toast(message);
 }
 
 function isloh_initAvatarUpload() {
@@ -384,6 +421,9 @@ function isloh_initAvatarUpload() {
       const file = input.files && input.files[0];
       if (!file) return;
 
+      /* Bu ikki tekshiruv serverda ham bor (apps/resources/rules.py) —
+         bu yerdagisi faqat qulaylik uchun: foydalanuvchi yuklab
+         bo'lgandan keyin emas, tanlagan zahoti xato ko'rsin. */
       if (file.type.indexOf('image/') !== 0) {
         input.value = '';
         isloh_toast('Faqat rasm fayli yuklash mumkin', 'error');
@@ -395,20 +435,27 @@ function isloh_initAvatarUpload() {
         return;
       }
 
-      isloh_readAvatarFile(file, (dataUrl) => {
+      isloh_readAvatarFile(file, (dataUrl, blob) => {
         input.value = ''; // bir xil faylni qayta tanlash ham hodisa bersin
         if (!dataUrl) { isloh_toast("Rasmni o'qib bo'lmadi", 'error'); return; }
-        if (!isloh_updateUserProfile({ avatar: dataUrl })) {
-          isloh_toast("Rasm saqlanmadi — brauzer xotirasi to'lgan", 'error');
+
+        if (!blob || typeof isloh_uploadFile !== 'function') {
+          isloh_applyAvatar(dataUrl, 'Profil rasmi yangilandi');
           return;
         }
-        isloh_toast('Profil rasmi yangilandi');
+
+        isloh_saveAvatarToServer(blob)
+          .then((user) => isloh_applyAvatar(user.avatar || dataUrl, 'Profil rasmi yangilandi'))
+          .catch(() => isloh_applyAvatar(dataUrl, 'Profil rasmi shu brauzerda saqlandi'));
       });
     });
   }
 
   document.querySelectorAll('[data-avatar-reset]').forEach((btn) => {
     btn.addEventListener('click', () => {
+      /* Serverdagi fayl ham o'chadi (u yerda eski rasm diskda qolmasin).
+         Mahalliy nusxa server javobini kutmaydi — tugma darhol ishlaydi. */
+      if (typeof islohApi !== 'undefined') islohApi.delete('/users/me/avatar').catch(() => {});
       isloh_updateUserProfile({ avatar: '' });
       isloh_toast('Profil rasmi olib tashlandi');
     });

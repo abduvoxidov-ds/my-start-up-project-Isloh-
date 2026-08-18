@@ -482,10 +482,23 @@ class StudentAssignmentSerializer(serializers.ModelSerializer):
 
 
 class SubmissionFileSerializer(serializers.ModelSerializer):
+    """`download_url` M5 da qo'shildi — u yerda ruxsat tekshiriladi.
+
+    `url` maydoni ham qoldi: unda tashqi havola bo'lishi mumkin
+    (apps/assessment/models.py dagi `SubmissionFile` izohi).
+    """
+
+    download_url = serializers.SerializerMethodField()
+
     class Meta:
         model = SubmissionFile
-        fields = ["id", "name", "size_bytes", "url"]
-        read_only_fields = ["id"]
+        fields = ["id", "file", "name", "size_bytes", "url", "download_url"]
+        read_only_fields = ["id", "download_url"]
+
+    def get_download_url(self, obj):
+        from apps.resources.serializers import isloh_download_url
+
+        return isloh_download_url(obj.file)
 
 
 class SubmissionSerializer(serializers.ModelSerializer):

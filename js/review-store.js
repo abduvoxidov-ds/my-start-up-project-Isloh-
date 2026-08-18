@@ -1,18 +1,6 @@
 /* ==========================================================================
    ISLOH — Sharhlar do'koni
 
-   IKKI KALIT, ikki tushuncha:
-
-     `isloh_reviews`        — sharhlarning O'ZI (kim, qaysi kursga, necha
-                              yulduz, qachon). Shu fayl ekadi va boshqaradi.
-     `isloh_review_replies` — o'qituvchining JAVOBLARI, `{ "<sharh-id>":
-                              "javob matni" }` ko'rinishida. Bu kalit ilgari
-                              js/instructor-reviews.js da paydo bo'lgan va
-                              shakli O'ZGARMADI — faqat o'qish/yozish
-                              funksiyalari shu yerga ko'chirildi, chunki
-                              endi ularni kurs tafsilotlari sahifasi ham
-                              ishlatadi (CLAUDE.md §2 — DRY).
-
    NEGA BU FAYL BOR: sharhlar ro'yxati reviews.html ichiga qo'lda yozilgan
    5 ta kartochkadan iborat edi. Javob saqlanardi, lekin sharhning o'zi
    hech qayerda yo'q edi: yuqoridagi "4.8 / 128 ta sharh / 6 javobsiz"
@@ -21,22 +9,35 @@
    tafsilotlari sahifasidagi "So'nggi sharhlar" bloki esa shu sababli
    umuman bo'sh — `.placeholder-note` bilan — qolgan edi.
 
-   Naqsh js/assignment-store.js bilan bir xil: sxema + demo seed + qisman
-   yangilash + `isloh:reviews-updated` hodisasi. fetch() ishlatilmaydi
-   (CLAUDE.md §3).
+   M6 (backend): manba endi `/instructor/reviews`, `isloh_reviews` esa
+   OFFLINE NUSXA. Do'kon umumiy fabrikaga (`isloh_createStoreCache`)
+   o'tkazildi va sahifalar avvalgidek sinxron `isloh_getReviews()`
+   chaqiradi.
+
+   JAVOB ENDI SHARHNING ICHIDA. Ilgari u alohida `isloh_review_replies`
+   kalitida `{ "<sharh-id>": "javob matni" }` ko'rinishida yashardi va
+   sharh o'chirilsa javob yetim bo'lib qolardi. Serverda u `OneToOne`
+   (`ReviewReply`) va sharh bilan birga keladi. Tashqi API O'ZGARMADI —
+   `isloh_getReviewReply(id)` hamon satr qaytaradi, ya'ni
+   js/instructor-reviews.js va js/course-details.js ga tegilmadi.
+
+   SHARHNI TALABA YOZADI, O'QITUVCHI FAQAT JAVOB BERADI. Shuning uchun bu
+   do'kon o'qituvchi tomonida FAQAT O'QISH uchun: yagona yozuv amali —
+   javob (`isloh_saveReviewReply`).
    ========================================================================== */
 
 const ISLOH_REVIEWS_KEY = 'isloh_reviews';
-const ISLOH_REVIEW_REPLIES_KEY = 'isloh_review_replies';
 
 const ISLOH_REVIEW_DEFAULTS = {
   id: '',
   courseId: '',
+  courseTitle: '',
   studentId: '',
   studentName: '',
-  avatar: '',       // CSS gradienti; bo'sh bo'lsa .avatar sinfining o'z rangi
+  avatar: '',       // CSS gradienti YOKI rasm manzili (M5 dan keyin)
   rating: 5,        // 1..5
   text: '',
+  reply: '',        // o'qituvchi javobi; bo'sh bo'lsa javob berilmagan
   createdAt: ''     // ISO
 };
 
@@ -69,6 +70,7 @@ function isloh_reviewSeed() {
       id: 'rev-2', courseId: 'django-rest-masterclass', studentId: 's-nodira', studentName: 'Nodira Yusupova',
       avatar: 'linear-gradient(135deg,#DB2777,#F472B6)', rating: 5,
       text: "Ustoz juda sabrli va savollarga aniq javob beradi. Xabarlar bo'limida tez javob oldim.",
+      reply: 'Rahmat Nodira! Muvaffaqiyat tilayman 🙌',
       createdAt: isloh_rvHoursAgo(28)
     },
     {
@@ -84,6 +86,7 @@ function isloh_reviewSeed() {
       id: 'rev-4', courseId: 'postgresql-complete-guide', studentId: '', studentName: 'Samarqand Islomov',
       avatar: '', rating: 3,
       text: "O'rtacha kurs, ba'zi bo'limlar biroz eskirgan versiyalarga asoslangan.",
+      reply: 'Fikringiz uchun rahmat, kursni yangilash rejalashtirilgan.',
       createdAt: isloh_rvHoursAgo(120)
     },
     {
@@ -95,43 +98,45 @@ function isloh_reviewSeed() {
   ];
 }
 
-/* Javoblarning demo ma'lumoti — ilgari reviews.html markupida turgan ikki
-   javob. Faqat kalit UMUMAN yo'q bo'lganda ekiladi: foydalanuvchi javobni
-   o'chirib bo'sh `{}` qoldirgan bo'lsa, u qayta tiklanmasin. */
-function isloh_reviewReplySeed() {
+/* --- Do'kon: server (M6) --------------------------------------------------
+   Serverdagi shakl snake_case (`student_name`, `created_at`) va javob
+   ichma-ich obyekt; frontendniki camelCase va javob — oddiy satr. Ikkalasi
+   FAQAT quyidagi funksiyada uchrashadi (M2 dagi 2-qaror). */
+
+function isloh_isServerReview(row) {
+  return row && (('student_name' in row) || ('course_title' in row));
+}
+
+function isloh_fromServerReview(row) {
   return {
-    'rev-2': 'Rahmat Nodira! Muvaffaqiyat tilayman 🙌',
-    'rev-4': 'Fikringiz uchun rahmat, kursni yangilash rejalashtirilgan.'
+    id: row.id,
+    courseId: row.course,
+    courseTitle: row.course_title || '',
+    studentId: (row.author && row.author.id) || '',
+    studentName: row.student_name || (row.author && row.author.name) || '',
+    avatar: row.avatar || '',
+    rating: Number(row.rating) || 0,
+    text: row.text || '',
+    reply: (row.reply && row.reply.text) || '',
+    createdAt: row.created_at || ''
   };
 }
 
-/* --- Do'kon (sharhlar) ---------------------------------------------------- */
-
-function isloh_rvReadJson(key) {
-  try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; }
-}
-
-function isloh_rvWriteJson(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
 function isloh_normalizeReview(review) {
-  return Object.assign({}, ISLOH_REVIEW_DEFAULTS, review || {});
+  const source = isloh_isServerReview(review) ? isloh_fromServerReview(review) : (review || {});
+  return Object.assign({}, ISLOH_REVIEW_DEFAULTS, source);
 }
 
-function isloh_getReviews() {
-  const stored = isloh_rvReadJson(ISLOH_REVIEWS_KEY);
-  if (Array.isArray(stored)) return stored.map(isloh_normalizeReview);
+const ISLOH_REVIEW_CACHE = isloh_createStoreCache({
+  key: ISLOH_REVIEWS_KEY,
+  endpoint: '/instructor/reviews',
+  event: 'isloh:reviews-updated',
+  normalize: isloh_normalizeReview,
+  seed: isloh_reviewSeed
+});
 
-  const seed = isloh_reviewSeed().map(isloh_normalizeReview);
-  isloh_rvWriteJson(ISLOH_REVIEWS_KEY, seed);
-  return seed;
-}
+function isloh_loadReviews() { return ISLOH_REVIEW_CACHE.load(); }
+function isloh_getReviews()  { return ISLOH_REVIEW_CACHE.get(); }
 
 function isloh_getReview(id) {
   if (!id) return null;
@@ -142,65 +147,59 @@ function isloh_getReview(id) {
    sahifasidagi "So'nggi sharhlar" bloki shu ro'yxatni chizadi. */
 function isloh_getCourseReviews(courseId) {
   const list = courseId ? isloh_getReviews().filter((r) => r.courseId === courseId) : isloh_getReviews();
-  return list.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+  return list.slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
 }
 
-function isloh_commitReviews(list) {
-  if (!isloh_rvWriteJson(ISLOH_REVIEWS_KEY, list)) return false;
-  document.dispatchEvent(new CustomEvent('isloh:reviews-updated', { detail: list }));
-  return true;
-}
-
-/* Yozish API'si: sharhni talaba qoldiradi (talaba tomoni yoki backend),
-   o'qituvchi tomonida esa faqat javob yoziladi. */
-function isloh_saveReview(patch) {
-  const list = isloh_getReviews();
-  const data = patch || {};
-  const index = data.id ? list.findIndex((r) => r.id === data.id) : -1;
-
-  if (index === -1) {
-    const review = isloh_normalizeReview(data);
-    review.id = 'rev-' + Date.now();
-    review.createdAt = review.createdAt || new Date().toISOString();
-    list.unshift(review);
-    return isloh_commitReviews(list) ? review : null;
-  }
-
-  list[index] = isloh_normalizeReview(Object.assign({}, list[index], data));
-  return isloh_commitReviews(list) ? list[index] : null;
-}
-
-function isloh_deleteReview(id) {
-  return isloh_commitReviews(isloh_getReviews().filter((r) => r.id !== id));
-}
-
-/* --- Do'kon (javoblar) ----------------------------------------------------
-   Shakl o'zgarmadi: { "<sharh-id>": "javob matni" }.                        */
-
-function isloh_getReviewReplies() {
-  const raw = localStorage.getItem(ISLOH_REVIEW_REPLIES_KEY);
-  if (raw === null) {
-    const seed = isloh_reviewReplySeed();
-    isloh_rvWriteJson(ISLOH_REVIEW_REPLIES_KEY, seed);
-    return seed;
-  }
-
-  const stored = isloh_rvReadJson(ISLOH_REVIEW_REPLIES_KEY);
-  return stored && typeof stored === 'object' ? stored : {};
-}
+/* --- Javoblar -------------------------------------------------------------
+   Tashqi API o'zgarmadi: `isloh_getReviewReply(id)` satr qaytaradi. */
 
 function isloh_getReviewReply(id) {
-  return isloh_getReviewReplies()[id] || '';
+  const review = isloh_getReview(id);
+  return review ? (review.reply || '') : '';
 }
 
+/* Javob ALOHIDA endpoint'ga boradi, do'kon fabrikasining `PUT` yo'li bilan
+   emas: fabrika butun sharhni yuborardi va u yerda `rating` ham, `text`
+   ham bo'lardi — ya'ni o'qituvchi javob yozayotib talabaning bahosini
+   ham o'zgartirib yuborishi mumkin bo'lardi. Server buni baribir rad
+   etadi, lekin so'rovning o'zi noto'g'ri niyatni ifodalardi. */
 function isloh_saveReviewReply(id, text) {
-  const replies = isloh_getReviewReplies();
-  replies[id] = text;
-  if (!isloh_rvWriteJson(ISLOH_REVIEW_REPLIES_KEY, replies)) return false;
-  /* Javob berish darajasi va "javobsiz qolgan" ko'rsatkichlari shu hodisadan
-     keyin qayta hisoblanadi (js/profile-stats.js). */
-  document.dispatchEvent(new CustomEvent('isloh:reviews-updated', { detail: isloh_getReviews() }));
+  const list = isloh_getReviews();
+  const index = list.findIndex((r) => r.id === id);
+  if (index === -1) return false;
+
+  const previous = list[index].reply;
+  list[index] = Object.assign({}, list[index], { reply: text });
+
+  /* Optimistik: javob darhol ko'rinadi. Javob berish darajasi va
+     "javobsiz qolgan" ko'rsatkichlari shu hodisadan keyin qayta
+     hisoblanadi (js/profile-stats.js). */
+  document.dispatchEvent(new CustomEvent('isloh:reviews-updated', { detail: list }));
+
+  islohApi.post('/instructor/reviews/' + id + '/reply', { text: text })
+    .then(() => ISLOH_REVIEW_CACHE.load())
+    .catch((err) => {
+      const at = isloh_getReviews().findIndex((r) => r.id === id);
+      if (at !== -1) isloh_getReviews()[at].reply = previous;
+      document.dispatchEvent(new CustomEvent('isloh:reviews-updated', { detail: isloh_getReviews() }));
+      if (typeof islohUI !== 'undefined') islohUI.toast(err.error || "Saqlab bo'lmadi", 'error');
+    });
+
   return true;
+}
+
+/* --- Talaba tomoni --------------------------------------------------------
+   Sharh KURS manzili ostida yaratiladi va faqat kursga yozilgan talabadan
+   qabul qilinadi (apps/social/views.py, 1-qoida). */
+
+function isloh_loadCourseReviews(courseId) {
+  return islohApi.get('/courses/' + courseId + '/reviews')
+    .then((rows) => (rows || []).map(isloh_normalizeReview));
+}
+
+function isloh_submitCourseReview(courseId, rating, text) {
+  return islohApi.post('/courses/' + courseId + '/reviews', { rating: rating, text: text })
+    .then(isloh_normalizeReview);
 }
 
 /* --- Hisoblanadigan qiymatlar --------------------------------------------- */
@@ -209,8 +208,7 @@ function isloh_saveReviewReply(id, text) {
    Taqsimot FOIZda — reviews.html dagi chiziqlar shu qiymatni ishlatadi. */
 function isloh_reviewStats(courseId) {
   const list = courseId ? isloh_getReviews().filter((r) => r.courseId === courseId) : isloh_getReviews();
-  const replies = isloh_getReviewReplies();
-  const replied = list.filter((r) => Boolean(replies[r.id])).length;
+  const replied = list.filter((r) => Boolean(r.reply)).length;
 
   const buckets = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
   list.forEach((r) => {
@@ -245,6 +243,30 @@ function isloh_reviewStarsHtml(rating) {
     else html += '<i class="bi bi-star"></i>';
   }
   return html;
+}
+
+/* Sharh muallifining avatari — kartochka HTML'i uchun (M6).
+
+   IKKI SHAKL: demo yozuvlarda `avatar` — CSS gradienti, serverda esa
+   RASM MANZILI (M5 dan keyin `User.avatar` — `/api/v1/files/.../download`).
+   Ikkalasini bitta `style="background:..."` bilan chizib bo'lmaydi.
+
+   Manzil MATN maydonidan keladi, ya'ni unga istalgan narsa yozilishi
+   mumkin — shuning uchun gradient `isloh_safeCssValue` (oq ro'yxat), manzil
+   esa `isloh_escapeAttr` orqali o'tadi (js/escape.js).                     */
+function isloh_reviewAvatarHtml(review) {
+  const initials = typeof isloh_getUserInitials === 'function'
+    ? isloh_getUserInitials(review.studentName)
+    : String(review.studentName || '?').charAt(0).toUpperCase();
+  const value = String(review.avatar || '');
+
+  if (/^(\/|https?:)/.test(value)) {
+    return `<div class="avatar avatar-sm">${isloh_escapeHtml(initials)}<img class="avatar-img" alt="" src="${isloh_escapeAttr(value)}"></div>`;
+  }
+
+  const css = isloh_safeCssValue(value);
+  const style = css ? ` style="background:${css};"` : '';
+  return `<div class="avatar avatar-sm"${style}>${isloh_escapeHtml(initials)}</div>`;
 }
 
 /* Sharh vaqti: "4 soat oldin" / "2 kun oldin". Format js/datetime.js

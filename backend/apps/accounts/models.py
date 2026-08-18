@@ -89,7 +89,19 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(unique=True, db_index=True)
     full_name = models.CharField(max_length=150)
+    # Frontend `user.avatar` ni URL deb o'qiydi (js/profile.js) — shartnoma
+    # o'zgarmadi. `avatar_file` esa M5 da qo'shildi va faqat TOZALASH uchun:
+    # usiz har almashtirishda eski rasm diskda yetim bo'lib qolardi.
+    # Satrli havola (`"resources.File"`) ATAYLAB: `apps.resources`
+    # `apps.accounts` ga tayanadi, teskari import aylanma bo'lardi.
     avatar = models.URLField(blank=True, default="")
+    avatar_file = models.ForeignKey(
+        "resources.File",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+    )
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default=STATUS_ACTIVE)
     email_verified_at = models.DateTimeField(null=True, blank=True)
 

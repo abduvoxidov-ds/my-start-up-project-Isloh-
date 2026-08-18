@@ -340,16 +340,49 @@ class SubmitAssignmentView(APIView):
             is_late=is_late,
         )
 
-        # Fayl metama'lumoti — haqiqiy yuklash M5 da
-        for row in request.data.get("files", [])[: assignment.max_files]:
+        isloh_attach_submission_files(request, submission, assignment)
+        return Response(SubmissionSerializer(submission).data, status=status.HTTP_201_CREATED)
+
+
+def isloh_attach_submission_files(request, submission, assignment):
+    """Yuklangan fayllarni ishga bog'laydi (M5).
+
+    Mijoz `files: [{file: "<id>"}]` yuboradi — baytlar allaqachon
+    `/uploads/presign` -> `PUT` -> `complete` orqali saqlangan. NOM VA HAJM
+    MIJOZDAN OLINMAYDI: ular `File` yozuvidan ko'chiriladi, aks holda
+    talaba 2 GB lik faylni "12 KB" deb ko'rsatib chegaradan o'tib ketardi.
+
+    Begona yoki tugallanmagan fayl JIMGINA tushiriladi (M4 dagi "testga
+    begona savol qo'shib bo'lmaydi" qarori bilan bir xil naqsh): ish
+    baribir topshiriladi, faqat o'sha fayl ilinmaydi.
+    """
+    from apps.resources.models import File
+    from apps.resources.rules import isloh_validate_upload
+
+    rows = request.data.get("files", [])
+    if not isinstance(rows, list):
+        return
+
+    for row in rows[: assignment.max_files]:
+        file_id = row.get("file") if isinstance(row, dict) else None
+        external = (row.get("url", "") if isinstance(row, dict) else "") or ""
+
+        if file_id:
+            file = File.objects.filter(
+                pk=file_id, owner=request.user, status=File.STATUS_READY
+            ).first()
+            if file is None:
+                continue
+            # Chegara topshiriqning O'ZIDAN — `max_size_mb` va `file_types`
+            isloh_validate_upload(file.name, file.size_bytes, file.purpose, assignment)
             SubmissionFile.objects.create(
                 submission=submission,
-                name=row.get("name", ""),
-                size_bytes=row.get("size_bytes", 0),
-                url=row.get("url", ""),
+                file=file,
+                name=file.name,
+                size_bytes=file.size_bytes,
             )
-
-        return Response(SubmissionSerializer(submission).data, status=status.HTTP_201_CREATED)
+        elif external:
+            SubmissionFile.objects.create(submission=submission, name=row.get("name", ""), url=external)
 
 
 def isloh_is_late(assignment):

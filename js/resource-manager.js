@@ -217,6 +217,21 @@ function isloh_openResourcePreview(resource) {
       'Yuklangan: ' + isloh_relativeDate(resource.uploadedAt)
     ].join(' · ');
   }
+  /* M5: tugma haqiqiy manzilga ishora qiladi. Tashqi havolada — o'sha
+     havolaning o'zi; yuklangan faylda — ruxsat tekshiradigan endpoint.
+     Manzil yo'q bo'lsa tugma umuman ko'rsatilmaydi (ilgari u har doim
+     turardi va hech narsa qilmasdi). */
+  const download = modal.querySelector('[data-preview-resource-download]');
+  if (download) {
+    const href = resource.type === 'url' ? resource.url : resource.downloadUrl;
+    download.hidden = !href;
+    if (href) {
+      download.href = href;
+      if (resource.type === 'url') download.target = '_blank';
+      else download.removeAttribute('target');
+    }
+  }
+
   if (typeof isloh_openModal === 'function') isloh_openModal('preview-resource-modal');
 }
 
@@ -299,24 +314,41 @@ function isloh_initResourceActions() {
   });
 }
 
-/* Yuklash — fayl tanlanadi, metama'lumot do'konga yoziladi. Faylning O'ZI
-   saqlanmaydi: localStorage'ga megabaytlik fayl sig'maydi va sig'gani ham
-   noto'g'ri bo'lardi (CLAUDE.md §4 — bu backend ishi). Shu sababli oynada
-   buni ochiq aytadigan izoh turadi. */
-const ISLOH_RESOURCE_EXT_TYPES = {
-  pdf: 'pdf', zip: 'zip', rar: 'zip',
-  mp4: 'video', mov: 'video', avi: 'video',
-  mp3: 'audio', wav: 'audio',
-  png: 'image', jpg: 'image', jpeg: 'image', gif: 'image', svg: 'image',
-  ppt: 'presentation', pptx: 'presentation',
-  xls: 'spreadsheet', xlsx: 'spreadsheet', csv: 'spreadsheet',
-  doc: 'document', docx: 'document', txt: 'document',
-  py: 'code', js: 'code', yml: 'code', yaml: 'code', json: 'code', sh: 'code'
-};
+/* --- Yuklash (M5) ---------------------------------------------------------
+   Ilgari faylning O'ZI saqlanmasdi — do'konga faqat metama'lumot (nom, tur,
+   hajm) tushardi, chunki localStorage'ga megabaytlik fayl sig'maydi.
+   Endi baytlar serverga ketadi (js/upload.js — presign / PUT / complete) va
+   do'konga faqat `fileId` qaytadi.
 
-function isloh_resourceTypeFromName(name) {
-  const ext = String(name).split('.').pop().toLowerCase();
-  return ISLOH_RESOURCE_EXT_TYPES[ext] || 'document';
+   TUR VA HAJM BU YERDA HISOBLANMAYDI: ularni server faylning o'zidan
+   aniqlaydi (apps/resources/rules.py), aks holda ikki tomonda ikki xil
+   qoida bo'lardi. */
+
+function isloh_setUploadProgress(form, percent) {
+  const box = form.querySelector('[data-upload-progress]');
+  const bar = form.querySelector('[data-upload-bar]');
+  const out = form.querySelector('[data-upload-percent]');
+  if (!box) return;
+
+  box.hidden = percent === null;
+  if (bar) bar.style.width = (percent || 0) + '%';
+  if (out) out.textContent = (percent || 0) + '%';
+}
+
+/* Yuklash davomida forma qulflanadi: ikkinchi marta bosilsa bitta fayl
+   ikki marta yuklanardi. */
+function isloh_setUploadBusy(form, busy) {
+  const submit = form.querySelector('[data-upload-submit]');
+  if (submit) submit.disabled = busy;
+}
+
+function isloh_finishResourceUpload(form, saved) {
+  form.reset();
+  isloh_setUploadProgress(form, null);
+  isloh_setUploadBusy(form, false);
+  isloh_renderResourceManager();
+  if (typeof isloh_closeModal === 'function') isloh_closeModal('upload-resource-modal');
+  isloh_resourceToast(`"${saved.name}" qo'shildi`);
 }
 
 function isloh_initResourceUpload() {
@@ -338,25 +370,43 @@ function isloh_initResourceUpload() {
       return;
     }
 
-    const data = file
-      ? { name: file.name, type: isloh_resourceTypeFromName(file.name), sizeKb: Math.max(1, Math.round(file.size / 1024)) }
-      : { name: url.replace(/^https?:\/\//, '').replace(/\/$/, ''), type: 'url', url: url, sizeKb: 0 };
-
-    const saved = isloh_saveResource(Object.assign(data, {
+    const common = {
       courseId: isloh_resManagerCourseId(),
       folder: folder,
       category: category
-    }));
+    };
 
-    if (!saved) {
-      isloh_resourceToast("Saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
+    /* Tashqi havolada yuklanadigan hech narsa yo'q — to'g'ridan-to'g'ri
+       do'konga. */
+    if (!file) {
+      const saved = isloh_saveResource(Object.assign({
+        name: url.replace(/^https?:\/\//, '').replace(/\/$/, ''),
+        url: url
+      }, common));
+      if (saved) isloh_finishResourceUpload(form, saved);
       return;
     }
 
-    form.reset();
-    isloh_renderResourceManager();
-    if (typeof isloh_closeModal === 'function') isloh_closeModal('upload-resource-modal');
-    isloh_resourceToast(`"${saved.name}" qo'shildi`);
+    isloh_setUploadBusy(form, true);
+    isloh_setUploadProgress(form, 0);
+
+    isloh_uploadFile(file, {
+      purpose: ISLOH_UPLOAD_PURPOSES.resource,
+      onProgress: (percent) => isloh_setUploadProgress(form, percent)
+    })
+      .then((uploaded) => {
+        const saved = isloh_saveResource(Object.assign({
+          name: uploaded.name,
+          fileId: uploaded.id,
+          downloadUrl: uploaded.download_url
+        }, common));
+        isloh_finishResourceUpload(form, saved);
+      })
+      .catch((err) => {
+        isloh_setUploadProgress(form, null);
+        isloh_setUploadBusy(form, false);
+        isloh_resourceToast((err && err.error) || "Faylni yuklab bo'lmadi", 'error');
+      });
   });
 }
 
@@ -388,6 +438,12 @@ function isloh_initResourceBulkActions() {
     run((id) => isloh_deleteResource(id), "{n} ta resurs o'chirildi");
   });
 }
+
+/* M5 dan boshlab do'kon ASINXRON to'ladi: birinchi chizishda zaxira
+   ko'rinadi, server javobi kelgach fabrika shu hodisani yuboradi. Obuna
+   bo'lmasa sahifa demo ma'lumot bilan qolib ketardi (BACKEND-PLAN.md
+   "Obunachilarni tekshirish"). */
+document.addEventListener('isloh:resources-updated', isloh_renderResourceManager);
 
 document.addEventListener('DOMContentLoaded', () => {
   isloh_renderResourceManager();

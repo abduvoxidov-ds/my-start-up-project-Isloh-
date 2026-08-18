@@ -26,38 +26,40 @@
    ========================================================================== */
 
 /* Kurs nomi do'kondan; kurs o'chirilgan bo'lsa id ko'rinadi (sharh
-   yo'qolib qolmasin). */
-function isloh_reviewCourseTitle(courseId) {
+   yo'qolib qolmasin). Serverdan kelgan sharhda nom allaqachon bor —
+   kurslar do'koni hali yuklanmagan bo'lsa ham yorliq bo'sh qolmaydi. */
+function isloh_reviewCourseTitle(courseId, fallback) {
   const course = typeof isloh_getCourse === 'function' ? isloh_getCourse(courseId) : null;
-  return course ? course.title : courseId;
+  return (course && course.title) || fallback || courseId;
 }
 
+/* M6 — HAMMA MATN EKRANLANADI.
+   Bu yerdagi `review.text`, `review.studentName` va o'qituvchi javobi
+   BOSHQA foydalanuvchidan keladi va to'g'ridan-to'g'ri `innerHTML` ga
+   tushardi. Endi ular js/escape.js orqali o'tadi; avatar esa
+   `isloh_reviewAvatarHtml` da (u gradientni oq ro'yxatdan o'tkazadi). */
 function isloh_reviewCardHtml(review) {
   const reply = isloh_getReviewReply(review.id);
-  const initials = typeof isloh_getUserInitials === 'function'
-    ? isloh_getUserInitials(review.studentName)
-    : String(review.studentName || '?').charAt(0).toUpperCase();
-  const avatarStyle = review.avatar ? ` style="background:${review.avatar};"` : '';
 
   /* Javob bor bo'lsa javob bloki, bo'lmasa "Javob berish" tugmasi —
      ikkalasi birga ko'rinmaydi. */
   const tail = reply
-    ? `<div class="review-reply"><div class="lbl">Sizning javobingiz</div><div class="txt">${reply}</div></div>`
+    ? `<div class="review-reply"><div class="lbl">Sizning javobingiz</div><div class="txt">${isloh_escapeHtml(reply)}</div></div>`
     : `<div class="review-actions"><button type="button" class="btn btn-teach btn-sm" data-review-reply><i class="bi bi-reply-fill"></i> Javob berish</button></div>`;
 
-  return `<div class="review-card" data-review-id="${review.id}" data-filter-item
+  return `<div class="review-card" data-review-id="${isloh_escapeAttr(review.id)}" data-filter-item
        data-rating-band="${isloh_reviewRatingBand(review.rating)}"
        data-reply="${reply ? 'replied' : 'pending'}"
-       data-filter-text="${review.studentName} ${review.text}">
-    <div class="avatar avatar-sm"${avatarStyle}>${initials}</div>
+       data-filter-text="${isloh_escapeAttr(review.studentName + ' ' + review.text)}">
+    ${isloh_reviewAvatarHtml(review)}
     <div style="flex:1; min-width:0;">
       <div class="review-head">
-        <span class="review-name filter-title">${review.studentName}</span>
+        <span class="review-name filter-title">${isloh_escapeHtml(review.studentName)}</span>
         <span class="rating-stars">${isloh_reviewStarsHtml(review.rating)}</span>
-        <span class="review-course">· ${isloh_reviewCourseTitle(review.courseId)}</span>
-        <span class="review-time">${isloh_reviewTimeLabel(review)}</span>
+        <span class="review-course">· ${isloh_escapeHtml(isloh_reviewCourseTitle(review.courseId, review.courseTitle))}</span>
+        <span class="review-time">${isloh_escapeHtml(isloh_reviewTimeLabel(review))}</span>
       </div>
-      <div class="review-text">${review.text}</div>
+      <div class="review-text">${isloh_escapeHtml(review.text)}</div>
       ${tail}
     </div>
   </div>`;

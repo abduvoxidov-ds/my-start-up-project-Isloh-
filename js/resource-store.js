@@ -22,6 +22,18 @@
    HAJM `sizeKb` da butun son sifatida saqlanadi va faqat ko'rsatishda
    formatlanadi — "340 KB" matnini saqlash yig'indini hisoblashni
    imkonsiz qilardi.
+
+   M5 (backend): manba endi `/instructor/resources`, `isloh_resources` esa
+   OFFLINE NUSXA. Do'kon umumiy fabrikaga (`isloh_createStoreCache`)
+   o'tkazildi va tashqi API'si O'ZGARMADI — sahifalar avvalgidek sinxron
+   `isloh_getResources()` chaqiradi.
+
+   IKKI MAYDONNI ENDI SERVER QO'YADI: `type` va `sizeKb`. Ular faylning
+   o'zidan kelib chiqadi (apps/resources/serializers.py), shuning uchun
+   bu yerdan yuborilmaydi — aks holda 4 KB lik matn fayli "PDF · 2 GB"
+   bo'lib ko'rinishi va kutubxona statistikasi yolg'on ko'rsatishi mumkin
+   edi. Fayl BAYTLARI ham bu do'konda emas: ular js/upload.js orqali uch
+   qadamda saqlanadi va bu yerga faqat `fileId` bilan qaytadi.
    ========================================================================== */
 
 const ISLOH_RESOURCES_KEY = 'isloh_resources';
@@ -63,6 +75,8 @@ const ISLOH_RESOURCE_CATEGORIES = {
 const ISLOH_RESOURCE_DEFAULTS = {
   id: '',
   courseId: 'py-101',
+  fileId: '',         // saqlangan fayl (M5); tashqi havolada bo'sh
+  downloadUrl: '',    // ruxsat tekshiradigan manzil, baytlarga to'g'ridan-to'g'ri emas
   name: '',
   type: 'pdf',
   folder: 'general',
@@ -113,21 +127,75 @@ function isloh_resourceSeed() {
   ];
 }
 
-/* --- Do'kon --------------------------------------------------------------- */
+/* --- Do'kon: server (M5) --------------------------------------------------
+   Ilgari manba `isloh_resources` kaliti edi; endi u offline nusxa.
+   Serverdagi shakl snake_case (`size_kb`, `used_at`), frontendniki
+   camelCase — ikkalasi FAQAT quyidagi ikki funksiyada uchrashadi. */
+
+function isloh_isServerResource(row) {
+  return row && (('size_kb' in row) || ('used_at' in row) || ('download_url' in row));
+}
+
+function isloh_fromServerResource(row) {
+  return {
+    id: row.id,
+    courseId: row.course,
+    fileId: row.file || '',
+    downloadUrl: row.download_url || '',
+    name: row.name,
+    type: row.type,
+    folder: row.folder,
+    category: row.category,
+    sizeKb: row.size_kb || 0,
+    url: row.url || '',
+    favorite: !!row.favorite,
+    status: row.status,
+    uploadedAt: (row.created_at || '').slice(0, 10),
+    usedAt: row.used_at || ''
+  };
+}
+
+/* `type` va `sizeKb` YUBORILMAYDI — ularni server faylning o'zidan
+   aniqlaydi (fayl boshidagi izoh). */
+function isloh_serializeResource(resource) {
+  const body = {
+    name: resource.name,
+    folder: resource.folder,
+    category: resource.category,
+    url: resource.url || '',
+    favorite: !!resource.favorite,
+    status: resource.status,
+    used_at: resource.usedAt || null
+  };
+  if (resource.fileId) body.file = resource.fileId;
+
+  /* Demo yozuvlarda `courseId` — slug (`py-101`), serverda esa UUID.
+     Slug yuborilsa 400 bo'lardi, shuning uchun faqat haqiqiy kalit
+     o'tkaziladi (js/assignment-store.js dagi bilan bir xil shart). */
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(resource.courseId || ''))) {
+    body.course = resource.courseId;
+  }
+  return body;
+}
 
 function isloh_normalizeResource(resource) {
-  return Object.assign({}, ISLOH_RESOURCE_DEFAULTS, resource || {});
+  const source = isloh_isServerResource(resource)
+    ? isloh_fromServerResource(resource)
+    : (resource || {});
+  return Object.assign({}, ISLOH_RESOURCE_DEFAULTS, source);
 }
 
-function isloh_getResources() {
-  let stored = null;
-  try { stored = JSON.parse(localStorage.getItem(ISLOH_RESOURCES_KEY)); } catch (e) { stored = null; }
-  if (Array.isArray(stored)) return stored.map(isloh_normalizeResource);
+const ISLOH_RESOURCE_CACHE = isloh_createStoreCache({
+  key: ISLOH_RESOURCES_KEY,
+  endpoint: '/instructor/resources',
+  event: 'isloh:resources-updated',
+  normalize: isloh_normalizeResource,
+  serialize: isloh_serializeResource,
+  seed: isloh_resourceSeed
+});
 
-  const seed = isloh_resourceSeed().map(isloh_normalizeResource);
-  isloh_persistResources(seed);
-  return seed;
-}
+function isloh_loadResources() { return ISLOH_RESOURCE_CACHE.load(); }
+function isloh_getResources()  { return ISLOH_RESOURCE_CACHE.get(); }
 
 function isloh_getResource(id) {
   if (!id) return null;
@@ -141,21 +209,6 @@ function isloh_getCourseResources(courseId) {
   return isloh_getResources().filter((r) => r.courseId === courseId);
 }
 
-function isloh_persistResources(list) {
-  try {
-    localStorage.setItem(ISLOH_RESOURCES_KEY, JSON.stringify(list));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function isloh_commitResources(list) {
-  if (!isloh_persistResources(list)) return false;
-  document.dispatchEvent(new CustomEvent('isloh:resources-updated', { detail: list }));
-  return true;
-}
-
 function isloh_uniqueResourceId(base, list) {
   const taken = list.map((r) => r.id);
   const slug = typeof isloh_slugify === 'function' ? isloh_slugify(base) : '';
@@ -167,6 +220,8 @@ function isloh_uniqueResourceId(base, list) {
   return root + '-' + n;
 }
 
+/* Yaratadi yoki yangilaydi. Sinxron qaytadi (sahifalar shunga tayanadi),
+   server javobi kelgach fabrika keshni yangilab hodisa yuboradi. */
 function isloh_saveResource(patch) {
   const list = isloh_getResources();
   const data = patch || {};
@@ -176,18 +231,22 @@ function isloh_saveResource(patch) {
     const resource = isloh_normalizeResource(data);
     resource.id = isloh_uniqueResourceId(data.name || 'resurs', list);
     resource.uploadedAt = isloh_resShift(0);
-    list.unshift(resource); // yangi yuklangan fayl tepada tursin
-    return isloh_commitResources(list) ? resource : null;
+    ISLOH_RESOURCE_CACHE.persist(resource).catch(() => {});
+    return resource;
   }
 
-  list[index] = isloh_normalizeResource(Object.assign({}, list[index], data));
-  return isloh_commitResources(list) ? list[index] : null;
+  const updated = isloh_normalizeResource(Object.assign({}, list[index], data));
+  ISLOH_RESOURCE_CACHE.persist(updated).catch(() => {});
+  return updated;
 }
 
 function isloh_deleteResource(id) {
-  return isloh_commitResources(isloh_getResources().filter((r) => r.id !== id));
+  return ISLOH_RESOURCE_CACHE.remove(id);
 }
 
+/* Nusxa BAYTLARNI ko'chirmaydi — ikkala yozuv bitta `fileId` ga ishora
+   qiladi. Fayl o'zgarmas (uni qayta yozib bo'lmaydi), shuning uchun
+   ulashish xavfsiz va 200 MB lik arxiv ikki marta saqlanmaydi. */
 function isloh_duplicateResource(id) {
   const list = isloh_getResources();
   const source = list.find((r) => r.id === id);
@@ -203,10 +262,11 @@ function isloh_duplicateResource(id) {
   copy.id = isloh_uniqueResourceId(copy.name, list);
   copy.status = 'active';
   copy.favorite = false;
+  copy.usedAt = '';
   copy.uploadedAt = isloh_resShift(0);
 
-  list.splice(list.indexOf(source) + 1, 0, copy);
-  return isloh_commitResources(list) ? copy : null;
+  ISLOH_RESOURCE_CACHE.persist(copy).catch(() => {});
+  return copy;
 }
 
 function isloh_setResourceStatus(id, status) {

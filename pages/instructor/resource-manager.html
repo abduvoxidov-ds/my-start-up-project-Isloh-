@@ -138,14 +138,17 @@
             <option value="python">Python asoslari</option><option value="django">Django va DRF</option><option value="devops">DevOps va Docker</option><option value="umumiy" selected>Umumiy</option>
           </select>
         </div>
-        <!-- Faylning O'ZI saqlanmaydi: localStorage'ga megabaytlik fayl
-             sig'maydi. Do'konga faqat metama'lumot (nom, tur, hajm) tushadi —
-             buni foydalanuvchidan yashirish yolg'on bo'lardi. -->
-        <p class="placeholder-note"><i class="bi bi-info-circle"></i> Hozircha faqat fayl ma'lumotlari (nomi, turi, hajmi) saqlanadi — faylni haqiqiy yuklash backend ulangach ishlaydi.</p>
+        <!-- M5: fayl endi haqiqatan yuklanadi (js/upload.js). Jarayon
+             ko'rsatkichi shu yerda — 40 MB lik video jimgina turgan tugma
+             bilan yuklanmasligi kerak. -->
+        <div class="field" data-upload-progress hidden>
+          <div class="progress-track"><div class="progress-fill fill-teach" data-upload-bar style="width:0%;"></div></div>
+          <div class="cell-sub" data-upload-percent>0%</div>
+        </div>
       </div>
       <div class="modal-foot">
         <button type="button" class="btn btn-outline btn-sm" data-modal-close="upload-resource-modal">Bekor qilish</button>
-        <button type="submit" class="btn btn-teach btn-sm"><i class="bi bi-plus-lg"></i> Qo'shish</button>
+        <button type="submit" class="btn btn-teach btn-sm" data-upload-submit><i class="bi bi-plus-lg"></i> Qo'shish</button>
       </div>
     </form>
   </div>
@@ -175,11 +178,13 @@
     <div class="lesson-preview-video"><div class="play-btn"><i class="bi bi-file-earmark-fill"></i></div></div>
     <div class="modal-body resource-preview-body-pad">
       <p class="text-muted" data-preview-resource-meta>—</p>
-      <p class="card-note"><i class="bi bi-info-circle"></i> Bu haqiqiy fayl ko'rinishining taxminiy ko'rinishi.</p>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline btn-sm" data-modal-close="preview-resource-modal">Yopish</button>
-      <button class="btn btn-teach btn-sm"><i class="bi bi-download"></i> Yuklab olish</button>
+      <!-- Manzil js/resource-manager.js da qo'yiladi. U baytlarga
+           to'g'ridan-to'g'ri emas, ruxsat tekshiradigan endpoint'ga
+           ishora qiladi (apps/resources/views.py). -->
+      <a class="btn btn-teach btn-sm" data-preview-resource-download href="#" hidden><i class="bi bi-download"></i> Yuklab olish</a>
     </div>
   </div>
 </div>
@@ -197,6 +202,8 @@
 </div>
 
 <script src="../../js/api.js"></script>
+<script src="../../js/escape.js"></script>
+<script src="../../js/upload.js"></script>
 <script src="../../js/ui-feedback.js"></script>
 <script src="../../js/auth-guard.js"></script>
 <script src="../../js/navigation.js"></script>
