@@ -188,15 +188,18 @@ function isloh_renderDashRecentStudents() {
 }
 
 /* --- Tezkor amallar izohi -------------------------------------------------
-   O'qilmagan xabarlar soni js/chat-store.js dagi isloh_chatBadgeCount()
-   orqali olinadi — u do'konni EKMAYDI. isloh_chatTotalUnread() chaqirilsa,
-   chat sahifasini hech qachon ochmagan foydalanuvchida dashboard namuna
-   suhbatlarni yaratib yuborardi. */
+   O'qilmagan xabarlar soni js/chat-store.js dagi isloh_chatFetchUnread()
+   orqali olinadi. U BUTUN RO'YXATNI TORTMAYDI: dashboard'da suhbatlar
+   kerak emas va ular faqat bitta son uchun yuklanishi isrof bo'lardi —
+   javob yengil `/chat/unread-count` endpoint'idan keladi (M8). */
 function isloh_renderDashUnread() {
   const el = document.querySelector('[data-dash-unread]');
-  if (!el) return;
+  if (!el || typeof isloh_chatFetchUnread !== 'function') return;
 
-  const count = typeof isloh_chatBadgeCount === 'function' ? isloh_chatBadgeCount() : 0;
+  isloh_chatFetchUnread().then((count) => isloh_showDashUnread(el, count));
+}
+
+function isloh_showDashUnread(el, count) {
   el.textContent = count ? `${count} ta yangi xabar` : "Yangi xabar yo'q";
 }
 

@@ -59,7 +59,7 @@ def isloh_notify(user, role, type, title, body="", href="", actor=None, course=N
         return None
 
     try:
-        return Notification.objects.create(
+        notification = Notification.objects.create(
             user=user,
             role=role,
             type=type,
@@ -73,6 +73,30 @@ def isloh_notify(user, role, type, title, body="", href="", actor=None, course=N
         # Jurnalga to'liq yoziladi, lekin so'rov davom etadi
         logger.exception("Bildirishnoma yozilmadi: %s", title)
         return None
+
+    _push(notification)
+    return notification
+
+
+def _push(notification):
+    """M8: yozilgan bildirishnomani `/ws/notifications` orqali yetkazadi.
+
+    QOIDA 2 BU YERGA HAM TEGISHLI — yetkazish so'rovni yiqitmaydi. Import
+    ham, chaqiruv ham himoyalangan: `channels` o'rnatilmagan muhitda
+    (masalan faqat REST ishlatilganda) modul umuman topilmasligi mumkin,
+    va bu holat XATO emas — bildirishnoma bazada turibdi, sahifa
+    yangilanganda ko'rinadi.
+    """
+    try:
+        from apps.messaging.realtime import isloh_broadcast_notification
+
+        from .serializers import NotificationSerializer
+
+        isloh_broadcast_notification(
+            notification.user_id, NotificationSerializer(notification).data
+        )
+    except Exception:  # noqa: BLE001 - yuqoridagi izoh
+        logger.exception("Bildirishnoma yetkazilmadi: %s", notification.pk)
 
 
 # --- M3: o'qish oqimi -------------------------------------------------------

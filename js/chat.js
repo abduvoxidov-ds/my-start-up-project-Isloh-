@@ -148,6 +148,15 @@ function isloh_chatBubbleHtml(msg, thread, meId) {
   </div>`;
 }
 
+/* M8: server bir sahifada 50 ta xabar beradi (kursor bo'yicha). Tepada
+   yana bori bo'lsa foydalanuvchi buni KO'RISHI kerak — aks holda uzun
+   yozishma jimgina kesilgandek tuyulardi. */
+function isloh_chatOlderHtml(threadId) {
+  if (typeof isloh_chatHasOlderMessages !== 'function') return '';
+  if (!isloh_chatHasOlderMessages(threadId)) return '';
+  return `<div class="chat-older"><button type="button" class="btn btn-outline btn-sm" data-chat-older>${isloh_chatText('chat.older', 'Eskiroq xabarlar')}</button></div>`;
+}
+
 function isloh_renderThreadMessages(threadId) {
   const body = document.querySelector('[data-thread-body]');
   if (!body) return;
@@ -161,8 +170,16 @@ function isloh_renderThreadMessages(threadId) {
      va chizib bo'lingach qayta yoqiladi. Yangi xabar esa (yuborilganda)
      alohida qo'shiladi va e'lon qilinadi. */
   body.setAttribute('aria-live', 'off');
-  body.innerHTML = isloh_chatMessages(threadId).map((m) => isloh_chatBubbleHtml(m, thread, meId)).join('');
-  body.scrollTop = body.scrollHeight;
+  /* Chizishdan OLDINGI balandlik esda qoladi: "eskiroq" yuklangach
+     ekranni o'sha xabarda ushlab turish uchun (aks holda ro'yxat
+     birdaniga yuqoriga sakrardi). */
+  const wasAtBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 40;
+  const previousHeight = body.scrollHeight;
+
+  body.innerHTML = isloh_chatOlderHtml(threadId)
+    + isloh_chatMessages(threadId).map((m) => isloh_chatBubbleHtml(m, thread, meId)).join('');
+
+  body.scrollTop = wasAtBottom ? body.scrollHeight : (body.scrollHeight - previousHeight);
   setTimeout(() => body.setAttribute('aria-live', 'polite'), 0);
 }
 
@@ -175,22 +192,18 @@ function isloh_appendChatBubble(msg, thread) {
   body.scrollTop = body.scrollHeight;
 }
 
-function isloh_openThread(threadId) {
-  const thread = isloh_chatThread(threadId);
-  if (!thread) return;
+/* Suhbat sarlavhasi: ism, avatar, holat nuqtasi va qadalgan e'lon.
 
-  isloh_activeChatThreadId = threadId;
-  isloh_chatMarkRead(threadId);
-
-  const emptyState = document.querySelector('[data-chat-empty-state]');
-  const activePane = document.querySelector('[data-chat-active-thread]');
-  if (emptyState) emptyState.hidden = true;
-  if (activePane) activePane.hidden = false;
-  /* Tor ekranda suhbat ro'yxatning o'rnini egallaydi (css/widgets.css) */
-  document.querySelector('.chat-shell')?.classList.add('is-thread-open');
+   ALOHIDA FUNKSIYA (M8): ilgari bu kod `isloh_openThread` ichida edi va
+   faqat suhbat OCHILGANDA bajarilardi. Ma'lumot serverdan kelgach esa u
+   qayta chizilmasdi — natijada sahifa ochilganda sarlavhada "Noma'lum
+   foydalanuvchi" turib qolardi: suhbatlar katalogdan OLDIN kelgan va
+   suhbatdoshning ismi hali ma'lum emas edi. Endi do'kon yangilanganda
+   ham shu funksiya chaqiriladi. */
+function isloh_paintThreadHeader(thread) {
+  const title = isloh_chatThreadTitle(thread);
 
   const avatarEl = document.querySelector('[data-thread-avatar]');
-  const title = isloh_chatThreadTitle(thread);
   if (avatarEl) { avatarEl.style.background = isloh_chatThreadAvatar(thread); avatarEl.textContent = isloh_chatInitials(title); }
 
   const presenceEl = document.querySelector('[data-thread-presence]');
@@ -213,6 +226,23 @@ function isloh_openThread(threadId) {
   }
 
   isloh_syncChatThreadMenu(thread);
+}
+
+function isloh_openThread(threadId) {
+  const thread = isloh_chatThread(threadId);
+  if (!thread) return;
+
+  isloh_activeChatThreadId = threadId;
+  isloh_chatMarkRead(threadId);
+
+  const emptyState = document.querySelector('[data-chat-empty-state]');
+  const activePane = document.querySelector('[data-chat-active-thread]');
+  if (emptyState) emptyState.hidden = true;
+  if (activePane) activePane.hidden = false;
+  /* Tor ekranda suhbat ro'yxatning o'rnini egallaydi (css/widgets.css) */
+  document.querySelector('.chat-shell')?.classList.add('is-thread-open');
+
+  isloh_paintThreadHeader(thread);
   isloh_renderThreadMessages(threadId);
   isloh_renderChatList(document.getElementById('chat-search-input')?.value);
 
@@ -375,48 +405,73 @@ function isloh_sendChatMessage() {
   if (!text || !isloh_activeChatThreadId) return;
 
   const threadId = isloh_activeChatThreadId;
+  /* Do'kon vaqtinchalik xabar qaytaradi va uni fonda serverga yuboradi;
+     yuborilmasa o'sha yerda ortga qaytariladi va sabab aytiladi
+     (js/chat-store.js). */
   const msg = isloh_chatSend(threadId, text);
-  if (!msg) {
-    isloh_chatToast('chat.toast.quota', "Xabarni saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
-    return;
-  }
+  if (!msg) return;
 
   input.value = '';
   isloh_appendChatBubble(msg, isloh_chatThread(threadId));
   isloh_renderChatList(document.getElementById('chat-search-input')?.value);
 }
 
+/* M8: suhbat SERVERDA yaratiladi, ya'ni natija darhol ma'lum emas.
+   Email ham serverda tekshiriladi — mahalliy katalogda faqat KONTAKTLAR
+   bor va u yerda topilmagan odam "yo'q" degani emas. */
 function isloh_startChatByEmail(email) {
   const normalized = (email || '').trim();
   if (!normalized) return;
 
-  const user = isloh_chatUserByEmail(normalized);
-  if (!user) {
-    isloh_chatToast('chat.toast.notFound', 'Bunday email bilan foydalanuvchi topilmadi', 'error');
+  isloh_chatOpenDirect({ email: normalized })
+    .then((thread) => {
+      if (typeof isloh_closeModal === 'function') isloh_closeModal('new-chat-modal');
+      const emailInput = document.getElementById('new-chat-email');
+      if (emailInput) emailInput.value = '';
+
+      /* Yangi suhbat arxivda emas, oddiy ro'yxatda — filtr tiklanadi, aks
+         holda arxiv tab'i ochiq turganda yaratilgan thread ko'rinmay qolardi. */
+      isloh_chatListFilter = ISLOH_CHAT_TAB_FILTERS[ISLOH_CHAT_DEFAULT_TAB];
+      isloh_syncChatTabUI(ISLOH_CHAT_DEFAULT_TAB);
+      isloh_renderChatList('');
+      isloh_openThread(thread.id);
+      isloh_chatToast('chat.toast.started', '{name} bilan chat boshlandi', 'success',
+        { name: isloh_chatThreadTitle(thread) });
+    })
+    .catch((err) => {
+      /* Server sababni o'zi aytadi ("Bunday foydalanuvchi topilmadi",
+         "Bu foydalanuvchiga xabar yozib bo'lmaydi") — matnni bu yerda
+         qayta yozmaymiz. */
+      if (typeof isloh_showToast === 'function') {
+        isloh_showToast((err && err.error) || isloh_chatText('chat.toast.createFail', "Suhbatni yaratib bo'lmadi"), 'error');
+      }
+    });
+}
+
+/* --- Do'kon yangilanishi (M8) ---------------------------------------------
+   Uch holatda chaqiriladi: birinchi yuklash tugadi, WebSocket xabar
+   keltirdi, yoki o'z amalimiz (yuborish, arxivlash) keshni o'zgartirdi.
+
+   Ochiq suhbat QAYTA OCHILMAYDI — `isloh_openThread` o'qilgan deb
+   belgilaydi va har kelgan xabarda uni chaqirish keraksiz so'rov
+   yuborardi. Faqat ro'yxat va puffaklar qayta chiziladi. */
+function isloh_onChatStoreUpdated() {
+  isloh_renderChatList(document.getElementById('chat-search-input')?.value);
+
+  if (!isloh_activeChatThreadId) {
+    /* Birinchi yuklashda hali hech narsa ochilmagan bo'lishi mumkin */
+    isloh_refreshChatView();
     return;
   }
-  if (user.id === isloh_chatMeId()) {
-    isloh_chatToast('chat.toast.self', "O'zingiz bilan suhbat boshlab bo'lmaydi", 'error');
-    return;
-  }
+  const thread = isloh_activeChatThread();
+  if (!thread) { isloh_closeThread(); return; }
 
-  const thread = isloh_chatOpenDirect(user.id);
-  if (!thread) {
-    isloh_chatToast('chat.toast.createFail', "Suhbatni yaratib bo'lmadi", 'error');
-    return;
-  }
+  isloh_renderThreadMessages(thread.id);
+  isloh_paintThreadHeader(thread);
 
-  if (typeof isloh_closeModal === 'function') isloh_closeModal('new-chat-modal');
-  const emailInput = document.getElementById('new-chat-email');
-  if (emailInput) emailInput.value = '';
-
-  /* Yangi suhbat arxivda emas, oddiy ro'yxatda — filtr tiklanadi, aks
-     holda arxiv tab'i ochiq turganda yaratilgan thread ko'rinmay qolardi. */
-  isloh_chatListFilter = ISLOH_CHAT_TAB_FILTERS[ISLOH_CHAT_DEFAULT_TAB];
-  isloh_syncChatTabUI(ISLOH_CHAT_DEFAULT_TAB);
-  isloh_renderChatList('');
-  isloh_openThread(thread.id);
-  isloh_chatToast('chat.toast.started', '{name} bilan chat boshlandi', 'success', { name: user.name });
+  /* Rolga xos qatlam (js/instructor-messages.js) ham xabardor bo'lsin:
+     e'lon WebSocket orqali o'zgargan bo'lishi mumkin. */
+  document.dispatchEvent(new CustomEvent('isloh:chat-thread-opened', { detail: { threadId: thread.id } }));
 }
 
 /* --- Ishga tushirish ------------------------------------------------------ */
@@ -464,6 +519,13 @@ function isloh_initChat() {
 
   document.querySelector('[data-chat-back]')?.addEventListener('click', isloh_backToChatList);
 
+  /* "Eskiroq xabarlar" — delegatsiya orqali: tugma har qayta chizishda
+     yangidan yaratiladi. */
+  document.querySelector('[data-thread-body]')?.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-chat-older]')) return;
+    if (isloh_activeChatThreadId) isloh_chatLoadOlderMessages(isloh_activeChatThreadId);
+  });
+
   const sendBtn = document.querySelector('[data-chat-send]');
   if (sendBtn) sendBtn.addEventListener('click', isloh_sendChatMessage);
   const msgInput = document.getElementById('chat-message-input');
@@ -491,6 +553,11 @@ function isloh_initChat() {
 
   isloh_initChatTabs();
   isloh_refreshChatView();
+
+  /* M8: ma'lumot SERVERDAN keladi, ya'ni birinchi chizishda kesh bo'sh
+     bo'lishi mumkin. Do'kon javobni olgach (yoki WebSocket orqali yangi
+     xabar kelgach) shu hodisani yuboradi va ro'yxat qayta chiziladi. */
+  document.addEventListener('isloh:chat-updated', isloh_onChatStoreUpdated);
 
   /* Til almashganda ro'yxat va suhbat qayta chiziladi: ular ichidagi
      matnlar (nisbiy vaqt, "Siz:", a'zolar soni) JS bilan yasaladi, ya'ni

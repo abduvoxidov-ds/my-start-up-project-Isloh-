@@ -19,3 +19,13 @@ django-environ==0.11.2
 # /js/* va /css/* ga Cache-Control: no-cache shu yerdan qo'yiladi
 # (docs/BACKEND-AUDIT.md §5.1).
 whitenoise==6.8.2
+
+# --- Real vaqt (M8) --------------------------------------------------------
+# WebSocket: /ws/chat va /ws/notifications (docs/BACKEND-PLAN.md §M8).
+# `daphne` INSTALLED_APPS da birinchi turadi va `runserver` ni ASGI
+# variantiga almashtiradi — mahalliy ishlab chiqishda alohida server
+# ko'tarish shart emas.
+channels==4.2.0
+daphne==4.1.2
+# Kanal qatlami: dev'da xotira, ishlab chiqarishda Redis (config/settings/prod.py)
+channels-redis==4.2.1

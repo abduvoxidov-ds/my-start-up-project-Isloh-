@@ -36,6 +36,9 @@ function isloh_courseRowMenu(course) {
 
   items.push(`<a href="course-builder.html?id=${id}" class="dropdown-item"><i class="bi bi-diagram-3"></i> Kurs tarkibi</a>`);
   items.push(`<a href="course-settings.html?id=${id}" class="dropdown-item"><i class="bi bi-gear"></i> Sozlamalar</a>`);
+  /* M8: kurs guruhi — o'qituvchi va yozilgan talabalar uchun umumiy
+     suhbat. Guruh birinchi ochilganda yaratiladi (js/chat-store.js). */
+  items.push(`<a href="messages.html?course=${course.id}" class="dropdown-item"><i class="bi bi-chat-square-text"></i> Kurs guruhi</a>`);
   items.push(`<button type="button" class="dropdown-item" data-course-duplicate="${course.id}"><i class="bi bi-files"></i> Nusxalash</button>`);
 
   if (course.status === 'published') {

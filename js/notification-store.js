@@ -237,6 +237,30 @@ function isloh_notifTimeLabel(notification) {
     : notification.createdAt;
 }
 
+/* --- Real vaqt (M8) -------------------------------------------------------
+   `/ws/notifications` kanalidan kelgan yangi yozuv. Ulanishni js/realtime.js
+   boshqaradi va turlarni bilmaydi — bu yerda faqat qabul qilinadi.
+
+   RO'YXAT QAYTA YUKLANMAYDI: yozuv to'liq holda keladi (serverdagi bir xil
+   serializer), ya'ni uni keshga qo'shishning o'zi yetarli. Qayta yuklash
+   har kelgan xabarda butun ro'yxatni tortib olardi. */
+function isloh_notifApplyIncoming(payload) {
+  if (!payload || payload.event !== 'notification' || !payload.notification) return;
+
+  /* Ro'yxat YUKLANMAGAN sahifada (nuqta bor, ro'yxat yo'q — 60+ sahifa)
+     do'konga tegilmaydi: `isloh_getAllNotifications()` chaqirilsa u butun
+     ro'yxatni tortib olardi. Nuqtaning o'zi yengil endpoint bilan
+     yangilanadi. */
+  if (!ISLOH_NOTIFICATION_CACHE.isLoaded()) { isloh_renderNotifBadge(); return; }
+
+  const notification = isloh_normalizeNotification(payload.notification);
+  const list = isloh_getAllNotifications();
+  if (list.some((n) => n.id === notification.id)) return;
+
+  list.unshift(notification);
+  isloh_emitNotifications(list);
+}
+
 /* --- Topbar nuqtasi -------------------------------------------------------
    Qizil nuqta har bir sahifaning markupida turadi, lekin uning KO'RINISHI
    endi do'kondan hisoblanadi. Shu sababli bu modul barcha o'qituvchi

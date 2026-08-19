@@ -37,6 +37,23 @@ services:
       retries: 10
       start_period: 10s
 
+  # M8 — kanal qatlami. WebSocket xabari qaysi jarayonga ulangan
+  # foydalanuvchiga borishini shu yerda hal qilinadi. Dev'da MAJBURIY
+  # EMAS: config/settings/base.py xotira qatlamini ishlatadi va u bitta
+  # jarayonda ishlaydi. Redis ishlab chiqarish sozlamasini mahalliy
+  # sinash uchun kerak (DJANGO_SETTINGS_MODULE=config.settings.prod).
+  redis:
+    image: redis:7-alpine
+    container_name: isloh-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
 volumes:
   isloh_pgdata:
     name: isloh_pgdata

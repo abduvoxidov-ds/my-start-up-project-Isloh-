@@ -2,55 +2,68 @@
    ISLOH — Xabarlar do'koni (chat-store)
    Uchala rol (talaba / instruktor / admin) uchun YAGONA suhbat grafi.
 
-   NEGA KERAK BO'LDI: ilgari butun mantiq js/chat.js ichida edi va faqat
-   1-ga-1 suhbatni bilardi — `thread.participantId` bitta foydalanuvchi,
-   yuboruvchi esa `'me'` degan oddiy satr. Bundan ikkita muammo chiqardi:
+   MODEL: thread `members[]` ro'yxatiga ega, "men" esa haqiqiy
+   foydalanuvchi id'si. Bitta suhbat ikki tomondan ko'rinadi — talaba
+   yozgan xabar instruktor qutisida o'qilmagan bo'lib paydo bo'ladi.
 
-     1) Guruh suhbati (kurs oqimi) modelga umuman sig'masdi, shuning uchun
-        pages/instructor/messages.html butunlay qattiq yozilgan maket edi.
-     2) `'me'` rolni bilmagani uchun instruktor va talaba bir xil uchta
-        kalitni bo'lishsa, ikkalasi ham AYNI threadlarni AYNI "men" nomidan
-        ko'rardi — ya'ni talaba yozgan xabar instruktorga bormasdi.
+   --- M8 (backend): MANBA ENDI SERVER ------------------------------------
 
-   YECHIM: thread endi `members[]` ro'yxatiga ega, "men" esa sahifa rolidan
-   kelib chiqadigan haqiqiy foydalanuvchi id'si. Bitta thread ikki tomondan
-   ham ko'rinadi: talaba yozgan xabar instruktor qutisida o'qilmagan bo'lib
-   paydo bo'ladi.
+   Ilgari butun graf `localStorage` da yashardi va shu sababli suhbat
+   FAQAT bitta brauzerda mavjud edi: "talaba yozgan xabar instruktorga
+   boradi" degan gap aslida bir odam ikki rolni almashtirib ko'rgandagina
+   to'g'ri edi. Endi manba — server:
 
-   DO'KON (localStorage):
+       GET    /chat/threads                    suhbatlar (massiv)
+       GET    /chat/users?q=                   kontaktlar katalogi (massiv)
+       GET    /chat/threads/{id}/messages      KURSOR bo'yicha (?before=)
+       POST   /chat/threads/{id}/messages      yuborish
+       POST   /chat/threads/{id}/read          o'qilgan deb belgilash
+       PATCH  /chat/threads/{id}               arxiv / ovoz / e'lon
+       POST   /chat/threads/direct             1-ga-1 suhbat ochish
+       POST   /chat/threads/course/{id}        kurs guruhini ochish
+       GET    /chat/unread-count               yon menyu nishoni
 
-     isloh_chat_users    — [{ id, name, email, avatar, role, presence }]
-     isloh_chat_threads  — [{ id, type:'direct'|'group', members:[userId],
-                              title, avatar, courseId, lastMessage,
-                              lastSenderId, timestamp,
-                              unread:{ [userId]: n }, archived, muted,
-                              pinnedNote }]
-     isloh_chat_messages — { [threadId]: [{ id, senderId, text, timestamp }] }
-     isloh_chat_meta     — { v: 2 }   ← migratsiya belgisi
+   `localStorage` ning roli o'zgardi: u endi MANBA emas, OFFLINE NUSXA
+   (js/api.js dagi fabrika bilan bir xil qoida). Namunaviy ma'lumot esa
+   faqat `file://` va tarmoq uzilganda ko'rinadi.
 
-   `direct` threadda `title`/`avatar` bo'lmaydi — ular suhbatdoshdan
-   olinadi (isloh_chatThreadTitle). `group` threadda esa o'zining nomi va
-   rangi bor.
+   --- NEGA UMUMIY FABRIKA (isloh_createStoreCache) ISHLATILMADI ----------
 
-   Rol hisoblari js/profile.js dagi ISLOH_PROFILE_DEFAULTS bilan bir xil
-   id'ga ega (std-001 / inst-001 / adm-001), shu sababli profil sahifasida
-   o'zgartirilgan ism chatda ham ko'rinadi (isloh_chatSyncMyProfile).
+   Sabab js/discussion-store.js dagi bilan bir xil, lekin bu yerda
+   kuchliroq: fabrika BITTA yassi massiv ustida ishlaydi, chat esa uchta
+   bog'liq to'plam (suhbatlar + katalog + har bir suhbatning xabarlari) va
+   har bir amal o'z manziliga boradi. Bundan tashqari xabarlar
+   SAHIFALANADI — fabrikada bunday tushuncha yo'q.
 
-   `presence` — hozircha statik namuna ma'lumot: real onlayn holat WebSocket
-   talab qiladi (CLAUDE.md §4, backend bosqichi). Uni "jonli" qilib
-   ko'rsatmaymiz, shunchaki do'konda saqlangan qiymat.
+   Fabrikaning naqshi esa saqlanadi: sinxron o'qish, optimistik yozish,
+   xatoda ortga qaytarish, `isloh:*-updated` hodisasi.
 
-   fetch() ishlatilmaydi (CLAUDE.md §3 — file:// protokoli).
+   --- SINXRON SHARTNOMA SAQLANDI -----------------------------------------
+
+   `isloh_chatThreads()`, `isloh_chatMessages()` va boshqalar AVVALGIDEK
+   sinxron: sahifalar (js/chat.js) o'zgarmadi. Ma'lumot kelmagan bo'lsa
+   ular kesh (yoki demo) qaytaradi va fonda yuklashni boshlaydi; javob
+   kelgach `isloh:chat-updated` hodisasi qayta chizishga sabab bo'ladi.
+
+   Ikkitasi ISTISNO va ular Promise qaytaradi, chunki natijasi serverdan
+   keladi: `isloh_chatOpenDirect` va `isloh_chatOpenCourseGroup`.
+
+   fetch() to'g'ridan-to'g'ri chaqirilmaydi — hammasi js/api.js orqali
+   (CLAUDE.md §2, §3).
    ========================================================================== */
 
 const ISLOH_CHAT_USERS_KEY = 'isloh_chat_users';
 const ISLOH_CHAT_THREADS_KEY = 'isloh_chat_threads';
 const ISLOH_CHAT_MESSAGES_KEY = 'isloh_chat_messages';
-const ISLOH_CHAT_META_KEY = 'isloh_chat_meta';
-const ISLOH_CHAT_VERSION = 2;
+const ISLOH_CHAT_EVENT = 'isloh:chat-updated';
 
-/* Rol → do'kondagi hisob id'si. Sidebar'siz sahifalarda (auth va h.k.)
-   talaba deb qaraladi — js/profile.js dagi ISLOH_DEFAULT_ROLE bilan bir xil. */
+/* Bir sahifada ko'rsatiladigan xabarlar soni — serverdagi
+   ISLOH_MESSAGE_PAGE bilan bir xil (apps/messaging/views.py). */
+const ISLOH_CHAT_PAGE_SIZE = 50;
+
+/* Rol → demo hisob id'si. FAQAT zaxira yo'lda ishlatiladi (`file://`,
+   tarmoq yo'q): serverga ulangan holatda "men" — JWT ichidagi haqiqiy
+   foydalanuvchi. */
 const ISLOH_CHAT_ROLE_IDS = { student: 'std-001', instructor: 'inst-001', admin: 'adm-001' };
 const ISLOH_CHAT_DEFAULT_ROLE = 'student';
 
@@ -79,9 +92,10 @@ function isloh_chatT(key, uz, vars) {
   return isloh_chatFill(uz, vars);
 }
 
-/* Avatar ranglari — dizayn token'i emas, foydalanuvchi ma'lumotining bir
-   qismi (har bir odam uchun boshqacha). Takrorlanmasligi uchun nomlangan
-   ro'yxatda turadi. */
+/* Avatar ranglari — dizayn qarori, shuning uchun FRONTENDDA qoladi
+   (CLAUDE.md §2). Server odamning rasm havolasini beradi, chat oynasi esa
+   bosh harflarni rangli fon ustida chizadi: rang id'dan hisoblanadi, ya'ni
+   bir odam har doim bir xil rangda ko'rinadi. */
 const ISLOH_CHAT_AVATARS = {
   violet: 'linear-gradient(135deg,#6C5DD3,#4338CA)',
   sky: 'linear-gradient(135deg,#0EA5E9,#0369A1)',
@@ -95,6 +109,17 @@ const ISLOH_CHAT_AVATARS = {
   neutral: 'var(--ink-300)'
 };
 
+const ISLOH_CHAT_AVATAR_KEYS = ['violet', 'sky', 'green', 'emerald', 'teal', 'pink', 'purple', 'orange'];
+
+/* Id'dan barqaror rang. Tasodifiy tanlash yaramaydi: sahifa har
+   yangilanganda odam boshqa rangda ko'rinardi. */
+function isloh_chatAvatarFor(id) {
+  const text = String(id || '');
+  let sum = 0;
+  for (let i = 0; i < text.length; i += 1) sum = (sum + text.charCodeAt(i)) % 997;
+  return ISLOH_CHAT_AVATARS[ISLOH_CHAT_AVATAR_KEYS[sum % ISLOH_CHAT_AVATAR_KEYS.length]];
+}
+
 /* --- 0) Past darajadagi o'qish/yozish ------------------------------------ */
 
 function isloh_chatRead(key) {
@@ -106,7 +131,7 @@ function isloh_chatRead(key) {
 }
 
 /* Kvota to'lganda jim yiqilmaslik uchun natija qaytariladi (js/profile.js
-   dagi bir xil naqsh) — chaqiruvchi foydalanuvchiga xabar bera oladi. */
+   dagi bir xil naqsh). */
 function isloh_chatWrite(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
@@ -116,92 +141,67 @@ function isloh_chatWrite(key, value) {
   }
 }
 
+/* Hodisa `document` ga yuboriladi — loyihadagi barcha obunachilar shu
+   yerda tinglaydi (js/api.js dagi fabrikadagi bir xil izoh). */
+function isloh_chatEmit() {
+  document.dispatchEvent(new CustomEvent(ISLOH_CHAT_EVENT, { detail: ISLOH_CHAT.threads }));
+}
+
 /* --- 1) Joriy foydalanuvchi ("men") -------------------------------------- */
 
 /* Sahifa roli yon menyudan olinadi. Aynan shu naqsh js/theme.js,
-   js/settings-store.js va js/profile.js da ham ishlatiladi — chat sahifalari
-   profile.js ni har doim ham ulamagani uchun bu yerda takrorlanadi. */
+   js/settings-store.js va js/profile.js da ham ishlatiladi. */
 function isloh_chatRole() {
   const aside = document.querySelector('.sidebar[data-role]');
   const role = aside ? aside.dataset.role : '';
   return ISLOH_CHAT_ROLE_IDS[role] ? role : ISLOH_CHAT_DEFAULT_ROLE;
 }
 
+/* "Men" — tokendagi haqiqiy id, u yo'q bo'lsa demo rol hisobi.
+
+   ROL BO'YICHA ANIQLASH SERVERDA ISHLAMAYDI: bitta odam ham talaba, ham
+   o'qituvchi bo'lishi mumkin va u ikkala sahifada ham AYNI shaxs. Id esa
+   access token ichida yotadi (js/api.js — isloh_currentUserId), ya'ni
+   qo'shimcha so'rov talab qilmaydi. */
 function isloh_chatMeId() {
-  return ISLOH_CHAT_ROLE_IDS[isloh_chatRole()];
+  const serverId = typeof islohApi !== 'undefined' ? islohApi.currentUserId() : '';
+  return serverId || ISLOH_CHAT_ROLE_IDS[isloh_chatRole()];
 }
 
-function isloh_chatMe() {
-  return isloh_chatUser(isloh_chatMeId());
-}
+/* --- 2) Namunaviy ma'lumot (faqat zaxira) -------------------------------- */
 
-/* --- 2) Ekiladigan namuna ma'lumot --------------------------------------- */
-
-/* Uchta rol hisobi + ular bilan yozishadigan odamlar. Emaillar barcha
-   joyda bitta xil bo'lishi muhim: stage 3 dagi "Xabar yozish" havolasi
-   talabani aynan email orqali topadi. */
+/* Ko'rinadigan joyi ikkita: `file://` ostida ochilgan sahifa va tarmoq
+   uzilishi. Server javob bersa bu massivlar umuman ishlatilmaydi. */
 function isloh_chatSeedUsers() {
   return [
-    /* --- Rol hisoblari (profile.js dagi id va email bilan bir xil) --- */
-    { id: 'std-001', name: 'Samar Mirzayev', email: 'samar@example.com', avatar: ISLOH_CHAT_AVATARS.sky, role: 'student', presence: 'online' },
-    { id: 'inst-001', name: 'Akmal Yusupov', email: 'akmal@example.com', avatar: ISLOH_CHAT_AVATARS.violet, role: 'instructor', presence: 'online' },
+    { id: 'std-001', name: 'Samar Mirzayev', email: 'samar@example.com', role: 'student', presence: 'online' },
+    { id: 'inst-001', name: 'Akmal Yusupov', email: 'akmal@example.com', role: 'instructor', presence: 'online' },
     /* Admin chatda shaxs emas, qo'llab-quvvatlash xizmati sifatida
        ko'rinadi — talaba "Admin" bilan emas, "Isloh Support" bilan
-       yozishadi. Profil sahifasidagi ism bundan mustaqil. */
-    { id: 'adm-001', name: 'Isloh Support', email: 'support@isloh.uz', avatar: ISLOH_CHAT_AVATARS.neutral, role: 'admin', presence: 'busy' },
-
-    /* --- Boshqa o'qituvchilar (talaba tomonidan ko'rinadi) --- */
-    { id: 'u2', name: 'Dilnoza Rakhimova', email: 'dilnoza@isloh.uz', avatar: ISLOH_CHAT_AVATARS.sky, role: 'instructor', presence: 'online' },
-    { id: 'u3', name: 'Aziz Karimov', email: 'aziz@isloh.uz', avatar: ISLOH_CHAT_AVATARS.green, role: 'instructor', presence: 'offline' },
-    { id: 'u5', name: 'Malika Tosheva', email: 'malika@isloh.uz', avatar: ISLOH_CHAT_AVATARS.pink, role: 'student', presence: 'offline' },
-
-    /* --- Instruktorning talabalari (pages/instructor/students.html) --- */
-    { id: 's-javohir', name: 'Javohir Rasimov', email: 'javohir@example.com', avatar: ISLOH_CHAT_AVATARS.orange, role: 'student', presence: 'online' },
-    { id: 's-bekzod', name: 'Bekzod Odilov', email: 'bekzod@example.com', avatar: ISLOH_CHAT_AVATARS.sky, role: 'student', presence: 'offline' },
-    { id: 's-alisher', name: 'Alisher Karimov', email: 'alisher@example.com', avatar: ISLOH_CHAT_AVATARS.purple, role: 'student', presence: 'offline' },
-    { id: 's-nodira', name: 'Nodira Yusupova', email: 'nodira@example.com', avatar: ISLOH_CHAT_AVATARS.pink, role: 'student', presence: 'online' },
-    { id: 's-sardor', name: 'Sardor Aliyev', email: 'sardor@example.com', avatar: ISLOH_CHAT_AVATARS.emerald, role: 'student', presence: 'offline' }
-  ];
+       yozishadi. */
+    { id: 'adm-001', name: 'Isloh Support', email: 'support@isloh.uz', role: 'admin', presence: 'busy' },
+    { id: 's-javohir', name: 'Javohir Rasimov', email: 'javohir@example.com', role: 'student', presence: 'online' },
+    { id: 's-bekzod', name: 'Bekzod Odilov', email: 'bekzod@example.com', role: 'student', presence: 'offline' },
+    { id: 's-nodira', name: 'Nodira Yusupova', email: 'nodira@example.com', role: 'student', presence: 'online' }
+  ].map(isloh_chatNormalizeUser);
 }
 
-/* Suhbatlar bitta umumiy grafda yashaydi: `th1` talabaning ro'yxatida ham,
-   instruktorning ro'yxatida ham chiqadi — faqat qarama-qarshi tomondan. */
 function isloh_chatSeedThreads() {
   const now = Date.now();
   return [
-    /* Talaba ↔ instruktor (talaba tomonida ilgari ham shu suhbat bor edi) */
     { id: 'th1', type: 'direct', members: ['std-001', 'inst-001'], lastMessage: "Tekshirib ko'ringlar, savol bo'lsa shu yerga yozing 👍", lastSenderId: 'inst-001', timestamp: now - 24 * 60000, unread: { 'std-001': 2 } },
-    { id: 'th2', type: 'direct', members: ['std-001', 'u3'], lastMessage: 'Rahmat, qabul qildim!', lastSenderId: 'u3', timestamp: now - 26 * 3600000, unread: {} },
     { id: 'th3', type: 'direct', members: ['std-001', 'adm-001'], lastMessage: 'Qanday yordam bera olamiz?', lastSenderId: 'adm-001', timestamp: now - 26 * 3600000, unread: {} },
-
-    /* Instruktorning kurs guruhlari */
-    /* `lastMessage` doim SOF matn — yuboruvchi ismi ro'yxatda chizishda
-       qo'shiladi (js/chat.js), do'konda takrorlanmaydi. */
     {
       id: 'thg1', type: 'group', title: 'Python Backend', courseId: 'py-101',
-      avatar: ISLOH_CHAT_AVATARS.python,
-      members: ['inst-001', 'std-001', 's-nodira', 's-bekzod', 's-sardor'],
-      pinnedNote: "6-modul (Deployment) darsi ertaga soat 18:00 da boshlanadi",
+      members: ['inst-001', 'std-001', 's-nodira', 's-bekzod'],
+      pinnedNote: '6-modul (Deployment) darsi ertaga soat 18:00 da boshlanadi',
       lastMessage: 'Rahmat ustoz, tushundim!',
       lastSenderId: 's-bekzod', timestamp: now - 10 * 60000, unread: { 'inst-001': 1, 'std-001': 1 }
     },
-    {
-      id: 'thg2', type: 'group', title: 'Django REST', courseId: 'django-rest',
-      avatar: ISLOH_CHAT_AVATARS.teal,
-      members: ['inst-001', 's-javohir', 's-nodira'],
-      lastMessage: 'Serializer xatosini tuzatdim',
-      lastSenderId: 's-javohir', timestamp: now - 3 * 3600000, unread: {}
-    },
-
-    /* Instruktor ↔ talabalar / support */
-    { id: 'th4', type: 'direct', members: ['inst-001', 's-alisher'], lastMessage: 'Sertifikat uchun rahmat!', lastSenderId: 's-alisher', timestamp: now - 27 * 3600000, unread: {} },
-    { id: 'th5', type: 'direct', members: ['inst-001', 'adm-001'], lastMessage: "Yangi to'lov usuli tasdiqlandi", lastSenderId: 'adm-001', timestamp: now - 2 * 86400000, unread: {} },
-    /* Arxivlangan suhbat — "Arxiv" tab'i bo'sh ko'rinmasligi uchun */
+    { id: 'th4', type: 'direct', members: ['inst-001', 's-javohir'], lastMessage: 'Sertifikat uchun rahmat!', lastSenderId: 's-javohir', timestamp: now - 27 * 3600000, unread: {} },
     { id: 'th6', type: 'direct', members: ['inst-001', 's-bekzod'], lastMessage: 'Kurs yakunlandi, omad!', lastSenderId: 'inst-001', timestamp: now - 21 * 86400000, unread: {}, archived: true },
-
-    /* Support qutisi (admin tomoni) */
-    { id: 'th7', type: 'direct', members: ['adm-001', 'u2'], lastMessage: "Kursimni ko'rib chiqishni so'ragan edim", lastSenderId: 'u2', timestamp: now - 5 * 3600000, unread: { 'adm-001': 1 } }
-  ];
+    { id: 'th7', type: 'direct', members: ['adm-001', 's-nodira'], lastMessage: "Kursimni ko'rib chiqishni so'ragan edim", lastSenderId: 's-nodira', timestamp: now - 5 * 3600000, unread: { 'adm-001': 1 } }
+  ].map(isloh_chatNormalizeThread);
 }
 
 function isloh_chatSeedMessages() {
@@ -212,189 +212,260 @@ function isloh_chatSeedMessages() {
       { id: 'm2', senderId: 'std-001', text: "Rahmat, hozir tekshirib ko'raman!", timestamp: now - 27 * 60000 },
       { id: 'm3', senderId: 'inst-001', text: "Tekshirib ko'ringlar, savol bo'lsa shu yerga yozing 👍", timestamp: now - 24 * 60000 }
     ],
-    th2: [
-      { id: 'm4', senderId: 'u3', text: 'Rahmat, qabul qildim!', timestamp: now - 26 * 3600000 }
-    ],
-    th3: [
-      { id: 'm5', senderId: 'adm-001', text: 'Qanday yordam bera olamiz?', timestamp: now - 26 * 3600000 }
-    ],
+    th3: [{ id: 'm5', senderId: 'adm-001', text: 'Qanday yordam bera olamiz?', timestamp: now - 26 * 3600000 }],
     thg1: [
-      { id: 'm6', senderId: 's-nodira', text: "Ustoz, 5-dars bo'yicha savolim bor edi — ManyToMany maydonlarni serializerda qanday ko'rsataman?", timestamp: now - 22 * 60000 },
-      { id: 'm7', senderId: 'inst-001', text: 'Salom Nodira! SlugRelatedField yoki nested serializer ishlatishingiz mumkin. Hozir kodini yuboraman 👍', timestamp: now - 17 * 60000 },
-      { id: 'm8', senderId: 'inst-001', text: 'Bu masala bo\'yicha video ham qo\'shdim, "Materiallar" bo\'limini tekshiring.', timestamp: now - 16 * 60000 },
+      { id: 'm6', senderId: 's-nodira', text: 'Ustoz, ManyToMany maydonlarni serializerda qanday ko\'rsataman?', timestamp: now - 22 * 60000 },
+      { id: 'm7', senderId: 'inst-001', text: 'Salom Nodira! SlugRelatedField yoki nested serializer ishlatishingiz mumkin 👍', timestamp: now - 17 * 60000 },
       { id: 'm9', senderId: 's-bekzod', text: 'Rahmat ustoz, tushundim!', timestamp: now - 10 * 60000 }
     ],
-    thg2: [
-      { id: 'm10', senderId: 's-javohir', text: 'Serializer xatosini tuzatdim', timestamp: now - 3 * 3600000 }
-    ],
-    th4: [
-      { id: 'm11', senderId: 's-alisher', text: 'Sertifikat uchun rahmat!', timestamp: now - 27 * 3600000 }
-    ],
-    th5: [
-      { id: 'm12', senderId: 'adm-001', text: "Yangi to'lov usuli tasdiqlandi", timestamp: now - 2 * 86400000 }
-    ],
-    th6: [
-      { id: 'm13', senderId: 'inst-001', text: 'Kurs yakunlandi, omad!', timestamp: now - 21 * 86400000 }
-    ],
-    th7: [
-      { id: 'm14', senderId: 'u2', text: "Kursimni ko'rib chiqishni so'ragan edim", timestamp: now - 5 * 3600000 }
-    ]
+    th4: [{ id: 'm11', senderId: 's-javohir', text: 'Sertifikat uchun rahmat!', timestamp: now - 27 * 3600000 }],
+    th6: [{ id: 'm13', senderId: 'inst-001', text: 'Kurs yakunlandi, omad!', timestamp: now - 21 * 86400000 }],
+    th7: [{ id: 'm14', senderId: 's-nodira', text: "Kursimni ko'rib chiqishni so'ragan edim", timestamp: now - 5 * 3600000 }]
   };
 }
 
-/* --- 3) Migratsiya (1-versiya → 2-versiya) -------------------------------
-   Eski shakl faqat talaba chatida ishlatilgan, shuning uchun egasi har doim
-   std-001. Eski `'me'` yuboruvchisi ham shunga aylanadi.
+/* --- 3) Server shakli → frontend shakli ----------------------------------
+   Ikki shakl FAQAT shu uchta funksiyada uchrashadi (js/api.js dagi
+   `normalize`/`serialize` juftligi bilan bir xil qoida). Frontend ichki
+   shakli o'zgarmadi, ya'ni js/chat.js ga tegilmagan. */
 
-   Eski id'lar yangi rol hisoblariga ko'chiriladi: `u1` (Akmal Yuldashev)
-   aslida instruktorning o'zi edi, `u4` esa support. Ko'chirilmasa,
-   talabaning saqlangan suhbati instruktor qutisiga hech qachon tushmasdi. */
-const ISLOH_CHAT_LEGACY_IDS = { u1: 'inst-001', u4: 'adm-001', me: 'std-001' };
-
-function isloh_chatMapLegacyId(id) {
-  return ISLOH_CHAT_LEGACY_IDS[id] || id;
+function isloh_chatIsServerRow(row) {
+  return row && (('last_message_at' in row) || ('pinned_note' in row) || ('created_at' in row));
 }
 
-function isloh_chatMigrateThreads(oldThreads) {
-  return oldThreads.map((t) => {
-    const peer = isloh_chatMapLegacyId(t.participantId);
-    const unread = {};
-    if (t.unreadCount) unread['std-001'] = t.unreadCount;
-    return {
-      id: t.id,
-      type: 'direct',
-      members: ['std-001', peer],
-      lastMessage: t.lastMessage || '',
-      lastSenderId: peer,
-      timestamp: t.timestamp || Date.now(),
-      unread: unread
-    };
-  });
+function isloh_chatNormalizeUser(row) {
+  const user = row || {};
+  return {
+    id: String(user.id || ''),
+    name: user.name || '',
+    email: user.email || '',
+    role: user.role || 'student',
+    presence: user.presence || 'offline',
+    /* Rasm havolasi saqlanadi (kelajakda kerak), fon esa id'dan */
+    photo: user.photo || user.avatar_url || '',
+    avatar: isloh_chatAvatarFor(user.id)
+  };
 }
 
-function isloh_chatMigrateMessages(oldMessages) {
-  const out = {};
-  Object.keys(oldMessages || {}).forEach((threadId) => {
-    out[threadId] = (oldMessages[threadId] || []).map((m) => ({
-      id: m.id,
-      senderId: isloh_chatMapLegacyId(m.senderId),
-      text: m.text,
-      timestamp: m.timestamp
-    }));
-  });
-  return out;
-}
-
-/* Eski katalogdagi foydalanuvchilar yangi ekilgan ro'yxatga qo'shiladi:
-   foydalanuvchi qo'lda boshlagan suhbatning suhbatdoshi yo'qolmasin. */
-function isloh_chatMigrateUsers(oldUsers) {
-  const seeded = isloh_chatSeedUsers();
-  const known = new Set(seeded.map((u) => u.id));
-  (oldUsers || []).forEach((u) => {
-    const id = isloh_chatMapLegacyId(u.id);
-    if (!known.has(id)) {
-      seeded.push(Object.assign({}, u, { id: id }));
-      known.add(id);
-    }
-  });
-  return seeded;
-}
-
-/* --- 4) Do'konni tayyorlash ---------------------------------------------- */
-
-/* Bir sahifa yuklanishida faqat bir marta bajariladi. Uchala kalit ham
-   birga tekshiriladi: yarim ko'chirilgan holat qolib ketmasligi kerak. */
-let isloh_chatReady = false;
-
-function isloh_chatEnsureStore() {
-  if (isloh_chatReady) return;
-  isloh_chatReady = true;
-
-  const meta = isloh_chatRead(ISLOH_CHAT_META_KEY);
-  /* Profil sinxroni har yuklashda bajariladi — foydalanuvchi ismini
-     ekilgandan KEYIN o'zgartirgan bo'lishi mumkin. */
-  if (meta && meta.v === ISLOH_CHAT_VERSION) { isloh_chatSyncMyProfile(); return; }
-
-  const oldThreads = isloh_chatRead(ISLOH_CHAT_THREADS_KEY);
-  const isLegacy = Array.isArray(oldThreads) && oldThreads.length && oldThreads[0].participantId !== undefined;
-
-  if (isLegacy) {
-    /* Foydalanuvchi yozgan xabarlar saqlanib qoladi, ekilgan suhbatlar esa
-       ustiga qo'shiladi (id bo'yicha eski nusxa ustuvor). */
-    const migrated = isloh_chatMigrateThreads(oldThreads);
-    const migratedIds = new Set(migrated.map((t) => t.id));
-    const merged = migrated.concat(isloh_chatSeedThreads().filter((t) => !migratedIds.has(t.id)));
-
-    const oldMessages = isloh_chatMigrateMessages(isloh_chatRead(ISLOH_CHAT_MESSAGES_KEY) || {});
-    const seededMessages = isloh_chatSeedMessages();
-    Object.keys(seededMessages).forEach((id) => {
-      if (!oldMessages[id]) oldMessages[id] = seededMessages[id];
-    });
-
-    isloh_chatWrite(ISLOH_CHAT_USERS_KEY, isloh_chatMigrateUsers(isloh_chatRead(ISLOH_CHAT_USERS_KEY)));
-    isloh_chatWrite(ISLOH_CHAT_THREADS_KEY, merged);
-    isloh_chatWrite(ISLOH_CHAT_MESSAGES_KEY, oldMessages);
-  } else {
-    isloh_chatWrite(ISLOH_CHAT_USERS_KEY, isloh_chatSeedUsers());
-    isloh_chatWrite(ISLOH_CHAT_THREADS_KEY, isloh_chatSeedThreads());
-    isloh_chatWrite(ISLOH_CHAT_MESSAGES_KEY, isloh_chatSeedMessages());
+/* Serverda `unread` — BITTA son (meniki), frontendda esa xarita: eski
+   shakl shunday edi va js/chat.js undan `unread[meId]` ni o'qiydi. */
+function isloh_chatNormalizeThread(row) {
+  const thread = row || {};
+  if (!isloh_chatIsServerRow(thread)) {
+    return Object.assign(
+      { type: 'direct', members: [], title: '', courseId: '', pinnedNote: '', lastMessage: '', lastSenderId: '', timestamp: Date.now(), unread: {}, archived: false, muted: false },
+      thread
+    );
   }
 
-  isloh_chatWrite(ISLOH_CHAT_META_KEY, { v: ISLOH_CHAT_VERSION });
-  isloh_chatSyncMyProfile();
+  const unread = {};
+  unread[isloh_chatMeId()] = thread.unread || 0;
+  const stamp = thread.last_message_at || thread.created_at;
+
+  return {
+    id: String(thread.id || ''),
+    type: thread.type || 'direct',
+    members: (thread.members || []).map(String),
+    title: thread.title || '',
+    courseId: thread.course ? String(thread.course) : '',
+    pinnedNote: thread.pinned_note || '',
+    lastMessage: thread.last_message || '',
+    lastSenderId: thread.last_sender ? String(thread.last_sender) : '',
+    timestamp: stamp ? new Date(stamp).getTime() : Date.now(),
+    unread: unread,
+    archived: !!thread.archived,
+    muted: !!thread.muted
+  };
 }
 
-/* Profil sahifasida o'zgartirilgan ism/email katalogda ham yangilanadi.
-   js/profile.js har bir sahifada ulanmagan, shuning uchun mavjudligi
-   tekshiriladi — bo'lmasa do'kon o'zidagi qiymat bilan qolaveradi.
-   Admin bundan istisno: uning chatdagi shaxsi — "Isloh Support" xizmati. */
-function isloh_chatSyncMyProfile() {
-  if (typeof isloh_getUserProfile !== 'function') return;
-  const role = isloh_chatRole();
-  if (role === 'admin') return;
+function isloh_chatNormalizeMessage(row) {
+  const msg = row || {};
+  if (!msg.created_at) return msg;
+  return {
+    id: String(msg.id || ''),
+    senderId: msg.sender ? String(msg.sender) : '',
+    text: msg.text || '',
+    timestamp: new Date(msg.created_at).getTime()
+  };
+}
 
-  let profile;
-  try { profile = isloh_getUserProfile(role); } catch (e) { return; }
-  if (!profile) return;
+/* --- 4) Kesh va yuklash --------------------------------------------------- */
 
-  const users = isloh_chatRead(ISLOH_CHAT_USERS_KEY) || [];
-  const me = users.find((u) => u.id === ISLOH_CHAT_ROLE_IDS[role]);
-  if (!me) return;
-  if (me.name === profile.name && me.email === profile.email) return;
+/* Butun do'kon holati bitta obyektda: uchta to'plam bir-biriga bog'liq va
+   ular alohida global o'zgaruvchilar bo'lganda qaysi biri yuklanganini
+   kuzatish tarqoq bo'lardi. */
+const ISLOH_CHAT = {
+  users: [],
+  threads: [],
+  messages: {},       // { threadId: [msg] }
+  pages: {},          // { threadId: { before, hasMore } }
+  usersLoaded: false,
+  threadsLoaded: false,
+  usersPromise: null,
+  threadsPromise: null,
+  messagePromises: {},
+  seeded: false
+};
 
-  me.name = profile.name || me.name;
-  me.email = profile.email || me.email;
-  isloh_chatWrite(ISLOH_CHAT_USERS_KEY, users);
+/* Offline nusxa; yo'q bo'lsa demo. Bu yerda localStorage'ga YOZILMAYDI —
+   js/api.js dagi fabrikadagi bir xil sabab: seed yozilsa bo'sh holat
+   hech qachon ko'rinmasdi va demo yozuvlar serverga ketib qolardi. */
+function isloh_chatFallback() {
+  if (ISLOH_CHAT.seeded) return;
+  ISLOH_CHAT.seeded = true;
+
+  const users = isloh_chatRead(ISLOH_CHAT_USERS_KEY);
+  const threads = isloh_chatRead(ISLOH_CHAT_THREADS_KEY);
+  const messages = isloh_chatRead(ISLOH_CHAT_MESSAGES_KEY);
+
+  ISLOH_CHAT.users = Array.isArray(users) && users.length ? users.map(isloh_chatNormalizeUser) : isloh_chatSeedUsers();
+  ISLOH_CHAT.threads = Array.isArray(threads) && threads.length ? threads.map(isloh_chatNormalizeThread) : isloh_chatSeedThreads();
+  ISLOH_CHAT.messages = (messages && typeof messages === 'object') ? messages : isloh_chatSeedMessages();
+}
+
+function isloh_chatCacheLocally() {
+  isloh_chatWrite(ISLOH_CHAT_USERS_KEY, ISLOH_CHAT.users);
+  isloh_chatWrite(ISLOH_CHAT_THREADS_KEY, ISLOH_CHAT.threads);
+  isloh_chatWrite(ISLOH_CHAT_MESSAGES_KEY, ISLOH_CHAT.messages);
+}
+
+/* Tarmoq xatosi bannerini bir marta ko'rsatadi (js/ui-feedback.js).
+   `file://` da API umuman yo'q — bu kutilgan holat, banner shovqin
+   bo'lardi (CLAUDE.md §3). */
+function isloh_chatNetworkError(err, retry) {
+  if (err && err.code === 'file_protocol') return;
+  if (typeof islohUI !== 'undefined') islohUI.showNetworkError(retry, err && err.error);
+}
+
+function isloh_chatLoadUsers() {
+  if (ISLOH_CHAT.usersPromise) return ISLOH_CHAT.usersPromise;
+
+  ISLOH_CHAT.usersPromise = islohApi.get('/chat/users')
+    .then((data) => {
+      ISLOH_CHAT.users = (data || []).map(isloh_chatNormalizeUser);
+      ISLOH_CHAT.usersLoaded = true;
+      isloh_chatCacheLocally();
+    })
+    .catch((err) => {
+      isloh_chatFallback();
+      isloh_chatNetworkError(err, isloh_chatRetry);
+    })
+    .then(() => { isloh_chatEmit(); return ISLOH_CHAT.users; });
+
+  return ISLOH_CHAT.usersPromise;
+}
+
+function isloh_chatLoadThreads() {
+  if (ISLOH_CHAT.threadsPromise) return ISLOH_CHAT.threadsPromise;
+
+  ISLOH_CHAT.threadsPromise = islohApi.get('/chat/threads')
+    .then((data) => {
+      ISLOH_CHAT.threads = (data || []).map(isloh_chatNormalizeThread);
+      ISLOH_CHAT.threadsLoaded = true;
+      isloh_chatCacheLocally();
+    })
+    .catch((err) => {
+      isloh_chatFallback();
+      isloh_chatNetworkError(err, isloh_chatRetry);
+    })
+    .then(() => { isloh_chatEmit(); return ISLOH_CHAT.threads; });
+
+  return ISLOH_CHAT.threadsPromise;
+}
+
+function isloh_chatRetry() {
+  ISLOH_CHAT.usersPromise = null;
+  ISLOH_CHAT.threadsPromise = null;
+  ISLOH_CHAT.seeded = false;
+  return Promise.all([isloh_chatLoadUsers(), isloh_chatLoadThreads()]).then(() => {
+    if (!ISLOH_CHAT.threadsLoaded) throw new Error('/chat/threads reload failed');
+  });
+}
+
+/* Sahifa boshlanishida bir marta. Nomi eski shartnomadan qoldi, lekin
+   endi u EKMAYDI — yuklashni boshlaydi. */
+function isloh_chatEnsureStore() {
+  if (ISLOH_CHAT.usersPromise) return;
+  isloh_chatLoadUsers();
+  isloh_chatLoadThreads();
+}
+
+/* Suhbat xabarlari — TALAB BO'YICHA. Ro'yxatdagi har bir suhbat uchun
+   oldindan yuklash o'nlab so'rov bo'lardi. */
+function isloh_chatLoadMessages(threadId, before) {
+  if (!threadId) return Promise.resolve([]);
+  if (!before && ISLOH_CHAT.messagePromises[threadId]) return ISLOH_CHAT.messagePromises[threadId];
+
+  const params = { limit: ISLOH_CHAT_PAGE_SIZE };
+  if (before) params.before = before;
+
+  const request = islohApi.get('/chat/threads/' + threadId + '/messages', params)
+    .then((page) => {
+      const rows = ((page && page.results) || []).map(isloh_chatNormalizeMessage);
+      const existing = ISLOH_CHAT.messages[threadId] || [];
+      /* Eskiroq sahifa OLDINGA qo'shiladi, birinchi sahifa esa
+         mavjudini almashtiradi */
+      ISLOH_CHAT.messages[threadId] = before ? rows.concat(existing) : rows;
+      ISLOH_CHAT.pages[threadId] = {
+        before: (page && page.next_before) || '',
+        hasMore: !!(page && page.has_more)
+      };
+      isloh_chatCacheLocally();
+      isloh_chatEmit();
+      return ISLOH_CHAT.messages[threadId];
+    })
+    .catch((err) => {
+      isloh_chatFallback();
+      isloh_chatNetworkError(err, () => isloh_chatLoadMessages(threadId));
+      isloh_chatEmit();
+      return ISLOH_CHAT.messages[threadId] || [];
+    });
+
+  if (!before) ISLOH_CHAT.messagePromises[threadId] = request;
+  return request;
+}
+
+/* "Eskiroq xabarlar" — chat oynasi tepasiga chiqilganda. */
+function isloh_chatLoadOlderMessages(threadId) {
+  const page = ISLOH_CHAT.pages[threadId];
+  if (!page || !page.hasMore || !page.before) return Promise.resolve(null);
+  return isloh_chatLoadMessages(threadId, page.before);
+}
+
+function isloh_chatHasOlderMessages(threadId) {
+  const page = ISLOH_CHAT.pages[threadId];
+  return !!(page && page.hasMore);
 }
 
 /* --- 5) O'qish ----------------------------------------------------------- */
 
 function isloh_chatUsers() {
-  isloh_chatEnsureStore();
-  const users = isloh_chatRead(ISLOH_CHAT_USERS_KEY);
-  return Array.isArray(users) ? users : [];
+  if (!ISLOH_CHAT.usersLoaded) { if (!ISLOH_CHAT.users.length) isloh_chatFallback(); isloh_chatLoadUsers(); }
+  return ISLOH_CHAT.users;
 }
 
 function isloh_chatUser(id) {
-  return isloh_chatUsers().find((u) => u.id === id) || null;
+  return isloh_chatUsers().find((u) => u.id === String(id)) || null;
 }
 
-function isloh_chatUserByEmail(email) {
-  const normalized = String(email || '').trim().toLowerCase();
-  if (!normalized) return null;
-  return isloh_chatUsers().find((u) => String(u.email).toLowerCase() === normalized) || null;
-}
+/* Email bo'yicha qidiruv ATAYLAB YO'Q: mahalliy katalogda faqat
+   KONTAKTLAR bor va u yerda topilmagan odam "mavjud emas" degani emas.
+   "Yangi suhbat" oynasi email'ni to'g'ridan-to'g'ri serverga yuboradi
+   (`isloh_chatOpenDirect({ email })`) — javobni faqat server bera oladi. */
 
 function isloh_chatAllThreads() {
-  isloh_chatEnsureStore();
-  const threads = isloh_chatRead(ISLOH_CHAT_THREADS_KEY);
-  return Array.isArray(threads) ? threads : [];
+  if (!ISLOH_CHAT.threadsLoaded) { if (!ISLOH_CHAT.threads.length) isloh_chatFallback(); isloh_chatLoadThreads(); }
+  return ISLOH_CHAT.threads;
 }
 
 /* Menga tegishli suhbatlar, eng yangisi tepada.
    Filtr: { archived: false, type: 'group', courseId: '...' } — berilmagan
    maydon tekshirilmaydi. `archived` sukut bo'yicha false, ya'ni arxiv
-   alohida so'ralmasa ro'yxatga tushmaydi. */
+   alohida so'ralmasa ro'yxatga tushmaydi.
+
+   A'ZOLIK BO'YICHA FILTR SAQLANDI, garchi server faqat menikini
+   qaytarsa ham: zaxira (demo) grafda hamma suhbat bor va u yerda filtr
+   kerak bo'ladi. */
 function isloh_chatThreads(filter) {
   const f = filter || {};
   const me = isloh_chatMeId();
@@ -409,13 +480,18 @@ function isloh_chatThreads(filter) {
 }
 
 function isloh_chatThread(id) {
-  return isloh_chatAllThreads().find((t) => t.id === id) || null;
+  return isloh_chatAllThreads().find((t) => t.id === String(id)) || null;
 }
 
+/* Suhbat ochilganda chaqiriladi. Kesh bo'sh bo'lsa yuklash boshlanadi va
+   javob kelgach `isloh:chat-updated` qayta chizadi. */
 function isloh_chatMessages(threadId) {
-  isloh_chatEnsureStore();
-  const all = isloh_chatRead(ISLOH_CHAT_MESSAGES_KEY) || {};
-  return all[threadId] || [];
+  if (!threadId) return [];
+  if (!(threadId in ISLOH_CHAT.messages)) {
+    isloh_chatFallback();
+    isloh_chatLoadMessages(threadId);
+  }
+  return ISLOH_CHAT.messages[threadId] || [];
 }
 
 /* --- 6) Ko'rsatish uchun yordamchilar ------------------------------------ */
@@ -442,13 +518,15 @@ function isloh_chatThreadTitle(thread) {
 
 function isloh_chatThreadAvatar(thread) {
   if (!thread) return 'var(--ink-300)';
-  if (thread.type === 'group') return thread.avatar || 'var(--ink-300)';
+  if (thread.type === 'group') return isloh_chatAvatarFor(thread.courseId || thread.id);
   const peer = isloh_chatPeer(thread);
   return peer ? peer.avatar : 'var(--ink-300)';
 }
 
 /* Sarlavha ostidagi qator: guruhda a'zolar soni, 1-ga-1 da suhbatdosh
-   holati. Onlayn soni katalogdagi `presence` dan sanaladi. */
+   holati. Onlayn soni katalogdagi `presence` dan sanaladi — u endi
+   HAQIQIY: WebSocket ulanishi holatni serverda yozadi
+   (apps/messaging/consumers.py). */
 function isloh_chatThreadSubtitle(thread) {
   if (!thread) return '';
   if (thread.type === 'group') {
@@ -478,29 +556,18 @@ function isloh_chatUnread(thread) {
   return thread.unread[isloh_chatMeId()] || 0;
 }
 
-function isloh_chatTotalUnread() {
-  return isloh_chatThreads().reduce((sum, t) => sum + isloh_chatUnread(t), 0);
-}
-
 /* --- Yon menyudagi o'qilmaganlar nishoni ---------------------------------
    Bu modul yon menyusi bor barcha sahifalarga ulangan, shuning uchun
    nishon platforma bo'ylab ko'rinadi. js/sidebar.js menyuni chizib
-   bo'lgach shu funksiyani chaqiradi (himoyalangan chaqiruv — chat-store
-   ulanmagan sahifada menyu shunchaki nishonsiz qoladi).
+   bo'lgach `isloh_chatMountNavBadge` ni chaqiradi.
 
-   MUHIM: bu yerda do'kon EKILMAYDI. `isloh_chatTotalUnread()` chaqirilsa,
-   chat sahifasini hech qachon ochmagan foydalanuvchida ham namuna
-   suhbatlar yaratilib ketardi — sozlamalar yoki savatcha sahifasini
-   ochish chat ma'lumotini tug'dirishi noto'g'ri bo'lardi. */
+   MUHIM: bu yerda butun ro'yxat YUKLANMAYDI. Nishon 60+ sahifada turadi,
+   suhbatlar esa faqat uchtasida kerak — shuning uchun yengil
+   `/chat/unread-count` endpoint'i (M7 dagi bildirishnoma nuqtasi bilan
+   bir xil qaror). Ro'yxat allaqachon yuklangan bo'lsa undan sanaladi. */
 function isloh_chatBadgeCount() {
-  const meta = isloh_chatRead(ISLOH_CHAT_META_KEY);
-  if (!meta || meta.v !== ISLOH_CHAT_VERSION) return 0;
-
-  const threads = isloh_chatRead(ISLOH_CHAT_THREADS_KEY);
-  if (!Array.isArray(threads)) return 0;
-
   const me = isloh_chatMeId();
-  return threads.reduce((sum, t) => {
+  return ISLOH_CHAT.threads.reduce((sum, t) => {
     if (t.archived) return sum;
     if (!t.members || t.members.indexOf(me) === -1) return sum;
     return sum + ((t.unread && t.unread[me]) || 0);
@@ -512,8 +579,7 @@ function isloh_chatBadgeCount() {
 const ISLOH_CHAT_NAV_KEYS = { student: 'chat', instructor: 'messages', admin: 'admin-messages' };
 const ISLOH_CHAT_BADGE_MAX = 99;
 
-function isloh_chatMountNavBadge() {
-  const count = isloh_chatBadgeCount();
+function isloh_chatShowNavBadge(count) {
   const key = ISLOH_CHAT_NAV_KEYS[isloh_chatRole()];
   const link = document.querySelector(`#sidebar-nav .nav-item[href*="${key}.html"]`);
   if (!link) return;
@@ -534,26 +600,69 @@ function isloh_chatMountNavBadge() {
   if (!existing) link.appendChild(badge);
 }
 
-/* --- 7) Yozish ----------------------------------------------------------- */
+/* "Nechta o'qilmagan xabar bor?" — YAGONA javob beruvchi.
 
-function isloh_chatSaveThreads(threads) {
-  return isloh_chatWrite(ISLOH_CHAT_THREADS_KEY, threads);
+   Ro'yxat allaqachon yuklangan bo'lsa keshdan sanaladi, aks holda yengil
+   endpoint'ga boradi. Ikkita chaqiruvchisi bor va ikkalasi ham chat
+   sahifasidan TASHQARIDA ishlaydi: yon menyudagi nishon va o'qituvchi
+   boshqaruv panelidagi "tezkor amallar" (js/instructor-dashboard.js).
+
+   Xato bo'lsa 0: yolg'on "yangi xabar bor" dan ko'ra yaxshiroq
+   (js/notification-store.js dagi bir xil qaror). */
+function isloh_chatFetchUnread() {
+  if (ISLOH_CHAT.threadsLoaded) return Promise.resolve(isloh_chatBadgeCount());
+  if (typeof islohApi === 'undefined') return Promise.resolve(0);
+  return islohApi.get('/chat/unread-count')
+    .then((data) => (data && data.unread) || 0)
+    .catch(() => 0);
 }
 
-/* Bitta threadni topib o'zgartiradi va butun ro'yxatni qayta yozadi.
-   `mutate` false qaytarsa (o'zgarish yo'q) yozuv bajarilmaydi. */
+function isloh_chatMountNavBadge() {
+  isloh_chatFetchUnread().then(isloh_chatShowNavBadge);
+}
+
+/* --- 7) Yozish -----------------------------------------------------------
+   Naqsh js/api.js dagi fabrikadan olingan: o'zgarish DARHOL keshga
+   yoziladi (interfeys kutmaydi), so'rov ketadi, xato bo'lsa eski holat
+   qaytariladi va foydalanuvchiga aytiladi. */
+
+function isloh_chatToastError(err, fallback) {
+  if (typeof islohUI !== 'undefined') islohUI.toast((err && err.error) || fallback, 'error');
+}
+
+/* --- Yozuv navbati --------------------------------------------------------
+   Yozish so'rovlari BIRIN-KETIN yuboriladi, parallel emas — js/api.js dagi
+   fabrikadagi bir xil qaror va shu yerda ham ZARUR bo'ldi (brauzerda
+   o'lchandi): "arxivdan qaytar" va "ovozni yoq" ketma-ket bosilganda ikki
+   `PATCH` bir vaqtda ketardi va ikkinchisi birinchisining natijasini
+   bekor qilardi.
+
+   Optimistik o'zgarish navbatda TURMAYDI — u sinxron bajariladi, shuning
+   uchun interfeys darhol javob beradi. */
+let ISLOH_CHAT_WRITES = Promise.resolve();
+
+function isloh_chatEnqueue(task) {
+  const run = ISLOH_CHAT_WRITES.then(task, task);
+  // Navbat xato tufayli uzilib qolmasin
+  ISLOH_CHAT_WRITES = run.then(() => {}, () => {});
+  return run;
+}
+
+/* Bitta threadni topib o'zgartiradi. `mutate` false qaytarsa hodisa
+   yuborilmaydi (o'zgarish bo'lmadi). */
 function isloh_chatUpdateThread(threadId, mutate) {
-  const threads = isloh_chatAllThreads();
-  const thread = threads.find((t) => t.id === threadId);
+  const thread = isloh_chatThread(threadId);
   if (!thread) return null;
   if (mutate(thread) === false) return thread;
-  isloh_chatSaveThreads(threads);
+  isloh_chatCacheLocally();
+  isloh_chatEmit();
   return thread;
 }
 
-/* Xabar yuborish. Grafda ikkala tomon ham bor, shuning uchun o'qilmagan
-   hisoblagich yuboruvchidan boshqa BARCHA a'zolarga oshadi — instruktor
-   javob yozsa, talaba uni o'qilmagan holatda ko'radi. */
+/* Xabar yuborish. Vaqtinchalik id bilan darhol ko'rinadi, server javobi
+   kelgach haqiqiy yozuv bilan almashadi (fabrikadagi bir xil qadam).
+
+   Sinxron qaytaradi — js/chat.js puffakni darhol chizadi. */
 function isloh_chatSend(threadId, text) {
   const clean = String(text || '').trim();
   if (!clean) return null;
@@ -562,75 +671,201 @@ function isloh_chatSend(threadId, text) {
   if (!thread) return null;
 
   const me = isloh_chatMeId();
-  const msg = { id: 'msg-' + Date.now(), senderId: me, text: clean, timestamp: Date.now() };
+  const temp = { id: 'tmp-' + Date.now(), senderId: me, text: clean, timestamp: Date.now(), pending: true };
 
-  const all = isloh_chatRead(ISLOH_CHAT_MESSAGES_KEY) || {};
-  all[threadId] = (all[threadId] || []).concat(msg);
-  if (!isloh_chatWrite(ISLOH_CHAT_MESSAGES_KEY, all)) return null;
+  ISLOH_CHAT.messages[threadId] = (ISLOH_CHAT.messages[threadId] || []).concat(temp);
+  const previous = { lastMessage: thread.lastMessage, lastSenderId: thread.lastSenderId, timestamp: thread.timestamp, archived: thread.archived };
 
-  isloh_chatUpdateThread(threadId, (t) => {
-    t.lastMessage = clean;
-    t.lastSenderId = me;
-    t.timestamp = msg.timestamp;
-    t.unread = t.unread || {};
-    (t.members || []).forEach((id) => {
-      if (id !== me) t.unread[id] = (t.unread[id] || 0) + 1;
+  thread.lastMessage = clean;
+  thread.lastSenderId = me;
+  thread.timestamp = temp.timestamp;
+  thread.unread = thread.unread || {};
+  thread.unread[me] = 0;
+  /* Arxivlangan suhbatga yozilsa, u qaytadan faol bo'ladi */
+  thread.archived = false;
+  isloh_chatCacheLocally();
+  isloh_chatEmit();
+
+  isloh_chatEnqueue(() => islohApi.post('/chat/threads/' + threadId + '/messages', { text: clean }))
+    .then((saved) => {
+      const list = ISLOH_CHAT.messages[threadId] || [];
+      const at = list.findIndex((m) => m.id === temp.id);
+      if (at !== -1 && saved) list[at] = isloh_chatNormalizeMessage(saved);
+      isloh_chatCacheLocally();
+      isloh_chatEmit();
+    })
+    .catch((err) => {
+      /* Yuborilmagan xabar ro'yxatda QOLMAYDI: aks holda foydalanuvchi
+         uni yetkazilgan deb o'ylardi. */
+      ISLOH_CHAT.messages[threadId] = (ISLOH_CHAT.messages[threadId] || []).filter((m) => m.id !== temp.id);
+      Object.assign(thread, previous);
+      isloh_chatCacheLocally();
+      isloh_chatEmit();
+      isloh_chatToastError(err, "Xabar yuborilmadi");
     });
-    /* Javob yozgan odam threadni o'qigan bo'ladi — o'zimning hisoblagichim
-       nolga tushadi, aks holda yuborgandan keyin ham "o'qilmagan" bo'lib
-       turaverardi. */
-    t.unread[me] = 0;
-    /* Arxivlangan suhbatga yozilsa, u qaytadan faol bo'ladi */
-    t.archived = false;
-  });
 
-  return msg;
+  return temp;
 }
 
 function isloh_chatMarkRead(threadId) {
   const me = isloh_chatMeId();
-  isloh_chatUpdateThread(threadId, (t) => {
-    if (!t.unread || !t.unread[me]) return false;
-    t.unread[me] = 0;
-    return true;
+  const thread = isloh_chatThread(threadId);
+  if (!thread || !thread.unread || !thread.unread[me]) return;
+
+  const previous = thread.unread[me];
+  thread.unread[me] = 0;
+  isloh_chatCacheLocally();
+  isloh_chatEmit();
+
+  isloh_chatEnqueue(() => islohApi.post('/chat/threads/' + threadId + '/read', {})).catch(() => {
+    thread.unread[me] = previous;
+    isloh_chatEmit();
+  });
+}
+
+/* Shaxsiy sozlamalar (arxiv, ovoz) va guruh e'loni — bitta PATCH.
+   Serverda ular ikki xil egaga tegishli, lekin frontend uchun bu bitta
+   "suhbatni o'zgartirish" amali. */
+function isloh_chatPatchThread(threadId, patch, fallbackMessage) {
+  const thread = isloh_chatThread(threadId);
+  if (!thread) return;
+
+  const previous = {};
+  Object.keys(patch).forEach((key) => { previous[key] = thread[key]; });
+  Object.assign(thread, patch);
+  isloh_chatCacheLocally();
+  isloh_chatEmit();
+
+  const body = {};
+  if ('archived' in patch) body.archived = patch.archived;
+  if ('muted' in patch) body.muted = patch.muted;
+  if ('pinnedNote' in patch) body.pinned_note = patch.pinnedNote;
+
+  isloh_chatEnqueue(() => islohApi.patch('/chat/threads/' + threadId, body)).catch((err) => {
+    Object.assign(thread, previous);
+    isloh_chatCacheLocally();
+    isloh_chatEmit();
+    isloh_chatToastError(err, fallbackMessage);
   });
 }
 
 function isloh_chatSetArchived(threadId, archived) {
-  isloh_chatUpdateThread(threadId, (t) => { t.archived = Boolean(archived); });
+  isloh_chatPatchThread(threadId, { archived: Boolean(archived) }, "Arxivlab bo'lmadi");
 }
 
 function isloh_chatSetMuted(threadId, muted) {
-  isloh_chatUpdateThread(threadId, (t) => { t.muted = Boolean(muted); });
+  isloh_chatPatchThread(threadId, { muted: Boolean(muted) }, "Saqlab bo'lmadi");
 }
 
 function isloh_chatSetPinnedNote(threadId, note) {
-  isloh_chatUpdateThread(threadId, (t) => { t.pinnedNote = String(note || ''); });
+  isloh_chatPatchThread(threadId, { pinnedNote: String(note || '') }, "E'lonni saqlab bo'lmadi");
 }
 
-/* Berilgan foydalanuvchi bilan 1-ga-1 suhbatni ochadi, bo'lmasa yaratadi.
-   O'zim bilan suhbat bo'lmaydi. */
-function isloh_chatOpenDirect(userId) {
-  const me = isloh_chatMeId();
-  if (!userId || userId === me) return null;
-  if (!isloh_chatUser(userId)) return null;
+/* --- Suhbat ochish (PROMISE) ----------------------------------------------
+   Bu ikki funksiya sinxron bo'la olmaydi: suhbat SERVERDA yaratiladi va
+   uning id'sini faqat javob beradi. Chaqiruv joylari (js/chat.js
+   "Yangi suhbat" oynasi va js/instructor-messages.js chuqur havolasi)
+   shunga moslangan. */
 
-  const existing = isloh_chatAllThreads().find((t) =>
-    t.type === 'direct' && (t.members || []).indexOf(me) !== -1 && (t.members || []).indexOf(userId) !== -1
-  );
-  if (existing) return existing;
-
-  const thread = {
-    id: 'th-' + Date.now(),
-    type: 'direct',
-    members: [me, userId],
-    lastMessage: '',
-    lastSenderId: '',
-    timestamp: Date.now(),
-    unread: {}
-  };
-  const threads = isloh_chatAllThreads();
-  threads.unshift(thread);
-  if (!isloh_chatSaveThreads(threads)) return null;
+function isloh_chatAdoptThread(row) {
+  const thread = isloh_chatNormalizeThread(row);
+  const at = ISLOH_CHAT.threads.findIndex((t) => t.id === thread.id);
+  if (at === -1) ISLOH_CHAT.threads.push(thread); else ISLOH_CHAT.threads[at] = thread;
+  isloh_chatCacheLocally();
+  isloh_chatEmit();
   return thread;
 }
+
+/* `target` — foydalanuvchi id'si yoki `{ email }`. */
+function isloh_chatOpenDirect(target) {
+  const body = (target && target.email) ? { email: target.email } : { user_id: String(target || '') };
+  if (!body.email && (!body.user_id || body.user_id === isloh_chatMeId())) {
+    return Promise.reject({ error: "O'zingiz bilan suhbat boshlab bo'lmaydi" });
+  }
+  return islohApi.post('/chat/threads/direct', body).then(isloh_chatAdoptThread);
+}
+
+/* Kurs guruhi — talab bo'yicha yaratiladi va a'zolar serverda
+   sinxronlanadi (apps/messaging/services.py). */
+function isloh_chatOpenCourseGroup(courseId) {
+  return islohApi.post('/chat/threads/course/' + courseId, {}).then(isloh_chatAdoptThread);
+}
+
+/* --- 8) Real vaqt (WebSocket) --------------------------------------------
+   js/realtime.js ulanishni boshqaradi va kelgan hodisani shu yerga
+   uzatadi. Do'kon soketni O'ZI ochmaydi: ulanish holati (qayta ulanish,
+   token yangilanishi) alohida mas'uliyat va u yerda turishi kerak. */
+
+/* O'Z XABARIM IKKI YO'LDAN KELADI va bu brauzerda ko'rindi: puffak ikki
+   marta chizilardi.
+
+   Yuborganimda do'kon darhol VAQTINCHALIK xabar qo'yadi (`pending`), REST
+   javobi kelgach uni haqiqiysi bilan almashtiradi. Ayni paytda server
+   WebSocket orqali ham yuboradi — va u paytda ro'yxatdagi nusxaning id'si
+   hali `tmp-...` bo'lgani uchun id bo'yicha solishtirish yordam bermaydi.
+
+   Shuning uchun ikki tekshiruv: id bo'yicha (odatiy takror) va "mening
+   kutayotgan xabarim" bo'yicha. BOSHQA TABDA kutayotgan nusxa yo'q, ya'ni
+   u yerda xabar odatdagidek qo'shiladi. */
+function isloh_chatIsDuplicate(list, message) {
+  if (list.some((m) => m.id === message.id)) return true;
+  if (message.senderId !== isloh_chatMeId()) return false;
+  return list.some((m) => m.pending && m.text === message.text);
+}
+
+function isloh_chatApplyMessage(payload) {
+  const threadId = String(payload.thread_id || '');
+  const message = isloh_chatNormalizeMessage(payload.message);
+  const thread = isloh_chatThread(threadId);
+
+  /* Suhbat keshda yo'q bo'lsa (yangi suhbat ochildi) ro'yxat qayta
+     yuklanadi — aks holda xabar hech qayerda ko'rinmasdi. */
+  if (!thread) {
+    ISLOH_CHAT.threadsPromise = null;
+    isloh_chatLoadThreads();
+    return;
+  }
+
+  const list = ISLOH_CHAT.messages[threadId];
+  /* Xabarlar yuklangan bo'lsagina qo'shiladi: yuklanmagan suhbatga
+     qo'shilsa, keyin ochilganda ro'yxat yarim bo'lib qolardi. */
+  if (list && !isloh_chatIsDuplicate(list, message)) list.push(message);
+
+  thread.lastMessage = message.text;
+  thread.lastSenderId = message.senderId;
+  thread.timestamp = message.timestamp;
+  thread.unread = thread.unread || {};
+  thread.unread[isloh_chatMeId()] = payload.unread || 0;
+
+  isloh_chatCacheLocally();
+  isloh_chatEmit();
+}
+
+function isloh_chatApplyPresence(payload) {
+  const user = isloh_chatUser(payload.user_id);
+  if (!user || user.presence === payload.presence) return;
+  user.presence = payload.presence;
+  isloh_chatEmit();
+}
+
+function isloh_chatApplyThreadPatch(payload) {
+  const thread = isloh_chatThread(payload.thread_id);
+  if (!thread) return;
+  const patch = payload.patch || {};
+  if ('pinned_note' in patch) thread.pinnedNote = patch.pinned_note;
+  isloh_chatCacheLocally();
+  isloh_chatEmit();
+}
+
+/* Bitta kirish nuqtasi — js/realtime.js turlarni bilmasin. */
+function isloh_chatApplyIncoming(payload) {
+  if (!payload || !payload.event) return;
+  if (payload.event === 'message') isloh_chatApplyMessage(payload);
+  else if (payload.event === 'presence') isloh_chatApplyPresence(payload);
+  else if (payload.event === 'thread') isloh_chatApplyThreadPatch(payload);
+}
+
+/* Nishon do'kon o'zgarganda ham yangilanadi (xabar kelganda ham). */
+document.addEventListener(ISLOH_CHAT_EVENT, () => {
+  if (ISLOH_CHAT.threadsLoaded) isloh_chatShowNavBadge(isloh_chatBadgeCount());
+});

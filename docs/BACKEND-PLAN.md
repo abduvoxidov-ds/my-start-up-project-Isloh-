@@ -19,7 +19,7 @@ qoldirilmaydi — keyingisiga o'tishdan oldin oldingisi to'liq yopiladi.
 | **M5** | Fayllar (`resources`) | ✅ **tayyor** | `resource-store`, avatar, video, topshiriq fayli |
 | **M6** | Ijtimoiy (`social`) | ✅ **tayyor** | `review-store` + `discussion-store` |
 | **M7** | Bildirishnomalar | ✅ **tayyor** | `notification-store` |
-| **M8** | Xabarlar (`messaging`) | ⬜ | `chat-store` (4 kalit) + WebSocket |
+| **M8** | Xabarlar (`messaging`) | ✅ **tayyor** | `chat-store` (3 kalit) + WebSocket, `presence` |
 | **M9** | Savdo (`commerce`) | ⬜ | savat/buyurtma zanjiri, `data-backend-pending` tugmalari |
 | **M10** | AI (`assistant`) | ⬜ | `ai-store` + oqim (SSE) |
 | **M11** | Analitika (`analytics`) | ⬜ | barcha `.placeholder-note` grafiklar |
@@ -685,7 +685,7 @@ Voqealar boshqa modullardan keladi: yangi ro'yxatga olish (M3), topshiriq
 topshirildi (M4), sharh yozildi (M6), to'lov o'tdi (M9).
 `isloh_addNotification` frontendda shu uchun tayyor.
 
-**Yetkazish:** REST + (M8 dan keyin) WebSocket.
+**Yetkazish:** REST + WebSocket (`/ws/notifications` — M8 da ulandi).
 
 ---
 
@@ -742,24 +742,123 @@ shuning uchun u OQ RO'YXATdan o'tadi: faqat `*.html` fayl nomi.
   bor. Uni do'konga ko'chirish yoki butunlay olib tashlash — alohida
   qaror; hozircha tegilmadi, chunki u hech qayerda ishlamaydi va zarar
   keltirmaydi.
-- **WebSocket** M8 dan keyin: hozir xabar sahifa yangilanganda keladi.
+- ~~**WebSocket** M8 dan keyin~~ ✅ M8 da ulandi: `/ws/notifications`
+  yangi bildirishnomani darhol yetkazadi (`isloh_notifApplyIncoming`).
 - **To'lov voqeasi (`payment`)** M9 da ulanadi — tur allaqachon bor.
 
 ---
 
-## M8 — Xabarlar
+## M8 — Xabarlar ✅
 
-**Modellar:** `ChatThread`, `ChatMember` (`unread_count`), `ChatMessage`.
+**Modellar:** `ChatThread`, `ChatMember` (`unread_count`, `archived`,
+`muted`), `ChatMessage`, `Presence`.
 
-Frontenddagi model allaqachon to'g'ri: `members[]` ro'yxati, rolga qarab
-"men" — ya'ni bitta thread ikki tomondan ko'rinadi.
+Frontenddagi model allaqachon to'g'ri edi: `members[]` ro'yxati, rolga
+qarab "men" — ya'ni bitta suhbat ikki tomondan ko'rinadi. Serverda ham
+xuddi shunday.
 
-**Real vaqt:** Django Channels + Redis. `WS /ws/chat`,
-`WS /ws/notifications`. `presence` hozir statik namuna — shu modulda
-haqiqiy bo'ladi.
+**`ChatMember` nega alohida jadval:** uchta maydon SUHBATGA emas, ODAMGA
+tegishli — o'qituvchida 3 ta o'qilmagan, talabada 0 ta; men arxivladim,
+suhbatdoshim uchun suhbat faol qolaveradi. Frontend ularni thread maydoni
+deb ko'radi, serializer esa joriy foydalanuvchining a'zoligidan o'qiydi.
 
-**Sahifalash:** xabarlar kursor bo'yicha (`?before=`), massiv emas — bu
-do'kon endpoint'i emas.
+**Endpoint'lar:**
+
+```
+GET    /chat/threads                    do'kon endpoint'i (MASSIV, §0.1)
+POST   /chat/threads/direct             {user_id | email} -> suhbat
+POST   /chat/threads/course/{id}        kurs guruhi (a'zolar sinxronlanadi)
+GET    /chat/threads/{id}               bitta suhbat
+PATCH  /chat/threads/{id}               archived / muted / pinned_note
+POST   /chat/threads/{id}/read          o'qilmaganlarni nollash
+GET    /chat/threads/{id}/messages      KURSOR (?before=&limit=)
+POST   /chat/threads/{id}/messages      yuborish
+GET    /chat/users?q=                   kontaktlar katalogi (MASSIV)
+GET    /chat/unread-count               yon menyu nishoni
+```
+
+**Kursor:** `"<vaqt>|<id>"`. Faqat vaqt yetarli emas — bir mikrosoniyada
+yozilgan ikki xabar chegaraga tushsa, `<` bilan biri yo'qolardi, `<=`
+bilan ikki marta kelardi.
+
+**Real vaqt:** Django Channels. `WS /ws/chat` (xabar, `presence`,
+e'lon), `WS /ws/notifications` (M7). Kanal qatlami: dev'da xotira
+(Redis'siz ham ishlaydi), ishlab chiqarishda Redis
+(`config/settings/prod.py`, `docker-compose.yml` da `redis` xizmati).
+
+**Token sarlavhada:** brauzer `new WebSocket(...)` ga `Authorization`
+qo'yishga imkon bermaydi, refresh cookie esa `path=/api/` bilan
+yozilgan. Yechim — sub-protokol: `new WebSocket(url, ['isloh-jwt',
+token])`. Brauzer buni `Sec-WebSocket-Protocol` sarlavhasida yuboradi,
+ya'ni token manzil qatorida, jurnalda va brauzer tarixida qolmaydi.
+`?token=` ham qabul qilinadi — faqat qo'lda sinash uchun.
+
+**Kanal FAQAT O'QIYDI.** Yozish REST'da qoladi: ikki yozish yo'li vaqt
+o'tishi bilan farq qila boshlardi, va mijoz optimistik yozuvni SERVER
+bergan id bilan almashtirishi kerak (fabrikadagi naqsh) — WebSocket'da
+buning uchun qo'shimcha "correlation id" mexanizmi kerak bo'lardi.
+
+**Ruxsat:** suhbatga faqat A'ZO kiradi, begona uchun **404** (403 ning
+o'zi suhbat borligini oshkor qilardi — M2 dan beri saqlanadigan qaror).
+Chat ochiq katalog emas: yozish mumkin bo'lgan odamlar — mavjud
+suhbatdoshlar, o'quv aloqasi (o'qituvchi ↔ o'z talabalari) va
+administratorlar (qo'llab-quvvatlash).
+
+**Frontend:** `js/chat-store.js` butunlay qayta yozildi — manba endi
+server, `localStorage` esa OFFLINE NUSXA. Sinxron shartnoma saqlandi
+(`isloh_chatThreads()` va boshqalar avvalgidek sinxron), shuning uchun
+js/chat.js ning chizish mantiqi o'zgarmadi. Ikkita funksiya Promise
+qaytaradi — `isloh_chatOpenDirect` va `isloh_chatOpenCourseGroup`:
+suhbat SERVERDA yaratiladi va id'sini faqat javob beradi.
+
+Yangi: `js/realtime.js` (ikkala WebSocket kanali, qayta ulanish,
+`ping`), `[data-chat-older]` tugmasi (kursor sahifalash), kurs
+guruhiga chuqur havola (`messages.html?course=<id>`, kurslar
+menyusidan).
+
+**Testlar: 41 ta** (jami 313). Ular ichida `channels.testing` bilan
+haqiqiy WebSocket ulanishi: token yo'q → rad, begona `Origin` → rad,
+sub-protokol → qabul, xabar yetkazish, `presence` yozilishi.
+
+### Brauzerda topilgan va tuzatilgan uchta xato
+
+Uchalasi ham **testda ko'rinmasdi** — shuning uchun 6-mezon (brauzerda
+uchidan-uchiga oqim) qog'ozdagi shart emas:
+
+1. **UUID JSON'ga o'girilmasdi.** DRF serializeri `.data` ichida UUID
+   OBYEKTINI qoldirardi. REST yo'lida `JSONRenderer` uni o'girib
+   yuborardi, WebSocket yo'lida esa `json.dumps` yiqilardi — xabar
+   bazada bor edi, lekin suhbatdoshga YETMASDI va ekranda hech qanday
+   xato yo'q edi. Ikki qatlamda tuzatildi: serializerlarda `UUIDField`
+   va `apps/messaging/realtime.py` dagi markaziy `isloh_json_safe`.
+2. **O'z xabarim ikki marta chizilardi.** U ikki yo'ldan keladi:
+   optimistik nusxa (`pending`) va WebSocket eshittirishi. Id bo'yicha
+   solishtirish yordam bermaydi — optimistik nusxaning id'si hali
+   `tmp-...`. `isloh_chatIsDuplicate` ikkala holatni ham tekshiradi.
+3. **Ikki `PATCH` bir-birini bekor qilardi.** "Arxivdan qaytar" va
+   "ovozni yoq" ketma-ket bosilganda ikkinchi so'rov birinchisidan OLDIN
+   o'qigan nusxani saqlab, uning natijasini yo'qotardi. Serverda
+   `update_fields` (har so'rov faqat o'z ustuniga tegadi), mijozda esa
+   yozuv navbati — fabrikadagi bir xil qaror.
+
+Yana bittasi ko'rinishga tegishli edi: suhbat sarlavhasi faqat suhbat
+OCHILGANDA chizilardi, ya'ni katalog suhbatlardan keyin kelganda
+"Noma'lum foydalanuvchi" turib qolardi (`isloh_paintThreadHeader`).
+
+### Bu modulda YOPILMAGAN
+
+- **Fayl biriktirish** — tugma hali `data-backend-pending`. Yuklash
+  zanjiri M5 da tayyor (presign → PUT → complete), lekin `ChatMessage`
+  da hali fayl maydoni yo'q.
+- **Chat xabari uchun bildirishnoma.** `message` turi M7 da bor, lekin
+  har bir xabarga bildirishnoma yozilsa ro'yxat shovqinga to'lardi.
+  To'g'ri qoida — "ulanmagan odamga yozish" va u ulanish holatini
+  bilishni talab qiladi (M13 dagi fon vazifasi bilan).
+- **Guruhga qo'lda a'zo qo'shish.** Guruh a'zoligi kursga yozilishdan
+  KELIB CHIQADI (`isloh_open_course_group` har ochishda sinxronlaydi).
+  Ixtiyoriy guruh — alohida xususiyat.
+- **Xabarni tahrirlash va o'chirish** — frontendda ham boshqaruv yo'q.
+- **Eski yozishmalarni tozalash** — M13 dagi fon vazifasi.
 
 ---
 

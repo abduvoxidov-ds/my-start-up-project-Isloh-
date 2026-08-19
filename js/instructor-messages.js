@@ -35,32 +35,57 @@ function isloh_imToast(key, uz, type, vars) {
    students.html dagi "Xabar yozish" havolasi shu ko'rinishda keladi.
    Email emas, id ishlatiladi — manzil qatorida shaxsiy ma'lumot
    qolmasligi uchun. */
-function isloh_imDeepLinkUserId() {
-  const match = /[?&]u=([^&]*)/.exec(window.location.search);
+function isloh_imDeepLinkParam(name) {
+  const match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
   return match ? decodeURIComponent(match[1]) : '';
 }
 
+function isloh_imDeepLinkUserId() {
+  return isloh_imDeepLinkParam('u');
+}
+
+/* `messages.html?course=<id>` — kurs guruhi (pages/instructor/courses.html
+   dagi menyudan). Guruh serverda TALAB BO'YICHA yaratiladi va a'zolar
+   o'sha yerda sinxronlanadi, ya'ni yangi yozilgan talabalar ham qo'shiladi
+   (apps/messaging/services.py). */
+function isloh_imOpenCourseGroup() {
+  const courseId = isloh_imDeepLinkParam('course');
+  if (!courseId) return false;
+
+  isloh_chatOpenCourseGroup(courseId)
+    .then((thread) => {
+      isloh_setChatTab('groups');
+      isloh_openThread(thread.id);
+    })
+    .catch((err) => {
+      if (typeof isloh_showToast === 'function') {
+        isloh_showToast((err && err.error) || "Kurs guruhini ochib bo'lmadi", 'error');
+      }
+    });
+  return true;
+}
+
+/* M8: suhbatni SERVER ochadi (yoki yaratadi), ya'ni natija Promise
+   orqali keladi. Foydalanuvchi mavjudligini ham server tekshiradi —
+   mahalliy katalogda faqat kontaktlar bor. */
 function isloh_imOpenDeepLink() {
   const userId = isloh_imDeepLinkUserId();
   if (!userId) return;
 
-  if (!isloh_chatUser(userId)) {
-    isloh_imToast('chat.toast.userNotFound', 'Bu foydalanuvchi topilmadi', 'error');
-    return;
-  }
-
-  const thread = isloh_chatOpenDirect(userId);
-  if (!thread) {
-    isloh_imToast('chat.toast.openFail', "Suhbatni ochib bo'lmadi", 'error');
-    return;
-  }
-
-  /* Tab ochilayotgan suhbatga moslanadi: arxivlangan talabaga havola
-     kelsa "Arxiv" tab'i ochiladi, aks holda suhbat panelda ko'rinar,
-     lekin ro'yxatda topilmasdi. Arxivdan chiqarish — foydalanuvchining
-     o'z qaroriga qoldiriladi, havola uni o'zgartirmaydi. */
-  isloh_setChatTab(thread.archived ? 'archive' : ISLOH_CHAT_DEFAULT_TAB);
-  isloh_openThread(thread.id);
+  isloh_chatOpenDirect(userId)
+    .then((thread) => {
+      /* Tab ochilayotgan suhbatga moslanadi: arxivlangan talabaga havola
+         kelsa "Arxiv" tab'i ochiladi, aks holda suhbat panelda ko'rinar,
+         lekin ro'yxatda topilmasdi. Arxivdan chiqarish — foydalanuvchining
+         o'z qaroriga qoldiriladi, havola uni o'zgartirmaydi. */
+      isloh_setChatTab(thread.archived ? 'archive' : ISLOH_CHAT_DEFAULT_TAB);
+      isloh_openThread(thread.id);
+    })
+    .catch((err) => {
+      if (typeof isloh_showToast === 'function') {
+        isloh_showToast((err && err.error) || "Suhbatni ochib bo'lmadi", 'error');
+      }
+    });
 }
 
 /* --- 2) E'lon boshqaruvlarining ko'rinishi -------------------------------
@@ -121,11 +146,9 @@ function isloh_imSubmitAnnouncement() {
 
   isloh_chatSetPinnedNote(thread.id, title);
   /* Xabar ham yuboriladi: banner faqat sarlavhani ko'rsatadi, to'liq matn
-     esa suhbatda qolishi kerak. */
-  if (!isloh_chatSend(thread.id, body)) {
-    isloh_imToast('chat.toast.annSaveFail', "E'lonni saqlab bo'lmadi — brauzer xotirasi to'lgan", 'error');
-    return;
-  }
+     esa suhbatda qolishi kerak. Ikkala amal ham optimistik — xato bo'lsa
+     do'kon o'zi ortga qaytaradi va sababini aytadi (js/chat-store.js). */
+  isloh_chatSend(thread.id, body);
   isloh_imSaveAnnouncementToDiscussions(title, body, thread.courseId);
 
   titleEl.value = '';
@@ -157,8 +180,9 @@ function isloh_initInstructorMessages() {
 
   /* chat.js o'z init'ini shu fayldan OLDIN bajaradi (skript tartibi), ya'ni
      bu paytda birinchi suhbat allaqachon ochilgan — chuqur havola uni
-     kerakli suhbatga almashtiradi. */
-  isloh_imOpenDeepLink();
+     kerakli suhbatga almashtiradi. Ikkita havola bor va ular bir vaqtda
+     ishlamaydi: `?course=` guruhni, `?u=` esa 1-ga-1 suhbatni ochadi. */
+  if (!isloh_imOpenCourseGroup()) isloh_imOpenDeepLink();
 }
 
 document.addEventListener('DOMContentLoaded', isloh_initInstructorMessages);

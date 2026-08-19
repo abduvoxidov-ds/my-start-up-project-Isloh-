@@ -22,6 +22,10 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     read = serializers.BooleanField(read_only=True)
     actor_name = serializers.CharField(source="actor.full_name", read_only=True, default="")
+    # SATR, `PrimaryKeyRelatedField` emas: u UUID OBYEKTINI qoldiradi va
+    # REST yo'lida `JSONRenderer` uni o'girib yuborardi, WebSocket yo'lida
+    # esa `json.dumps` yiqilardi (M8 — apps/messaging/realtime.py).
+    course = serializers.UUIDField(source="course_id", read_only=True)
 
     class Meta:
         model = Notification

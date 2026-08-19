@@ -31,6 +31,10 @@ DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
 INSTALLED_APPS = [
+    # `daphne` django.contrib.staticfiles DAN OLDIN turishi shart —
+    # u `runserver` buyrug'ini ASGI variantiga almashtiradi, ya'ni
+    # mahalliy serverda ham WebSocket ishlaydi (M8).
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -39,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Uchinchi tomon
     "rest_framework",
+    "channels",
     # Isloh ilovalari — docs/BACKEND-PLAN.md §1
     "apps.core",
     "apps.accounts",
@@ -48,6 +53,7 @@ INSTALLED_APPS = [
     "apps.resources",
     "apps.social",
     "apps.notifications",
+    "apps.messaging",
 ]
 
 MIDDLEWARE = [
@@ -175,6 +181,21 @@ ISLOH_STORAGE_BACKEND = env(
 # Imzolangan yuklash havolasining umri (soniya). Qisqa bo'lgani ma'qul:
 # havola — vaqtinchalik kalit, sarlavhada token yo'q.
 ISLOH_UPLOAD_URL_TTL = env.int("ISLOH_UPLOAD_URL_TTL", default=900)
+
+# --- Real vaqt (M8) --------------------------------------------------------
+# Kanal qatlami — WebSocket xabarlarini jarayonlar orasida tarqatadi.
+# Dev'da xotirada: Redis'siz ham chat ishlaydi va sinovda qo'shimcha
+# xizmat ko'tarish shart emas. Ishlab chiqarishda esa xotira qatlami
+# UMUMAN yaramaydi — u bitta jarayon ichida qoladi va ikkinchi worker'ga
+# ulangan foydalanuvchi hech narsa olmasdi (prod.py Redis'ga o'tkazadi).
+CHANNEL_LAYERS = {
+    "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"},
+}
+
+# Onlayn holat shu muddatdan keyin "oflayn" deb o'qiladi. Ulanish har doim
+# ham to'g'ri uzilmaydi (brauzer yopiladi, tarmoq uziladi) va bunday holda
+# yozuv "online" bo'lib qolib ketardi — apps/messaging/serializers.py.
+ISLOH_PRESENCE_TTL = env.int("ISLOH_PRESENCE_TTL", default=120)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

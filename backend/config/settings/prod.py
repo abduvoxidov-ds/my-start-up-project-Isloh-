@@ -16,3 +16,15 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 
 JWT_REFRESH_COOKIE_SECURE = True
+
+# --- Real vaqt (M8) --------------------------------------------------------
+# Xotira qatlami (base.py) FAQAT bitta jarayonda ishlaydi. Ishlab
+# chiqarishda bir nechta worker bo'ladi va ikkinchi worker'ga ulangan
+# foydalanuvchi birinchisidagi xabarni umuman olmasdi — shuning uchun bu
+# yerda Redis majburiy.
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [env("REDIS_URL", default="redis://127.0.0.1:6379/0")]},
+    },
+}
